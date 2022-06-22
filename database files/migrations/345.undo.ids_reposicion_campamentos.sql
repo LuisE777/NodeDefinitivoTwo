@@ -1,0 +1,8 @@
+ALTER TABLE inv_solicitud_reposicion drop solicitud_campamento;
+ALTER TABLE inv_detalle_solicitud_producto drop detalle_solicitud_campamento;
+ALTER TABLE agil_gestion_orden_reposicion drop orden_reposicion_campamento;
+ALTER TABLE agil_gestion_detalle_orden_reposicion drop detalle_orden_reposicion_campamento;
+ALTER TABLE inv_solicitud_reposicion drop campamento_sincronizado;
+ALTER TABLE inv_solicitud_reposicion drop fecha_sincronizado;
+ALTER TABLE agil_gestion_orden_reposicion drop campamento_sincronizado;
+ALTER TABLE agil_gestion_orden_reposicion drop fecha_sincronizado;

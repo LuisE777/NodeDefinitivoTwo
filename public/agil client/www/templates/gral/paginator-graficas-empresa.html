@@ -1,0 +1,24 @@
+<div class="col-sm-6">
+    <div>
+      Mostrando página {{paginatorGraficosEmpresa.currentPage}} de {{paginatorGraficosEmpresa.pages.length && paginatorGraficosEmpresa.pages.length || 1}}
+    </div>
+  </div>
+  <div ng-if="paginatorGraficosEmpresa.pages.length > 0" class="col-sm-6" align="right">
+    <ul class="pagination">
+      <li class="paginate_button">
+        <a href="javascript:void(0)" ng-click="paginatorGraficosEmpresa.getFirstPage()">Primero</a>
+      </li>
+      <li class="paginate_button">
+        <a href="javascript:void(0)" e-disabled="paginatorGraficosEmpresa.currentPage==1" ng-click="paginatorGraficosEmpresa.getPreviousPage()"><<</a>
+      </li>
+      <li class="paginate_button" ng-class="{active:paginatorGraficosEmpresa.currentPage==page}" ng-repeat="page in paginatorGraficosEmpresa.pages" ng-if="abs(paginatorGraficosEmpresa.currentPage-page)<4">
+        <a e-disabled="paginatorGraficosEmpresa.currentPage==page" href="javascript:void(0)" ng-click="paginatorGraficosEmpresa.getPage(page)">{{page}}</a>
+      </li>
+      <li class="paginate_button">
+        <a href="javascript:void(0)" e-disabled="paginatorGraficosEmpresa.currentPage==paginatorGraficosEmpresa.pages.length" ng-click="paginatorGraficosEmpresa.getNextPage()">>></a>
+      </lidiv>
+      <li class="paginate_button">
+        <a href="javascript:void(0)" ng-click="paginatorGraficosEmpresa.getLastPage()">Ultimo</a>
+      </li>
+    </ul>
+  </div>

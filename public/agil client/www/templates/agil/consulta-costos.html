@@ -1,0 +1,101 @@
+<div class="row">
+	<div class="col-sm-12">
+		<!-- <h3 class="header smaller lighter blue"> </h3> -->
+		<div class="clearfix">
+			<div class="pull-right tableTools-container"></div>
+		</div>
+		<div class="tabbable">
+			
+			<ul class="nav nav-tabs" id="myTab">
+				<li class="active">
+					<a data-toggle="tab" href="javascript:void(0)" data-target="#tab-proforma1" aria-expanded="true">
+						<i class="blue ace-icon fa fa-newspaper-o bigger-170"></i>
+						Costos-1
+					</a>
+				</li>
+
+				<li class="" >
+					<a data-toggle="tab" href="javascript:void(0)" data-target="#tab-proforma2" aria-expanded="false">
+						<i class="blue ace-icon fa fa-truck bigger-170"></i>
+						Costos-2
+					</a>
+				</li>
+			</ul>
+
+			<div class="tab-content">
+				<div id="tab-proforma1" class="tab-pane fade active in">
+					<fieldset>
+                        <div class="row">
+                            <div class="form-group col-sm-12 col-md-3 col-lg-12">
+                                <label>AÑO</label>&nbsp
+                                <select required id="gestion" name="gestion" 
+                                    ng-options="gestion.nombre_corto as gestion.nombre for gestion in gestiones | orderBy:'-nombre' track by gestion.id" 
+                                    ng-model="reportee.gestion" style="width:150px;">
+                                    <option value="">SELECCIONAR</option>
+                                </select>
+                                <label>MES</label>&nbsp
+                                <select id="mes" name="mes" ng-model="reportee.mes" style="width:150px;">
+                                    <option value="">TODOS</option>
+                                    <option value="1">ENERO</option>
+                                    <option value="2">FEBRERO</option>
+                                    <option value="3">MARZO</option>
+                                    <option value="4">ABRIL</option>
+                                    <option value="5">MAYO</option>
+                                    <option value="6">JUNIO</option>
+                                    <option value="7">JULIO</option>
+                                    <option value="8">AGOSTO</option>
+                                    <option value="9">SEPTIEMBRE</option>
+                                    <option value="10">OCTUBRE</option>
+                                    <option value="11">NOVIEMBRE</option>
+                                    <option value="12">DICIEMBRE</option>
+                                </select>&nbsp
+                                <button class="btn-primary button-glow" ng-if="!reportee.gestion" ng-click="" data-rel="tooltip" tooltip-placement="top" uib-tooltip="Primero debe seleccionar la gestión que desea ver en la tabla"><i class="ace-icon fa fa-angle-left align-top bigger-150"></i> GENERAR  DATOS</button>
+                               <button class="btn-xlsx button-glow" ng-click="filtrarCostosTablasDinamic(reportee)" ng-if="reportee.gestion"><i class="ace-icon fa fa-cloud-download align-top bigger-150"></i>GENERAR  DATOS</button>
+                            </div>
+                        </div>
+                        <hr style="margin-top: 0px;margin-bottom: 0px;border: 0;border-top: 1px solid #eee;">
+                        <div id="tablaDinamicaProforma"></div>
+                        <br><br><br><br>
+                        <div id="googlechart-containerr" style="height:600px;"></div>
+				    </fieldset>
+				</div>
+
+                <div id="tab-proforma2" class="tab-pane">
+					<fieldset>
+                        <div class="row">
+                            <div class="form-group col-sm-12 col-md-3 col-lg-12">
+                                <label>AÑO</label>&nbsp
+                                <select required id="gestion" name="gestion" 
+                                    ng-options="gestion.nombre_corto as gestion.nombre for gestion in gestiones | orderBy:'-nombre' track by gestion.id" 
+                                    ng-model="reporte.gestion" style="width:150px;">
+                                    <option value="">SELECCIONAR</option>
+                                </select>
+                                <label>MES</label>&nbsp
+                                <select id="mes" name="mes" ng-model="reporte.mes" style="width:150px;">
+                                    <option value="">TODOS</option>
+                                    <option value="1">ENERO</option>
+                                    <option value="2">FEBRERO</option>
+                                    <option value="3">MARZO</option>
+                                    <option value="4">ABRIL</option>
+                                    <option value="5">MAYO</option>
+                                    <option value="6">JUNIO</option>
+                                    <option value="7">JULIO</option>
+                                    <option value="8">AGOSTO</option>
+                                    <option value="9">SEPTIEMBRE</option>
+                                    <option value="10">OCTUBRE</option>
+                                    <option value="11">NOVIEMBRE</option>
+                                    <option value="12">DICIEMBRE</option>
+                                </select>&nbsp
+                                <button class="btn-primary button-glow" ng-if="!reporte.gestion" ng-click="" data-rel="tooltip" tooltip-placement="top" uib-tooltip="Primero debe seleccionar la gestión que desea ver en la tabla"><i class="ace-icon fa fa-angle-left align-top bigger-150"></i> GENERAR  DATOS</button>
+                               <button class="btn-xlsx button-glow" ng-click="filtrarCostosTablasDinamicc(reporte)" ng-if="reporte.gestion"><i class="ace-icon fa fa-cloud-download align-top bigger-150"></i>GENERAR  DATOS</button>
+                            </div>
+                        </div>
+                        <hr style="margin-top: 0px;margin-bottom: 0px;border: 0;border-top: 1px solid #eee;">
+                        <br>
+                        <div id="tablaDinamicaProformaII"></div>
+				    </fieldset>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

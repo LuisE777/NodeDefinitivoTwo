@@ -1,0 +1,1 @@
+ALTER TABLE agil_solicitud_caja_chica drop incremento;

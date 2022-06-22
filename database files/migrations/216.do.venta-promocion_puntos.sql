@@ -1,0 +1,1 @@
+alter table inv_detalle_venta add promocion_puntaje int(11);

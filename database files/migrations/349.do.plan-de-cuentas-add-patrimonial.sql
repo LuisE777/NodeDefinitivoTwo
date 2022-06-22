@@ -1,0 +1,1 @@
+ALTER TABLE agil_contabilidad_cuenta ADD patrimonial tinyInt(1) default 0;

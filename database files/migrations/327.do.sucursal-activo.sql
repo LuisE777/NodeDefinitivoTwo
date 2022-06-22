@@ -1,0 +1,1 @@
+alter table agil_sucursal add activo tinyint(1) default 1;

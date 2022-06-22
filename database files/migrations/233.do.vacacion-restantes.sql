@@ -1,0 +1,1 @@
+ALTER TABLE agil_rrhh_empleado_vacaciones ADD dias_restante int(11);

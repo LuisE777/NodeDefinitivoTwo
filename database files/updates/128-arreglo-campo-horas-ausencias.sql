@@ -1,0 +1,1 @@
+ALTER TABLE agil_rrhh_empleado_ausencia MODIFY COLUMN horas varchar(255);

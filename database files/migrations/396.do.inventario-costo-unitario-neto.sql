@@ -1,0 +1,1 @@
+ALTER TABLE inv_inventario add costo_unitario_neto  DECIMAL(20,4) DEFAULT null;

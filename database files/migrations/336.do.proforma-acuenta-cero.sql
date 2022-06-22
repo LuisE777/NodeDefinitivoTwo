@@ -1,0 +1,1 @@
+update agil_proforma set a_cuenta = 0 where a_cuenta is null;

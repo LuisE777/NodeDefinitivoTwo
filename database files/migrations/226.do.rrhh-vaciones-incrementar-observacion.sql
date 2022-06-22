@@ -1,0 +1,1 @@
+ALTER TABLE agil_rrhh_empleado_vacaciones MODIFY COLUMN observacion varchar(2184);

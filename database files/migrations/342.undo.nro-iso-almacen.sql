@@ -1,0 +1,1 @@
+ALTER TABLE agil_almacen DROP numero_correlativo_iso_orden_servicio;

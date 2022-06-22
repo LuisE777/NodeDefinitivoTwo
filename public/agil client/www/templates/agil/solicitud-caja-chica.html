@@ -1,0 +1,1723 @@
+<div class="conteiner">
+    <h3 class="header smaller lighter blue">SOLICITUD CAJA CHICA</h3>
+    <div>
+        <button id="nuevo" ng-disabled="!aplicacion.puede_crear" class="btn-woBox button-glow"
+            ng-click="abrirModalSolicitudCajaChica()">
+            <i class="ace-icon fa fa-plus align-top bigger-125"></i>
+            Nuevo
+        </button>
+
+        <form name="formularioFiltroCuentas" novalidate ng-submit="obtenerListaSolicitudes(filtro)">
+            <fieldset>
+                <legend>Filtro Solicitudes
+                <span class="pull-right" ng-if="usuario.id_empleado">
+                    Ver solicitudes propias
+                    <input class="ace ace-switch ace-switch-4" type="checkbox"
+                        ng-model="filtro.solicitudes_usuario_empleado" />
+                    <span class="lbl check-descuento"></span>
+                </legend>
+            </span>
+                <div class="row hidden-lg">
+                    <div class="col-md-6">
+                        <div class="input-group input-margin">
+                            <span class="input-group-addon">Desde</span>
+                            <input ng-update-hidden class="form-control date-picker" type="text"
+                                data-date-format="dd/mm/yyyy" id="fechainicio" ng-model="filtro.inicio" autocomplete="off"
+                                placeholder="Ingrese la fecha inicial" />
+                            <span class="input-group-addon">Hasta</span>
+                            <input ng-update-hidden class="form-control date-picker" type="text"
+                                data-date-format="dd/mm/yyyy" id="fechafin" ng-model="filtro.fin" autocomplete="off"
+                                placeholder="Ingrese la fecha final" />
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="btn-group btn-group-justified input-margin">
+
+                            <div class="btn-group" role="group">
+                                <button id="Buscar" type="submit" ng-disabled="formularioFiltroCuentas.$invalid"
+                                    class="btn-primary btn">
+                                    <i class="ace-icon fa fa-search align-top bigger-125"></i>
+                                    BUSCAR
+                                </button>
+                            </div>
+                            <div class="btn-group" role="group">
+                                <button id="pdf" ng-disabled="!Cuentas" class="btn btn-danger"
+                                    ng-click="imprimirFiltroCajaCartaOficio(Cuentas)">
+                                    <i class="ace-icon fa fa-print bigger-125"></i>
+                                    PDF
+                                </button>
+                            </div>
+
+                            <div class="btn-group" role="group">
+                                <button id="excel" ng-disabled="!Cuentas" class="btn btn-success"
+                                    ng-click="imprimirFiltroExcelCajaCartaOficio(Cuentas)">
+                                    <i class="ace-icon fa fa-print bigger-125"></i>
+                                    Excel
+                                </button>
+                            </div>
+                            <div class="btn-group" role="group">
+                                <button id="config"
+                                    ng-if="usuario.rolesUsuario[0].rol.nombre==diccionario.ROL_ADMINISTRADOR"
+                                    class="btn btn-primary" type="button" popover-placement="left"
+                                    uib-popover-template="dynamicPopoverConfig.templateUrl"
+                                    popover-trigger="outsideClick: outsideClick" popover-title="Tipo configuracion"
+                                    popover-append-to-body="true">
+                                    <i class="ace-icon fa fa-cog bigger-125"></i>
+                                    Config.
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row hidden-lg">
+                    <div class="col-md-6">
+                        <div class="input-group input-margin">
+                            <span class="input-group-addon">beneficiario</span>
+                            <input type="text" class="form-control" ng-model="filtro.solicitante">
+                            <span class="input-group-addon">Usuario</span>
+                            <input type="text" class="form-control" ng-model="filtro.usuario">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="input-group input-margin">
+                            <span class="input-group-addon">Estado</span>
+                            <select ng-disabled ng-model="filtro.estado" class="form-control"
+                                ng-options="estado.id as estado.nombre for estado in tiposEstados | orderBy:'numero' | filter:{habilitado:true} track by estado.id">
+                                <option value="">Seleccionar</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="overflow-x:auto;" class="hidden-sm hidden-xs">
+                    <table class="table table-striped table-bordered table-hover">
+                        <tbody>
+                            <tr>
+                               <!--  <td>
+
+                                </td> -->
+                                <td colspan="3">
+                                    <label>Desde</label>&nbsp
+                                </td>
+                                <td colspan="3">
+                                    <label>Hasta</label>&nbsp
+                                </td>
+                                <td colspan="3">
+                                </td>
+                            </tr>
+                            <tr>
+                               <!--  <td>
+                                    <label>PERIODO</label>&nbsp
+                                </td> -->
+                                <td colspan="3">
+                                    <div  ng-class="{'has-error-date':fechasIncorrectaInic}">
+                                    <input ng-update-hidden class="form-control date-picker" type="text"
+                                        data-date-format="dd/mm/yyyy" id="fechainicio" ng-model="filtro.inicio"
+                                        placeholder="Ingrese la fecha inicial" autocomplete="off" ng-change="validarFechaI(filtro.inicio,filtro.fin)" />
+                                    </div>
+                                </td>
+                                <td colspan="3">
+                                    <div  ng-class="{'has-error-date':fechasIncorrectaFin}">
+                                    <input ng-update-hidden class="form-control date-picker" type="text"
+                                        data-date-format="dd/mm/yyyy" id="fechafin" ng-model="filtro.fin" ng-change="validarFechaF(filtro.inicio,filtro.fin)"
+                                        placeholder="Ingrese la fecha final" autocomplete="off"/>
+                                    </div> &nbsp
+                                </td>
+                                <td colspan="3">
+                                    <button id="Buscar" type="submit" ng-disabled="formularioFiltroCuentas.$invalid ||fechasIncorrectaInic || fechasIncorrectaFin "
+                                        class="btn-primary btn btn-app btn-xs">
+                                        <i class="ace-icon fa fa-search align-top bigger-125"></i>
+                                        BUSCAR
+                                    </button>
+                                    <button id="pdf" class="btn btn-app btn-danger btn-xs"
+                                        ng-click="imprimirFiltroSolicitudCajaCarta(filtro)">
+                                        <i class="ace-icon fa fa-print bigger-160"></i>
+                                        PDF
+                                    </button>
+                                    <button id="excel" class="btn btn-app btn-success btn-xs"
+                                        ng-click="imprimirFiltroExcelSolicitudCajaCarta(filtro)">
+                                        <i class="ace-icon fa fa-print bigger-160"></i>
+                                        Excel
+                                    </button>
+                                    <button id="config"
+                                        ng-if="usuario.rolesUsuario[0].rol.nombre==diccionario.ROL_ADMINISTRADOR"
+                                        class="btn btn-primary btn-xs" type="button" popover-placement="left"
+                                        uib-popover-template="dynamicPopoverConfig.templateUrl"
+                                        popover-trigger="outsideClick: outsideClick" popover-title="Tipo Configuración"
+                                        popover-append-to-body="true">
+                                        <i class="ace-icon fa fa-cog bigger-160"></i>
+                                        Configuracion
+                                    </button>
+
+                                    <script type="text/ng-template" id="myPopoverTemplateConfig.html">
+                                    <div class="form-group">
+                                        <ul>
+                                            <li>
+                                                <a href="javascript:void(0)" ng-click="abrirModalNivelFondoRendir()"><h5>Niveles</h5></a>
+                                            </li>
+                                            <li>
+                                                <a href="javascript:void(0)" ng-click="abrirModalGastoFondoRendir()"><h5>Gastos</h5></a>
+                                            </li>
+                                        </ul>
+
+                                    </div>
+
+                                    </script>
+                                </td>
+                            </tr>
+                            <tr>
+                               <!--  <td>
+                                    &nbsp
+                                </td> -->
+                                <td>
+                                        <label>Doc</label>&nbsp
+                                    </td>
+                                <td>
+                                    <label>Beneficiario</label>&nbsp
+                                </td>
+                                <td>
+                                    <label>Autorizador</label>&nbsp
+                                </td>
+                                <td>
+                                    <label>Usuario</label>&nbsp
+                                </td>
+                                <td>
+                                    <label>Proveedor (nit,razon social)</label>&nbsp
+                                </td>
+                                <td>
+                                    <label>area</label>&nbsp
+                                </td>
+                                <td>
+                                    <label>campo</label>&nbsp
+                                </td>
+
+                                <td>
+                                    <label>concepto</label>&nbsp
+                                </td>
+                                <td>
+                                    <label>Estado</label>&nbsp
+                                </td>
+                            </tr>
+                            <tr>
+                               <!--  <td>
+                                    FILTRO
+                                </td> -->
+                                <td>
+                                        <input type="number" onkeydown="()=>{return event.keyCode !== 69}" ng-model="filtro.doc" class="form-control"
+                                            ng-class="filtro.doc?'filter-bg-yellow':''">
+                                    </td>
+                                <td>
+                                    <input type="text" ng-model="filtro.solicitante" class="form-control"
+                                        ng-class="filtro.solicitante?'filter-bg-yellow':''">
+                                </td>
+                                <td>
+                                    <input type="text" ng-model="filtro.autorizador"  class="form-control"
+                                        ng-class="filtro.autorizador?'filter-bg-yellow':''">
+                                </td>
+                                <td>
+                                    <input type="text" ng-model="filtro.usuario"  class="form-control"
+                                        ng-class="filtro.usuario?'filter-bg-yellow':''">
+                                </td>
+                                <td>
+                                    <input type="text" ng-model="filtro.proveedor"   class="form-control"
+                                        ng-class="filtro.proveedor?'filter-bg-yellow':''">
+                                </td>
+                                <td>
+                                    <select id="filtro-trabajadores-area-rol" class="form-control"
+                                        ng-options="area.id as area.nombre for area in listaAreas.clases | filter:{habilitado:true} track by area.id"
+                                        ng-model="filtro.area" ng-class="filtro.area?'filter-bg-yellow':''">
+                                        <option value="">--selecionar--</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <select id="filtro-trabajadores-campo-rol" class="form-control"
+                                        ng-options="centroCosto.id as centroCosto.nombre for centroCosto in centrosDeCostos | filter:{habilitado:true} track by centroCosto.id"
+                                        ng-model="filtro.campo" ng-class="filtro.campo?'filter-bg-yellow':''">
+                                        <option value="">--selecionar--</option>
+                                    </select>
+                                </td>
+
+                                <td>
+                                    <select ng-disabled ng-model="filtro.concepto" class="form-control"
+                                        ng-options="concepto.id as concepto.nombre for concepto in ConceptosMovimiento | filter:{habilitado:true} track by concepto.id"
+                                        ng-class="filtro.concepto?'filter-bg-yellow':''">
+                                        <option value="">Seleccionar</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <select ng-model="filtro.estado" class="form-control"
+                                        ng-options="estado.id as estado.nombre for estado in tiposEstados | orderBy:'numero' | filter:{habilitado:true} track by estado.id"
+                                        ng-class="filtro.estado?'filter-bg-yellow':''">
+                                        <option value="">Seleccionar</option>
+                                    </select>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </fieldset>
+        </form>
+        <div class="table-header">
+            <div class="row">
+                <div class="col-sm-12">
+                    Lista de Solicitudes
+
+                    <div class="inline pos-rel pull-right">
+
+                        <div class="col-sm-10" ng-include src="'/templates/gral/fields-viewer.html'"></div>
+                    </div>
+                    <span class="pull-right">Total Bs. {{montoTotalSolicitudes|number:2}} .-</span>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- div.table-responsive -->
+
+        <!-- div.dataTables_borderWrap -->
+        <div>
+            <div id="tabla-productos_wrapper" class="dataTables_wrapper form-inline no-footer">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div>
+                            <label>
+                                Mostrar <select ng-model="paginator.itemsPerPage" ng-change="paginator.getFirstPage()"
+                                    name="tabla-proveedores_length" aria-controls="tabla-proveedores"
+                                    class="form-control input-sm">
+                                    <option value="0">Todos</option>
+                                    <option ng-selected="true" value="10">10</option>
+                                    <option value="25">25</option>
+                                    <option value="50">50</option>
+                                    <option value="100">100</option>
+                                </select> Elementos</label>
+                        </div>
+                    </div>
+                    <div class="col-sm-6" align="right">
+                        <div>
+                            <label>Buscar:
+                                <input class="form-control input-sm" type="search" ng-model="textSearch"
+                                    ng-model-options='{ debounce: 600 }'
+                                    ng-change="paginator.getSearch(textSearch,paginator.filter,$event)">
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div style="overflow-x:auto;">
+                    <table id="tabla-contabilidadCuentas" class="table table-striped table-bordered">
+                        <thead>
+                            <tr>
+                                <th class="center">N°</th>
+                                <th class="center" ng-if="fieldViewer.getConfiguration().usuario_solicitante.show">
+                                    <a href="javascript:void(0)"
+                                        ng-click="paginator.sortColumn('usuario_solicitante',obtenerLista)">Usuario
+                                        <span id="usuario_solicitante" class="sort fa fa-sort icon-only"></span>
+                                    </a>
+                                </th>
+                                <th class="center" ng-if="fieldViewer.getConfiguration().sucursal.show">
+                                    Sucursal
+
+                                </th>
+                                <th>doc</th>
+                                <th class="center">
+                                    <a href="javascript:void(0)"
+                                        ng-click="paginator.sortColumn('fecha',obtenerLista)">Fecha
+                                        <span id="fecha" class="sort fa fa-sort icon-only"></span>
+                                    </a>
+                                </th>
+                                <th class="center" ng-if="fieldViewer.getConfiguration().beneficiario.show">
+                                    <a href="javascript:void(0)"
+                                        ng-click="paginator.sortColumn('beneficiario',obtenerLista)">Beneficiario
+                                        <span id="beneficiario" class="sort fa fa-sort icon-only"></span>
+                                    </a>
+                                </th>
+                                <th class="center" ng-if="fieldViewer.getConfiguration().proveedor.show">
+                                    <a href="javascript:void(0)"
+                                        ng-click="paginator.sortColumn('proveedor',obtenerLista)">Proveedor
+                                        <span id="proveedor" class="sort fa fa-sort icon-only"></span>
+                                    </a>
+                                </th>
+                                <th class="center" ng-if="fieldViewer.getConfiguration().numero_orden.show">
+                                    <a href="javascript:void(0)"
+                                        ng-click="paginator.sortColumn('numero_orden_compra',obtenerLista)">Nº orden
+                                        <span id="numero_orden_compra" class="sort fa fa-sort icon-only"></span>
+                                    </a>
+                                </th>
+                                <th class="center" ng-if="fieldViewer.getConfiguration().autorizador.show">
+                                    <a href="javascript:void(0)"
+                                        ng-click="paginator.sortColumn('autorizador',obtenerLista)">Autorizador
+                                        <span id="autorizador" class="sort fa fa-sort icon-only"></span>
+                                    </a>
+                                </th>
+                                <th class="center" ng-if="fieldViewer.getConfiguration().concepto.show">
+                                    <a href="javascript:void(0)"
+                                        ng-click="paginator.sortColumn('concepto',obtenerLista)">Concepto
+                                        <span id="concepto" class="sort fa fa-sort icon-only"></span>
+                                    </a>
+
+                                </th>
+                                <th class="center" ng-if="fieldViewer.getConfiguration().area.show">
+                                    <a href="javascript:void(0)"
+                                        ng-click="paginator.sortColumn('area',obtenerLista)">Area
+                                        <span id="area" class="sort fa fa-sort icon-only"></span>
+                                    </a>
+
+                                </th>
+                                <th class="center" ng-if="fieldViewer.getConfiguration().campo.show">
+                                    <a href="javascript:void(0)"
+                                        ng-click="paginator.sortColumn('campo',obtenerLista)">Campo
+                                        <span id="campo" class="sort fa fa-sort icon-only"></span>
+                                    </a>
+
+                                </th>
+                                <th class="center" ng-if="fieldViewer.getConfiguration().detalle.show">
+                                    <a href="javascript:void(0)"
+                                        ng-click="paginator.sortColumn('detalle',obtenerLista)">Detalle
+                                        <span id="detalle" class="sort fa fa-sort icon-only"></span>
+                                    </a>
+
+                                </th>
+                                <th class="center" ng-if="fieldViewer.getConfiguration().estado.show">
+                                    <a href="javascript:void(0)"
+                                        ng-click="paginator.sortColumn('estado',obtenerLista)">Estado
+                                        <span id="estado" class="sort fa fa-sort icon-only"></span>
+                                    </a>
+                                </th>
+                                <th class="center" ng-if="fieldViewer.getConfiguration().monto.show">
+                                    <a href="javascript:void(0)"
+                                        ng-click="paginator.sortColumn('monto',obtenerLista)">Monto
+                                        <span id="monto" class="sort fa fa-sort icon-only"></span>
+                                    </a>
+
+                                </th>
+                                <th class="center">
+                                    Acciones
+
+                                </th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr ng-repeat="solicitud in solicitudesCajaChica">
+                                <td>
+                                    {{($index+1)+(paginator.itemsPerPage*(paginator.currentPage-1))}}
+                                </td>
+                                <td ng-if="fieldViewer.getConfiguration().usuario_solicitante.show">
+                                    {{solicitud.usuario.persona.nombre_completo}}
+                                </td>
+                               
+                                <td ng-if="fieldViewer.getConfiguration().sucursal.show">
+                                    {{solicitud.sucursal.nombre}}
+                                </td>
+                                <td>
+                                        <p ng-if="solicitud.concepto.concepto.nombre!='GASTO'">
+                                            {{solicitud.cajasChicas[0].numero_correlativo}}</p>
+                                        <p ng-repeat="caja in solicitud.cajasChicas"
+                                            ng-if="solicitud.concepto.concepto.nombre=='GASTO'">{{caja.numero_correlativo}}
+                                        </p>
+                                        <p ng-if="solicitud.cajasChicas.length>1" class="orange">
+                                            <span
+                                                ng-if="solicitud.cajasChicas[1].concepto.nombre=='INCREMENTO'">{{solicitud.cajasChicas[1].numero_correlativo}}</span>
+                                        </p>
+                                    </td>
+                                <td ng-if="fieldViewer.getConfiguration().fecha.show">
+                                    {{solicitud.fecha|date:'dd/MM/yyyy'}}
+                                </td>
+                                <td ng-if="fieldViewer.getConfiguration().beneficiario.show">
+                                    {{solicitud.solicitante.persona.nombre_completo}}
+                                </td>
+                                <td ng-if="fieldViewer.getConfiguration().proveedor.show">
+                                    {{solicitud.proveedor.razon_social}}
+                                </td>
+                                <td ng-if="fieldViewer.getConfiguration().numero_orden.show">
+                                    {{solicitud.numero_orden_compra}}
+                                </td>
+                                <td ng-if="fieldViewer.getConfiguration().autorizador.show">
+                                    {{solicitud.autorizador.persona.nombre_completo}}
+                                </td>
+                                <td ng-if="fieldViewer.getConfiguration().concepto.show">{{solicitud.concepto.nombre}}
+                                </td>
+                                <td ng-if="fieldViewer.getConfiguration().area.show">
+                                    {{solicitud.solicitante.empleadosFichas[solicitud.solicitante.empleadosFichas.length-1].area.nombre}}
+                                </td>
+                                <td ng-if="fieldViewer.getConfiguration().campo.show">
+                                    {{solicitud.solicitante.campo.nombre}}
+                                </td>
+                                <td ng-if="fieldViewer.getConfiguration().detalle.show">{{solicitud.detalle}}</td>
+                                <td ng-if="fieldViewer.getConfiguration().estado.show"
+                                    ng-style="{'background-color': (solicitud.estado.nombre_corto===diccionario.CC_ESTADO_ANULADO)?'red' : 'auto','color': (solicitud.estado.nombre_corto==diccionario.CC_ESTADO_ANULADO)?'White' : 'auto'}">
+                                    {{solicitud.estado.nombre}}</td>
+                                <td ng-if="fieldViewer.getConfiguration().monto.show">
+                                    {{solicitud.monto|number:2}} .-
+                                </td>
+
+                                <td>
+                                    <div class="action-buttons">
+                                        <a class="blue tooltip-info" uib-tooltip="Ver Datos" href="javascript:void(0)"
+                                            tooltip-placement="left" e-disabled="!aplicacion.puede_ver"
+                                            ng-click="verSolicitudCajaChica(solicitud)">
+                                            <i class="ace-icon fa fa-search-plus bigger-130"></i>
+                                        </a>
+                                        <a ng-if="!solicitud.eliminado  && solicitud.estado.nombre_corto!=diccionario.CC_ESTADO_PROCESADO && solicitud.estado.nombre_corto!=diccionario.CC_ESTADO_ANULADO && solicitud.estado.nombre_corto!=diccionario.CC_ESTADO_DESEMBOLSADO"
+                                            class="green tooltip-info" uib-tooltip="Editar Datos"
+                                            href="javascript:void(0)" e-disabled="!aplicacion.puede_modificar"
+                                            ng-click="editarSolicitudCajaChica(solicitud)" tooltip-placement="left">
+                                            <i class="ace-icon fa fa-pencil bigger-130"></i>
+                                        </a>
+                                        <a tooltip-placement="left"
+                                            ng-if="!solicitud.eliminado && solicitud.estado.nombre_corto!=diccionario.CC_ESTADO_PROCESADO&& solicitud.estado.nombre_corto!=diccionario.CC_ESTADO_ANULADO && solicitud.estado.nombre_corto!=diccionario.CC_ESTADO_DESEMBOLSADO"
+                                            class="red tooltip-info " uib-tooltip="Eliminar" href="javascript:void(0)"
+                                            e-disabled="!aplicacion.puede_eliminar"
+                                            ng-click="abrirModalEliminarSolicitud(solicitud)">
+                                            <i class="ace-icon fa fa-trash-o bigger-130"></i>
+                                        </a>
+                                        <a tooltip-placement="left"
+                                            ng-if="!solicitud.eliminado && solicitud.estado.nombre_corto==diccionario.CC_ESTADO_PENDIENTE"
+                                            class="blue tooltip-info " uib-tooltip="Autorizar Solicitud"
+                                            href="javascript:void(0)" e-disabled="!aplicacion.puede_crear"
+                                            ng-click="abrirModalVerificarAutorizacion(solicitud)">
+                                            <i class="ace-icon fa fa-pencil-square  bigger-130">A</i>
+                                        </a>
+                                        <a tooltip-placement="left" style="color: black"
+                                            ng-if="!solicitud.eliminado && solicitud.concepto.concepto.nombre_corto==diccionario.CC_MOV_KARDEX && (solicitud.estado.nombre_corto==diccionario.CC_ESTADO_DESEMBOLSADO || solicitud.estado.nombre_corto===diccionario.CC_ESTADO_VERIFICADO)"
+                                            class="tooltip-info" uib-tooltip="Fondo a rendir" href="javascript:void(0)"
+                                            e-disabled="!aplicacion.puede_crear"
+                                            ng-click="verificarDatosPanelGastoFondo(solicitud.id)">
+                                            <i class="ace-icon fa fa-file-text  bigger-130"></i>
+                                        </a>
+                                    </div>
+
+
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row" ng-include src="'/templates/gral/paginator.html'">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- inicio solicitud -->
+<div class="modal" id="dialog-solicitud">
+    <div class="modal-content">
+        <div class="modal-header bg-primary">
+            <button type="button" ng-click="cerrarModalSolicitudCajaChica()" class="close" data-dismiss="modal"
+                aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="modal-title">SOLICITUD DE CAJA CHICA</h4>
+        </div>
+        <form id="form-conf-imp" name="form-conf-imp" ng-submit="guardarSolicitudCajaChica()">
+            <div class="modal-body">
+
+                <div class="row">
+                    <div class="col-md-4">
+                        <label class="inline">
+
+                            <span class="lbl">Usuario:</span>
+                        </label>
+                    </div>
+                    <div class="col-md-8">
+                        {{usuario.persona.nombre_completo}}
+                    </div>
+                </div>
+                <div class="space-4"></div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <label class="inline">
+
+                            <span class="lbl">Fecha:</span>
+                        </label>
+                    </div>
+                    <div class="col-md-8">
+                        <p ng-hide="!solicitud.ver">{{solicitud.fecha|date:'dd/MM/yyyy'}}</p>
+                        <p ng-hide="solicitud.ver">{{solicitud.fecha|date:'dd/MM/yyyy'}}</p>
+                        <!-- <input ng-hide="solicitud.ver" ng-update-hidden class="form-control date-picker" type="text" data-date-format="dd/mm/yyyy" id="fechainicio" ng-model="solicitud.fecha"
+                            placeholder="Ingrese la fecha inicial" required/>                -->
+                    </div>
+                </div>
+                <div class="space-4"></div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <label class="inline">
+
+                            <span class="lbl">Concepto</span>
+                        </label>
+                    </div>
+
+                    <div class="col-md-8">
+                        <div class="row">
+
+                            <div class="col-md-10">
+                                <select ng-disabled="solicitud.ver" required ng-model="solicitud.concepto"
+                                    class="form-control"
+                                    ng-options="concepto as concepto.nombre+'('+concepto.concepto.nombre+')' for concepto in ConceptosMovimiento | filter:{habilitado:true}|filtroSolicitud |orderBy:'nombre' track by concepto.id">
+                                    <option value="">Seleccionar</option>
+                                </select>
+                            </div>
+                            <div class="col-md-1" align="left"
+                                ng-if="usuario.rolesUsuario[0].rol.nombre==diccionario.ROL_ADMINISTRADOR">
+                                <div class="space-4"></div>
+                                <span ng-hide="solicitud.ver" class="fa fa-pencil bigger-160"
+                                    ng-click="abrirModalConceptosMovimiento(tiposConceptos)"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="space-4"></div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <label class="inline">
+
+                            <span class="lbl">Beneficiario:</span>
+                        </label>
+                    </div>
+                    <div class="col-md-8">
+                        <input ng-disabled="solicitud.ver" ng-disabled="evaluacion.ver != undefined"
+                            ng-keypress="interceptarTecla($event,'id_servicio',true)" autocomplete="off" required
+                            type="text" ng-model="solicitud.solicitante" placeholder="Busqueda de personal..."
+                            uib-typeahead="personal as personal.persona.nombre_completo for personal in buscarPersonal($viewValue)"
+                            typeahead-wait-ms="2000" typeahead-template-url="templates/autocompletar.html"
+                            typeahead-show-hint="false" typeahead-min-length="1"
+                            typeahead-on-select="establecerPersonal($item, $model, $label, $event)">
+                        <P class="red" ng-if="beneficiarioNoEncontrado">El beneficiaro esta mal asignado</P>
+                        <!-- | filter:{eliminado:false} -->
+                    </div>
+                </div>
+                <div class="space-4"></div>
+                <div class="row" ng-if="solicitud.concepto.concepto.nombre_corto === diccionario.CC_MOV_PROVEEDOR">
+                    <div class="col-md-4">
+                        <label class="inline">
+
+                            <span class="lbl">Proveedor:</span>
+                        </label>
+                    </div>
+                    <div class="col-md-8">
+                        <input id="razon_social" ng-disabled="solicitud.ver" class="form-control"
+                            ng-keypress="interceptarTecla($event,'factura',true)" required type="text"
+                            ng-model="solicitud.proveedor" placeholder="Ingrese la Razon Social"
+                            uib-typeahead="proveedor as proveedor.razon_social for proveedor in buscarProveedor($viewValue)"
+                            typeahead-wait-ms="2000" typeahead-template-url="templates/autocompletar.html"
+                            typeahead-show-hint="false" typeahead-min-length="0"
+                            typeahead-on-select="establecerProveedor($item, $model, $label, $event)">
+                        <P class="red" ng-if="errorSolicitudProveedor">El proveedor esta mal asignado</P>
+                    </div>
+                </div>
+                <div class="space-4"></div>
+                <div class="row" ng-if="solicitud.concepto.concepto.nombre_corto === diccionario.CC_MOV_PROVEEDOR">
+                    <div class="col-md-4">
+                        <label class="inline">
+
+                            <span class="lbl">Nº orden:</span>
+                        </label>
+                    </div>
+                    <div class="col-md-8">
+                        <input type="number" name="numero_orden" id="numero_orden" required
+                            ng-model="solicitud.numero_orden_compra">
+                    </div>
+                </div>
+                <div class="space-4"></div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <label class="inline">
+
+                            <span class="lbl">Detalle</span>
+                        </label>
+                    </div>
+                    <div class="col-md-8">
+                        <textarea ng-disabled="solicitud.ver" required class="form-control" cols="30" rows="4"
+                            ng-model="solicitud.detalle"></textarea>
+                    </div>
+                </div>
+                <div class="space-4"></div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <label class="inline">
+                            <span class="lbl">Monto:</span>
+                        </label>
+                    </div>
+                    <div class="col-md-8">
+                        <input ng-disabled="solicitud.ver" required type="number" step="0.001" min="1"
+                            ng-model="solicitud.monto" class="form-control">
+                    </div>
+                </div>
+                <div class="space-4"></div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <label class="inline">
+                            <span class="lbl">Sucursal:</span>
+                        </label>
+                    </div>
+                    <div class="col-md-8">
+                        <select ng-disabled="solicitud.ver" required data-validate="validate(required)"
+                            ng-model-options="{updateOn: 'submit'}" required
+                            ng-options="sucursal as sucursal.nombre for sucursal in sucursales track by sucursal.id"
+                            ng-model="solicitud.sucursal">
+                            <option value="">Seleccionar</option>
+                        </select>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button ng-hide="solicitud.ver" type="submit" class="btn btn-primary">Guardar</button>
+                <button type="button" class="btn btn-danger" ng-click="cerrarModalSolicitudCajaChica()">Cerrar</button>
+
+            </div>
+        </form>
+    </div>
+</div>
+</div>
+<!-- fin solicitud -->
+
+<!-- === modal conceptos movimiento"==== -->
+<div id="dialog-conceptos-movimiento" class="modal" item-width="500">
+    <div class="modal-header bg-primary">
+        <h4 class='smaller text-white text-uppercase'>
+            <i class='icono-prerequisito'></i>
+            <label> &nbsp;CONCEPTOS MOVIMIENTO</label>
+        </h4>
+    </div>
+    <form ng-submit="AgregarConceptosMovimientoCajaChica(clase)">
+        <div class="row">
+
+            <div class="col-sm-3">
+                <div class="form-group">
+                    <label for="ciudad">Concepto</label>
+                    <input type="text" ng-model="clase.nombre" type="text" ng-model-options="{updateOn: 'submit'}"
+                        capitalize style="text-transform:uppercase;" class="form-control" id="ciudad" name="ciudad"
+                        placeholder="Bolivia">
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <label for="ciudad">Movimiento</label>
+                    <select class="form-control" ng-model="clase.concepto" ng-model-options="{updateOn: 'submit'}"
+                        ng-options="movimiento as movimiento.nombre for movimiento in tiposMovimientos.clases | filter:{habilitado:true} track by movimiento.id">
+                    </select>
+                </div>
+            </div>
+            <div class="col-sm-2">
+                <br>
+                <div class="form-group">
+                    <!-- <button type="button" class="btn btn-success" ng-click="AgregarDepartamento(clase)">
+                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                    </button> -->
+                    <button ng-if="!clase.edit" type="submit" class="btn btn-success">
+                        <span class="glyphicon glyphicon-plus" aria-hidden="true">Agregar</span>
+                    </button>
+                    <button ng-if="clase.edit" type="submit" class="btn btn-primary">
+                        <span class="glyphicon glyphicon-plus" aria-hidden="true">Modificar</span>
+                    </button>
+                    <button ng-if="clase.edit" type="button" class="btn btn-danger"
+                        ng-click="cancelarEdicionConcepotMovimientoCajaChica(clase)">
+                        <span class="" aria-hidden="true">Cancelar</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th>nombre</th>
+                <th>Movimiento</th>
+                <th>Habilitar</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="concepto in ConceptosMovimiento track by $index">
+                <th scope="row">{{concepto.nombre}}</th>
+                <th scope="row">{{concepto.concepto.nombre}}</th>
+
+                <td>
+                    <label>
+                        <input name="switch-field-1" class="ace ace-switch ace-switch-5" type="checkbox"
+                            ng-model="concepto.habilitado">
+                        <span class="lbl check-espaniol"></span>
+                    </label>
+                </td>
+                <td>
+                    <a ng-click="editarConceptoMovimientoCajaChica(concepto)">
+                        <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+                    </a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="row">
+        <div class="modal-footer wizard-actions">
+            <button class="btn btn-primary btn-sm" ng-click="guardarConceptoMovimientoCajaChica()">
+                <i class="glyphicon glyphicon-floppy-disk"></i>Guardar
+            </button>
+            <button class="btn btn-danger btn-sm" ng-click="cerrarModalConceptosMovimiento()">
+                <i class="ace-icon fa fa-times"></i>Cancelar
+            </button>
+        </div>
+    </div>
+</div>
+<!-- ========= fin departamento estado ========= -->
+<!-- =========eliminar solicitud ========= -->
+<div id="dialog-eliminar-solicitud" title="¿Eliminación de Seguro?" class="modal">
+    <p>
+        <span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>¿Esta seguro de eliminar la
+        solicitud seleccionado?
+    </p>
+    <button type="button" class="btn btn-danger" ng-click="eliminarSolicitud()">Si</button>
+    <button type="button" class="btn btn-success" ng-click="cerrarDialogEliminarSolicitud()">No</button>
+</div>
+<!-- ========= fin modal eliminar solicitud ========= -->
+<!-- inicio confirmar usuario Autorizado-->
+<div id="modal-verificar-autorizacion" class="modal">
+    <form name="formularioAsignarCuenta" ng-submit="verificarPerimisoAutorizacion(cuenta)">
+        <div class="modal-header">
+            <p>
+                <h3>Verificar Permiso de Autorizacion</h3>
+            </p>
+        </div>
+        <div class="modal-body">
+            <div>
+                <span>Clave</span>
+                <input required class="form-control" type="password" name="contra" ng-model="cuenta.clave">
+            </div>
+        </div>
+        <div class="modal-footer">
+            <div class="col-sm-6">
+                <button type="submit" class="btn btn-success">Autorizar</button>
+            </div>
+
+
+            <div class="col-sm-6">
+                <button type="button" class="btn btn-danger"
+                    ng-click="cerrarModalVerificarAutorizacion()">Cancelar</button>
+            </div>
+        </div>
+    </form>
+</div>
+<!-- fin  confirmar usuario Autorizado -->
+<!-- inicio niveles fondo a rendir-->
+<div id="modal-nivel-fondo-rendir" class="modal">
+
+    <div class="modal-header" align="center">
+        <p>
+            <h3>Nivel</h3>
+        </p>
+    </div>
+    <div class="modal-body">
+        <form name="formularioNivelesFondo" ng-submit="agregarNivelFondoARendir()">
+            <div class="form-group form-inline">
+                <label for="nombre-nivel">Nombre</label>
+                <input class="form-control" type="text" name="nombre-nivel" ng-model="nivelFr.nombre">
+            </div>
+            <button type="submit" ng-if="!nivelFr.editar" class="btn btn-primary pull-right"><i
+                    class="ace-icon fa fa-plus"></i>Agregar</button>
+
+            <button ng-if="nivelFr.editar" type="submit" class="btn btn-success pull-right"><i
+                    class="ace-icon fa fa-plus"></i>modificar</button>
+        </form>
+        <div>
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>N°</th>
+                        <th>Nombre</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="nivel in nivelesFr |filter:{eliminado:false}|orderBy: 'numero'">
+                        <td>{{nivel.numero}}</td>
+                        <td>{{nivel.nombre}}</td>
+                        <td>
+                            <a class="blue" ng-if="nivel.numero>1" href="javascript:void(0)"
+                                e-disabled="!aplicacion.puede_modificar"
+                                ng-click="modificarNivelFondoARendir('subir-nivel',nivel,index)">
+                                <i class="ace-icon fa fa-arrow-up bigger-130"></i>
+                            </a>
+                            <a class="green" href="javascript:void(0)" e-disabled="!aplicacion.puede_modificar"
+                                ng-click="modificarNivelFondoARendir('editar',nivel,index)">
+                                <i class="ace-icon fa fa-pencil bigger-130"></i>
+                            </a>
+                            <a class="red" href="javascript:void(0)" e-disabled="!aplicacion.puede_eliminar"
+                                ng-click="modificarNivelFondoARendir('eliminar',nivel,$index)">
+                                <i class="ace-icon fa fa-trash-o bigger-130"></i>
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+    <div class="modal-footer">
+
+        <button type="button" class="btn btn-success pull-right"
+            ng-click="guardarNivelesFondoARendir()">Guardar</button>
+
+        <button type="button" class="btn btn-danger pull-left"
+            ng-click="cerrarModalNivelFondoRendir()">Cancelar</button>
+
+    </div>
+
+</div>
+<!-- fin  nivel fondo a rendir -->
+
+<!-- inicio niveles fondo a rendir-->
+<div id="modal-gasto-fondo-rendir" class="modal">
+
+    <div class="modal-header" align="center">
+        <p>
+            <h3>Gasto</h3>
+        </p>
+    </div>
+    <div class="modal-body">
+        <form name="formularioGastosFondo" ng-submit="agregarGastoFondoARendir(combustible_recorrido,usar_producto)">
+            <div class="row">
+                <label class="col-md-3" for="nombre-nivel-gasto">nivel</label>
+                <div class="col-md-9">
+                    <select ng-model="gastoFr.nivel" name="nombre-nivel-gasto" required class="form-control"
+                        ng-options="nivel as nivel.nombre for nivel in nivelesFr | orderBy:'numero' track by nivel.id">
+                        <option value="">Seleccionar</option>
+                    </select>
+                </div>
+            </div>
+            <div class="space-4"></div>
+            <div class="row">
+                <label class="col-md-3" for="nombre-gasto">Gasto</label>
+                <div class="col-md-9">
+                    <input required class="form-control" type="text" name="nombre-gasto" ng-model="gastoFr.nombre">
+                </div>
+            </div>
+            <div class="space-4"></div>
+            <div class="row">
+                <label class="col-md-3" for="nombre-gasto">Concepto</label>
+                <div class="col-md-9">
+                    <select required ng-model="gastoFr.concepto" class="form-control"
+                        ng-options="concepto as concepto.nombre for concepto in ConceptosMovimiento | filter:{habilitado:true}|filtroEgresos track by concepto.id">
+                        <option value="">Seleccionar</option>
+                    </select>
+                </div>
+            </div>
+            <div class="space-4"></div>
+            <div class="row">
+                <label class="col-md-3" for="nombre-cuenta">Cuenta Contabilidad</label>
+                <div class="col-md-9">
+                    <input enter autocomplete="off" ng-disabled="cajaChica.ver" typeahead-append-to-body="true"
+                        ng-keypress="interceptarTecla($event,'cantidad',true)" required type="text"
+                        ng-model="gastoFr.cuenta" placeholder="Busqueda..."
+                        uib-typeahead="cuenta as (cuenta.codigo+'-'+cuenta.nombre) for cuenta in buscarCuentasCajaChica($viewValue)"
+                        typeahead-wait-ms="1000" typeahead-template-url="templates/autocompletar.html"
+                        typeahead-show-hint="false" typeahead-min-length="1"
+                        typeahead-on-select="establecerCuenta($item, $model, $label, $event)">
+                    <p class="text-danger" ng-if=" validarCuenta">La cuenta no es valida</p>
+                </div>
+            </div>
+
+
+            <div class="space-4"></div>
+            <div class="row">
+                <label class="col-md-3" for="nombre-nivel">Combustible Recorrido</label>
+                <div class="col-md-9">
+                    <!--  <input name="" class="ace ace-switch ace-switch-5 ng-valid ng-dirty ng-valid-parse ng-touched ng-empty"
+                        type="checkbox" ng-model="GastoFr.combustible_recorrido">
+                    <span class="lbl check-espaniol"></span> -->
+                    <label>
+                        <input name="switch-field-1" class="ace ace-switch ace-switch-5" type="checkbox"
+                            ng-model="combustible_recorrido">
+                        <span class="lbl check-espaniol"></span>
+                    </label>
+                </div>
+            </div>
+            <div class="space-4"></div>
+            <div class="row">
+                <label class="col-md-3" for="nombre-nivel">Producto</label>
+                <div class="col-md-9">
+                    <label>
+                        <input name="switch-field-1" class="ace ace-switch ace-switch-5" type="checkbox"
+                            ng-model="usar_producto">
+                        <span class="lbl check-espaniol"></span>
+                    </label>
+
+                </div>
+            </div>
+            <button ng-if="!gastoFr.editar " type="submit" class="btn btn-primary  pull-right"><i
+                    class="ace-icon fa fa-plus"></i>Agregar</button>
+            <button ng-if="gastoFr.editar " type="submit" class="btn btn-success  pull-right"><i
+                    class="ace-icon fa fa-plus"></i>modificar</button>
+        </form>
+        <div>
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>N°</th>
+                        <th>nivel</th>
+                        <th>Gasto</th>
+                        <th>Cta. Cont.</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="gasto in gastosFr|orderBy: 'numero'">
+                        <td>{{gasto.numero}}</td>
+                        <td>{{gasto.nivel.nombre}}</td>
+                        <td>{{gasto.nombre}}</td>
+                        <td>{{gasto.cuenta.nombre}}</td>
+                        <td>
+                            <a class="blue" ng-if="gasto.numero>1" href="javascript:void(0)"
+                                e-disabled="!aplicacion.puede_modificar"
+                                ng-click="modificarGastoFondoARendir('subir-nivel',gasto,$index)">
+                                <i class="ace-icon fa fa-arrow-up bigger-130"></i>
+                            </a>
+                            <a class="green" href="javascript:void(0)" e-disabled="!aplicacion.puede_modificar"
+                                ng-click="modificarGastoFondoARendir('editar',gasto,$index)">
+                                <i class="ace-icon fa fa-pencil bigger-130"></i>
+                            </a>
+                            <a class="red" href="javascript:void(0)" e-disabled="!aplicacion.puede_eliminar"
+                                ng-click="modificarGastoFondoARendir('eliminar',gasto,$index)">
+                                <i class="ace-icon fa fa-trash-o bigger-130"></i>
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-success pull-right" ng-click="guardarGastosFondoARendir()">Guardar</button>
+        <button type="button" class="btn btn-danger pull-left"
+            ng-click="cerrarModalGastoFondoRendir()">Cancelar</button>
+    </div>
+
+</div>
+<!-- fin  nivel fondo a rendir -->
+
+<!-- inicio pabel gasto -->
+<div class="modal" id="modal-panel-gasto-fondo">
+    <div role="document">
+        <div class="modal-content">
+            <div class="modal-header ficha">
+                <h4 class="modal-title" id="myModalLabel">Rendición de Fondos</h4>
+
+            </div>
+
+            <div class="modal-body container-fluid">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="widget-box">
+                            <form ng-submit="guardarRendicionDeFondo()">
+
+                                <div class="widget-body" style="display: block;">
+                                    <div class="widget-main">
+                                        <div class="space-4"></div>
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                Rendición:
+                                            </div>
+                                            <div class="input-group col-md-9">
+
+                                                <select required ng-model="rendicionFondo.rendicion"
+                                                    ng-disabled="rendicionFondo.ver" class="form-control"
+                                                    id="motivo-beneficio" ng-change="activarFechas();"
+                                                    ng-options="rendicion as rendicion.nombre for rendicion in tipoRendiciones.clases | filter:{habilitado:true} track by rendicion.id">
+                                                    <option value="">Seleccionar</option>
+                                                </select>
+                                                <span
+                                                    class="input-group-addon glyphicon glyphicon-pencil point-edit green"
+                                                    ng-click="abrirDialogConceptoEdicion(tipoRendiciones)"></span>
+                                            </div>
+                                        </div>
+                                        <div class="space-4"></div>
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                Fecha:
+                                            </div>
+                                            <div class=" col-md-9">
+                                                <input type="text" autocomplete="off" ng-disabled="rendicionFondo.ver"
+                                                    ng-update-hidden data-date-format="dd/mm/yyyy"
+                                                    ng-model="rendicionFondo.fecha" required
+                                                    class="form-control date-picker">
+                                            </div>
+                                        </div>
+                                        <div class="space-4"></div>
+
+                                        <div class="row input-group"
+                                            ng-if="rendicionFondo.rendicion.nombre_corto !=diccionario.CC_RENDICION_INTERNA">
+                                            <div class="col-md-3">
+                                                Fechas:
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label for="salida">Salida:</label>
+                                                <input type="text" ng-disabled="rendicionFondo.ver" autocomplete="off"
+                                                    required ng-update-hidden data-date-format="dd/mm/yyyy"
+                                                    ng-model="rendicionFondo.fecha_salida"
+                                                    class="form-control date-picker">
+                                            </div>
+                                            <div class="col-md-5">
+                                                <label for="entrada">Entrada:</label>
+                                                <input type="text" ng-disabled="rendicionFondo.ver" autocomplete="off"
+                                                    required ng-update-hidden data-date-format="dd/mm/yyyy"
+                                                    ng-model="rendicionFondo.fecha_entrada"
+                                                    class="form-control date-picker">
+                                            </div>
+                                        </div>
+                                        <div class="space-4"></div>
+                                        <div class="row input-group"
+                                            ng-if="rendicionFondo.rendicion.nombre_corto !=diccionario.CC_RENDICION_INTERNA">
+                                            <div class="col-md-3">
+                                                Odómetro:
+                                            </div>
+                                            <div class="col-md-4">
+                                                <input type="number" ng-disabled="rendicionFondo.ver" required min="0.1"
+                                                    step=".000001" ng-model="rendicionFondo.odometro_salida" required
+                                                    class="form-control" ng-change="calcularTotalFondoARendir()">
+                                            </div>
+                                            <div class="col-md-5">
+                                                <input type="number" ng-disabled="rendicionFondo.ver"
+                                                    min="{{endicionFondo.odometro_salida}}" step=".000001"
+                                                    ng-model="rendicionFondo.odometro_entrada" required
+                                                    class="form-control" ng-change="calcularTotalFondoARendir()">
+                                            </div>
+                                        </div>
+                                        <div class="space-4"></div>
+                                        <div class="row"
+                                            ng-if="rendicionFondo.rendicion.nombre_corto !=diccionario.CC_RENDICION_INTERNA">
+                                            <div class="col-md-3">
+                                                Litros:
+                                            </div>
+                                            <div class="col-md-9">
+                                                <input type="number" ng-disabled="rendicionFondo.ver" required
+                                                    ng-model="rendicionFondo.litros" min="1" step=".0000001"
+                                                    class="form-control" ng-change="calcularTotalFondoARendir()">
+                                            </div>
+                                        </div>
+                                        <div class="space-4"></div>
+                                        <div class="row"
+                                            ng-if="rendicionFondo.rendicion.nombre_corto !=diccionario.CC_RENDICION_INTERNA">
+                                            <div class="col-md-3">
+                                                Conductor:
+                                            </div>
+                                            <div class="input-group col-md-9">
+                                                <input id="conductorInput" name="conductorInput" type="text" placeholder="Ingrese conductor"
+                                                    autocomplete="off" class="form-control"
+                                                    ng-model="rendicionFondo.conductor"
+                                                    ng-disabled="rendicionFondo.ver"
+                                                    ng-required="true"
+                                                    typeahead-editable="false"
+                                                    uib-typeahead="chofer as chofer.nombre for chofer in choferesViaje | filter:{habilitado:true} | filter:$viewValue"
+                                                    typeahead-show-hint="true"
+                                                    typeahead-append-to-body="true"
+                                                    typeahead-focus-on-select="false" 
+                                                    typeahead-min-length="0">
+
+                                                <span
+                                                    class="input-group-addon glyphicon glyphicon-pencil point-edit green"
+                                                    aria-hidden="true"
+                                                    ng-click="abrirModalConductoresViaje(choferesViaje)"></span>
+                                            </div>
+                                        </div>
+                                        <div class="space-4"></div>
+                                        <div class="row" ng-if="rendicionFondo.rendicion.nombre_corto !=diccionario.CC_RENDICION_INTERNA">
+                                            <div class="col-md-3">
+                                                Placa:
+                                            </div>
+                                            <div class="input-group col-md-9">
+                                                <input id="placaInput" name="placaInput" type="text" placeholder="Ingrese conductor"
+                                                    autocomplete="off" class="form-control"
+                                                    ng-disabled="rendicionFondo.ver"
+                                                    ng-model="rendicionFondo.vehiculo"
+                                                    ng-required="true"
+                                                    typeahead-editable="false"
+                                                    uib-typeahead="vehiculo as vehiculo.nombre for vehiculo in vehiculosViaje.clases | filter:$viewValue"
+                                                    typeahead-show-hint="true"
+                                                    typeahead-append-to-body="true"
+                                                    typeahead-focus-on-select="false" 
+                                                    typeahead-min-length="2">
+                                                <span
+                                                    class="input-group-addon glyphicon glyphicon-pencil point-edit green"
+                                                    aria-hidden="true"
+                                                    ng-click="abrirModalVehiculosViaje(vehiculosViaje)"></span>
+                                            </div>
+                                        </div>
+                                        <div class="space-4"></div>
+                                        <div class="row"
+                                            ng-if="rendicionFondo.rendicion.nombre_corto !=diccionario.CC_RENDICION_INTERNA">
+                                            <div class="col-md-3">
+                                                &nbsp
+                                            </div>
+                                            <div class="col-md-9">
+                                                <div class="infobox infobox-green pull-right"
+                                                    style="width: 100%;max-width: 100%">
+                                                    <div class="infobox-icon">
+                                                        <i style="color: red" class="icon fa fa-bus bigger-300"></i>
+                                                    </div>
+
+                                                    <div class="infobox-data">
+                                                        <span
+                                                            class="infobox-data-number">{{km_recorridos|number:2}}</span>
+                                                        <div class="infobox-content">KM</div>
+                                                    </div>
+
+                                                    <!--  <div class="stat stat-success">8%</div> -->
+                                                </div>
+
+                                                <div class="infobox infobox-green pull-right"
+                                                    style="width: 100%;max-width: 100%">
+                                                    <div class="infobox-icon">
+                                                        <img src="img/Gas-Pump-icon.png" height="35" width="35" alt="">
+                                                    </div>
+
+                                                    <div class="infobox-data">
+                                                        <span class="infobox-data-number">{{km_litros|number:2}}</span>
+                                                        <div class="infobox-content">KM/Lts.</div>
+                                                    </div>
+
+                                                    <!--  <div class="stat stat-success">8%</div> -->
+                                                </div>
+
+                                                <div class="infobox infobox-green pull-right"
+                                                    style="width: 100%;max-width: 100%">
+                                                    <div class="infobox-icon">
+                                                        <i style="color: green" class="icon fa fa-money bigger-300"></i>
+                                                    </div>
+
+                                                    <div class="infobox-data">
+                                                        <span class="infobox-data-number">{{km_bs|number:2}}</span>
+                                                        <div class="infobox-content">Bs./KM</div>
+                                                    </div>
+
+                                                    <!--   <div class="stat stat-success">8%</div> -->
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="widget-footer">
+                                    <div class="widget-main">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <button type="submit" class="btn btn-success pull-right"
+                                                    ng-if="!rendicionFondo.ver" ng-disabled="rendicionFondo.gastos.length==0">Guardar</button>
+                                                <button type="button" class="btn btn-danger pull-left"
+                                                    ng-click="cerrarModalPanelGastoFondo()">Cancelar</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="col-md-8">
+
+                        <div class="widget-box" ng-hide="rendicionFondo.ver">
+                            <div class="widget-header">
+                                <h4 class="widget-title">INGRESAR GASTO</h4>                                
+                            </div>
+                            <div class="widget-body" style="display: block;">
+                                <div id="horz-list">
+                                    <ul>
+                                        <li>Registros de Compra:</li>
+                                        <li ng-repeat="compra in comprasDeLaRendicion">
+                                            <a ng-if="ingresoGasto.id_compra != compra.id" href="javascript:void(0)" ng-click="asignarCompra(compra)">
+												<i class="icon-agil-comprobantes"></i>
+                                                {{compra.factura?'F'+compra.factura:'ISO'+compra.numero_iso_compra}}
+												<i class="ace-icon fa fa-arrow-right icon-on-right"></i>
+											</a>
+                                            <span ng-if="ingresoGasto.id_compra == compra.id" class="badge badge-info">
+                                                <i class="icon-agil-comprobantes"></i>
+                                                {{compra.factura?'F'+compra.factura:'ISO'+compra.numero_iso_compra}}
+                                                <i class="ace-icon fa fa-arrow-right icon-on-right"></i>
+                                            </span>
+                                        </li>
+                                    </ul>
+                                  </div>
+                                <form id="formularioDetallePlantillaFr" name="formularioDetallePlantillaFr"
+                                    ng-submit="agregarDetalleFondoARendir(ingresoGasto)">
+                                    <div class="widget-main">
+                                        <div class="row">
+                                            <div class="col-md-2">
+                                                <div class="space-4"></div>
+                                                <label>Gasto:</label>
+                                                <input id="gastoinput" name="gastoinput" type="text" placeholder="Gasto"
+                                                    autocomplete="off" class="form-control"
+                                                    ng-model="ingresoGasto.gasto"
+                                                    uib-typeahead="gasto as (gasto.nombre+', '+gasto.nivel.nombre) for gasto in gastosFr | filter:{eliminado:false} | filter:$viewValue"
+                                                    typeahead-show-hint="true"
+                                                    typeahead-on-select="establecerGasto($item, $model, $label, $event)"
+                                                    ng-blur="establecerGasto(ingresoGasto.gasto)"
+                                                    typeahead-append-to-body="true"
+                                                    typeahead-template-url="customTemplate.html"
+                                                    typeahead-focus-on-select="false" typeahead-min-length="0">
+                                                <script type="text/ng-template" id="customTemplate.html">
+                                                    <a>
+                                                        <i style="color: green" class="icon fa fa-money bigger-200"></i>
+                                                        <span ng-bind-html="match.label | uibTypeaheadHighlight:query"></span>
+                                                    </a>
+                                                </script>
+                                                <p ng-if="gastoNoAsignado" class="red">El gasto esta mal
+                                                    asignada!</p>
+
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="space-4"></div>
+                                                <label>Fecha:</label>
+
+                                                
+                                                <!-- <input type="text" autocomplete="off" required ng-update-hidden
+                                                    ng-model-options="{updateOn: 'submit'}"
+                                                    ng-model="ingresoGasto.fecha"
+                                                    id="fecha_ingreso_gasto"
+                                                    class="form-control date-picker" data-date-format="dd/mm/yyyy"> -->
+                                                
+                                                <datepicker date-format="dd/MM/yyyy" datepicker-mobile="true">
+                                                    <input ng-model="ingresoGasto.fecha" class="form-control" ng-model-options="{updateOn: 'submit'}" type="text"/>
+                                                </datepicker>
+                                            
+                                                <!-- <input type="text" autocomplete="off" required
+                                                    ng-click="showcalendar($event)" uib-datepicker-popup="{{dateformat}}"
+                                                    ng-model="ingresoGasto.fecha"
+                                                    is-open="showdp" datepicker-options="dateOptions" show-button-bar="false" 
+                                                    class="form-control"> -->
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div>
+                                                    <label class="inline" name="fact">Nº Fact/Rec:</label>
+                                                    <label>
+                                                        <input name="fact"
+                                                            class="ace ace-switch ace-switch-5 big-switch"
+                                                            type="checkbox" ng-model="ingresoGasto.usar_factura"
+                                                            ng-model-options="{updateOn: 'submit'}">
+                                                        <span class="lbl"
+                                                            data-lbl="&nbsp;&nbsp;&nbsp;Factura.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RECIBO."></span>
+                                                    </label>
+                                                </div>
+                                                <input type="number"  required min="0"
+                                                    ng-model="ingresoGasto.numero_factura_recargo" class="form-control"
+                                                    ng-model-options="{updateOn: 'submit'}">
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="space-4"></div>
+                                                <label>detalle:</label>
+                                                <input type="text" required ng-model="ingresoGasto.detalle"
+                                                    class="form-control" ng-model-options="{updateOn: 'submit'}">
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="space-4"></div>
+                                                <label>Monto:</label>
+                                                <input type="number" min="0.01" step=".0001" required
+                                                    ng-model="ingresoGasto.monto" class="form-control"
+                                                    ng-model-options="{updateOn: 'submit'}">
+                                            </div>
+                                        </div>
+                                        <div class="row form-group">
+                                            <div class="col-md-2">
+                                                <label class="col-md-3">Area</label>
+                                                <div class="input-group col-md-9">
+                                                    <input id="placaInput" name="placaInput" type="text" placeholder="Ingrese Area"
+                                                        autocomplete="off" class="form-control"
+                                                        ng-disabled="rendicionFondo.ver"
+                                                        ng-model="ingresoGasto.area"
+                                                        ng-required="true"
+                                                        typeahead-editable="false"
+                                                        uib-typeahead="area as area.nombre for area in listaAreas.clases | filter:{habilitado:true} | filter:$viewValue"
+                                                        typeahead-show-hint="true"
+                                                        typeahead-append-to-body="true"
+                                                        typeahead-focus-on-select="false" 
+                                                        typeahead-min-length="2">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label>Destinos:</label>
+                                                <div class="input-group">
+                                                    <!-- <div id="destinos" isteven-multi-select required="true"
+                                                        input-model="campamento" output-model="ingresoGasto.centrosCosto"
+                                                        button-label="icon nombre" item-label="icon nombre maker"
+                                                        tick-property="ticked" translation="localLang" max-labels="5">
+                                                    </div> -->
+                                                    <div id="destinos" isteven-multi-select input-model="campamento"
+                                                    output-model="ingresoGasto.centrosCosto" button-label="icon nombre"
+                                                    item-label="icon nombre maker" tick-property="ticked"
+                                                    translation="localLang">
+                                                </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                <div> &nbsp</div>
+                                                <button type="submit"
+                                                    ng-disabled="!ingresoGasto.gasto.id || rendicionFondo.ver"
+                                                    class="btn btn-primary  pull-left"><i
+                                                        class="ace-icon fa fa-plus"></i>Agregar</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="widget-box">
+                            <div class="widget-header">
+                                <h4 class="widget-title">DETALLE GASTOS.</h4>
+                                <div class="inline pos-rel pull-right open">
+                                    <a data-toggle="dropdown" href="javascript:void(0)" class="dropdown-toggle">
+                                        <i class="glyphicon glyphicon-list-alt"></i>
+                                    </a>
+
+                                    <ul id="field-viewer"
+                                        class="dropdown-menu-right dropdown-menu dropdown-yellow dropdown-caret">
+                                        <li ng-repeat="fieldKey in fieldViewerDetalleFondo.getKeys()">
+                                            <label>
+                                                <input class="ace ace-switch ace-switch-4" type="checkbox"
+                                                    ng-model="fieldViewerDetalleFondo.object.configuracion[fieldKey].show"
+                                                    ng-change="fieldViewerDetalleFondo.updateObject()" />
+                                                <span class="lbl check-descuento"></span>
+                                            </label>
+                                            <label
+                                                class="blue">{{fieldViewerDetalleFondo.object.configuracion[fieldKey].value}}</label>
+                                        </li>
+                                        <li class="divider"></li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="widget-body" style="display: block;">
+                                <div class="widget-main">
+                                    <div class="table-fixed-header2">
+                                        <table class="table table-striped table-hover">
+                                            <thead fix-head class="table-head-color">
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th ng-if="fieldViewerDetalleFondo.getConfiguration().gasto.show">
+                                                        Gasto</th>
+                                                    <th ng-if="fieldViewerDetalleFondo.getConfiguration().fecha.show">
+                                                        Fecha</th>
+                                                    <th
+                                                        ng-if="fieldViewerDetalleFondo.getConfiguration().num_fact_rec.show">
+                                                        Nº
+                                                        Fact/Rec</th>
+                                                    <th ng-if="fieldViewerDetalleFondo.getConfiguration().detalle.show">
+                                                        Detalle</th>
+                                                    <th ng-if="fieldViewerDetalleFondo.getConfiguration().monto.show">
+                                                        Monto</th>
+                                                    <th ng-if="fieldViewerDetalleFondo.getConfiguration().area.show">
+                                                        Area</th>
+                                                    <th
+                                                        ng-if="fieldViewerDetalleFondo.getConfiguration().centro_costos.show">
+                                                        Centros
+                                                        Costos</th>
+                                                    <th>Acciones</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr ng-style="{'color':gasto.eliminado == true ?  'red': ''}"
+                                                    ng-repeat="gasto in rendicionFondo.gastos track by $index">
+                                                    <td>{{$index}}</td>
+                                                    <td ng-if="fieldViewerDetalleFondo.getConfiguration().gasto.show">
+                                                        {{gasto.gasto.nombre}}</td>
+                                                    <td ng-if="fieldViewerDetalleFondo.getConfiguration().fecha.show">
+                                                        {{gasto.fecha|date:'dd/MM/yyyy'}}</td>
+                                                    <td
+                                                        ng-if="fieldViewerDetalleFondo.getConfiguration().num_fact_rec.show">
+                                                        {{gasto.numero_factura_recargo}}</td>
+                                                    <td ng-if="fieldViewerDetalleFondo.getConfiguration().detalle.show">
+                                                        {{gasto.detalle}}</td>
+                                                    <td ng-if="fieldViewerDetalleFondo.getConfiguration().monto.show">
+                                                        {{gasto.monto}}</td>
+                                                    <td ng-if="fieldViewerDetalleFondo.getConfiguration().area.show">
+                                                        {{gasto.area.nombre}}</td>
+                                                    <td
+                                                        ng-if="fieldViewerDetalleFondo.getConfiguration().centro_costos.show">
+                                                        <a popover-placement="right"
+                                                            uib-popover-template="dynamicPopoverCargosFr.templateUrl"
+                                                            popover-trigger="outsideClick: outsideClick"
+                                                            popover-title="Contros de costo"
+                                                            popover-append-to-body="true" class="blue">
+                                                            <i class="fa fa-list-ol bigger-200 orange"
+                                                                aria-hidden="true"></i>
+                                                        </a>
+                                                        <script type="text/ng-template"
+                                                            id="myPopoverTemplateFrCargos.html">
+                                                                <div class="form-group">    
+                                                                    <div style="height:300px !important;overflow: auto;" >
+                                                                            <p ng-repeat="centroCosto in gasto.centrosCosto track by $index">
+                                                                                    {{centroCosto.nombre}}
+                                                                                </p>
+                                                                    </div>
+                                                                </div>                                           
+                                                            </script>
+                                                    </td>
+                                                    <td>
+                                                        <a class="green" href="javascript:void(0)"
+                                                            e-disabled="!aplicacion.puede_modificar || rendicionFondo.ver"
+                                                            ng-click="editarDetalleRendicionFondo('editar',gasto,$index)">
+                                                            <i class="ace-icon fa fa-pencil bigger-130"></i>
+                                                        </a>
+                                                        <a class="red" href="javascript:void(0)"
+                                                            ng-hide="gasto.eliminado"
+                                                            e-disabled="!aplicacion.puede_eliminar || rendicionFondo.ver"
+                                                            ng-click="editarDetalleRendicionFondo('eliminar',gasto,$index)">
+                                                            <i class="ace-icon fa fa-trash-o bigger-130"></i>
+                                                        </a>
+                                                        <a class="blue" href="javascript:void(0)"
+                                                            class="green tooltip-info"
+                                                            uib-tooltip="puede volver a habilitar el detalle antes de guardar. posterior ya no va tener la opcion."
+                                                            tooltip-placement="left"
+                                                            ng-show="gasto.eliminado && gasto.id"
+                                                            e-disabled="!aplicacion.puede_eliminar || rendicionFondo.ver"
+                                                            ng-click="editarDetalleRendicionFondo('activar',gasto,$index)">
+                                                            <i class="fa fa-check-circle-o bigger-130"
+                                                                aria-hidden="true"></i>
+                                                        </a>
+                                                    </td>
+                                                </tr>
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 col-sm-6"><span class="pull-right"><b>Total</b></span></div>
+                                    <div class="col-md-6 col-sm-6"><span
+                                            class="pull-left"><b>{{totalGastos}}</b></span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <!-- fin panel gasto -->
+
+    <!--- modal vehiculos de viaje  ======== -->
+    <div id="dialog-vehiculos-viaje" class="modal" title="Tipo de Documento" item-width="500">
+        <div class="modal-dialog modal-rh-nuevo">
+            <div class="modal-header bg-primary">
+                <h4 class="smaller text-white text-uppercase">
+                    <i class="icono-prerequisito"></i>
+                    <label> &nbsp;Vehículos de Viaje</label>
+                </h4>
+            </div>
+            <div class="modal-body">
+                <form ng-submit="AgregarDepartamento(clase)">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="ciudad">Vehículo</label>
+                                <input type="text" class="form-control" id="clase-vehiculo" ng-model="clase.vehiculo"
+                                    name="ciudad" placeholder="Vehículo">
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="ciudad">Placa</label>
+                                <input type="text" class="form-control" id="clase-placa" ng-model="clase.placa"
+                                    name="ciudad" placeholder="Vehículo">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="ciudad">Cap. Pasajeros</label>
+                                <input type="text" class="form-control" id="clase-nombre-corto"
+                                    ng-model="clase.nombre_corto" name="ciudad" placeholder="Pasajeros">
+                            </div>
+                        </div>
+                        <div class="col-sm-2">
+                            <br>
+                            <div class="form-group">
+                                <button type="button" class="btn btn-success" ng-click="agregarVehiculo(clase)">
+                                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Nombre Corto</th>
+                            <th>Habilitar</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="clase in tipo_edicion.clases">
+                            <th scope="row">{{clase.nombre}}</th>
+                            <td>{{clase.nombre_corto}}</td>
+                            <td>
+                                <label>
+                                    <input ng-model="clase.habilitado" name="switch-field-1"
+                                        class="ace ace-switch ace-switch-5" type="checkbox">
+                                    <span class="lbl check-espaniol"></span>
+                                </label>
+                            </td>
+                            <td>
+                                <a class="green" href="javascript:void(0)"
+                                    ng-click="modificarConceptoEdicionVehiculo(clase)">
+                                    <i class="ace-icon fa fa-pencil bigger-130"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer wizard-actions">
+                <button class="btn btn-primary btn-sm" ng-click="guardarConceptoEdicionVehiculo(tipo_edicion)">
+                    <i class="glyphicon glyphicon-floppy-disk"></i>Guardar
+                </button>
+                <button class="btn btn-danger btn-sm pull-left" ng-click="cerrarModalVehiculosViaje()">
+                    <i class="ace-icon fa fa-times"></i>Cancelar
+                </button>
+            </div>
+        </div>
+    </div>
+    <!--- fin modal vehiculos de viaje  ======== -->
+    <!--- modal conductor de viaje  ======== -->
+    <div id="dialog-conductores-viaje" class="modal" title="Tipo de Documento" item-width="500">
+        <div class="modal-dialog modal-rh-nuevo">
+            <div class="modal-header bg-primary">
+                <h4 class="smaller text-white text-uppercase">
+                    <i class="icono-prerequisito"></i>
+                    <label> &nbsp;Conductores de Viaje</label>
+                </h4>
+            </div>
+            <div class="modal-body">
+                <form ng-submit="agregarConductor(conductor)">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="ciudad">Conductor</label>
+                                <input type="text" required class="form-control" ng-model-options="{updateOn: 'blur'}"
+                                    ng-model="conductor.nombre" placeholder="Conductor">
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="ciudad">Licencia:</label>
+                                <input type="text" required class="form-control" ng-model-options="{updateOn: 'blur'}"
+                                    ng-model="conductor.licencia" placeholder="Licencia">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-5">
+                            <div class="form-group">
+                                <label for="ciudad">Tipo Licencia:</label>
+                                <div class="input-group">
+                                    <span class="input-group-addon glyphicon glyphicon-pencil point-edit green"
+                                        aria-hidden="true"
+                                        ng-click="abrirDialogConceptoEdicion(TiposLicenciasVehiculo)"></span>
+                                    <select required class="form-control" ng-model-options="{updateOn: 'blur'}"
+                                        ng-options="licencia as licencia.nombre_corto for licencia in TiposLicenciasVehiculo.clases | filter:{habilitado:true} track by licencia.id"
+                                        ng-model="conductor.tipoLicencia">
+                                        <option value="">--seleccionar--</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-2">
+                            <br>
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-success">
+                                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="col-sm-5">
+                            <div class="form-group pull-right">
+                                <label for="ciudad">Filtrar Conductor:</label>
+                                <div class="input-group">
+                                    <select ng-model="tipo" ng-change=filtrarConductor(tipo)>
+                                        <option value="!!">Empleados</option>
+                                        <option value="!">Externos</option>
+                                        <option value="">Todos</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Licencia</th>
+                            <th>Habilitar</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="conductor in choferesViaje|filter:tipoConductor">
+                            <th scope="row">{{conductor.nombre}}</th>
+                            <td>{{conductor.licencia}} {{conductor.tipoLicencia.nombre}}</td>
+                            <td>
+                                <label>
+                                    <input ng-disabled="conductor.id_empleado" ng-model="conductor.habilitado"
+                                        name="switch-field-1" class="ace ace-switch ace-switch-5" type="checkbox">
+                                    <span class="lbl check-espaniol"></span>
+                                </label>
+                            </td>
+                            <td>
+                                <a class="green" ng-if="!conductor.id_empleado" href="javascript:void(0)"
+                                    ng-click="editarConductor(conductor)">
+                                    <i class="ace-icon fa fa-pencil bigger-130"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer wizard-actions">
+                <button class="btn btn-primary btn-sm" ng-click="guardarConductores()">
+                    <i class="glyphicon glyphicon-floppy-disk"></i>Guardar
+                </button>
+                <button class="btn btn-danger btn-sm pull-left" ng-click="cerrarModalConductoresViaje()">
+                    <i class="ace-icon fa fa-times"></i>Cancelar
+                </button>
+            </div>
+        </div>
+    </div>
+    <!--- fin modal conductor de viaje  ======== -->
+
+    <div id="dialog-conceptos" class="modal" ng-include src="'/templates/gral/concepto-edicion.html'"></div>
+    <!-- =========fondo rendir edit solicitud ========= -->
+    <div id="dialog-fondo-rendir-edicion-solicitud" class="modal">
+
+        <div class="modal-header bg-primary">
+            <h4 class="smaller text-white text-uppercase">
+                <i class="icono-prerequisito"></i>
+                <label> &nbsp;LA RENDICION YA FUE REALIZADA.</label>
+            </h4>
+        </div>
+        <div class="modal-body" align="center">
+            <h4 class="text-info">Acciones</h4>
+            <p><a class="blue" href="javascript:void(0)" ng-click="editarGastoFondo('ver')">Ver <i
+                        class="fa fa-search-plus" aria-hidden="true"></i></i></a></p>
+            <p><a class="green" href="javascript:void(0)"
+                    ng-hide="solicitud.estado.nombre_corto===diccionario.CC_ESTADO_VERIFICADO"
+                    ng-click="editarGastoFondo('editar')">Editar<i class="fa fa-pencil-square-o"
+                        aria-hidden="true"></i></a></p>
+            <p><a class="green tooltip-info"
+                    uib-tooltip="La rendición no puede ser editada, porque se encuentra procesada."
+                    tooltip-placement="left" href="javascript:void(0)"
+                    ng-show="solicitud.estado.nombre_corto===diccionario.CC_ESTADO_VERIFICADO"
+                    e-disabled="solicitud.estado.nombre_corto===diccionario.CC_ESTADO_VERIFICADO"
+                    ng-click="editarGastoFondo('editar')">Editar<i class="fa fa-pencil-square-o"
+                        aria-hidden="true"></i></a></p>
+            <p><a class="red" href="javascript:void(0)" ng-click="editarGastoFondo('imprimir')">Imprimir <i
+                        class="fa fa-print" aria-hidden="true"></i></a></p>
+        </div>
+        <div class="modal-footer wizard-actions">
+            <button type="button" class="btn btn-danger"
+                ng-click="cerrarModalFondoRendirEdicionSolicitud()">Cerrar</button>
+        </div>
+
+    </div>
+    <!-- ========= fin fondo rendir edit solicitud ========= -->

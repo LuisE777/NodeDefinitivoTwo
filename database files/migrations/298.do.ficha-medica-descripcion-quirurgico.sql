@@ -1,0 +1,1 @@
+alter table agil_medico_paciente_ficha add quirurgico_descripcion varchar(255) default NULL;

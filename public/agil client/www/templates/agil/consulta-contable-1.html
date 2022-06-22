@@ -1,0 +1,509 @@
+<a popover-trigger="outsideClick : outsideClick"
+uib-popover-template="PopoverCostos.templateUrl"
+popover-placement="left" class="btn btn-woBoxNar pull-right" type="button"
+id="id-btn-ServiciosConfig">
+      COSTOS
+</a>
+<script type="text/ng-template" id="PopoverCostos.html">
+<div class="form-control">
+    <a href="javascript:void(0)" class="blue" ng-click="generarExcelCostosResumido(filtro.inicio,filtro.fin)">prueba</a>
+</div>
+<div class="form-control">
+    <a href="javascript:void(0)" class="blue" ng-click="generarExcelCentroCostosResumido()">Resumido</a>
+</div>
+<div class="form-control">
+    <a href="javascript:void(0)" class="blue" ng-click=" ">Matricial</a>
+</div>
+</script>
+&nbsp &nbsp
+<a popover-trigger="outsideClick : outsideClick"
+    uib-popover-template="PopoverConfiguracionCostos.templateUrl"
+    popover-placement="left"  type="button"
+    id="id-btn-ServiciosConfig" class="pull-right">
+    <i class=" glyphicon glyphicon-cog bigger-300"> </i>
+</a>
+<script type="text/ng-template" id="PopoverConfiguracionCostos.html">
+    <div class="form-control">
+        <a href="javascript:void(0)" class="blue" ng-click="abrirConfiguracionAreaCostos()">Áreas de Costo</a>
+    </div>
+    <div class="form-control">
+        <a href="javascript:void(0)" class="blue" ng-click="abrirConfiguracionCentroCosto()">Centro de Costos</a>
+    </div>
+</script>
+
+<div class="row">
+	<div class="col-sm-12">
+		<!-- <h3 class="header smaller lighter blue"> </h3> -->
+		<div class="clearfix">
+			<div class="pull-right tableTools-container"></div>
+		</div>
+		<div class="tabbable" id="tab-reporte-estado-cliente">
+			
+			<ul class="nav nav-tabs" id="myTab">
+				<li class="active">
+					<a data-toggle="tab" href="javascript:void(0)" data-target="#tab-contable1" aria-expanded="true">
+						<i class="blue ace-icon fa fa-newspaper-o bigger-170"></i>
+						Contable/1
+					</a>
+				</li>
+
+				<li class="" >
+					<a data-toggle="tab" href="javascript:void(0)" data-target="#tab-contable2" aria-expanded="false">
+						<i class="blue ace-icon fa fa-truck bigger-170"></i>
+						Contable/2
+					</a>
+				</li>
+			</ul>
+
+			<div class="tab-content">
+				<div id="tab-contable1" class="tab-pane fade active in">
+					<fieldset>
+                        <div class="row">
+                            <div class="form-group col-sm-12 col-md-3 col-lg-9">
+                                <label>AÑO</label>&nbsp
+                                <select required id="gestion" name="gestion" 
+                                    ng-options="gestion.nombre_corto as gestion.nombre for gestion in gestiones | orderBy:'-nombre' track by gestion.id" 
+                                    ng-model="reporte.gestion" style="width:150px;">
+                                    <option value="">SELECCIONAR</option>
+                                </select>
+                                <label>MES</label>&nbsp
+                                <select id="mes" name="mes" ng-model="reporte.mes" style="width:150px;">
+                                    <option value="">TODOS</option>
+                                    <option value="1">ENERO</option>
+                                    <option value="2">FEBRERO</option>
+                                    <option value="3">MARZO</option>
+                                    <option value="4">ABRIL</option>
+                                    <option value="5">MAYO</option>
+                                    <option value="6">JUNIO</option>
+                                    <option value="7">JULIO</option>
+                                    <option value="8">AGOSTO</option>
+                                    <option value="9">SEPTIEMBRE</option>
+                                    <option value="10">OCTUBRE</option>
+                                    <option value="11">NOVIEMBRE</option>
+                                    <option value="12">DICIEMBRE</option>
+                                </select>&nbsp
+                                <button class="btn-primary button-glow" ng-if="!reporte.gestion" ng-click="" data-rel="tooltip" tooltip-placement="top" uib-tooltip="Primero debe seleccionar la gestión que desea ver en la tabla"><i class="ace-icon fa fa-angle-left align-top bigger-150"></i> GENERAR  DATOS</button>
+                                <button class="btn-xlsx button-glow" ng-click="filtrarCentroCostosTAblasDinamic(reporte)" ng-if="reporte.gestion"><i class="ace-icon fa fa-cloud-download align-top bigger-150"></i>GENERAR  DATOS</button>
+                            </div>
+                        </div>
+                        <hr style="margin-top: 0px;margin-bottom: 0px;border: 0;border-top: 1px solid #eee;">
+
+                        <!-- ========= TABLA  DINAMICA COSTOS ========= -->
+                        <div id="tablaDinamica"></div>
+                        <br><br><br><br>
+                        <div id="googlechart-container" style="height:600px;"></div>
+				    </fieldset>
+				</div>
+
+                <div id="tab-contable2" class="tab-pane">
+					<fieldset>
+                        <div class="row">
+                            <div class="form-group col-sm-12 col-md-3 col-lg-9">
+                                <label>AÑO</label>&nbsp
+                                <select required id="gestion" name="gestion" 
+                                    ng-options="gestion.nombre_corto as gestion.nombre for gestion in gestiones | orderBy:'-nombre' track by gestion.id" 
+                                    ng-model="reportee.gestion" style="width:150px;">
+                                    <option value="">SELECCIONAR</option>
+                                </select>
+                                <label>MES</label>&nbsp
+                                <select id="mes" name="mes" ng-model="reportee.mes" style="width:150px;">
+                                    <option value="">TODOS</option>
+                                    <option value="1">ENERO</option>
+                                    <option value="2">FEBRERO</option>
+                                    <option value="3">MARZO</option>
+                                    <option value="4">ABRIL</option>
+                                    <option value="5">MAYO</option>
+                                    <option value="6">JUNIO</option>
+                                    <option value="7">JULIO</option>
+                                    <option value="8">AGOSTO</option>
+                                    <option value="9">SEPTIEMBRE</option>
+                                    <option value="10">OCTUBRE</option>
+                                    <option value="11">NOVIEMBRE</option>
+                                    <option value="12">DICIEMBRE</option>
+                                </select>&nbsp
+                                <button class="btn-primary button-glow" ng-if="!reportee.gestion" ng-click="" data-rel="tooltip" tooltip-placement="top" uib-tooltip="Primero debe seleccionar la gestión que desea ver en la tabla"><i class="ace-icon fa fa-angle-left align-top bigger-150"></i> GENERAR  DATOS</button>
+                               <button class="btn-xlsx button-glow" ng-click="filtrarCentroCostosTAblasDinamicc(reportee)" ng-if="reportee.gestion"><i class="ace-icon fa fa-cloud-download align-top bigger-150"></i>GENERAR  DATOS</button>
+                            </div>
+                        </div>
+                        <hr style="margin-top: 0px;margin-bottom: 0px;border: 0;border-top: 1px solid #eee;">
+                        <br>
+                        <!-- ========= TABLA  DINAMICA COSTOS ========= -->
+                        <div id="tabla-dinamicaII"></div>
+				    </fieldset>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--<center><h1>CONTABLE 1</h1></center>
+
+ <div class="row">
+    <div class="form-group col-sm-6 col-md-3 col-lg-9">
+        <label>AÑO</label>&nbsp
+        <select required id="gestion" name="gestion" 
+            ng-options="gestion.nombre_corto as gestion.nombre for gestion in gestiones | orderBy:'-nombre' track by gestion.id" 
+            ng-model="reporte.gestion" style="width:150px;">
+            <option value="">SELECCIONAR</option>
+        </select>
+        <label>MES</label>&nbsp
+        <select id="mes" name="mes" ng-model="reporte.mes" style="width:150px;">
+            <option value="">TODOS</option>
+            <option value="1">ENERO</option>
+            <option value="2">FEBRERO</option>
+            <option value="3">MARZO</option>
+            <option value="4">ABRIL</option>
+            <option value="5">MAYO</option>
+            <option value="6">JUNIO</option>
+            <option value="7">JULIO</option>
+            <option value="8">AGOSTO</option>
+            <option value="9">SEPTIEMBRE</option>
+            <option value="10">OCTUBRE</option>
+            <option value="11">NOVIEMBRE</option>
+            <option value="12">DICIEMBRE</option>
+        </select>&nbsp
+        <button class="btn-primary button-glow" ng-if="!reporte.gestion" ng-click="" data-rel="tooltip" tooltip-placement="top" uib-tooltip="Primero debe seleccionar la gestión que desea ver en la tabla"><i class="ace-icon fa fa-angle-left align-top bigger-150"></i> GENERAR  DATOS</button>
+       <button class="btn-xlsx button-glow" ng-click="filtrarCentroCostosTAblasDinamic(reporte)" ng-if="reporte.gestion"><i class="ace-icon fa fa-cloud-download align-top bigger-150"></i>GENERAR  DATOS</button>
+    </div>
+    <div class="form-group col-sm-6 col-md-3 col-lg-3">
+         <a popover-trigger="outsideClick : outsideClick"
+            uib-popover-template="PopoverCostos.templateUrl"
+            popover-placement="left" class="btn btn-woBoxNar pull-right" type="button"
+            id="id-btn-ServiciosConfig">
+                  COSTOS
+        </a>
+        <script type="text/ng-template" id="PopoverCostos.html">
+            <div class="form-control">
+                <a href="javascript:void(0)" class="blue" ng-click="generarExcelCostosResumido(filtro.inicio,filtro.fin)">prueba</a>
+            </div>
+            <div class="form-control">
+                <a href="javascript:void(0)" class="blue" ng-click="generarExcelCentroCostosResumido()">Resumido</a>
+            </div>
+            <div class="form-control">
+                <a href="javascript:void(0)" class="blue" ng-click=" ">Matricial</a>
+            </div>
+        </script>
+           &nbsp &nbsp
+           <a popover-trigger="outsideClick : outsideClick"
+                uib-popover-template="PopoverConfiguracionCostos.templateUrl"
+                popover-placement="left"  type="button"
+                id="id-btn-ServiciosConfig" class="pull-right">
+                <i class=" glyphicon glyphicon-cog bigger-300"> </i>
+            </a>
+            <script type="text/ng-template" id="PopoverConfiguracionCostos.html">
+                        <div class="form-control">
+                           <a href="javascript:void(0)" class="blue" ng-click="abrirConfiguracionAreaCostos()">Áreas de Costo</a>
+                       </div>
+                       <div class="form-control">
+                           <a href="javascript:void(0)" class="blue" ng-click="abrirConfiguracionCentroCosto()">Centro de Costos</a>
+                       </div>
+               </script>
+    </div>
+</div>
+<hr style="margin-top: 0px;margin-bottom: 0px;border: 0;border-top: 1px solid #eee;"> -->
+
+ <!-- ========= TABLA  DINAMICA COSTOS ========= -->
+ 
+<!-- <div id="tablaDinamica"></div>
+<br><br><br><br>
+<div id="googlechart-container" style="height:600px;"></div> -->
+
+<!-- ========= TABLA  DINAMICA PROFORMA ========= -->
+<br><br><br><br>
+<!-- <div class="row">
+    <div class="form-group col-sm-6 col-md-3 col-lg-9">
+        <label>AÑO</label>&nbsp
+        <select required id="gestion" name="gestion" 
+            ng-options="gestion.nombre_corto as gestion.nombre for gestion in gestiones | orderBy:'-nombre' track by gestion.id" 
+            ng-model="reportee.gestion" style="width:150px;">
+            <option value="">SELECCIONAR</option>
+        </select>
+        <label>MES</label>&nbsp
+        <select id="mes" name="mes" ng-model="reportee.mes" style="width:150px;">
+            <option value="">TODOS</option>
+            <option value="1">ENERO</option>
+            <option value="2">FEBRERO</option>
+            <option value="3">MARZO</option>
+            <option value="4">ABRIL</option>
+            <option value="5">MAYO</option>
+            <option value="6">JUNIO</option>
+            <option value="7">JULIO</option>
+            <option value="8">AGOSTO</option>
+            <option value="9">SEPTIEMBRE</option>
+            <option value="10">OCTUBRE</option>
+            <option value="11">NOVIEMBRE</option>
+            <option value="12">DICIEMBRE</option>
+        </select>&nbsp
+        <button class="btn-primary button-glow" ng-if="!reportee.gestion" ng-click="" data-rel="tooltip" tooltip-placement="top" uib-tooltip="Primero debe seleccionar la gestión que desea ver en la tabla"><i class="ace-icon fa fa-angle-left align-top bigger-150"></i> GENERAR  DATOS</button>
+       <button class="btn-xlsx button-glow" ng-click="filtrarProformaTablasDinamic(reportee)" ng-if="reportee.gestion"><i class="ace-icon fa fa-cloud-download align-top bigger-150"></i>GENERAR  DATOS</button>
+    </div>
+</div>
+
+<div id="tablaDinamicaProforma"></div>
+<br><br><br><br>
+<div id="googlechart-containerr" style="height:600px;"></div> -->
+
+<!-- ========= TABLA  DINAMICA flexmon ========= -->
+ <div id="pivot-container"></div>
+
+
+
+
+ <!-- ========= Modal para área de costos ========= -->
+
+<div id="modalConfiguracionAreaCostos" style="overflow-x:hidden !important" class="modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="formConfiguracionActividadesEconomicas" name="form" novalidate
+                ng-submit="guardarDetallesAreaCostos(areasCentroCostos)">
+                <div class="row">
+                    <h2 align="center" class="blue">Área de Costos</h2>
+                </div>
+                <div id="modal-wizard-panel-container-actividad">
+                    <div class="modal-body step-content">
+                        <div class="step-pane active" >
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="row form-group">
+                                        <div class="col-lg-3">
+                                            <label for="">Área de Costo :</label>
+                                        </div>
+                                        <div class="col-lg-8">
+                                            <input type="text"  ng-model="AreaCosto.nombre">
+                                        </div>
+                                    </div>
+                                    <div class="row form-group">
+                                        <div class="col-lg-3">
+                                            <label for="">Descripción :</label>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <input type="text"  ng-model="AreaCosto.descripcion">
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <button type="button" class="btn-primary button-glow"  ng-if="!AreaCosto.editar" ng-click="agregarDetalleAreaCosto(AreaCosto)">
+                                                <i class="ace-icon fa fa-plus bigger-125"><br>Guardar</i>
+                                            </button>
+                                            <button type="button" class="btn-success button-glow"  ng-if="AreaCosto.editar" ng-click="guardarEdAreaCostos(AreaCosto)">
+                                                <i class="ace-icon fa fa-save bigger-125"><br>Agregar Cambios</i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="row form-group">
+                                        <div class="container-fluid">
+                                            <table class="table table-striped table-bordered table-hover">
+                                                <thead>
+                                                    <th>Área de Costo</th>
+                                                    <th>Descripción</th>
+                                                    <th>Acciones</th>
+                                                </thead>
+                                                <tbody>
+                                                    <tr ng-if="!ComAreaCosto.eliminado"
+                                                        ng-repeat="ComAreaCosto in areasCentroCostos track by $index">
+                                                        <td>
+                                                          {{ComAreaCosto.nombre}}
+                                                        </td>
+                                                        <td>
+                                                         {{ComAreaCosto.descripcion}}
+                                                        </td>
+                                                        <td>
+                                                            <a e-disabled="!aplicacion.puede_modificar" class="blue"
+                                                                ng-click="editarAreaCostos(ComAreaCosto,$index)" data-rel="tooltip"
+                                                                tooltip-placement="top" uib-tooltip="Modificar">
+                                                                <i class="ace-icon fa fa-pencil-square-o bigger-135"></i>
+                                                            </a>&nbsp &nbsp
+                                                            <a e-disabled="!aplicacion.puede_eliminar" class="red"
+                                                                ng-click="confirmarEliminarAreaCostos(ComAreaCosto)"
+                                                                data-rel="tooltip" tooltip-placement="top"
+                                                                uib-tooltip="Eliminar">
+                                                                <i class="ace-icon fa fa-trash-o bigger-135"></i>
+                                                            </a>
+                                                            
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer wizard-actions">
+                    <button type="submit"
+                        class="btn-success btn-sm btn-next button-glow">
+                        Confirmar Registro
+                        <i class="ace-icon fa fa-arrow-right icon-on-right"></i>
+                    </button>
+                    <button type="button" class="btn btn-danger btn-sm pull-left" data-dismiss="modal"
+                        ng-click="cerrarConfiguracionAreaCostos()">
+                        <i class="ace-icon fa fa-times"></i>
+                        Cancelar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- ========= Modal para Centro de Costos ========= -->
+<div id="modalConfiguracionCentroCosto" style="overflow-x:hidden !important" class="modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="" name="form" novalidate
+                ng-submit="">
+                        <h2 align="center" class="blue">Centro de Costos</h2>
+                        <hr style="margin-top: -10px;margin-bottom: 3px;border: 0;border-top: 1px solid #eee;">
+                <div class="row">
+                    <div class="col-lg-12 center">
+                        <div class="col-lg-6">
+                            <span class="lbl " style="vertical-align: super;">Valuación por Ventas</span>
+                            <input name="l " class="ace ace-switch ace-switch-4 ng-valid ng-dirty ng-valid-parse ng-not-empty ng-touched" type="checkbox" ng-model="opcionBimonetario0">
+                            <span class="lbl check-descuento"></span>
+                        </div>
+                        <div class="col-lg-6 center">
+                            <span class="lbl " style="vertical-align: super;">Valuación por Gastos</span>
+                            <input name="ll " class="ace ace-switch ace-switch-4 ng-valid ng-dirty ng-valid-parse ng-not-empty ng-touched" type="checkbox" ng-model="opcionBimonetario00">
+                            <span class="lbl check-descuento"></span>
+                        </div>
+                    </div>
+                </div>
+                <hr style="margin-top: 0px;margin-bottom: 0px;border: 0;border-top: 1px solid #eee;">
+                <div id="modal-wizard-panel-container-actividad">
+                    <div class="modal-body step-content">
+                        <div class="step-pane active" >
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="row form-group">
+                                        <div class="col-lg-4">
+                                            <label for="paterno">Centro de Costo</label>
+                                        </div>
+                                        <div class="col-lg-5">
+                                            <select style="max-width: 180px;width: 180px"
+                                                ng-change="obtenerListaDetalleCentroCostos(CentrCosto.centroCostoss.id)"
+                                                ng-options="ComCentroCosto as ComCentroCosto.nombre for ComCentroCosto in CentroCostos track by ComCentroCosto.id"
+                                                ng-model="CentrCosto.centroCostoss">
+                                                <option value="">SELECCIONAR</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row form-group">
+                                        <div class="col-lg-4">
+                                            <label>Área de Costo</label>
+                                        </div>
+                                        <div class="col-lg-5">
+                                            <select style="max-width: 180px;width: 180px" required
+                                                id="" name=""
+                                               ng-options="ComCentroCosto as ComCentroCosto.nombre for ComCentroCosto in areasCentroCostos track by ComCentroCosto.id"
+                                                ng-model="CentrCosto.areaCosto">
+                                                <option value="">SELECCIONAR</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row form-group">
+                                        <div class="col-lg-4">
+                                            <label>Descripción :</label>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <input type="text"  ng-model="CentrCosto.descripcion">
+                                            
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <button type="button" class="btn-primary button-glow" ng-if="!CentrCosto.editar" ng-click="guardarDetallesCentroCostos(CentrCosto)">
+                                                <i class="ace-icon fa fa-plus bigger-125"> <br>Guardar</i>
+                                            </button>
+                                            <button type="button"  class="btn-success button-glow"  ng-if="CentrCosto.editar" ng-click="guardarModifCentroCostos(CentrCosto)">
+                                                <i class="ace-icon fa fa-save bigger-125"> <br>Guardar Cambios</i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="row form-group">
+                                        <div class="container-fluid">
+                                            <table class="table table-striped table-bordered table-hover">
+                                                <thead>
+                                                    <th class="center">
+                                                        <label class="pos-rel">
+                                                            <input type="checkbox" class="ace" />
+                                                            <span class="lbl"></span>
+                                                        </label>
+                                                    </th>
+                                                    <th>Centro de Costo</th>
+                                                    <th>Área de Costo</th>
+                                                    <th>Descripción</th>
+                                                    <th>Acciones</th>
+                                                </thead>
+                                                <tbody>
+                                                    <tr ng-repeat="ComCentroCosto in centroCostosArea track by $index">
+                                                        <td class="center">
+                                                            <label>
+                                                                <input type="checkbox" class="ace" ng-click="TikCentroCostos(ComCentroCosto)" ng-model="ComCentroCosto.prorrateo"/>
+                                                                <span class="lbl"></span>
+                                                            </label>
+                                                        </td>
+                                                        <td>{{ComCentroCosto.centro_costo.nombre}}</td>
+                                                        <td>{{ComCentroCosto.area_costo.nombre}}</td>
+                                                        <td>{{ComCentroCosto.descripcion}}</td>
+                                                        <td>
+                                                            <a class="blue"
+                                                                ng-click="editarCentroCostos(ComCentroCosto)" >
+                                                                <i class="ace-icon fa fa-pencil-square-o bigger-135"></i>
+                                                            </a>&nbsp &nbsp
+                                                            <a e-disabled="!aplicacion.puede_eliminar" class="red"
+                                                                ng-click="confirmarEliminarCentroCostos(ComCentroCosto)"
+                                                                data-rel="tooltip" tooltip-placement="top"
+                                                                uib-tooltip="Eliminar">
+                                                                <i class="ace-icon fa fa-trash-o bigger-135"></i>
+                                                            </a>
+                                                            
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer wizard-actions">
+                   <!--  <button type="submit"
+                        class="btn btn-success btn-sm btn-next">
+                        Guardar
+                        <i class="ace-icon fa fa-arrow-right icon-on-right"></i>
+                    </button> -->
+                    <button type="button" class="btn btn-danger btn-sm pull-left" data-dismiss="modal"
+                        ng-click="cerrarConfiguracionCentroCosto()">
+                        <i class="ace-icon fa fa-times"></i>
+                        Cancelar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+

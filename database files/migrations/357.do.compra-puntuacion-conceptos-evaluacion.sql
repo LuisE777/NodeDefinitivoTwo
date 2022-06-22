@@ -1,0 +1,1 @@
+ALTER TABLE agil_detalle_calificacion_proveedor add puntuacion  int(11);

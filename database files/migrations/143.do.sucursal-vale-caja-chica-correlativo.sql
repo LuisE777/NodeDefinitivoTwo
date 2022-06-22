@@ -1,0 +1,1 @@
+ALTER TABLE agil_sucursal add vale_caja_chica_correlativo int(11);

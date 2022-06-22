@@ -1,0 +1,2077 @@
+<div class="row">
+	<div class="col-xs-12">
+		<h3 class="header smaller lighter blue">EMPRESAS</h3>
+
+		<button ng-if="usuario.rolesUsuario[0].rol.nombre==diccionario.USUARIO_SUPERADMIN"
+			ng-disabled="!aplicacion.puede_crear" class="btn btn-primary" ng-click="crearNuevaEmpresa()">
+			<i class="ace-icon fa fa-plus align-top bigger-125"></i>
+			Nuevo
+		</button>
+
+		<div class="clearfix">
+			<div class="pull-right tableTools-container"></div>
+		</div>
+		<div class="table-header">
+			Lista de Empresas
+		</div>
+
+		<!-- div.table-responsive -->
+
+		<!-- div.dataTables_borderWrap -->
+		<div style="overflow-x:auto;">
+			<table id="tabla-empresas" class="table table-striped table-bordered table-hover">
+				<thead>
+					<tr>
+						<th class="center">
+							<label class="pos-rel">
+								<input type="checkbox" class="ace" />
+								<span class="lbl"></span>
+							</label>
+						</th>
+						<th>Razón Social</th>
+						<th>Nombre comercial</th>
+						<th>Nit</th>
+						<th>Imagen</th>
+						<th>
+							<i class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>
+							Dirección
+						</th>
+						<th ng-if="usuario.rolesUsuario[0].rol.nombre!=diccionario.USUARIO_SUPERADMIN">Telefono 1</th>
+						<th ng-if="usuario.rolesUsuario[0].rol.nombre!=diccionario.USUARIO_SUPERADMIN">Telefono 2</th>
+						<th ng-if="usuario.rolesUsuario[0].rol.nombre!=diccionario.USUARIO_SUPERADMIN">Departamento</th>
+						<th ng-if="usuario.rolesUsuario[0].rol.nombre!=diccionario.USUARIO_SUPERADMIN">Municipio</th>
+						<th ng-if="usuario.rolesUsuario[0].rol.nombre==diccionario.USUARIO_SUPERADMIN">¿Usa Panel?</th>
+						<th ng-if="usuario.rolesUsuario[0].rol.nombre==diccionario.USUARIO_SUPERADMIN">¿Usa
+							Vencimientos?</th>
+						<th ng-if="usuario.rolesUsuario[0].rol.nombre==diccionario.USUARIO_SUPERADMIN">¿Usa Servicios?
+						</th>
+						<th ng-if="usuario.rolesUsuario[0].rol.nombre==diccionario.USUARIO_SUPERADMIN">¿Usa Consumos?
+						</th>
+						<th ng-if="usuario.rolesUsuario[0].rol.nombre==diccionario.USUARIO_SUPERADMIN">¿Usa Descuentos?
+						</th>
+						<th ng-if="usuario.rolesUsuario[0].rol.nombre==diccionario.USUARIO_SUPERADMIN">¿Usa Geo?</th>
+						<th ng-if="usuario.rolesUsuario[0].rol.nombre==diccionario.USUARIO_SUPERADMIN">¿Usa Pedidos?
+						</th>
+						<th>Acciones</th>
+					</tr>
+				</thead>
+
+				<tbody>
+					<tr ng-repeat="empresa in empresas">
+						<td class="center">
+							{{$index+1}}
+						</td>
+
+						<td>
+							{{empresa.razon_social}}
+						</td>
+						<td>
+							{{empresa.nombre_comercial}}
+						</td>
+						<td>{{empresa.nit}}</td>
+						<td>
+							<img src="{{empresa.imagen}}" width="50">
+						</td>
+						<td>{{empresa.direccion}}</td>
+						<td ng-if="usuario.rolesUsuario[0].rol.nombre!=diccionario.USUARIO_SUPERADMIN">
+							{{empresa.telefono1}}</td>
+						<td ng-if="usuario.rolesUsuario[0].rol.nombre!=diccionario.USUARIO_SUPERADMIN">
+							{{empresa.telefono2}}</td>
+						<td ng-if="usuario.rolesUsuario[0].rol.nombre!=diccionario.USUARIO_SUPERADMIN">
+							{{empresa.departamento.nombre}}</td>
+						<td ng-if="usuario.rolesUsuario[0].rol.nombre!=diccionario.USUARIO_SUPERADMIN">
+							{{empresa.municipio.nombre}}</td>
+						<td
+							ng-if="empresa.usar_panel && usuario.rolesUsuario[0].rol.nombre==diccionario.USUARIO_SUPERADMIN">
+							<span class="label label-sm label-success">Si</span>
+						</td>
+						<td
+							ng-if="!empresa.usar_panel && usuario.rolesUsuario[0].rol.nombre==diccionario.USUARIO_SUPERADMIN">
+							<span class="label label-sm label-warning">No</span>
+						</td>
+						<td
+							ng-if="empresa.usar_vencimientos && usuario.rolesUsuario[0].rol.nombre==diccionario.USUARIO_SUPERADMIN">
+							<span class="label label-sm label-success">Si</span>
+						</td>
+						<td
+							ng-if="!empresa.usar_vencimientos && usuario.rolesUsuario[0].rol.nombre==diccionario.USUARIO_SUPERADMIN">
+							<span class="label label-sm label-warning">No</span>
+						</td>
+						<td
+							ng-if="empresa.usar_servicios && usuario.rolesUsuario[0].rol.nombre==diccionario.USUARIO_SUPERADMIN">
+							<span class="label label-sm label-success">Si</span>
+						</td>
+						<td
+							ng-if="!empresa.usar_servicios && usuario.rolesUsuario[0].rol.nombre==diccionario.USUARIO_SUPERADMIN">
+							<span class="label label-sm label-warning">No</span>
+						</td>
+						<td
+							ng-if="empresa.usar_consumos && usuario.rolesUsuario[0].rol.nombre==diccionario.USUARIO_SUPERADMIN">
+							<span class="label label-sm label-success">Si</span>
+						</td>
+						<td
+							ng-if="!empresa.usar_consumos && usuario.rolesUsuario[0].rol.nombre==diccionario.USUARIO_SUPERADMIN">
+							<span class="label label-sm label-warning">No</span>
+						</td>
+						<td
+							ng-if="empresa.usar_descuentos && usuario.rolesUsuario[0].rol.nombre==diccionario.USUARIO_SUPERADMIN">
+							<span class="label label-sm label-success">Si</span>
+						</td>
+						<td
+							ng-if="!empresa.usar_descuentos && usuario.rolesUsuario[0].rol.nombre==diccionario.USUARIO_SUPERADMIN">
+							<span class="label label-sm label-warning">No</span>
+						</td>
+						<td
+							ng-if="empresa.usar_georeferenciacion && usuario.rolesUsuario[0].rol.nombre==diccionario.USUARIO_SUPERADMIN">
+							<span class="label label-sm label-success">Si</span>
+						</td>
+						<td
+							ng-if="!empresa.usar_georeferenciacion && usuario.rolesUsuario[0].rol.nombre==diccionario.USUARIO_SUPERADMIN">
+							<span class="label label-sm label-warning">No</span>
+						</td>
+						<td
+							ng-if="empresa.usar_pedidos && usuario.rolesUsuario[0].rol.nombre==diccionario.USUARIO_SUPERADMIN">
+							<span class="label label-sm label-success">Si</span>
+						</td>
+						<td
+							ng-if="!empresa.usar_pedidos && usuario.rolesUsuario[0].rol.nombre==diccionario.USUARIO_SUPERADMIN">
+							<span class="label label-sm label-warning">No</span>
+						</td>
+						<td>
+							<div class="hidden-sm hidden-xs action-buttons">
+								<a class="blue" href="javascript:void(0)" e-disabled="!aplicacion.puede_ver"
+									ng-click="verEmpresa(empresa)">
+									<i class="ace-icon fa fa-search-plus bigger-130"></i>
+								</a>
+
+								<a class="green" href="javascript:void(0)" e-disabled="!aplicacion.puede_modificar"
+									ng-click="modificarEmpresa(empresa)">
+									<i class="ace-icon fa fa-pencil bigger-130"></i>
+								</a>
+
+								<a class="red" href="javascript:void(0)" e-disabled="!aplicacion.puede_eliminar"
+									ng-click="mostrarConfirmacionEliminacion(empresa)">
+									<i class="ace-icon fa fa-trash-o bigger-130"></i>
+								</a>
+								<a class="blue" href="javascript:void(0)" e-disabled="!aplicacion.puede_modificar"
+									ng-click="abrirModalCorrelativoEmpresa(empresa)">
+									<i class="ace-icon fa fa-bookmark bigger-130"></i>
+								</a>
+								<a class="blue" href="javascript:void(0)" e-disabled="!aplicacion.puede_modificar"
+									ng-if="usuario.empresa.usar_configuracion_iso"
+									ng-click="abrirModalConfiguracionIso(sucursal)">
+									<img src="img/iso.png" height="25" width="25" alt="">
+								</a>
+
+								<a class="text-warning orange tooltip-info" href="javascript:void(0)" e-disabled="!aplicacion.puede_modificar"
+									data-rel="tooltip" tooltip-placement="left"
+									uib-tooltip="Reporte de saldos negativos" tooltip-append-to-body="true"
+									ng-click="reporteItemsEmpresa(empresa)">
+									<i class="fa  fa-cube bigger-120">!</i>
+								</a>
+								<a ng-if="empresa.usar_facturacion_electronica && usuario.rolesUsuario[0].rol.nombre==diccionario.USUARIO_SUPERADMIN" class="text-warning blue tooltip-info" href="javascript:void(0)" e-disabled="!aplicacion.puede_modificar"
+									data-rel="tooltip" tooltip-placement="left"
+									uib-tooltip="Config Sistema Facturación Electronica Web" tooltip-append-to-body="true"
+									ng-click="configFacturacionElectWeb(empresa)">
+									<i class="ace-icon icono-impuestos bigger-140"></i>
+								</a>
+								
+							</div>
+
+							<div class="hidden-md hidden-lg">
+								<div class="inline pos-rel">
+									<button class="btn btn-minier btn-yellow dropdown-toggle" data-toggle="dropdown"
+										data-position="auto">
+										<i class="ace-icon fa fa-caret-down icon-only bigger-120"></i>
+									</button>
+
+									<ul
+										class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-menu-right dropdown-caret dropdown-close">
+										<li>
+											<a href="javascript:void(0)" e-disabled="!aplicacion.puede_ver"
+												ng-click="verEmpresa(empresa)" class="tooltip-info" data-rel="tooltip"
+												title="View">
+												<span class="blue">
+													<i class="ace-icon fa fa-search-plus bigger-120"></i>
+												</span>
+											</a>
+										</li>
+
+										<li>
+											<a href="javascript:void(0)" e-disabled="!aplicacion.puede_modificar"
+												ng-click="modificarEmpresa(empresa)" class="tooltip-success"
+												data-rel="tooltip" title="Edit">
+												<span class="green">
+													<i class="ace-icon fa fa-pencil-square-o bigger-120"></i>
+												</span>
+											</a>
+										</li>
+
+										<li>
+											<a href="javascript:void(0)" e-disabled="!aplicacion.puede_eliminar"
+												ng-click="mostrarConfirmacionEliminacion(empresa)" class="tooltip-error"
+												data-rel="tooltip" title="Delete">
+												<span class="red">
+													<i class="ace-icon fa fa-trash-o bigger-120"></i>
+												</span>
+											</a>
+										</li>
+									</ul>
+								</div>
+							</div>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+
+<div id="modal-wizard-empresa" class="modal wizard-posicion">
+	<!-- <div class="modal-dialog">
+		<div class="modal-content"> -->
+	<form ng-submit="saveForm(empresa)">
+		<div id="modal-wizard-container-empresa-edicion">
+			<div class="modal-header">
+				<ul class="steps">
+					<li data-step="1" class="active">
+						<span class="step">1</span>
+						<span class="title">Datos de la Empresa</span>
+					</li>
+					<li data-step="2" class="active">
+						<span class="step">2</span>
+						<span class="title">Datos Adicionales</span>
+					</li>
+					<li data-step="3" ng-if="esNuevo">
+						<span class="step">3</span>
+						<span class="title">Datos de la Sucursal Principal</span>
+					</li>
+					<li data-step="4" class="active">
+						<span class="step">4</span>
+						<span class="title">Representante Legal</span>
+					</li>
+					<li data-step="5">
+						<span class="step">5</span>
+						<span class="title">Finalización</span>
+					</li>
+				</ul>
+			</div>
+
+			<div class="modal-body step-content">
+				<div class="step-pane active" data-step="1">
+					<div class="form-group row"
+						ng-if="usuario.rolesUsuario[0].rol.nombre==diccionario.USUARIO_SUPERADMIN">
+						<label class=" col-md-3 control-label no-padding-right" for="peps">Usar inventarios
+							PEPS/FIFO</label>
+						<div class="col-md-9">
+							<label uib-tooltip="Usar PEPS/FIFO">
+								<input checked="checked" type="checkbox" id="peps" ng-model="empresa.usar_peps"
+									placeholder="Razón Social" class="ace ace-switch ace-switch-5" />
+								<span class="lbl"
+									data-lbl="Si&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;No"></span>
+							</label>
+
+						</div>
+					</div>
+					<div class="row">
+						<div class="form-group col-sm-12 col-md-3 col-lg-3">
+							<label class="control-label no-padding-right" for="razon_social">Razón Social</label>
+							<div>
+								<input required type="text" id="razon_social" ng-model="empresa.razon_social"
+									placeholder="Razón Social" class="form-control" />
+							</div>
+						</div>
+
+						<div class="form-group col-sm-12 col-md-3 col-lg-3">
+							<label class="control-label no-padding-right" for="nombre_comercial">Nombre
+								Comercial</label>
+
+							<div>
+								<input type="text" id="nombre_comercial" ng-model="empresa.nombre_comercial"
+									placeholder="Nombre comercial" class="form-control" />
+							</div>
+						</div>
+						<div class="form-group col-sm-12 col-md-3 col-lg-3">
+							<label class="control-label no-padding-right" for="nit">NIT</label>
+
+							<div>
+								<input required type="text" id="nit" ng-model="empresa.nit" placeholder="nit"
+									class="form-control" />
+							</div>
+						</div>
+						<!-- 
+
+						<div class="space-4"></div> -->
+
+						<div class="form-group col-sm-12 col-md-3 col-lg-3">
+							<label class="col-sm-3 control-label no-padding-right" for="direccion">Dirección</label>
+
+							<div>
+								<input required type="text" id="direccion" ng-model="empresa.direccion"
+									placeholder="dirección" class="form-control" />
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="form-group col-sm-12 col-md-2 col-lg-2">
+							<label class="control-label no-padding-right" for="telefono1">Teléfono 1</label>
+
+							<div>
+								<input type="text" id="telefono1" ng-model="empresa.telefono1" placeholder="telefono 1"
+									class="form-control" />
+							</div>
+						</div>
+						<div class="form-group col-sm-12 col-md-2 col-lg-2">
+							<label class="control-label no-padding-right" for="telefono2">Teléfono 2</label>
+
+							<div>
+								<input type="text" id="telefono2" ng-model="empresa.telefono2" placeholder="telefono 2"
+									class="form-control" />
+							</div>
+						</div>
+						<div class="form-group col-sm-12 col-md-2 col-lg-2">
+							<label class="control-label no-padding-right" for="telefono3">Teléfono 3</label>
+
+							<div>
+								<input type="text" id="telefono3" ng-model="empresa.telefono3" placeholder="telefono 3"
+									class="form-control" />
+							</div>
+						</div>
+						<div class="form-group col-sm-12 col-md-3 col-lg-3"
+							ng-if="usuario.rolesUsuario[0].rol.nombre==diccionario.USUARIO_SUPERADMIN">
+							<label class="control-label no-padding-right">Departamento</label>
+
+							<div>
+								<select required id="departamento" name="departamento"
+									data-placeholder="Click para escoger" ng-model="empresa.id_departamento"
+									ng-change="buscarMunicipios(empresa.id_departamento)" class="form-control">
+									<option ng-selected="departamento.id==empresa.id_departamento"
+										ng-repeat="departamento in departamentos"
+										value="{{departamento.id}}-{{departamento.nombre_corto}}">
+										{{departamento.nombre}}
+									</option>
+								</select>
+							</div>
+						</div>
+						<div class="form-group col-sm-12 col-md-3 col-lg-3"
+							ng-if="usuario.rolesUsuario[0].rol.nombre==diccionario.USUARIO_SUPERADMIN">
+							<label class="control-label no-padding-right">Municipio</label>
+
+							<div>
+								<select required id="municipio" name="municipio" data-placeholder="Click para escoger"
+									ng-model="empresa.id_municipio" class="form-control">
+									<option ng-selected="municipio.id==empresa.id_municipio"
+										ng-repeat="municipio in municipios" value="{{municipio.id}}">
+										{{municipio.nombre}}
+									</option>
+								</select>
+							</div>
+						</div>
+						<div class="form-group col-sm-12 col-md-12 col-lg-12">
+							<div class="form-group col-sm-12 col-md-4 col-lg-4" ng-if="usuario.rolesUsuario[0].rol.nombre == diccionario.USUARIO_SUPERADMIN || usuario.rolesUsuario[0].rol.nombre == diccionario.ROL_ADMINISTRADOR && empresa.usar_facturacion_electronica">
+								<label class="control-label no-padding-right">Usar Facturación Electrónica WEB en línea</label>
+								<label class="bigger pull-right">
+									<input name="switch-field-1" class="ace ace-switch ace-switch-4" type="checkbox" ng-model="empresa.usar_facturacion_electronica" ng-disabled="usuario.rolesUsuario[0].rol.nombre != diccionario.USUARIO_SUPERADMIN"/>
+									<span class="lbl check-descuento"></span>
+								</label>
+								<div class="hr hr9 hr-double"></div>
+							</div>
+							<div class="form-group col-sm-12 col-md-12 col-lg-12" id="flex-container" ng-show="empresa.usar_facturacion_electronica && usuario.rolesUsuario[0].rol.nombre == diccionario.USUARIO_SUPERADMIN">
+								<div class="form-group col-sm-12 col-md-3 col-lg-3">
+									<label class="control-label no-padding-right">Código de Sistema</label>
+									<div class="input-group">
+										<input type="text" ng-model="empresa.facturacionConfigEmpresa.codigoSistema" placeholder="Código de Sistema" class="form-control" /> 
+										<span class="red input-group-addon">(*)</span>
+									</div>
+								</div>
+								<div class="form-group col-sm-12 col-md-3 col-lg-3">
+									<label class="control-label no-padding-right">Código de Ambiente</label>
+									<div class="input-group">
+										<input type="text" ng-model="empresa.facturacionConfigEmpresa.codigoAmbiente" placeholder="Código de Ambiente" class="form-control" />
+										<span class="red input-group-addon">(*)</span> 
+									</div>
+								</div>
+								<div class="form-group col-sm-12 col-md-3 col-lg-3">
+									<label class="control-label no-padding-right">Código de Modalidad</label>
+									<div class="input-group">
+										<input type="text" ng-model="empresa.facturacionConfigEmpresa.codigoModalidad" placeholder="Código de Modalidad" class="form-control" /> 
+										<span class="red input-group-addon">(*)</span> 
+									</div>
+								</div>
+								<div class="form-group col-sm-12 col-md-3 col-lg-3">
+									<label class="control-label no-padding-right">TokenSin</label>
+									<div class="input-group">
+										<input type="text" ng-model="empresa.facturacionConfigEmpresa.tokenSin" placeholder="Token" class="form-control" /> 
+										<span class="red input-group-addon">(*)</span> 
+									</div>
+								</div>
+								<div class="form-group col-sm-12 col-md-3 col-lg-3">
+									<label class="control-label no-padding-right">firma Digital</label>
+									<div class="input-group">
+										<input type="file" files-input ng-model="empresa.facturacionConfigEmpresa.firmaDigital"
+                                        id="id-firmadigital" />
+										<span class="red input-group-addon">(*)</span> 
+									</div>
+								</div>
+								<div class="form-group col-sm-12 col-md-3 col-lg-3">
+									<label class="control-label no-padding-right">password Firma</label>
+									<div class="input-group">
+										<input type="text" ng-model="empresa.facturacionConfigEmpresa.passwordFirma" placeholder="passwordFirma" class="form-control" /> 
+										<span class="red input-group-addon">(*)</span> 
+									</div>
+								</div>
+								<div class="form-group col-sm-12 col-md-3 col-lg-3"> 
+									<label class="control-label no-padding-right"> CUFD Automático ?
+										<input checked="checked" type="checkbox" ng-model="empresa.facturacionConfigEmpresa.cufdAutomatico" class="ace ace-switch ace-switch-5"/>
+										<span class="lbl"
+											data-lbl="Si&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;No"></span>
+									</label>
+								</div>
+							</div> 
+						</div>
+						<div class="form-group col-sm-12 col-md-12 col-lg-12">
+							<div class="form-group col-sm-12 col-md-3 col-lg-3" ng-if="usuario.rolesUsuario[0].rol.nombre == diccionario.USUARIO_SUPERADMIN || usuario.rolesUsuario[0].rol.nombre == diccionario.ROL_ADMINISTRADOR && empresa.usar_envio_correos">
+								<label class="control-label no-padding-right">Usar envio de correos ?</label>
+								<label class="bigger pull-right">
+									<input name="switch-field-1" class="ace ace-switch ace-switch-4" type="checkbox" ng-model="empresa.usar_envio_correos" ng-disabled="usuario.rolesUsuario[0].rol.nombre != diccionario.USUARIO_SUPERADMIN"/>
+									<span class="lbl check-descuento"></span>
+								</label>
+								<div class="hr hr9 hr-double"></div>
+							</div>
+							<div class="form-group col-sm-12 col-md-12 col-lg-12" id="flex-container" ng-if="empresa.usar_envio_correos && usuario.rolesUsuario[0].rol.nombre == diccionario.ROL_ADMINISTRADOR">
+								<div class="form-group col-sm-12 col-md-2 col-lg-2" ng-if="usuario.rolesUsuario[0].rol.nombre == diccionario.USUARIO_SUPERADMIN || (usuario.rolesUsuario[0].rol.nombre == diccionario.ROL_ADMINISTRADOR && empresa.usar_envio_correos)"> 
+									<label class="control-label no-padding-right"> Usar Correo Institucional ?
+										<input checked="checked" type="checkbox" ng-model="empresa.usar_correo_imstitucional" class="ace ace-switch ace-switch-5"/>
+										<span class="lbl"
+											data-lbl="Si&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;No"></span>
+									</label>
+								</div>
+								<div class="form-group col-sm-12 col-md-2 col-lg-2" ng-if="empresa.usar_correo_imstitucional">
+									<label class="control-label no-padding-right">Host</label>
+									<div>
+										<input type="text" ng-model="empresa.email_host" placeholder="Outgoing Server" class="form-control" />
+									</div>
+								</div>
+								<div class="form-group col-sm-12 col-md-2 col-lg-2" ng-if="empresa.usar_correo_imstitucional" >
+									<label class="control-label no-padding-right">Puerto</label>
+									<div>
+										<input type="text" ng-model="empresa.email_puerto" placeholder="SMTP Port" class="form-control" />
+									</div>
+								</div>
+								<div class="form-group col-sm-12 col-md-2 col-lg-2" >
+									<label class="control-label no-padding-right">Usuario-email</label>
+									<div>
+										<input type="text" ng-model="empresa.email_empresa_aplicacion" placeholder="eooo@eoo.com" class="form-control" />
+									</div>
+								</div>
+								<div class="form-group col-sm-12 col-md-2 col-lg-2">
+									<label class="control-label no-padding-right">Password</label>
+									<div>
+										<input type="text" ng-model="empresa.email_password_aplicacion" placeholder="Ingrese Password " class="form-control" />
+									</div>
+								</div>
+								<div class="form-group col-sm-12 col-md-2 col-lg-2">
+									<label class="control-label no-padding-right">Asunto Email</label>
+									<div>
+										<input type="text" ng-model="empresa.asunto_email" placeholder="Ingrese Asunto" class="form-control" />
+									</div>
+								</div>
+							</div> 
+						</div>
+					</div>
+					<div class="form-group col-sm-12 col-md-12 col-lg-12" ng-if="usuario.rolesUsuario[0].rol.nombre==diccionario.USUARIO_SUPERADMIN">
+						<label class="control-label col-xs-12 col-sm-2 no-padding-right">Imagen/Logo</label>
+						<div class="col-xs-12 col-xs-12 col-sm-9">
+							<img ng-if="empresa.id" src="{{empresa.imagen}}" width="100">
+							<input type="file" id="imagen-empresa"
+								onchange="uploadImage(this,'imagen-empresa-oculto')" />
+							<input id="imagen-empresa-oculto" ng-model="empresa.imagen" name="imagen" type="hidden"
+								ng-update-hidden>
+						</div>
+					</div>
+				</div>
+				<div class="step-pane" data-step="2">
+					<div class="form-group" ng-if="usuario.rolesUsuario[0].rol.nombre!=diccionario.USUARIO_SUPERADMIN">
+						<label class="control-label col-xs-12 col-sm-3 no-padding-right">Departamento</label>
+
+						<div class="col-xs-12 col-sm-9">
+							<select required id="departamento" name="departamento" data-placeholder="Click para escoger"
+								ng-model="empresa.id_departamento"
+								ng-change="buscarMunicipios(empresa.id_departamento)">
+								<option ng-selected="departamento.id==empresa.id_departamento"
+									ng-repeat="departamento in departamentos"
+									value="{{departamento.id}}-{{departamento.nombre_corto}}">{{departamento.nombre}}
+								</option>
+							</select>
+						</div>
+					</div>
+
+					<div class="form-group" ng-if="usuario.rolesUsuario[0].rol.nombre!=diccionario.USUARIO_SUPERADMIN">
+						<label class="control-label col-xs-12 col-sm-3 no-padding-right">Municipio</label>
+
+						<div class="col-xs-12 col-sm-9">
+							<select required id="municipio" name="municipio" data-placeholder="Click para escoger"
+								ng-model="empresa.id_municipio">
+								<option ng-selected="municipio.id==empresa.id_municipio"
+									ng-repeat="municipio in municipios" value="{{municipio.id}}">{{municipio.nombre}}
+								</option>
+							</select>
+						</div>
+					</div>
+					<div class="form-group" ng-if="usuario.rolesUsuario[0].rol.nombre!=diccionario.USUARIO_SUPERADMIN">
+						<label class="control-label col-xs-12 col-sm-3 no-padding-right">Imagen/Logo</label>
+						<div class="col-xs-12 col-xs-12 col-sm-9">
+							<img ng-if="empresa.id" src="{{empresa.imagen}}" width="100">
+							<input type="file" id="imagen-empresa"
+								onchange="uploadImage(this,'imagen-empresa-oculto')" />
+							<input id="imagen-empresa-oculto" ng-model="empresa.imagen" name="imagen" type="hidden"
+								ng-update-hidden>
+						</div>
+					</div>
+
+					<div class="row form-group" ng-hide="usuario.empresa">
+						<div class="col-lg-5">
+							<label for="aplicaciones">Aplicaciones</label>
+							<!-- <label for="cargo">Cargos:</label> -->
+						</div>
+
+						<div class="col-lg-7">
+							<!-- <div isteven-multi-select input-model="aplicacionesSistema" output-model="empresa.aplicaciones" button-label="icon name"
+							 item-label="icon name maker" tick-property="ticked">
+							</div> -->
+							<div isteven-multi-select input-model="aplicacionesSistema"
+								output-model="empresa.aplicaciones" button-label="icon name"
+								item-label="icon name maker" tick-property="ticked" max-labels="4"
+								translation="localLang">
+							</div>
+							<!-- 	<isteven-multi-select input-model="aplicacionesSistema" output-model="empresa.aplicaciones" button-label="icon name" item-label="icon name maker"
+							 tick-property="ticked">
+							</isteven-multi-select> -->
+						</div>
+					</div>
+					<!-- <div class="col-md-6"> -->
+					<div class="hr hr8 hr-double"></div>
+					<div ng-if="usuario.rolesUsuario[0].rol.nombre==diccionario.USUARIO_SUPERADMIN">
+						<div class="row ">
+							<div class="col-md-4 col-lg-4 col-sm-12">
+								<label class="control-label no-padding-right">¿Usar Panel?</label>
+								<a href="javascript:void(0)" class="green" data-rel="tooltip" data-placement="top"
+									uib-tooltip='Habilita e panel rápido de ventas (VENTAS)'><i
+										class="fa fa-exclamation-circle fa-2x" aria-hidden="true"></i></a>
+								<label class="bigger pull-right">
+									<input name="switch-field-1" class="ace ace-switch ace-switch-4" type="checkbox"
+										ng-model="empresa.usar_panel" />
+									<span class="lbl check-descuento"></span>
+								</label>
+								<div class="hr hr8 hr-double"></div>
+							</div>
+							<div class="col-md-4 col-lg-4 col-sm-12">
+								<label class="control-label no-padding-right">¿Usar Vencimientos?</label>
+								<a href="javascript:void(0)" class="green" data-rel="tooltip" data-placement="top"
+									uib-tooltip='Habilita las alertas, de vencimientos para créditos (ALERTAS)'><i
+										class="fa fa-exclamation-circle fa-2x" aria-hidden="true"></i></a>
+								<label class="bigger pull-right">
+									<input name="switch-field-1" class="ace ace-switch ace-switch-4" type="checkbox"
+										ng-model="empresa.usar_vencimientos" />
+									<span class="lbl check-descuento"></span>
+								</label>
+								<div class="hr hr8 hr-double"></div>
+							</div>
+							<div class="col-md-4 col-lg-4 col-sm-12" ng-if="empresa.usar_vencimientos">
+								<label class="control-label no-padding-right">¿Usar Vencimiento
+									Productos?</label>
+								<a href="javascript:void(0)" class="green" data-rel="tooltip" data-placement="top"
+									uib-tooltip='Habilita el uso de fechas de vencimiento y lotes/series para todos los productos (COMPRAS – VENTAS – ALMACENES - INVENTARIOS - COTIZACIONES)'><i
+										class="fa fa-exclamation-circle fa-2x" aria-hidden="true"></i></a>
+								<label class="bigger pull-right">
+									<input name="switch-field-1" class="ace ace-switch ace-switch-4" type="checkbox"
+										ng-model="empresa.usar_vencimiento_productos" />
+									<span class="lbl check-descuento"></span>
+								</label>
+								<div class="hr hr8 hr-double"></div>
+							</div>
+							<div class="col-md-4 col-lg-4 col-sm-12" ng-if="empresa.usar_vencimientos">
+								<label class="control-label no-padding-right">¿Usar Vencimiento
+									Creditos?</label>
+								<a href="javascript:void(0)" class="green" data-rel="tooltip" data-placement="top"
+									uib-tooltip='Habilita las alertas, de vencimientos para créditos (ALERTAS)'><i
+										class="fa fa-exclamation-circle fa-2x" aria-hidden="true"></i></a>
+								<label class="bigger pull-right">
+									<input name="switch-field-1" class="ace ace-switch ace-switch-4" type="checkbox"
+										ng-model="empresa.usar_vencimiento_creditos" />
+									<span class="lbl check-descuento"></span>
+								</label>
+								<div class="hr hr8 hr-double"></div>
+							</div>
+							<div class="col-md-4 col-lg-4 col-sm-12" ng-if="empresa.usar_vencimientos">
+								<label class="control-label no-padding-right">¿Usar Vencimiento
+									Deudas?</label>
+								<a href="javascript:void(0)" class="green" data-rel="tooltip" data-placement="top"
+									uib-tooltip='Habilita las alertas de vencimientos de créditos'><i
+										class="fa fa-exclamation-circle fa-2x" aria-hidden="true"></i></a>
+								<label class="bigger pull-right">
+									<input name="switch-field-1" class="ace ace-switch ace-switch-4" type="checkbox"
+										ng-model="empresa.usar_vencimiento_deudas" />
+									<span class="lbl check-descuento"></span>
+								</label>
+								<div class="hr hr8 hr-double"></div>
+							</div>
+							<div class="col-md-4 col-lg-4 col-sm-12">
+								<label class="control-label no-padding-right">¿Usar Servicios?</label>
+								<a href="javascript:void(0)" class="green" data-rel="tooltip" data-placement="top"
+									uib-tooltip='falta informacion pabel!'><i class="fa fa-exclamation-circle fa-2x"
+										aria-hidden="true"></i></a>
+								<label class="bigger pull-right">
+									<input name="switch-field-1" class="ace ace-switch ace-switch-4" type="checkbox"
+										ng-model="empresa.usar_servicios" />
+									<span class="lbl check-descuento"></span>
+								</label>
+								<div class="hr hr8 hr-double"></div>
+							</div>
+							<div class="col-md-4 col-lg-4 col-sm-12">
+								<label class="control-label no-padding-right">¿Usar Consumos?</label>
+								<a href="javascript:void(0)" class="green" data-rel="tooltip" data-placement="top"
+									uib-tooltip='Habilita los productos intermedios y productos finales  (PRODUCTOS)'><i
+										class="fa fa-exclamation-circle fa-2x" aria-hidden="true"></i></a>
+								<label class="bigger pull-right">
+									<input name="switch-field-1" class="ace ace-switch ace-switch-4" type="checkbox"
+										ng-model="empresa.usar_consumos" />
+									<span class="lbl check-descuento"></span>
+								</label>
+								<div class="hr hr8 hr-double"></div>
+							</div>
+							<div class="col-md-4 col-lg-4 col-sm-12">
+								<label class="control-label no-padding-right">¿Usar Descuentos?</label>
+								<a href="javascript:void(0)" class="green" data-rel="tooltip" data-placement="top"
+									uib-tooltip='Habilita los descuentos automáticos en productos, predeterminados y Fijos (PRODUCTO)!'><i
+										class="fa fa-exclamation-circle fa-2x" aria-hidden="true"></i></a>
+								<label class="bigger pull-right">
+									<input name="switch-field-1" class="ace ace-switch ace-switch-4" type="checkbox"
+										ng-model="empresa.usar_descuentos" />
+									<span class="lbl check-descuento"></span>
+								</label>
+								<div class="hr hr8 hr-double"></div>
+							</div>
+							<div class="col-md-4 col-lg-4 col-sm-12">
+								<label class="control-label no-padding-right">¿Usar Georeferenciación?</label>
+								<a href="javascript:void(0)" class="green" data-rel="tooltip" data-placement="top"
+									uib-tooltip='falta informacion pabel!'><i class="fa fa-exclamation-circle fa-2x"
+										aria-hidden="true"></i></a>
+								<label class="bigger pull-right">
+									<input name="switch-field-1" class="ace ace-switch ace-switch-4" type="checkbox"
+										ng-model="empresa.usar_georeferenciacion" />
+									<span class="lbl check-descuento"></span>
+								</label>
+								<div class="hr hr8 hr-double"></div>
+							</div>
+							<div class="col-md-4 col-lg-4 col-sm-12">
+								<label class="control-label no-padding-right">¿Usar Pedidos?</label>
+								<a href="javascript:void(0)" class="green" data-rel="tooltip" data-placement="top"
+									uib-tooltip='Habilita la impresión de comandas'><i class="fa fa-exclamation-circle fa-2x"
+										aria-hidden="true"></i></a>
+								<label class="bigger pull-right">
+									<input name="switch-field-1" class="ace ace-switch ace-switch-4" type="checkbox"
+										ng-model="empresa.usar_pedidos" />
+									<span class="lbl check-descuento"></span>
+								</label>
+								<div class="hr hr8 hr-double"></div>
+							</div>
+							<div class="col-md-4 col-lg-4 col-sm-12">
+								<label class="control-label no-padding-right">¿Usar Pantalla Cliente?</label>
+								<a href="javascript:void(0)" class="green" data-rel="tooltip" data-placement="top"
+									uib-tooltip='Habilita pantalla para el cliente visualice la transacción realizada (PANTALLAS)'><i
+										class="fa fa-exclamation-circle fa-2x" aria-hidden="true"></i></a>
+								<label class="bigger pull-right">
+									<input name="switch-field-1" class="ace ace-switch ace-switch-4" type="checkbox"
+										ng-model="empresa.usar_pantalla_cliente" />
+									<span class="lbl check-descuento"></span>
+								</label>
+								<div class="hr hr8 hr-double"></div>
+							</div>
+							<div class="col-md-4 col-lg-4 col-sm-12">
+								<label class="control-label no-padding-right">¿Usar Pantalla Despacho?</label>
+								<a href="javascript:void(0)" class="green" data-rel="tooltip" data-placement="top"
+									uib-tooltip='Habilita el uso de pantalla de despachos para restaurantes. (PANTALLAS)'><i
+										class="fa fa-exclamation-circle fa-2x" aria-hidden="true"></i></a>
+								<label class="bigger pull-right">
+									<input name="switch-field-1" class="ace ace-switch ace-switch-4" type="checkbox"
+										ng-model="empresa.usar_pantalla_despacho" />
+									<span class="lbl check-descuento"></span>
+								</label>
+								<div class="hr hr8 hr-double"></div>
+							</div>
+							<div class="col-md-4 col-lg-4 col-sm-12">
+								<label class="control-label no-padding-right">¿Usar Mesas?</label>
+								<a href="javascript:void(0)" class="green" data-rel="tooltip" data-placement="top"
+									uib-tooltip='Habilita el uso de mesas para El sistema Restaurant (MESAS)'><i
+										class="fa fa-exclamation-circle fa-2x" aria-hidden="true"></i></a>
+								<label class="bigger pull-right">
+									<input name="switch-field-1" class="ace ace-switch ace-switch-4" type="checkbox"
+										ng-model="empresa.usar_mesas" />
+									<span class="lbl check-descuento"></span>
+								</label>
+								<div class="hr hr8 hr-double"></div>
+							</div>
+							<div class="col-md-4 col-lg-4 col-sm-12">
+								<label class="control-label no-padding-right">¿Usar Salas?</label>
+								<a href="javascript:void(0)" class="green" data-rel="tooltip" data-placement="top"
+									uib-tooltip='Habilita el uso de salas para restaurantes con mesas y mozos (MESAS)'><i
+										class="fa fa-exclamation-circle fa-2x" aria-hidden="true"></i></a>
+								<label class="bigger pull-right">
+									<input name="switch-field-1" class="ace ace-switch ace-switch-4" type="checkbox"
+										ng-model="empresa.usar_salas" />
+									<span class="lbl check-descuento"></span>
+								</label>
+								<div class="hr hr8 hr-double"></div>
+							</div>
+							<div class="col-md-4 col-lg-4 col-sm-12">
+								<label class="control-label no-padding-right">¿Usar Contabilidad?</label>
+								<a href="javascript:void(0)" class="green" data-rel="tooltip" data-placement="top"
+									uib-tooltip='falta informacion pabel!'><i class="fa fa-exclamation-circle fa-2x"
+										aria-hidden="true"></i></a>
+								<label class="bigger pull-right">
+									<input name="switch-field-1" class="ace ace-switch ace-switch-4" type="checkbox"
+										ng-model="empresa.usar_contabilidad" />
+									<span class="lbl check-descuento"></span>
+								</label>
+								<div class="hr hr8 hr-double"></div>
+							</div>
+							<div class="col-md-4 col-lg-4 col-sm-12">
+								<label class="control-label no-padding-right">¿Usar Medico?</label>
+								<a href="javascript:void(0)" class="green" data-rel="tooltip" data-placement="top"
+									uib-tooltip='Habilita el módulo Médico Laboral (PACIENTES)'><i
+										class="fa fa-exclamation-circle fa-2x" aria-hidden="true"></i></a>
+								<label class="bigger pull-right">
+									<input name="switch-field-1" class="ace ace-switch ace-switch-4" type="checkbox"
+										ng-model="empresa.usar_medico" />
+									<span class="lbl check-descuento"></span>
+								</label>
+								<div class="hr hr8 hr-double"></div>
+							</div>
+							<div class="col-md-4 col-lg-4 col-sm-12">
+								<label class="control-label no-padding-right">¿Usar Mantenimiento Interno?</label>
+								<a href="javascript:void(0)" class="green" data-rel="tooltip" data-placement="top"
+									uib-tooltip='Habilita el uso de mantenimiento interno'><i
+										class="fa fa-exclamation-circle fa-2x" aria-hidden="true"></i></a>
+								<label class="bigger pull-right">
+									<input name="switch-field-1" class="ace ace-switch ace-switch-4" type="checkbox"
+										ng-model="empresa.usar_mantenimiento" />
+									<span class="lbl check-descuento"></span>
+								</label>
+								<div class="hr hr8 hr-double"></div>
+							</div>
+							<div class="col-md-4 col-lg-4 col-sm-12">
+								<label class="control-label no-padding-right">¿Usar Cuentas Auxiliares?</label>
+								<a href="javascript:void(0)" class="green" data-rel="tooltip" data-placement="top"
+									uib-tooltip='Habilita el uso en el plan de cuentas de auxiliares contables y permite el uso de los auxiliares contables en los comprobantes. (PLAN DE CUENTAS – COMPROBANTES)'><i
+										class="fa fa-exclamation-circle fa-2x" aria-hidden="true"></i></a>
+								<label class="bigger pull-right">
+									<input name="switch-field-1" class="ace ace-switch ace-switch-4" type="checkbox"
+										ng-model="empresa.usar_cuentas_auxiliares" />
+									<span class="lbl check-descuento"></span>
+								</label>
+								<div class="hr hr8 hr-double"></div>
+							</div>
+							<div class="col-md-4 col-lg-4 col-sm-12">
+								<label class="control-label no-padding-right">¿Usar proformas?</label>
+								<a href="javascript:void(0)" class="green" data-rel="tooltip" data-placement="top"
+									uib-tooltip='falta informacion pabel!'><i class="fa fa-exclamation-circle fa-2x"
+										aria-hidden="true"></i></a>
+								<label class="bigger pull-right">
+									<input name="switch-field-1" class="ace ace-switch ace-switch-4" type="checkbox"
+										ng-model="empresa.usar_proformas" />
+									<span class="lbl check-descuento"></span>
+								</label>
+								<div class="hr hr8 hr-double"></div>
+							</div>
+							<div class="col-md-4 col-lg-4 col-sm-12">
+								<label class="control-label no-padding-right">¿Usar Créditos?</label>
+								<a href="javascript:void(0)" class="green" data-rel="tooltip" data-placement="top"
+									uib-tooltip='Habilita las líneas de crédito, plazos de créditos, cierre de ventas para créditos vencidos con switch Bloqueado SI. (CLIENTES)'><i
+										class="fa fa-exclamation-circle fa-2x" aria-hidden="true"></i></a>
+								<label class="bigger pull-right">
+									<input name="switch-field-1" class="ace ace-switch ace-switch-4" type="checkbox"
+										ng-model="empresa.usar_creditos" />
+									<span class="lbl check-descuento"></span>
+								</label>
+								<div class="hr hr8 hr-double"></div>
+							</div>
+							<div class="col-md-4 col-lg-4 col-sm-12">
+								<label class="control-label no-padding-right">¿Usar Destinos?</label>
+								<a href="javascript:void(0)" class="green" data-rel="tooltip" data-placement="top"
+									uib-tooltip='Habilita el uso de destinos para los despachos en clientes (CLIENTES)'><i
+										class="fa fa-exclamation-circle fa-2x" aria-hidden="true"></i></a>
+								<label class="bigger pull-right">
+									<input name="switch-field-1" class="ace ace-switch ace-switch-4" type="checkbox"
+										ng-model="empresa.usar_destinos" />
+									<span class="lbl check-descuento"></span>
+								</label>
+								<div class="hr hr8 hr-double"></div>
+							</div>
+							<div class="col-md-4 col-lg-4 col-sm-12">
+								<label class="control-label no-padding-right">¿Usar Razón S.?</label>
+								<a href="javascript:void(0)" class="green" data-rel="tooltip" data-placement="top"
+									uib-tooltip='Habilita las razones sociales adicionales por cada cliente y la importación de las mismas. (CLIENTES)'><i
+										class="fa fa-exclamation-circle fa-2x" aria-hidden="true"></i></a>
+								<label class="bigger pull-right">
+									<input name="switch-field-1" class="ace ace-switch ace-switch-4" type="checkbox"
+										ng-model="empresa.usar_razon_social" />
+									<span class="lbl check-descuento"></span>
+								</label>
+								<div class="hr hr8 hr-double"></div>
+							</div>
+							<div class="col-md-4 col-lg-4 col-sm-12">
+								<label class="control-label no-padding-right">¿Usar funcionalidades adicionales
+									Bancos?</label>
+								<a href="javascript:void(0)" class="green" data-rel="tooltip" data-placement="top"
+									uib-tooltip='Habilitas funcionalidades adicionales de bancos. (TRANSACCIONES)'><i
+										class="fa fa-exclamation-circle fa-2x" aria-hidden="true"></i></a>
+								<label class="bigger pull-right">
+									<input name="switch-field-1" class="ace ace-switch ace-switch-4" type="checkbox"
+										ng-model="empresa.usar_bancos" />
+									<span class="lbl check-descuento"></span>
+								</label>
+								<div class="hr hr8 hr-double"></div>
+							</div>
+							<div class="col-md-4 col-lg-4 col-sm-12">
+								<label class="control-label no-padding-right">¿Usar correlativos clientes?</label>
+								<a href="javascript:void(0)" class="green" data-rel="tooltip" data-placement="top"
+									uib-tooltip='Permite crear códigos correlativos automáticos para los clientes previa configuración (CLIENTES)'><i
+										class="fa fa-exclamation-circle fa-2x" aria-hidden="true"></i></a>
+								<label class="bigger pull-right">
+									<input name="switch-field-1" class="ace ace-switch ace-switch-4" type="checkbox"
+										ng-model="empresa.usar_correlativos_clientes" />
+									<span class="lbl check-descuento"></span>
+								</label>
+								<div class="hr hr8 hr-double"></div>
+							</div>
+							<div class="col-md-4 col-lg-4 col-sm-12">
+								<label class="control-label no-padding-right">¿Usar correlativos destinos?</label>
+								<a href="javascript:void(0)" class="green" data-rel="tooltip" data-placement="top"
+									uib-tooltip='Habilita la herramienta “Correlativos Destinos”, de forma automática.'><i
+										class="fa fa-exclamation-circle fa-2x" aria-hidden="true"></i></a>
+								<label class="bigger pull-right">
+									<input name="switch-field-1" class="ace ace-switch ace-switch-4" type="checkbox"
+										ng-model="empresa.usar_correlativos_destinos" />
+									<span class="lbl check-descuento"></span>
+								</label>
+								<div class="hr hr8 hr-double"></div>
+							</div>
+							<div class="col-md-4 col-lg-4 col-sm-12">
+								<label class="control-label no-padding-right">¿Usar funciones ERP?</label>
+								<a href="javascript:void(0)" class="green" data-rel="tooltip" data-placement="top"
+									uib-tooltip='falta informacion pabel!'><i class="fa fa-exclamation-circle fa-2x"
+										aria-hidden="true"></i></a>
+								<label class="bigger pull-right">
+									<input name="switch-field-1" class="ace ace-switch ace-switch-4" type="checkbox"
+										ng-model="empresa.usar_funciones_erp" />
+									<span class="lbl check-descuento"></span>
+								</label>
+								<div class="hr hr8 hr-double"></div>
+							</div>
+							<div class="col-md-4 col-lg-4 col-sm-12">
+								<label class="control-label no-padding-right">¿Usar estado de resultados no
+									contable?</label>
+								<a href="javascript:void(0)" class="green" data-rel="tooltip" data-placement="top"
+									uib-tooltip='Habilita el estado de resultados no contables, recomendado para empresa que no tienen contabilidad (ESTADO DE RESULTADOS NO CONTABLES)'><i
+										class="fa fa-exclamation-circle fa-2x" aria-hidden="true"></i></a>
+								<label class="bigger pull-right">
+									<input name="switch-field-1" class="ace ace-switch ace-switch-4" type="checkbox"
+										ng-model="empresa.usar_estado_resultados_no_contables" />
+									<span class="lbl check-descuento"></span>
+								</label>
+								<div class="hr hr8 hr-double"></div>
+							</div>
+							<div class="col-md-4 col-lg-4 col-sm-12">
+								<label class="control-label no-padding-right">¿Usar Edición Ventas?</label>
+								<a href="javascript:void(0)" class="green" data-rel="tooltip" data-placement="top"
+									uib-tooltip='Habilita el lápiz de edición de ventas (VENTAS)'><i
+										class="fa fa-exclamation-circle fa-2x" aria-hidden="true"></i></a>
+								<label class="bigger pull-right">
+									<input name="switch-field-1" class="ace ace-switch ace-switch-4" type="checkbox"
+										ng-model="empresa.usar_edicion_venta" />
+									<span class="lbl check-descuento"></span>
+								</label>
+								<div class="hr hr8 hr-double"></div>
+							</div>
+							<div class="col-md-4 col-lg-4 col-sm-12">
+								<label class="control-label no-padding-right">¿Usar Ventas de Servicios?</label>
+								<a href="javascript:void(0)" class="green" data-rel="tooltip" data-placement="top"
+									uib-tooltip='Habilita en ventas en el menú movimiento los servicios, te permite crear conceptos de servicios venta. (VENTAS)'><i
+										class="fa fa-exclamation-circle fa-2x" aria-hidden="true"></i></a>
+								<label class="bigger pull-right">
+									<input name="switch-field-1" class="ace ace-switch ace-switch-4" type="checkbox"
+										ng-model="empresa.usar_venta_servicio" />
+									<span class="lbl check-descuento"></span>
+								</label>
+								<div class="hr hr8 hr-double"></div>
+							</div>
+							<div class="col-md-4 col-lg-4 col-sm-12">
+								<label class="control-label no-padding-right">¿Usar Facturación masiva?</label>
+								<a href="javascript:void(0)" class="green" data-rel="tooltip" data-placement="top"
+									uib-tooltip='Habilita, ícono de facturación masiva sólo para servicios (VENTAS)'><i
+										class="fa fa-exclamation-circle fa-2x" aria-hidden="true"></i></a>
+								<label class="bigger pull-right">
+									<input name="switch-field-1" class="ace ace-switch ace-switch-4" type="checkbox"
+										ng-model="empresa.usar_facturacion_masiva" />
+									<span class="lbl check-descuento"></span>
+								</label>
+								<div class="hr hr8 hr-double"></div>
+							</div>
+							<div class="col-md-4 col-lg-4 col-sm-12">
+								<label class="control-label no-padding-right">¿Usar Cotizaciones?</label>
+								<a href="javascript:void(0)" class="green" data-rel="tooltip" data-placement="top"
+									uib-tooltip='Habilita cotizaciones el ícono de cotizaciones en ventas, pero también debe habilitarse el módulo de cotizaciones (VENTAS)'><i
+										class="fa fa-exclamation-circle fa-2x" aria-hidden="true"></i></a>
+								<label class="bigger pull-right">
+									<input name="switch-field-1" class="ace ace-switch ace-switch-4" type="checkbox"
+										ng-model="empresa.usar_cotizacion" />
+									<span class="lbl check-descuento"></span>
+								</label>
+								<div class="hr hr8 hr-double"></div>
+							</div>
+							<div class="col-md-4 col-lg-4 col-sm-12">
+								<label class="control-label no-padding-right">¿Usar Tipos de Precios?</label>
+								<a href="javascript:void(0)" class="green" data-rel="tooltip" data-placement="top"
+									uib-tooltip='Habilita el tipo cliente en clientes y en productos habilita el Tipo Precio, puedes crear clientes mayoristas, minoristas, etc. (CLIENTES – PRODUCTOS)'><i
+										class="fa fa-exclamation-circle fa-2x" aria-hidden="true"></i></a>
+								<label class="bigger pull-right">
+									<input name="switch-field-1" class="ace ace-switch ace-switch-4" type="checkbox"
+										ng-model="empresa.usar_tipo_precio" />
+									<span class="lbl check-descuento"></span>
+								</label>
+								<div class="hr hr8 hr-double"></div>
+							</div>
+							<div class="col-md-4 col-lg-4 col-sm-12">
+								<label class="control-label no-padding-right">¿Usar pagos anticipados?</label>
+								<a href="javascript:void(0)" class="green" data-rel="tooltip" data-placement="top"
+									uib-tooltip='Habilita en estado de cuentas la posibilidad de realizar pagos anticipados (REPORTES)'><i
+										class="fa fa-exclamation-circle fa-2x" aria-hidden="true"></i></a>
+								<label class="bigger pull-right">
+									<input name="switch-field-1" class="ace ace-switch ace-switch-4" type="checkbox"
+										ng-model="empresa.usar_pago_anticipado" />
+									<span class="lbl check-descuento"></span>
+								</label>
+								<div class="hr hr8 hr-double"></div>
+							</div>
+							<div class="col-md-4 col-lg-4 col-sm-12">
+								<label class="control-label no-padding-right">¿Usar ceros por delante en plan de
+									cuentas?</label>
+								<a href="javascript:void(0)" class="green" data-rel="tooltip" data-placement="top"
+									uib-tooltip='Habilita el uso de ceros por delante del código de la cuenta contable (COMPROBANTES Y PLAN DE CUENTAS)'><i
+										class="fa fa-exclamation-circle fa-2x" aria-hidden="true"></i></a>
+								<label class="bigger pull-right">
+									<input name="switch-field-1" class="ace ace-switch ace-switch-4" type="checkbox"
+										ng-model="empresa.usar_ceros_plan_cuenta" />
+									<span class="lbl check-descuento"></span>
+								</label>
+								<div class="hr hr8 hr-double"></div>
+							</div>
+							<div class="col-md-4 col-lg-4 col-sm-12">
+								<label class="control-label no-padding-right">¿Usar importación de compras?</label>
+								<a href="javascript:void(0)" class="green" data-rel="tooltip" data-placement="top"
+									uib-tooltip='Habilita la importación de compras (COMPRAS)'><i
+										class="fa fa-exclamation-circle fa-2x" aria-hidden="true"></i></a>
+								<label class="bigger pull-right">
+									<input name="switch-field-1" class="ace ace-switch ace-switch-4" type="checkbox"
+										ng-model="empresa.usar_importacion_compra" />
+									<span class="lbl check-descuento"></span>
+								</label>
+								<div class="hr hr8 hr-double"></div>
+							</div>
+							<div class="col-md-4 col-lg-4 col-sm-12">
+								<label class="control-label no-padding-right">¿Usar importación de ventas?</label>
+								<a href="javascript:void(0)" class="green" data-rel="tooltip" data-placement="top"
+									uib-tooltip='Habilita la pestaña de importación de ventas (VENTAS)'><i
+										class="fa fa-exclamation-circle fa-2x" aria-hidden="true"></i></a>
+								<label class="bigger pull-right">
+									<input name="switch-field-1" class="ace ace-switch ace-switch-4" type="checkbox"
+										ng-model="empresa.usar_importacion_venta" />
+									<span class="lbl check-descuento"></span>
+								</label>
+								<div class="hr hr8 hr-double"></div>
+							</div>
+							<div class="col-md-4 col-lg-4 col-sm-12">
+								<label class="control-label no-padding-right">¿Usar filtro por serie en ventas?</label>
+								<a href="javascript:void(0)" class="green" data-rel="tooltip" data-placement="top"
+									uib-tooltip='Habilita el stwich para realizar ventas por series, muy útil para usar disparador de código de barras. (VENTAS)'><i
+										class="fa fa-exclamation-circle fa-2x" aria-hidden="true"></i></a>
+								<label class="bigger pull-right">
+									<input name="switch-field-1" class="ace ace-switch ace-switch-4" type="checkbox"
+										ng-model="empresa.usar_filtro_lote" />
+									<span class="lbl check-descuento"></span>
+								</label>
+								<div class="hr hr8 hr-double"></div>
+							</div>
+							<div class="col-md-4 col-lg-4 col-sm-12">
+								<label class="control-label no-padding-right">¿Usar anticipos c/chica?</label>
+								<a href="javascript:void(0)" class="green" data-rel="tooltip" data-placement="top"
+									uib-tooltip='falta informacion pabel!'><i class="fa fa-exclamation-circle fa-2x"
+										aria-hidden="true"></i></a>
+								<label class="bigger pull-right">
+									<input name="switch-field-1" class="ace ace-switch ace-switch-4" type="checkbox"
+										ng-model="empresa.usar_anticipo_caja_chica" />
+									<span class="lbl check-descuento"></span>
+								</label>
+								<div class="hr hr8 hr-double"></div>
+							</div>
+							<div class="col-md-4 col-lg-4 col-sm-12">
+								<label class="control-label no-padding-right">¿Usar anticipos RRHH?</label>
+								<a href="javascript:void(0)" class="green" data-rel="tooltip" data-placement="top"
+									uib-tooltip='falta informacion pabel!'><i class="fa fa-exclamation-circle fa-2x"
+										aria-hidden="true"></i></a>
+								<label class="bigger pull-right">
+									<input name="switch-field-1" class="ace ace-switch ace-switch-4" type="checkbox"
+										ng-model="empresa.usar_anticipo_recursos_humanos" />
+									<span class="lbl check-descuento"></span>
+								</label>
+								<div class="hr hr8 hr-double"></div>
+							</div>
+							<div class="col-md-4 col-lg-4 col-sm-12">
+								<label class="control-label no-padding-right">¿Usar Integraciones?</label>
+								<a href="javascript:void(0)" class="green" data-rel="tooltip" data-placement="top"
+									uib-tooltip='Habilita las integraciones para la contabilidad, se deben actualizar los sub roles. (COMPROBANTES)'><i
+										class="fa fa-exclamation-circle fa-2x" aria-hidden="true"></i></a>
+								<a popover-placement="right"
+									uib-popover-template="dynamicPopoverIntegracion.templateUrl"
+									popover-trigger="outsideClick: outsideClick"
+									popover-title="Configuracion integraciones" popover-append-to-body="true"
+									class="blue">
+									<i class="fa fa-list-ol bigger-200 orange" aria-hidden="true"></i>
+								</a>
+								<label class="bigger pull-right">
+									<input name="switch-field-1" class="ace ace-switch ace-switch-4" type="checkbox"
+										ng-model="empresa.usar_integracion" />
+									<span class="lbl check-descuento"></span>
+								</label>
+								<div class="hr hr8 hr-double"></div>
+
+								<script type="text/ng-template" id="integracionTemplate.html">
+							<div class="form-group">
+								<div><span>Actualizar</span>
+									<a type="button" class="pull-left" ng-click="obtenerListaOpcionesIntegracionAplicacion(empresa.integraciones)">
+											<i class="ace-icon fa fa-refresh icon-animated-bell red2 align-top bigger-200"></i>
+										</a>
+							</div>
+								<div style="height:300px !important;overflow: auto;">
+
+									<table class="table table-bordered table-striped">
+										
+										<thead>
+											<tr>
+												<th>Nº</th>
+												<th>Nombre Opcion</th>
+												<th>modulo</th>
+												<th>¿Integrar?</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr ng-repeat="integracion in empresa.integraciones track by $index">
+												<td>{{$index +1}}</td>
+												<td>
+													<p ng-if="integracion.nombre">{{integracion.nombre}}</p>
+													<p ng-if="!integracion.nombre">{{integracion.moduloIntegracion.nombre}}</p>
+												</td>
+												<td><p ng-if="integracion.nombre"> {{integracion.aplicacion.titulo}}</p>
+													<p ng-if="!integracion.nombre">{{integracion.moduloIntegracion.aplicacion.titulo}}</p></td>
+												<td class="center">
+														<label class="pos-rel">
+															<input type="checkbox" class="ace" ng-model="integracion.usar_integracion" />
+															<span class="lbl"></span>
+														</label>
+													</td>
+											</tr>
+										</tbody>
+									</table>
+
+								</div>
+
+							</div>
+							</script>
+							</div>
+							<div class="col-md-4 col-lg-4 col-sm-12">
+								<label class="control-label no-padding-right">¿Usar promociones producto?</label>
+								<a href="javascript:void(0)" class="green" data-rel="tooltip" data-placement="top"
+									uib-tooltip='Habilita las promociones para productos (PRODUCTOS)'><i
+										class="fa fa-exclamation-circle fa-2x" aria-hidden="true"></i></a>
+								<label class="bigger pull-right">
+									<input name="switch-field-1" class="ace ace-switch ace-switch-4" type="checkbox"
+										ng-model="empresa.usar_promocion_producto" />
+									<span class="lbl check-descuento"></span>
+								</label>
+								<div class="hr hr8 hr-double"></div>
+							</div>
+							<div class="col-md-4 col-lg-4 col-sm-12">
+								<label class="control-label no-padding-right">¿Usar promociones de puntos?</label>
+								<a href="javascript:void(0)" class="green" data-rel="tooltip" data-placement="top"
+									uib-tooltip='Permite realizar calificaciones a los clientes con puntajes por productos (PRODUCTOS)'><i
+										class="fa fa-exclamation-circle fa-2x" aria-hidden="true"></i></a>
+								<label class="bigger pull-right">
+									<input name="switch-field-1" class="ace ace-switch ace-switch-4" type="checkbox"
+										ng-model="empresa.usar_promocion_producto_puntos" />
+									<span class="lbl check-descuento"></span>
+								</label>
+								<div class="hr hr8 hr-double"></div>
+							</div>
+							<div class="col-md-4 col-lg-4 col-sm-12">
+								<label class="control-label no-padding-right">¿Usar prestación para compra?</label>
+								<a href="javascript:void(0)" class="green" data-rel="tooltip" data-placement="top"
+									uib-tooltip='Habilita la casilla en productos denominada “Prestación en compra”, esto hace que las compra se realizarán en múltiplos”. (PRODUCTOS – ALMACENES)'><i
+										class="fa fa-exclamation-circle fa-2x" aria-hidden="true"></i></a>
+								<label class="bigger pull-right">
+									<input name="switch-field-1" class="ace ace-switch ace-switch-4" type="checkbox"
+										ng-model="empresa.usar_prestacion_compra" />
+									<span class="lbl check-descuento"></span>
+								</label>
+								<div class="hr hr8 hr-double"></div>
+							</div>
+							<div class="col-md-4 col-lg-4 col-sm-12">
+								<label class="control-label no-padding-right">¿Usar costos en dólares?</label>
+								<a href="javascript:void(0)" class="green" data-rel="tooltip" data-placement="top"
+									uib-tooltip='Habilita el uso de dólares en compras y ventas (COMPRAS – VENTAS)'><i
+										class="fa fa-exclamation-circle fa-2x" aria-hidden="true"></i></a>
+								<label class="bigger pull-right">
+									<input name="switch-field-1" class="ace ace-switch ace-switch-4" type="checkbox"
+										ng-model="empresa.ver_costos_dolares" />
+									<span class="lbl check-descuento"></span>
+								</label>
+								<div class="hr hr8 hr-double"></div>
+							</div>
+							<div class="col-md-4 col-lg-4 col-sm-12" ng-if="empresa.ver_costos_dolares">
+								<label class="control-label no-padding-right">Dolar a:</label>
+								<label class="bigger">
+									<input name="tipo_cambio_dolar" class="form-control" type="number" step="0.01"
+										ng-model="empresa.tipo_cambio_dolar" />
+								</label>
+								<div class="hr hr8 hr-double"></div>
+							</div>
+							<div class="col-md-4 col-lg-4 col-sm-12">
+								<label class="control-label no-padding-right">¿Usar mantenimiento externo?</label>
+								<a href="javascript:void(0)" class="green" data-rel="tooltip" data-placement="top"
+									uib-tooltip='Habilita el mantenimiento externo (MANTENIMIENTO)'><i
+										class="fa fa-exclamation-circle fa-2x" aria-hidden="true"></i></a>
+								<label class="bigger pull-right">
+									<input name="switch-field-1" class="ace ace-switch ace-switch-4" type="checkbox"
+										ng-model="empresa.usar_mantenimiento_externo_propio" />
+									<span class="lbl check-descuento"></span>
+								</label>
+								<div class="hr hr8 hr-double"></div>
+							</div>
+							<div class="col-md-4 col-lg-4 col-sm-12">
+								<label class="control-label no-padding-right">¿Restar solo en despacho?</label>
+								<a href="javascript:void(0)" class="green" data-rel="tooltip" data-placement="top"
+									uib-tooltip='Resta de inventario sólo al realizar despachos y no cuando emiten facturas.'><i
+										class="fa fa-exclamation-circle fa-2x" aria-hidden="true"></i></a>
+								<label class="bigger pull-right">
+									<input name="switch-field-1" class="ace ace-switch ace-switch-4" type="checkbox"
+										ng-model="empresa.restar_solo_despacho" />
+									<span class="lbl check-descuento"></span>
+								</label>
+								<div class="hr hr8 hr-double"></div>
+							</div>
+							<div class="col-md-4 col-lg-4 col-sm-12">
+								<label class="control-label no-padding-right">¿Usar el indice de rotación de
+									productos?</label>
+								<a href="javascript:void(0)" class="green" data-rel="tooltip" data-placement="top"
+									uib-tooltip='falta informacion pabel!'><i class="fa fa-exclamation-circle fa-2x"
+										aria-hidden="true"></i></a>
+								<label class="bigger pull-right">
+									<input name="switch-field-1" class="ace ace-switch ace-switch-4" type="checkbox"
+										ng-model="empresa.usar_indice_rotacion_producto" />
+									<span class="lbl check-descuento"></span>
+								</label>
+								<div class="hr hr8 hr-double"></div>
+							</div>
+							<div class="col-md-4 col-lg-4 col-sm-12">
+								<label class="control-label no-padding-right">¿Usar restaurante express?</label>
+								<a href="javascript:void(0)" class="green" data-rel="tooltip" data-placement="top"
+									uib-tooltip='Habilita el ícono de ventas para venta con meseros y mesas (VENTAS)'><i
+										class="fa fa-exclamation-circle fa-2x" aria-hidden="true"></i></a>
+								<label class="bigger pull-right">
+									<input name="switch-field-1" class="ace ace-switch ace-switch-4" type="checkbox"
+										ng-model="empresa.usar_restaurante_express" />
+									<span class="lbl check-descuento"></span>
+								</label>
+								<div class="hr hr8 hr-double"></div>
+							</div>
+							<div class="col-md-4 col-lg-4 col-sm-12">
+								<label class="control-label no-padding-right">¿usar productos derivados en
+									panel?</label>
+								<a href="javascript:void(0)" class="green" data-rel="tooltip" data-placement="top"
+									uib-tooltip='Habilita el panel de ventas y panel de ventas Express, la opción derivado y en productos habilita las relaciones para derivados (VENTAS – PRODUCTOS)'><i
+										class="fa fa-exclamation-circle fa-2x" aria-hidden="true"></i></a>
+								<label class="bigger pull-right">
+									<input name="switch-field-1" class="ace ace-switch ace-switch-4" type="checkbox"
+										ng-model="empresa.usar_productos_derivados_panel" />
+									<span class="lbl check-descuento"></span>
+								</label>
+								<div class="hr hr8 hr-double"></div>
+							</div>
+							<div class="col-md-4 col-lg-4 col-sm-12">
+								<label class="control-label no-padding-right">¿Usar calificaciones para
+									proveedores?</label>
+								<a href="javascript:void(0)" class="green" data-rel="tooltip" data-placement="top"
+									uib-tooltip='Se habilita la opción para que en compras
+								aparezcan los conceptos de calificaciones a
+								proveedores, se debe crear un nuevo
+								concepto para la empresa denominado
+								"Proveedores Calificaciones - PVDCAL"'><i class="fa fa-exclamation-circle fa-2x" aria-hidden="true"></i></a>
+								<label class="bigger pull-right">
+									<input name="switch-field-1" class="ace ace-switch ace-switch-4" type="checkbox"
+										ng-model="empresa.usar_calificaciones_proveedor" />
+									<span class="lbl check-descuento"></span>
+								</label>
+								<div class="hr hr8 hr-double"></div>
+							</div>
+							<div class="col-md-4 col-lg-4 col-sm-12">
+								<label class="control-label no-padding-right">¿Usar precio por sucursal?</label>
+								<a href="javascript:void(0)" class="green" data-rel="tooltip" data-placement="top"
+									uib-tooltip='habilita para la creación de precios distintos de cada producto por sucursal'><i
+										class="fa fa-exclamation-circle fa-2x" aria-hidden="true"></i></a>
+								<label class="bigger pull-right">
+									<input name="switch-field-1" class="ace ace-switch ace-switch-4" type="checkbox"
+										ng-model="empresa.usar_precio_por_sucursal" />
+									<span class="lbl check-descuento"></span>
+								</label>
+								<div class="hr hr8 hr-double"></div>
+							</div>
+							<div class="col-md-4 col-lg-4 col-sm-12">
+								<label class="control-label no-padding-right">¿Usar combo en producto final?</label>
+								<a href="javascript:void(0)" class="green" data-rel="tooltip" data-placement="top"
+									uib-tooltip='Habilita la posibilidad de crear combos en productos (PRODUCTOS)'><i
+										class="fa fa-exclamation-circle fa-2x" aria-hidden="true"></i></a>
+								<label class="bigger pull-right">
+									<input name="switch-field-1" class="ace ace-switch ace-switch-4" type="checkbox"
+										ng-model="empresa.usar_combo_producto_final" />
+									<span class="lbl check-descuento"></span>
+								</label>
+								<div class="hr hr8 hr-double"></div>
+							</div>
+							<div class="col-md-4 col-lg-4 col-sm-12">
+								<label class="control-label no-padding-right">¿Usar configuración doc iso?</label>
+								<a href="javascript:void(0)" class="green" data-rel="tooltip" data-placement="top"
+									uib-tooltip='Habilita las impresiones con normas ISO, previa configuración en sucursales cada documento habilitado, también crear Nuevo concepto, Nombre: TIPO DOC. CONFIGURACION ISO Nombre Corto: TIPDOCISO y Nombre Clase: ORDEN DE COMPRA, Nombre Corto Clase: ORDENCOMPRA'><i
+										class="fa fa-exclamation-circle fa-2x" aria-hidden="true"></i></a>
+								<label class="bigger pull-right">
+									<input name="switch-field-1" class="ace ace-switch ace-switch-4" type="checkbox"
+										ng-model="empresa.usar_configuracion_iso" />
+									<span class="lbl check-descuento"></span>
+								</label>
+								<div class="hr hr8 hr-double"></div>
+							</div>
+							<div class="col-md-4 col-lg-4 col-sm-12">
+								<label class="control-label no-padding-right">¿Usar panel de cotizaciones?</label>
+								<a href="javascript:void(0)" class="green" data-rel="tooltip" data-placement="top"
+									uib-tooltip='Habilita el ícono de panel de cotizaciones'><i
+										class="fa fa-exclamation-circle fa-2x" aria-hidden="true"></i></a>
+								<label class="bigger pull-right">
+									<input name="switch-field-1" class="ace ace-switch ace-switch-4" type="checkbox"
+										ng-model="empresa.usar_panel_cotizaciones" />
+									<span class="lbl check-descuento"></span>
+								</label>
+								<div class="hr hr8 hr-double"></div>
+							</div>
+							<div class="col-md-4 col-lg-4 col-sm-12">
+								<label class="control-label no-padding-right">¿Usar Devoluciónes?</label>
+								<a href="javascript:void(0)" class="green" data-rel="tooltip" data-placement="top"
+									uib-tooltip='Habilita el ícono de devoluciones en ventas'><i
+										class="fa fa-exclamation-circle fa-2x" aria-hidden="true"></i></a>
+								<label class="bigger pull-right">
+									<input name="switch-field-1" class="ace ace-switch ace-switch-4" type="checkbox"
+										ng-model="empresa.usar_devoluciones" />
+									<span class="lbl check-descuento"></span>
+								</label>
+								<div class="hr hr8 hr-double"></div>
+							</div>
+							<div class="col-md-4 col-lg-4 col-sm-12">
+								<label class="control-label no-padding-right">¿Usar generador de series?</label>
+								<a href="javascript:void(0)" class="green" data-rel="tooltip" data-placement="top"
+									uib-tooltip='Genera series en formato código de barras para productos sin series en Compras'><i
+										class="fa fa-exclamation-circle fa-2x" aria-hidden="true"></i></a>
+								<label class="bigger pull-right">
+									<input name="switch-field-1" class="ace ace-switch ace-switch-4" type="checkbox"
+										ng-model="empresa.usar_generador_series" />
+									<span class="lbl check-descuento"></span>
+								</label>
+								<div class="hr hr8 hr-double"></div>
+							</div>
+							<div class="col-md-4 col-lg-4 col-sm-12">
+								<label class="control-label no-padding-right">¿Usar Ingreso por Ajuste?</label>
+								<a href="javascript:void(0)" class="green" data-rel="tooltip" data-placement="top"
+									uib-tooltip='Habilita la opción de ajuste de
+									ingreso en el módulo de compras'><i class="fa fa-exclamation-circle fa-2x" aria-hidden="true"></i></a>
+								<label class="bigger pull-right">
+									<input name="switch-field-1" class="ace ace-switch ace-switch-4" type="checkbox"
+										ng-model="empresa.usar_ingreso_por_ajuste" />
+									<span class="lbl check-descuento"></span>
+								</label>
+								<div class="hr hr8 hr-double"></div>
+							</div>
+							<div class="col-md-4 col-lg-4 col-sm-12">
+								<label class="control-label no-padding-right">¿Usar Traspaso Automático?</label>
+								<a href="javascript:void(0)" class="green" data-rel="tooltip" data-placement="top"
+									uib-tooltip='Habilita los traspasos autompaticos desde salidas'><i
+										class="fa fa-exclamation-circle fa-2x" aria-hidden="true"></i></a>
+								<label class="bigger pull-right">
+									<input name="switch-field-1" class="ace ace-switch ace-switch-4" type="checkbox"
+										ng-model="empresa.usar_traspaso_automatico" />
+									<span class="lbl check-descuento"></span>
+								</label>
+								<div class="hr hr8 hr-double"></div>
+							</div>
+							<div class="col-md-4 col-lg-4 col-sm-12">
+								<label class="control-label no-padding-right">¿Usar producción?</label>
+								<a href="javascript:void(0)" class="green" data-rel="tooltip" data-placement="top"
+									uib-tooltip='Habilita las compras con movimiento "PRODUCCÓN"'><i
+										class="fa fa-exclamation-circle fa-2x" aria-hidden="true"></i></a>
+								<label class="bigger pull-right">
+									<input name="switch-field-1" class="ace ace-switch ace-switch-4" type="checkbox"
+										ng-model="empresa.usar_produccion_compra" />
+									<span class="lbl check-descuento"></span>
+								</label>
+								<div class="hr hr8 hr-double"></div>
+							</div>
+							<div class="col-md-4 col-lg-4 col-sm-12">
+								<label class="control-label no-padding-right">¿Usar programación pago
+									proveedores?</label>
+								<a href="javascript:void(0)" class="green" data-rel="tooltip" data-placement="top"
+									uib-tooltip='Habilita programación pagos de proveedores'><i
+										class="fa fa-exclamation-circle fa-2x" aria-hidden="true"></i></a>
+								<label class="bigger pull-right">
+									<input name="switch-field-1" class="ace ace-switch ace-switch-4" type="checkbox"
+										ng-model="empresa.usar_programacion_pago_proveedor" />
+									<span class="lbl check-descuento"></span>
+								</label>
+								<div class="hr hr8 hr-double"></div>
+							</div>
+							<div class="col-md-4 col-lg-4 col-sm-12">
+								<label class="control-label no-padding-right">¿Usar Relacion entre compras con
+									rendiciones?</label>
+								<a href="javascript:void(0)" class="green" data-rel="tooltip" data-placement="top"
+									uib-tooltip='Permite incluir en las compras al contado el documento de
+									 desembolso del fondo a rendir y relacionar los documentos en la rendición'><i
+										class="fa fa-exclamation-circle fa-2x" aria-hidden="true"></i></a>
+								<label class="bigger pull-right">
+									<input name="switch-field-1" class="ace ace-switch ace-switch-4" type="checkbox"
+										ng-model="empresa.usar_relacion_compra_rendicion" />
+									<span class="lbl check-descuento"></span>
+								</label>
+								<div class="hr hr8 hr-double"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="step-pane" data-step="3" ng-if="esNuevo">
+					<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right" for="nombre">Nombre</label>
+
+						<div class="col-sm-9">
+							<input required type="text" id="nombre" ng-model="empresa.sucursal.nombre"
+								placeholder="Nombre" class="col-xs-10 col-sm-5" />
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right" for="numero">Número</label>
+
+						<div class="col-sm-9">
+							<input required type="number" id="numero" ng-model="empresa.sucursal.numero"
+								placeholder="Numero" class="form-control" />
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right" for="nota_venta_correlativo">Número
+							Correlativo Venta</label>
+
+						<div class="col-sm-9">
+							<input required type="number" id="nota_venta_correlativo"
+								ng-model="empresa.sucursal.nota_venta_correlativo"
+								placeholder="Correlativo nota de venta" class="form-control" />
+						</div>
+					</div>
+
+					<div class="space-4"></div>
+
+					<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right" for="sucursaldireccion">Dirección</label>
+
+						<div class="col-sm-9">
+							<input required type="text" id="sucursaldireccion" ng-model="empresa.sucursal.direccion"
+								placeholder="dirección" class="form-control" />
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right" for="sucursaltelefono1">Teléfono
+							1</label>
+
+						<div class="col-sm-9">
+							<input type="text" id="sucursaltelefono1" ng-model="empresa.sucursal.telefono1"
+								placeholder="telefono 1" class="form-control" />
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right" for="sucursaltelefono2">Teléfono
+							2</label>
+
+						<div class="col-sm-9">
+							<input type="text" id="sucursaltelefono2" ng-model="empresa.sucursal.telefono2"
+								placeholder="telefono 2" class="form-control" />
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right" for="sucursaltelefono3">Teléfono
+							3</label>
+
+						<div class="col-sm-9">
+							<input type="text" id="sucursaltelefono3" ng-model="empresa.sucursal.telefono3"
+								placeholder="telefono 3" class="form-control" />
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="control-label col-xs-12 col-sm-3 no-padding-right">Departamento</label>
+
+						<div class="col-xs-12 col-sm-9">
+							<select required id="departamento" name="departamentoM"
+								data-placeholder="Click para escoger" ng-model="empresa.sucursal.id_departamento"
+								ng-change="buscarMunicipios(empresa.sucursal.id_departamento)">
+								<option ng-repeat="departamento in departamentos"
+									value="{{departamento.id}}-{{departamento.nombre_corto}}">{{departamento.nombre}}
+								</option>
+							</select>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label class="control-label col-xs-12 col-sm-3 no-padding-right">Municipio</label>
+
+						<div class="col-xs-12 col-sm-9">
+							<select required id="municipio" name="municipioM" ng-model="empresa.sucursal.id_municipio"
+								data-placeholder="Click para escoger">
+								<option ng-repeat="municipio in municipios" value="{{municipio.id}}">
+									{{municipio.nombre}}</option>
+							</select>
+						</div>
+					</div>
+				</div>
+				<div class="step-pane" data-step="4">
+					<div class="row">
+						<div class="form-group col-sm-12 col-md-3 col-lg-3">
+							<label class="control-label no-padding-right" for="representante_legal">Representante
+								Legal</label>
+							<div>
+								<input required type="text" id="representante_legal"
+									ng-model="empresa.representante_legal" placeholder="Representante Legal"
+									class="form-control" />
+							</div>
+						</div>
+						<div class="form-group col-sm-12 col-md-3 col-lg-3">
+							<label class="control-label no-padding-right" for="repr_ci">Cédula de Identidad</label>
+
+							<div>
+								<input required type="text" id="repr_ci" ng-model="empresa.repr_ci"
+									placeholder="Cédula de Identidad" class="form-control" />
+							</div>
+						</div>
+						<div class="form-group col-sm-12 col-md-3 col-lg-3">
+							<label class="control-label no-padding-right" for="repr_extension_ci">Extensión CI</label>
+
+							<div>
+								<input required type="text" id="repr_extension_ci" ng-model="empresa.repr_extension_ci"
+									placeholder="Extensión CI" class="form-control" />
+							</div>
+						</div>
+
+						<div class="form-group col-sm-12 col-md-3 col-lg-3">
+							<label class="control-label no-padding-right" for="repr_direccion">Dirección</label>
+
+							<div>
+								<input required type="text" id="repr_direccion" ng-model="empresa.repr_direccion"
+									placeholder="dirección" class="form-control" />
+							</div>
+						</div>
+						<div class="form-group col-sm-12 col-md-3 col-lg-3">
+							<label class="control-label no-padding-right" for="repr_telefono">Teléfono(s)</label>
+
+							<div>
+								<input required type="text" id="repr_telefono" ng-model="empresa.repr_telefono"
+									placeholder="telefono" class="form-control" />
+							</div>
+						</div>
+						<div class="form-group col-sm-12 col-md-3 col-lg-3">
+							<label class="control-label no-padding-right" for="repr_correo_electronico">Correo
+								Electrónico</label>
+
+							<div>
+								<input required type="email" id="repr_correo_electronico"
+									ng-model="empresa.repr_correo_electronico" placeholder="Correo Electrónico"
+									class="form-control" />
+							</div>
+						</div>
+					</div>
+
+				</div>
+				<div class="step-pane" data-step="5">
+					<div class="center">
+						<h4 class="blue">Step 5</h4>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="modal-footer wizard-actions col-md-12">
+			<button class="btn btn-sm btn-prev">
+				<i class="ace-icon fa fa-arrow-left"></i>
+				Anterior
+			</button>
+
+			<button type="submit" id="siguiente" class="btn btn-success btn-sm btn-next" data-last="Finish">
+				Siguiente
+				<i class="ace-icon fa fa-arrow-right icon-on-right"></i>
+			</button>
+
+			<button type="button" class="btn btn-danger btn-sm pull-left" data-dismiss="modal"
+				ng-click="cerrarPopPupNuevaEmpresa()">
+				<i class="ace-icon fa fa-times"></i>
+				Cancelar
+			</button>
+		</div>
+	</form>
+	<!-- </div>
+	</div> -->
+</div>
+<!-- PAGE CONTENT ENDS -->
+
+<div id="modal-wizard-empresa-vista" class="modal wizard-posicion">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<form ng-submit="saveForm(empresa)">
+				<div id="modal-wizard-container-empresa-vista">
+					<div class="modal-header">
+						<ul class="steps">
+							<li data-step="1" class="active">
+								<span class="step">1</span>
+								<span class="title">Datos de la Empresa</span>
+							</li>
+							<li data-step="2">
+								<span class="step">2</span>
+								<span class="title">Datos Adicionales</span>
+							</li>
+							<li data-step="2">
+								<span class="step">3</span>
+								<span class="title">Finalización</span>
+							</li>
+						</ul>
+					</div>
+
+					<div class="modal-body step-content">
+						<div class="step-pane active" data-step="1">
+							<div class="form-group">
+								<label class="col-sm-3 control-label no-padding-right" for="razon_social">Razón
+									Social</label>
+
+								<div class="col-sm-9">
+									<input disabled required type="text" id="razon_social"
+										ng-model="empresa.razon_social" placeholder="Razón Social"
+										class="col-xs-10 col-sm-5" />
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="col-sm-3 control-label no-padding-right" for="nit">NIT</label>
+
+								<div class="col-sm-9">
+									<input disabled required type="text" id="nit" ng-model="empresa.nit"
+										placeholder="nit" class="form-control" />
+								</div>
+							</div>
+
+							<div class="space-4"></div>
+
+							<div class="form-group">
+								<label class="col-sm-3 control-label no-padding-right" for="direccion">Dirección</label>
+
+								<div class="col-sm-9">
+									<input disabled required type="text" id="direccion" ng-model="empresa.direccion"
+										placeholder="dirección" class="form-control" />
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label no-padding-right" for="telefono1">Teléfono
+									1</label>
+
+								<div class="col-sm-9">
+									<input disabled type="text" id="telefono1" ng-model="empresa.telefono1"
+										placeholder="telefono 1" class="form-control" />
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label no-padding-right" for="telefono2">Teléfono
+									2</label>
+
+								<div class="col-sm-9">
+									<input disabled type="text" id="telefono2" ng-model="empresa.telefono2"
+										placeholder="telefono 2" class="form-control" />
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label no-padding-right" for="telefono3">Teléfono
+									3</label>
+
+								<div class="col-sm-9">
+									<input disabled type="text" id="telefono3" ng-model="empresa.telefono3"
+										placeholder="telefono 3" class="form-control" />
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="control-label col-xs-12 col-sm-3 no-padding-right">¿Usar Panel?</label>
+
+								<div class="col-xs-3">
+									<label>
+										<input disabled name="switch-field-1" class="ace ace-switch ace-switch-4"
+											type="checkbox" ng-model="empresa.usar_panel" />
+										<span class="lbl check-descuento"></span>
+									</label>
+									<div class="hr hr8 hr-double"></div>
+								</div>
+							</div>
+						</div>
+						<div class="step-pane active" data-step="2">
+							<div class="form-group">
+								<label class="control-label col-xs-12 col-sm-3 no-padding-right">Departamento</label>
+
+								<div class="col-xs-12 col-sm-9">
+									<input disabled type="text" ng-model="empresa.departamento.nombre"
+										class="form-control" />
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="control-label col-xs-12 col-sm-3 no-padding-right">Municipio</label>
+
+								<div class="col-xs-12 col-sm-9">
+									<input disabled type="text" ng-model="empresa.municipio.nombre"
+										class="form-control" />
+								</div>
+							</div>
+							<div class="form-group">
+								<label  class="control-label col-xs-12 col-sm-3 no-padding-right">Correo Electronico</label>
+								<div class="col-xs-12 col-sm-9">
+									<input type="text" ng-model="empresa.email_empresa_aplicacion" class="form-control" disabled />
+								</div>
+							</div>
+							<div class="form-group">
+								<label  class="control-label col-xs-12 col-sm-3 no-padding-right">Password Aplicación</label>
+								<div class="col-xs-12 col-sm-9">
+									<input type="text" ng-model="empresa.email_password_aplicacion" class="form-control" disabled/>
+								</div>
+							</div>
+							<div class="form-group">
+								<label  class="control-label col-xs-12 col-sm-3 no-padding-right">Asunto Email</label>
+								<div class="col-xs-12 col-sm-9">
+									<input type="text" ng-model="empresa.asunto_email" class="form-control" disabled/>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="control-label col-xs-12 col-sm-3 no-padding-right">Imagen/Logo</label>
+								<div class="col-xs-12 col-xs-12 col-sm-9">
+									<img src="{{empresa.imagen}}" width="100">
+								</div>
+							</div>
+
+						</div>
+						<div class="step-pane" data-step="3">
+							<div class="center">
+								<h4 class="blue">Finalización</h4>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="modal-footer wizard-actions">
+					<button class="btn btn-sm btn-prev">
+						<i class="ace-icon fa fa-arrow-left"></i>
+						Anterior
+					</button>
+
+					<button type="submit" id="siguiente" class="btn btn-success btn-sm btn-next" data-last="Finish">
+						Siguiente
+						<i class="ace-icon fa fa-arrow-right icon-on-right"></i>
+					</button>
+
+					<button type="button" class="btn btn-danger btn-sm pull-left" data-dismiss="modal"
+						ng-click="cerrarPopPupVista()">
+						<i class="ace-icon fa fa-times"></i>
+						Cancelar
+					</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+<div id="dialog-eliminar-empresa" title="¿Eliminación de Empresa?" class="modal">
+	<p>
+		<span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>¿Esta seguro de eliminar la
+		Empresa seleccionada?
+	</p>
+	<button type="button" class="btn btn-danger" ng-click="eliminarEmpresa(empresa)">Si</button>
+	<button type="button" class="btn btn-success" ng-click="cerrarConfirmacionEliminacion()">No</button>
+</div>
+<div id="dialog-correlativos-empresa" class="modal">
+
+	<div class="modal-content">
+		<div class="modal-header">
+			<h5 class="modal-title">CORRELATIVOS EMPRESA</h5>
+		</div>
+		<form ng-submit="guardarCorrelativosEmpresa()">
+			<div class="modal-body">
+				<div class="container-fluid">
+
+					<div class="form-group">
+						<label for="">Número correlativo llamada atencion</label>
+						<input type="number" class="form-control" name="llamadaA" id="llamadaA"
+							ng-model="correlativos.numero_correlativo_llamada_atencion" placeholder="">
+					</div>
+					<div class="form-group" ng-if="empresa.usar_programacion_pago_proveedor">
+						<label for="">Número correlativo programación pagos</label>
+						<input type="number" class="form-control" name="llamadaA" id="llamadaA"
+							ng-model="correlativos.numero_correlativo_programacion_pago" placeholder="">
+					</div>
+					<div class="form-group" ng-if="empresa.usar_programacion_pago_proveedor">
+						<label for="">Número correlativo transaccion de cobro</label>
+						<input type="number" class="form-control" name="llamadaA" id="llamadaA"
+							ng-model="correlativos.numero_correlativo_transaccion_cobro" placeholder="">
+					</div>
+					<div class="form-group" ng-if="empresa.usar_programacion_pago_proveedor">
+						<label for="">Número correlativotransaccion de pago</label>
+						<input type="number" class="form-control" name="llamadaA" id="llamadaA"
+							ng-model="correlativos.numero_correlativo_transaccion_pago" placeholder="">
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-danger" ng-click="cerrarModalCorrelativoEmpresa()">Cerrar</button>
+				<button type="submit" class="btn btn-success">Guardar</button>
+			</div>
+		</form>
+	</div>
+</div>
+<div id="dialog-configuracion-iso" class="modal">
+	<div class="modal-header">
+		<h3>Configuración Iso</h3>
+	</div>
+	<div class="modal-body">
+		<form id="formiso" ng-submit="agregarConfiguracionIso()">
+			<div class="form-group">
+				<label>Seleccionar Tipo doc</label>
+				<select class="form-control" ng-options="doc as doc.nombre  
+			for doc in tiposDocumentosIso.clases track by doc.id" ng-model="configuracionIso.tipoDocumento" required>
+					<option value="">Seleccionar</option>
+				</select>
+				<small class="text-danger " ng-if="errorConfiguracioniso">{{errorConfiguracioniso}}</small>
+			</div>
+			<div class="row">
+				<div class="col-sm-6">
+					<div class="form-group">
+						<label for="nombre_iso">Nombre</label>
+						<input type="text" name="nombre_iso" id="nombre_iso" class="form-control" required
+							ng-model="configuracionIso.nombre">
+					</div>
+				</div>
+				<div class="col-sm-6">
+					<div class="form-group">
+						<label for="revicion_iso">Revisión</label>
+						<input type="text" name="revicion_iso" id="revicion_iso" class="form-control" required
+							ng-model="configuracionIso.revicion">
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-6">
+					<div class="form-group">
+						<label for="Codigo_iso">Código</label>
+						<input type="text" name="Codigo_iso" id="Codigo_iso" class="form-control" required
+							ng-model="configuracionIso.codigo">
+					</div>
+				</div>
+				<div class="col-sm-6">
+					<div class="form-group">
+						<label for="fecha_aprobacion_iso">Fecha de Aprobación</label>
+						<input type="text" name="fecha_aprobacion_iso" ng-update-hidden data-date-format="dd/mm/yyyy"
+							autocomplete="off" id="fecha_aprobacion_iso" class="form-control date-picker" required
+							ng-model="configuracionIso.fecha_aprobacion_iso">
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<button type="submit" class="btn btn-primary">
+					<i class="ace-icon fa fa-plus align-top bigger-125"></i>Agregar
+				</button>
+			</div>
+		</form>
+		<div>
+			<table class="table table-striped table-inverse table-responsive">
+				<thead>
+					<tr>
+						<th>Tipo Doc</th>
+						<th>Nombre</th>
+						<th>Revisión</th>
+						<th>Codigo</th>
+						<th>Fecha de Aprobación</th>
+						<th>Versión Impresión</th>
+						<th>Activo</th>
+						<th>Predefinido</th>
+						<th>Acc</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="configuracion in configuracionesIso">
+						<td>{{configuracion.tipoDocumento.nombre}}
+							<p><small class="text-danger" ng-if="configuracion.eliminado">la configuracion se
+									eliminara.</small></p>
+						</td>
+						<td>{{configuracion.nombre}}</td>
+						<td>{{configuracion.revicion}}</td>
+						<td>{{configuracion.codigo}}</td>
+						<td>{{configuracion.fecha_aprobacion|date:'dd/MM/yyyy'}}</td>
+						<td>{{configuracion.version_impresion}}</td>
+						<td><input id="activo" ng-model="configuracion.activo"
+								ng-change="modificarEstadosISO(configuracion, $index)" type="checkbox"
+								class="ace ace-switch ace-switch-4"><span class="lbl check-descuento"></span></td>
+						<td><input id="predefinido" ng-model="configuracion.predefinido"
+								ng-disabled="!configuracion.activo"
+								ng-change="modificarEstadosISO(configuracion, $index)" type="checkbox"
+								class="ace ace-switch ace-switch-4"><span class="lbl check-descuento"></span></td>
+						<td>
+							<a href="javascript:void(0)" class="text-success"
+								ng-click="modificarConfiguracionIso(configuracion)">
+								<i class="fa fa-pencil bigger-140"></i>
+							</a>
+							<a href="javascript:void(0)" class="text-danger"
+								ng-click="eliminarConfiguracionIso(configuracion)">
+								<i class="fa fa-trash-o bigger-140"></i>
+							</a>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<div class="modal-footer">
+		<button type="button" class="btn btn-danger" ng-click="cerrarModalConfiguracionIso()">Cancelar</button>
+		<button type="button" class="btn btn-success" ng-click="guardarConfiguracionIso()">Guardar</button>
+	</div>
+
+</div>
+
+<div id="dialog-reporte-items" class="modal">
+	<div class="">
+		<div class="modal-content">
+			<div class="modal-header no-padding">
+				<div class="table-header text-center">
+					<button type="button" class="close" aria-hidden="true" ng-click="cerrarModalReporteItems()">
+						<span class="white">×</span>
+					</button>
+					Reporte de Saldos Negativos
+				</div>
+			</div>
+
+			<div class="modal-body no-padding">
+				<!-- {{inventariosEmpresa}} -->
+				<div class="table-responsive table-fixed-header">
+					<table class="table table-striped table-bordered table-hover no-margin-bottom no-border-top">
+						<thead>
+							<tr>
+								<th class="th-fix text-center">#</th>
+								<th class="th-fix text-center">Codigo</th>
+								<th class="th-fix text-center">Cantidad</th>
+								<th class="th-fix text-center">Unid.</th>
+								<th class="th-fix text-center">
+									Descripcion
+								</th>
+								<th class="th-fix text-center">
+									<i class="ace-icon fa fa-clock-o bigger-110"></i>
+									Venc.
+								</th>
+								<th class="th-fix text-center">Sucursal</th>
+								<th class="th-fix text-center">Almacen</th>
+								<th class="th-fix text-center">Grupo</th>
+								<th class="th-fix text-center">Sub Grupo</th>
+							</tr>
+						</thead>
+	
+						<tbody>
+							
+							<tr ng-repeat="invent in inventariosEmpresa track by $index">
+								<td>{{$index+1}}</td>
+								<td>
+									{{invent.producto.codigo}}
+								</td>
+								<td>{{invent.cantidad}}</td>
+								<td>{{invent.producto.unidad_medida}}</td>
+								<td>{{invent.producto.descripcion}}</td>
+								<td>{{invent.fecha_vencimiento | date:'dd/MM/yyyy'}}</td>
+								<td>{{invent.almacen.sucursal.nombre}}</td>
+								<td>{{invent.almacen.nombre}}</td>
+								<td>{{invent.producto.grupo.nombre}}</td>
+								<td>{{invent.producto.subgrupo.nombre}}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				
+			</div>
+
+			<div class="modal-footer no-margin-top">
+				<button class="btn btn-sm btn-danger pull-left" ng-click="cerrarModalReporteItems()">
+					<i class="ace-icon fa fa-times"></i>
+					Cerrar
+				</button>
+
+				<!-- <button class="btn btn-white btn-danger btn-bold">
+					<i class="ace-icon fa fa-file-pdf-o bigger-120 red"></i>
+					PDF
+				</button> -->
+				<button type="button" class="btn btn-white btn-success btn-bold" ng-click="excelSaldosNegativosEmpresa(inventariosEmpresa)">
+					<i class="ace-icon fa fa-file-excel-o bigger-120 green"></i>
+					EXCEL
+				</button>
+
+				<!-- <ul class="pagination pull-right no-margin">
+					<li class="prev disabled">
+						<a href="#">
+							<i class="ace-icon fa fa-angle-double-left"></i>
+						</a>
+					</li>
+
+					<li class="active">
+						<a href="#">1</a>
+					</li>
+
+					<li>
+						<a href="#">2</a>
+					</li>
+
+					<li>
+						<a href="#">3</a>
+					</li>
+
+					<li class="next">
+						<a href="#">
+							<i class="ace-icon fa fa-angle-double-right"></i>
+						</a>
+					</li>
+				</ul> -->
+			</div>
+		</div><!-- /.modal-content -->
+	</div>
+</div>
+
+
+
+<!-- Modal para configuraciones de sistema de facturación web por tipo -->
+<div id="modal-config-sistema-facturacion-elect-web" class="modal">
+	<div class="">
+		<div class="modal-content">
+			<div class="modal-header no-padding">
+				<div class="table-header text-center">
+					<button type="button" class="close" aria-hidden="true" ng-click="cerrarModalconfigFacturacionElectWeb()">
+						<span class="white">×</span>
+					</button>
+					CONFIGURACIÓN SISTEMA FACTURACIÓN ELECTRONICA WEB EN LINEA
+				</div>
+			</div>
+			<div class="modal-body no-padding">
+				<div class="table-responsive table-fixed-header">
+					<table class="table table-striped table-bordered table-hover no-margin-bottom no-border-top">
+						<thead>
+							<tr>
+								<th class="th-fix text-center">#</th>
+								<th class="th-fix text-center">DESCRIPCIÓN</th>
+								<th class="th-fix text-center">ACCIONES</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="catalogo in catalogosEmpresa track by $index">
+								<td style="width: 5%;">{{$index+1}}</td>
+								<td>{{catalogo.nombre}}</td>
+								<td style="width: 10%;">
+									<a class="text-warning blue tooltip-info align-center" href="javascript:void(0)" e-disabled="!aplicacion.puede_modificar"
+										data-rel="tooltip" tooltip-placement="left"
+										uib-tooltip="Configurar {{catalogo.nombre}}" tooltip-append-to-body="true"
+										ng-click="empresaConfigSFE(catalogo)">
+										<i class="ace-icon fa fa-share-square-o bigger-140"></i>
+									</a>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="modal-footer no-margin-top">
+				<button class="btn btn-sm btn-danger pull-left" ng-click="cerrarModalconfigFacturacionElectWeb()">
+					<i class="ace-icon fa fa-times"></i>
+					Cerrar
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- Modal para configuraciones de empresa y tipo de sistema de facturación web -->
+<div id="modal-empresa-config-sfe" class="modal">
+	<div class="">
+		<div class="modal-content">
+			<div class="modal-header no-padding">
+				<div class="table-header text-center">
+					<button type="button" class="close" aria-hidden="true" ng-click="cerrarModalempresaConfigSFE()">
+						<span class="white">×</span>
+					</button>
+					{{catalogo.nombre}}
+				</div>
+			</div>
+			<div class="modal-body no-padding">
+				<div class="table-responsive table-fixed-header">
+					<table class="table table-striped table-bordered table-hover no-margin-bottom no-border-top">
+						<thead>
+							<tr>
+								<th class="th-fix text-center">#</th>
+								<th class="th-fix text-center">CÓDIGO</th>
+								<th class="th-fix text-center">DESCRIPCIÓN</th>
+								<th class="th-fix text-center">ACCIONES</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="listCatalog in listaXcatalogo track by $index">
+								<td>{{$index+1}}</td>
+								<td>{{listCatalog.codigo}}</td>
+								<td>{{listCatalog.descripcion}}</td>
+								<td>
+									<label class="bigger pull-right">
+										<input name="switch-field-1" class="ace ace-switch ace-switch-4" type="checkbox"
+										ng-model="listCatalog.activo" ng-true-value="1" ng-false-value="0"/>
+										<span class="lbl check-descuento"></span>
+									</label>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="modal-footer no-margin-top">
+				<button class="btn btn-sm btn-danger pull-left" ng-click="cerrarModalempresaConfigSFE()">
+					<i class="ace-icon fa fa-times"></i>
+					Cerrar
+				</button>
+				<button type="button" class="btn btn-sm btn-info" ng-click="guardarCatalogos(listaXcatalogo,catalogo)"><i class="ace-icon fa fa-check-circle-o bigger-150"></i>
+					GUARDAR
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+

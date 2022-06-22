@@ -1,0 +1,2 @@
+ALTER TABLE agil_rrhh_empleado_otros_bonos drop id_usuario;
+ALTER TABLE agil_rrhh_empleado_otros_bonos DROP FOREIGN KEY agil_rrhh_empleado_otros_bonos_ibfk_2;

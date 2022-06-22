@@ -1,0 +1,84 @@
+<div class="row">
+    <div class="col-xs-12">
+        <h3 class="header smaller lighter blue">REPORTES DE RENDICION DE CAJA CHICA. </h3>
+        <form name="formularioReporteRendicionCajaChica" novalidate>
+            <fieldset>
+                <legend>RANGO DE FECHAS</legend>
+                <div class="row">
+                    <div class="form-group col-sm-6 col-md-3 col-lg-2">
+                        <label> Desde</label>
+                        <div  ng-class="{'has-error-date':fechasIncorrectaInic}">
+                            <input required ng-update-hidden autocomplete="off" class="form-control date-picker" type="text" data-date-format="dd/mm/yyyy" id="fechainicio" ng-model="reporte.desde" placeholder="Ingrese la fecha inicial" ng-change="validarFechaI(reporte.desde,reporte.hasta)"/>
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-6 col-md-3 col-lg-2">
+                        <label> Hasta</label>
+                        <div  ng-class="{'has-error-date':fechasIncorrectaFin}">
+                            <input required ng-update-hidden autocomplete="off" class="form-control date-picker" type="text" data-date-format="dd/mm/yyyy" id="fechafin" ng-model="reporte.hasta" placeholder="Ingrese la fecha final" ng-change="validarFechaF(reporte.desde,reporte.hasta)"/>
+                        </div>
+                    </div>
+                    <div >
+                        <button style="margin-top: 16px;"
+                        ng-disabled="formularioReporte.$invalid || fechasIncorrectaInic || fechasIncorrectaFin" class="btn btn-primary"
+                        type="button" ng-click="generarExcelReporteRendicionCajaChica(reporte)">
+                        <i class="ace-icon fa fa-plus align-top bigger-125"></i>
+                        Descargar Excel
+                        </button>
+                        
+                    </div>	
+                </div>
+
+
+
+<!-- 
+
+                <div class="col-xs-12">
+                    <table class="table table-striped table-bordered table-hover" style="width:50%">
+                        <tbody>
+                            <tr>
+                                <td>
+
+                                </td>
+                                <td>
+                                    <label>Desde</label>&nbsp
+                                </td>
+                                <td>
+                                    <label>Hasta</label>&nbsp
+                                </td>
+                                <td>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label>PERIODO</label>&nbsp
+                                </td>
+                                <td>
+                                    <input required ng-update-hidden autocomplete="off" class="form-control date-picker" type="text" data-date-format="dd/mm/yyyy" id="fechainicio" ng-model="reporte.desde" placeholder="Ingrese la fecha inicial" />
+                                </td>
+                                <td>
+                                    <input required ng-update-hidden autocomplete="off" class="form-control date-picker" type="text" data-date-format="dd/mm/yyyy" id="fechafin" ng-model="reporte.hasta" placeholder="Ingrese la fecha final" />
+                                    &nbsp
+                                </td>
+                                <!-- <td>
+
+                                    <button ng-disabled="formularioReporte.$invalid" class="btn btn-primary"
+                                        type="button" ng-click="generarPdfVentasMensuales(reporte)">
+                                        <i class="ace-icon fa fa-plus align-top bigger-125"></i>
+                                        Descargar PDF
+                                    </button>
+                                </td> 
+                                <td>
+                                    <button ng-disabled="formularioReporte.$invalid" class="btn btn-primary"
+                                        type="button" ng-click="generarExcelReporteRendicionCajaChica(reporte)">
+                                        <i class="ace-icon fa fa-plus align-top bigger-125"></i>
+                                        Descargar Excel
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div> -->
+            </fieldset>
+        </form>
+    </div>
+</div>

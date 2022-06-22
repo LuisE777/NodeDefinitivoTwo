@@ -1,0 +1,2 @@
+ALTER TABLE agil_rrhh_empleado_ficha add caracteristica_discapacidad int(11);
+ALTER TABLE agil_rrhh_empleado_ficha add vencimiento_carnet_discapacidad datetime;

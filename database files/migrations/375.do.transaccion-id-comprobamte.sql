@@ -1,0 +1,2 @@
+ALTER TABLE agil_cuenta_transaccion  add id_comprobante  INT(11) DEFAULT null;
+ALTER TABLE agil_cuenta_transaccion ADD CONSTRAINT agil_cuenta_transaccion_ibfk_8 FOREIGN KEY (id_comprobante) REFERENCES agil_comprobante_contabilidad(id);

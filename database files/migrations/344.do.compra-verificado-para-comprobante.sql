@@ -1,0 +1,1 @@
+alter table inv_compra ADD verificado_para_comprobante tinyint(1) default 0;

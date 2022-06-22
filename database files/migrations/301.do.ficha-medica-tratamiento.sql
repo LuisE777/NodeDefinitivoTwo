@@ -1,0 +1,1 @@
+alter table agil_medico_paciente_ficha add tratamiento TEXT(2000);

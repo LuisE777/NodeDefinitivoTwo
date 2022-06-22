@@ -1,0 +1,1 @@
+ALTER TABLE agil_proforma ADD autorizacion bigint(20);

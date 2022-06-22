@@ -1,0 +1,1 @@
+alter table agil_sucursal drop activo;

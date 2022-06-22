@@ -1,0 +1,1 @@
+alter table agil_almacen drop numero_correlativo_iso_dotacion_ropa;

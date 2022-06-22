@@ -1,0 +1,1 @@
+ALTER TABLE agil_empresa add usar_panel_cotizaciones tinyint default 0;

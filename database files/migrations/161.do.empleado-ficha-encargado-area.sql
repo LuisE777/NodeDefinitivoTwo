@@ -1,0 +1,1 @@
+ALTER TABLE agil_rrhh_empleado_ficha add encargado_area tinyint(1) default 0;

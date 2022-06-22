@@ -1,0 +1,963 @@
+<main>
+    <div class="row">
+        <div class="col-xs-12">
+            <h3 class="header smaller small lighter blue">Facturación</h3>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
+            <button type="button" style="border-radius:5px;" class="btn btn-md btn-primary" ng-click="abrirDialogNuevaFactura()">Nuevo</button>
+            <button type="button" style="border-radius:5px;" class="btn btn-md btn-inverse pull-right" ng-click="verFiltros = !verFiltros"><i class="fa fa-sliders bigger-125" aria-hidden="true"></i></button>
+        </div>
+    </div>
+    <div class="row" ng-if="verFiltros">
+        <div class="col-xs-6 col-sm-4 col-md-4 col-lg-2">
+            <label for="desde" class="text-uppercase smaller lighter"><small>Desde</small></label>
+            <input type="text" class="form-control input-sm">
+        </div>
+        <div class="col-xs-6 col-sm-4 col-md-4 col-lg-2">
+            <label for="hasta" class="text-uppercase smaller lighter"><small>Hasta</small></label>
+            <input type="text" class="form-control input-sm">
+
+        </div>
+        <div class="col-xs-6 col-sm-4 col-md-4 col-lg-2">
+            <label for="tipo" class="text-uppercase smaller lighter"><small>Tipo</small></label>
+            <input type="text" class="form-control input-sm">
+        </div>
+        <div class="col-xs-6 col-sm-4 col-md-4 col-lg-2">
+            <label for="hasta" class="text-uppercase smaller lighter"><small>Cufd</small></label>
+            <input type="text" class="form-control input-sm">
+        </div>
+        <div class="col-xs-6 col-sm-4 col-md-4 col-lg-2">
+            <label for="codigo" class="text-uppercase smaller lighter"><small>Código</small></label>
+            <input type="text" class="form-control input-sm">
+        </div>
+        <div class="col-xs-6 col-sm-4 col-md-4 col-lg-2">
+            <label for="estado" class="text-uppercase smaller lighter"><small>Estado</small></label>
+            <input type="text" class="form-control input-sm">  
+        </div>
+    </div>
+    <div style="padding-top: 8px;">
+        <div class="table-header">Facturas generadas <div class="inline pos-rel pull-right">
+                <div class="col-sm-10" ng-include="" src="'/templates/gral/fields-viewer.html'">
+                    <div class="inline pos-rel pull-right">
+                        <a data-toggle="dropdown" href="javascript:void(0)" class="dropdown-toggle white">
+                            <i class="glyphicon glyphicon-list-alt"></i>
+                        </a>
+
+                        <ul id="field-viewer" class="dropdown-menu-right dropdown-menu dropdown-yellow dropdown-caret">
+                            <!---->
+                            <li ng-repeat="fieldKey in fieldViewer.getKeys()">
+                                <label>
+                                    <input
+                                        class="ace ace-switch ace-switch-4 ng-pristine ng-untouched ng-valid ng-not-empty"
+                                        type="checkbox" ng-model="fieldViewer.object.configuracion[fieldKey].show"
+                                        ng-change="fieldViewer.updateObject()">
+                                    <span class="lbl check-descuento middle"></span>
+                                </label>
+                                <label class="blue">Fecha</label>
+                            </li>
+                            <!---->
+                            <li ng-repeat="fieldKey in fieldViewer.getKeys()">
+                                <label>
+                                    <input
+                                        class="ace ace-switch ace-switch-4 ng-pristine ng-untouched ng-valid ng-not-empty"
+                                        type="checkbox" ng-model="fieldViewer.object.configuracion[fieldKey].show"
+                                        ng-change="fieldViewer.updateObject()">
+                                    <span class="lbl check-descuento middle"></span>
+                                </label>
+                                <label class="blue">Recibo</label>
+                            </li>
+                            <!---->
+                            <li ng-repeat="fieldKey in fieldViewer.getKeys()">
+                                <label>
+                                    <input
+                                        class="ace ace-switch ace-switch-4 ng-pristine ng-untouched ng-valid ng-not-empty"
+                                        type="checkbox" ng-model="fieldViewer.object.configuracion[fieldKey].show"
+                                        ng-change="fieldViewer.updateObject()">
+                                    <span class="lbl check-descuento middle"></span>
+                                </label>
+                                <label class="blue">Monto</label>
+                            </li>
+                            <!---->
+                            <li ng-repeat="fieldKey in fieldViewer.getKeys()">
+                                <label>
+                                    <input
+                                        class="ace ace-switch ace-switch-4 ng-pristine ng-untouched ng-valid ng-not-empty"
+                                        type="checkbox" ng-model="fieldViewer.object.configuracion[fieldKey].show"
+                                        ng-change="fieldViewer.updateObject()">
+                                    <span class="lbl check-descuento middle"></span>
+                                </label>
+                                <label class="blue">Chofer</label>
+                            </li>
+                            <!---->
+                            <li ng-repeat="fieldKey in fieldViewer.getKeys()">
+                                <label>
+                                    <input
+                                        class="ace ace-switch ace-switch-4 ng-pristine ng-untouched ng-valid ng-not-empty"
+                                        type="checkbox" ng-model="fieldViewer.object.configuracion[fieldKey].show"
+                                        ng-change="fieldViewer.updateObject()">
+                                    <span class="lbl check-descuento middle"></span>
+                                </label>
+                                <label class="blue">Placa</label>
+                            </li>
+                            <!---->
+                            <li ng-repeat="fieldKey in fieldViewer.getKeys()">
+                                <label>
+                                    <input
+                                        class="ace ace-switch ace-switch-4 ng-pristine ng-untouched ng-valid ng-not-empty"
+                                        type="checkbox" ng-model="fieldViewer.object.configuracion[fieldKey].show"
+                                        ng-change="fieldViewer.updateObject()">
+                                    <span class="lbl check-descuento middle"></span>
+                                </label>
+                                <label class="blue">Método Pago</label>
+                            </li>
+                            <!---->
+                            <li ng-repeat="fieldKey in fieldViewer.getKeys()">
+                                <label>
+                                    <input
+                                        class="ace ace-switch ace-switch-4 ng-pristine ng-untouched ng-valid ng-not-empty"
+                                        type="checkbox" ng-model="fieldViewer.object.configuracion[fieldKey].show"
+                                        ng-change="fieldViewer.updateObject()">
+                                    <span class="lbl check-descuento middle"></span>
+                                </label>
+                                <label class="blue">Banco Origen</label>
+                            </li>
+                            <!---->
+                            <li ng-repeat="fieldKey in fieldViewer.getKeys()">
+                                <label>
+                                    <input
+                                        class="ace ace-switch ace-switch-4 ng-pristine ng-untouched ng-valid ng-not-empty"
+                                        type="checkbox" ng-model="fieldViewer.object.configuracion[fieldKey].show"
+                                        ng-change="fieldViewer.updateObject()">
+                                    <span class="lbl check-descuento middle"></span>
+                                </label>
+                                <label class="blue">Banco Destino</label>
+                            </li>
+                            <!---->
+                            <li ng-repeat="fieldKey in fieldViewer.getKeys()">
+                                <label>
+                                    <input
+                                        class="ace ace-switch ace-switch-4 ng-pristine ng-untouched ng-valid ng-not-empty"
+                                        type="checkbox" ng-model="fieldViewer.object.configuracion[fieldKey].show"
+                                        ng-change="fieldViewer.updateObject()">
+                                    <span class="lbl check-descuento middle"></span>
+                                </label>
+                                <label class="blue">Cheque</label>
+                            </li>
+                            <!---->
+                            <li ng-repeat="fieldKey in fieldViewer.getKeys()">
+                                <label>
+                                    <input
+                                        class="ace ace-switch ace-switch-4 ng-pristine ng-untouched ng-valid ng-not-empty"
+                                        type="checkbox" ng-model="fieldViewer.object.configuracion[fieldKey].show"
+                                        ng-change="fieldViewer.updateObject()">
+                                    <span class="lbl check-descuento middle"></span>
+                                </label>
+                                <label class="blue">Sucursal.</label>
+                            </li>
+                            <!---->
+                            <li ng-repeat="fieldKey in fieldViewer.getKeys()">
+                                <label>
+                                    <input
+                                        class="ace ace-switch ace-switch-4 ng-pristine ng-untouched ng-valid ng-not-empty"
+                                        type="checkbox" ng-model="fieldViewer.object.configuracion[fieldKey].show"
+                                        ng-change="fieldViewer.updateObject()">
+                                    <span class="lbl check-descuento middle"></span>
+                                </label>
+                                <label class="blue">Usuario</label>
+                            </li>
+                            <!---->
+                            <li ng-repeat="fieldKey in fieldViewer.getKeys()">
+                                <label>
+                                    <input
+                                        class="ace ace-switch ace-switch-4 ng-pristine ng-untouched ng-valid ng-not-empty"
+                                        type="checkbox" ng-model="fieldViewer.object.configuracion[fieldKey].show"
+                                        ng-change="fieldViewer.updateObject()">
+                                    <span class="lbl check-descuento middle"></span>
+                                </label>
+                                <label class="blue">Estado</label>
+                            </li>
+                            <!---->
+                            <li class="divider"></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div>
+            <div id="tabla-comprobamte_wrapper" class="dataTables_wrapper form-inline no-footer">
+                <div class="row" ng-include="" src="'/templates/gral/paginator-header-1.html'">
+                    <div class="col-xs-6 col-sm-6 col-md-6">
+                        <div>
+                            <label>
+                                Mostrar <select ng-model="paginator.itemsPerPage" ng-change="paginator.getFirstPage()"
+                                    name="tabla-proveedores_length" aria-controls="tabla-proveedores"
+                                    class="form-control input-sm ng-pristine ng-untouched ng-valid ng-not-empty">
+                                    <option value="? number:10 ?"></option>
+                                    <option value="0">Todos</option>
+                                    <option ng-selected="true" value="10" selected="selected">10</option>
+                                    <option value="25">25</option>
+                                    <option value="50">50</option>
+                                    <option value="100">100</option>
+                                </select> Elementos</label>
+                        </div>
+                    </div>
+                    <div class="col-xs-6 col-sm-6 col-md-6" align="right">
+                        <div class="col-sm-5">
+
+                        </div>
+                        <div class="col-sm-3">
+                            <label style="margin-top: 5px;">Buscar:</label>
+                        </div>
+                        <div class="col-xs-12 col-sm-4 col-md-3 col-lg-3" style="padding: 0px 0px;">
+                            <div ng-class="{ 'button-glow' :!textSearch.length>0 }" class="button-glow">
+                                <input style="margin: 0px 0px !important; width: 100%;" id="searchBox" name="searchBox"
+                                    class="input-sm ng-pristine ng-untouched ng-valid ng-empty" type="search"
+                                    ng-model="textSearch" ng-model-options="{ debounce: 600 }"
+                                    ng-change="paginator.getSearch(textSearch,paginator.filter,$event)">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div style="overflow-x:auto;">
+                    <table id="tabla-comprobantes" class="table table-striped table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <td class="text-center small">N°</td>
+                                <td ng-if="fieldViewer.getConfiguration().fecha.show" class="text-center">
+                                    <a href="javascript:void(0)" class="small bolder text-center text-nowrap" ng-click="paginator.sortColumn('createdAt')">
+                                        <small>FECHA</small>
+                                        <span id="fecha_factura" class="sort fa fa-sort icon-only"></span>
+                                    </a>
+                                </td>
+                                <td ng-if="fieldViewer.getConfiguration().tipo.show" class="text-center">
+                                    <a href="javascript:void(0)" class="small bolder text-nowrap" ng-click="paginator.sortColumn('correlativo')">
+                                        <small>FACTURA</small>
+                                        <span id="nro_factura" class="sort fa fa-sort icon-only"></span>
+                                    </a>
+                                </td>
+                                <td ng-if="fieldViewer.getConfiguration().estado.show" class="text-center">
+                                    <a href="javascript:void(0)" class="small bolder text-nowrap" ng-click="paginator.sortColumn('banco')">
+                                        <small>CLIENTE</small>
+                                        <span id="nombre_cliente" class="sort fa fa-sort icon-only"></span>
+                                    </a>
+                                </td>
+                                <td ng-if="fieldViewer.getConfiguration().estado.show" class="text-center">
+                                    <a href="javascript:void(0)" class="small bolder text-nowrap" ng-click="paginator.sortColumn('banco')">
+                                        <small>DOC. CLIENTE</small>
+                                        <span id="doc_cliente" class="sort fa fa-sort icon-only"></span>
+                                    </a>
+                                </td>
+                                <td ng-if="fieldViewer.getConfiguration().estado.show" class="text-center">
+                                    <a href="javascript:void(0)" class="small bolder text-nowrap" ng-click="paginator.sortColumn('banco')">
+                                        <small>MÉTODO PAGO</small>
+                                        <span id="factura_metodo_pago" class="sort fa fa-sort icon-only"></span>
+                                    </a>
+                                </td>
+                                <td ng-if="fieldViewer.getConfiguration().estado.show" class="text-center">
+                                    <a href="javascript:void(0)" class="small bolder text-nowrap" ng-click="paginator.sortColumn('banco')">
+                                        <small>MONEDA</small>
+                                        <span id="moneda_factura" class="sort fa fa-sort icon-only"></span>
+                                    </a>
+                                </td>
+                                <td ng-if="fieldViewer.getConfiguration().estado.show" class="text-center">
+                                    <a href="javascript:void(0)" class="small bolder text-nowrap" ng-click="paginator.sortColumn('banco')">
+                                        <small>DOCUMENTO SECTOR</small>
+                                        <span id="factura_sector" class="sort fa fa-sort icon-only"></span>
+                                    </a>
+                                </td>
+                                <td ng-if="fieldViewer.getConfiguration().estado.show" class="text-center">
+                                    <a href="javascript:void(0)" class="small bolder text-nowrap" ng-click="paginator.sortColumn('banco')">
+                                        <small>TIPO EMISIÓN</small>
+                                        <span id="factura_emision" class="sort fa fa-sort icon-only"></span>
+                                    </a>
+                                </td>
+                                <td ng-if="fieldViewer.getConfiguration().estado.show" class="text-center">
+                                    <a href="javascript:void(0)" class="small bolder text-nowrap" ng-click="paginator.sortColumn('banco')">
+                                        <small class="text-nowrap">TIPO FACTURA</small>
+                                        <span id="factura_tipo" class="sort fa fa-sort icon-only"></span>
+                                    </a>
+                                </td>
+                                <td ng-if="fieldViewer.getConfiguration().estado.show" class="text-center">
+                                    <a href="javascript:void(0)" class="small bolder text-nowrap" ng-click="paginator.sortColumn('banco')">
+                                        <small>MOTIVO ANULACIÓN</small>
+                                        <span id="factura_motivo_anulacion" class="sort fa fa-sort icon-only"></span>
+                                    </a>
+                                </td>
+                                <td ng-if="fieldViewer.getConfiguration().codigo.show" class="text-center">
+                                    <a href="javascript:void(0)" class="small bolder text-nowrap" ng-click="paginator.sortColumn('monto')">
+                                        <small>CUF</small>
+                                        <span id="factura_cuf" class="sort fa fa-sort icon-only"></span>
+                                    </a>
+                                </td>
+                                <td ng-if="fieldViewer.getConfiguration().inicio.show" class="text-center">
+                                    <a href="javascript:void(0)" class="small bolder text-center text-nowrap" ng-click="paginator.sortColumn('chofer')">
+                                        <small>CUFD</small>
+                                        <span id="factura_cufd" class="sort fa fa-sort icon-only"></span>
+                                    </a>
+                                </td>
+                                <td ng-if="fieldViewer.getConfiguration().fin.show" class="text-center">
+                                    <a href="javascript:void(0)" class="small bolder text-center text-nowrap" ng-click="paginator.sortColumn('placa')">
+                                        <small>MONTO TOTAL</small>
+                                        <span id="factura_monto_total" class="sort fa fa-sort icon-only"></span>
+                                    </a>
+                                </td>
+                                <td ng-if="fieldViewer.getConfiguration().fin.show" class="text-center">
+                                    <a href="javascript:void(0)" class="small bolder text-center text-nowrap" ng-click="paginator.sortColumn('placa')">
+                                        <small>DESCUENTO</small>
+                                        <span id="factura_descuento" class="sort fa fa-sort icon-only"></span>
+                                    </a>
+                                </td>
+                                <td ng-if="fieldViewer.getConfiguration().sucursal.show" class="text-center">
+                                    <a href="javascript:void(0)" class="small bolder text-nowrap" ng-click="paginator.sortColumn('metodo_pago')">
+                                        <small>MONTO GIFTCARD</small>
+                                        <span id="factura_giftcard" class="sort fa fa-sort icon-only"></span>
+                                    </a>
+                                </td>
+                                <td ng-if="fieldViewer.getConfiguration().estado.show" class="text-center">
+                                    <a href="javascript:void(0)" class="small bolder text-nowrap" ng-click="paginator.sortColumn('banco')">
+                                        <small>TOTAL SUJETO IVA</small>
+                                        <span id="factura_sujeto_iva" class="sort fa fa-sort icon-only"></span>
+                                    </a>
+                                </td>
+                                <td ng-if="fieldViewer.getConfiguration().estado.show" class="text-center">
+                                    <a href="javascript:void(0)" class="small bolder text-nowrap" ng-click="paginator.sortColumn('banco')">
+                                        <small>ESTADO</small>
+                                        <span id="factura_estado" class="sort fa fa-sort icon-only"></span>
+                                    </a>
+                                </td>
+                                <td class="text-center small">ACCIONES</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="factura in facturas">
+                                <td><p class="small"> {{ $index + 1 }}</p></td>
+                                <td ng-if="fieldViewer.getConfiguration().fecha.show"><p class="small text-center"> {{factura.fechaEmision | date : 'dd/MM/yyyy': timezone}}&nbsp{{ factura.fechaEmision | date : 'HH:mm' : timezone}}</p></td>
+                                <td ng-if="fieldViewer.getConfiguration().tipo.show" class="small text-right"><p>{{ factura.numeroFactura ? factura.numeroFactura : '' }}</p></td>
+                                <td ng-if="fieldViewer.getConfiguration().estado.show" class="small text-center">{{ factura.nombreRazonSocial ? factura.nombreRazonSocial : '' }}</td>
+                                <td ng-if="fieldViewer.getConfiguration().estado.show" class="small text-center">{{ factura.numeroDocumento ? factura.numeroDocumento : '' }}</td>
+                                <td ng-if="fieldViewer.getConfiguration().estado.show" class="small text-center">{{ factura.metodoPago ? factura.metodoPago.descripcion : '' }}</td>
+                                <td ng-if="fieldViewer.getConfiguration().estado.show" class="small text-center">{{ factura.tipoMoneda ? factura.tipoMoneda.descripcion : '' }}</td>
+                                <td ng-if="fieldViewer.getConfiguration().estado.show" class="small text-center">{{ factura.documentoSector ? factura.documentoSector.descripcion : '' }}</td>
+                                <td ng-if="fieldViewer.getConfiguration().estado.show" class="small text-center">{{ factura.tipoEmision ? factura.tipoEmision.descripcion : '' }}</td>
+                                <td ng-if="fieldViewer.getConfiguration().estado.show" class="small text-center">{{ factura.tipoFactura ? factura.tipoFactura.descripcion : '' }}</td>
+                                <td ng-if="fieldViewer.getConfiguration().estado.show" class="small text-center">{{ factura.motivoAnulacion ? factura.motivoAnulacion.descripcion : '' }}</td>
+                                <td ng-if="fieldViewer.getConfiguration().codigo.show" class="small text-center"><p ng-if="factura.cuf" class="text-nowrap">{{ factura.cuf.slice(0, 10) }}...<span style="cursor: pointer;" ng-click="addclipboard(factura.cuf)"><i class="fa fa-files-o info" aria-hidden="true"></i></span></p></td>
+                                <td ng-if="fieldViewer.getConfiguration().inicio.show" class="small text-center"><p ng-if="factura.cufd" class="text-nowrap">{{ factura.cufd.slice(0, 10) }}...<span style="cursor: pointer;" ng-click="addclipboard(factura.cufd)"><i class="fa fa-files-o info" aria-hidden="true"></i></span></p></td>
+                                <td ng-if="fieldViewer.getConfiguration().fin.show" class="small text-right"><p> {{ factura.montoTotal | number: 2  }}</p></td>
+                                <td ng-if="fieldViewer.getConfiguration().fin.show" class="small text-right"><p> {{ factura.descuentoAdicional | number: 2  }}</p></td>
+                                <td ng-if="fieldViewer.getConfiguration().sucursal.show" class="small text-right"><p>{{ factura.montoGiftCard | number: 2 }}</p></td>
+                                <td ng-if="fieldViewer.getConfiguration().sucursal.show" class="small text-right"><p>{{ factura.montoTotalSujetoIva | number: 2 }}</p></td>
+                                <td ng-if="fieldViewer.getConfiguration().sucursal.show">
+                                    <span class="badge" ng-class="{'badge-success': factura.estado === 'ENTREGADO', 'badge-warning' : factura.estado === 'VALIDADO', 'badge-danger' : factura.estado === 'ANULADO' }">{{ factura.estado }}</span>
+
+                                </td>
+                                <td>
+                                    <a href="javascript:void(0)" ng-click="generarFactura(factura.id, false)"><i class="fa fa-file-text bigger-110 info" aria-hidden="true"></i></a>
+                                    <a href="javascript:void(0)" ng-if="!factura.codigoMotivoAnulacion" ng-click="anularFactura(factura)"><i class="fa fa-trash bigger-125 red" aria-hidden="true"></i></a>
+                                    <a href="javascript:void(0)" ng-if="!factura.codigoMotivoAnulacion" ng-click="enviarFacturaPorCorreo(factura.id)"><i class="fa fa-envelope bigger-110 yellow" aria-hidden="true"></i></a>
+                                    <a href="javascript:void(0)" ng-if="false" ng-click="enviarFacturaPorWhatsapp(factura)"><i class="fa fa-paper-plane bigger-110 green" aria-hidden="true"></i></a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row" ng-include src="'/templates/gral/paginator.html'">
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- MODAL NUEVO FACTURA -->
+<div class="modal" id="dialog-nueva-factura">
+    <div class="modal-content">
+        <div class="modal-header bg-primary">
+            <button type="button" class="close" ng-click="cerrarDialogNuevaFactura()" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h5 class=' text-center text-white text-uppercase'>NUEVA FACTURA</h5>
+        </div>
+        <form  ng-submit="guardarFactura(formFactura)" id="formFactura" name="formFactura">
+            <div class="modal-body">
+                <div class="row" style="margin-bottom: 6px;">
+                    <div class="col-xs-4 col-sm-3 col-lg-2">
+                        <label for="actividad">ACTIVIDAD</label>
+                        <select class="form-control input-sm" name="act_econ" id="act_econ"
+                            ng-model="nuevaFactura.actividadEconomica" required
+                            ng-options="actividad as actividad.descripcion for actividad in actividades">
+                        </select>
+                    </div>
+                    <div class="col-xs-4 col-sm-3 col-lg-2">
+                        <label for="tipo_factura">TIPO FACTURA</label>
+                        <select class="form-control input-sm" name="tipo_factura" id="tipo_factura"
+                            ng-model="nuevaFactura.tipoFactura" required
+                            ng-options="tipoFactura as tipoFactura.descripcion for tipoFactura in tiposFacturas">
+                        </select>
+                    </div>
+                    <div class="col-xs-4 col-sm-3 col-lg-2">
+                        <label for="doc_sector">DOC. SECTOR</label>
+                        <select class="form-control input-sm" name="doc_sector" id="doc_sector"
+                            ng-model="nuevaFactura.tipoDocSector" required
+                            ng-options="doc as doc.descripcion for doc in documentosSector">
+                        </select>
+                    </div>
+                    <div class="col-xs-4 col-sm-3 col-lg-2">
+                        <label for="tipo_moneda">TIPO MONEDA</label>
+                        <select class="form-control input-sm" name="tipo_moneda" id="tipo_moneda"
+                            ng-model="nuevaFactura.tipoMoneda" required
+                            ng-options="moneda as moneda.descripcion for moneda in tiposMoneda">>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12 col-md-4 col-lg-3">
+                        <div class="widget-box">
+                            <div class="widget-header">
+                                <h4 class="widget-title"><small class="blue lighter smaller bolder">DATOS FACTURA</small></h4>
+                            </div>
+                            <div class="widget-body">
+                                <div class="widget-main">
+                                   <div class="row">
+                                    <div class="alert alert-info alinear-mensaje" ng-if="!venta.editable &amp;&amp; venta.detallesVenta.length>0">
+                                        <button type="button" class="close" data-dismiss="alert">
+                                            <i class="ace-icon fa fa-times"></i>
+                                        </button>
+                                        Si desea cambiar los datos bloqueados elimine el detalle
+                                        <br>
+                                    </div>
+                                    <div class="col-xs-6" style="margin-top: 6px!important;">
+                                        <label for="pagado">PAGADO</label>
+                                        <input type="number" ng-model="nuevaFactura.pagado" ng-change="calcularTotalPago()" class="form-control text-right" style="height: 30px!important;">
+                                    </div>
+                                    <div class="col-xs-6" style="margin-top: 6px!important;">
+                                        <label for="cambio">CAMBIO</label>
+                                        <input type="number" ng-model="nuevaFactura.cambio" disabled ng-class="cambio<0 ? 'bg-cambio-negativo' : 'bg-cambio-postivo'" class="form-control text-right" style="height: 30px!important;">
+                                    </div>
+                                    <div class="col-xs-6" style="margin-top: 6px!important;">
+                                        <label for="sucursal">SUCURSAL</label>
+                                        <input type="text" ng-model="nuevaFactura.sucursal.nombre" ng-disabled="true" class="form-control" style="height: 30px!important;">
+                                    </div>
+                                    <div class="col-xs-6" style="margin-top: 6px!important;">
+                                        <label for="almacen">ALMACÉN</label>
+                                        <!-- <input type="text" ng-model="nuevaFactura.almacen" class="form-control"> -->
+                                        <ui-select class="" id="tipo_pago" required name="tipo_pago" ng-model="nuevaFactura.almacen" theme="select2" title="NINGUNO" append-to-body="true" style="min-width: 100px; width: 100%; padding-left: 0px; padding-right: 0px; height: 30px;">
+                                            <ui-select-match class="form-control" placeholder="NINGUNO"><span
+                                                    style="color:black">{{$select.selected.nombre}}</span>
+                                            </ui-select-match>
+                                            <ui-select-choices
+                                                repeat="almacen in sucursalUsuario.almacenes  | filter: $select.search">
+                                                <span> {{almacen.nombre}} </span>
+                                                <hr
+                                                    style="margin-top: 0px;margin-bottom: 0px;border: 0;border-top: 1px solid rgb(195, 193, 193);">
+                                            </ui-select-choices>
+                                        </ui-select>
+                                    </div>
+                                    <div class="col-xs-6" style="margin-top: 6px!important;">
+                                        <label for="nit">NIT</label>
+                                        <input class="form-control input-sm text-uppercase" autocomplete="off" required type="text" ng-model="nuevaFactura.cliente" placeholder="NIT/CI" uib-typeahead="cliente as ( cliente.complemento ? cliente.nit +' '+cliente.complemento : cliente.nit ) for cliente in listarClientes($viewValue, true)" typeahead-wait-ms="750" typeahead-template-url="templates/autocompletar.html" typeahead-show-hint="false" typeahead-min-length="3" typeahead-on-select="establecerCliente($item, $model, $label, $event)" style="height: 30px!important;">
+                                    </div>
+                                    <div class="col-xs-6" style="margin-top: 6px!important;">
+                                        <label for="razon_social">RAZON SOCIAL</label>
+                                        <input class="form-control input-sm text-uppercase" autocomplete="off" required type="text" ng-model="nuevaFactura.razon_social" placeholder="NOMBRE/RAZON SOCIAL" uib-typeahead="cliente as cliente.razon_social for cliente in listarClientes($viewValue, false)" typeahead-wait-ms="750" typeahead-template-url="templates/autocompletar.html" typeahead-show-hint="false" typeahead-min-length="3" typeahead-on-select="establecerCliente($item, $model, $label, $event)" style="height: 30px!important;">
+                                    </div>
+                                    <div class="col-xs-6" style="margin-top: 6px!important;">
+                                        <label for="metodo_pago">TIPO PAGO</label> 
+                                        <ui-select class="" id="tipo_pago" name="tipo_pago" ng-model="nuevaFactura.metodoPago" ng-change="actualizarCamposFacturacion()" theme="select2" title="Todos" append-to-body="true" style="min-width: 100px; width: 100%; padding-left: 0px; padding-right: 0px; height: 30px;">
+                                            <ui-select-match class="form-control" placeholder="Todos"><span
+                                                    style="color:black">{{$select.selected.descripcion}}</span>
+                                            </ui-select-match>
+                                            <ui-select-choices
+                                                repeat="metodo in metodosPago  | filter: $select.search">
+                                                <span> {{metodo.descripcion}} </span>
+                                                <hr
+                                                    style="margin-top: 0px;margin-bottom: 0px;border: 0;border-top: 1px solid rgb(195, 193, 193);">
+                                            </ui-select-choices>
+                                        </ui-select>
+                                    </div>
+                                    <div class="col-xs-6" style="margin-top: 6px!important;" ng-if="mostrarNroTarjeta">
+                                        <label for="fecha">N° TARJETA</label>
+                                        <input autocomplete="off" inputmode="numeric" pattern="[0-9\s]{13,19}" maxlength="19" required class="form-control" type="number" id="nro_tarjeta" ng-model="nuevaFactura.numeroTarjeta" style="height: 30px!important;">
+                                    </div>
+                                    <div class="col-xs-6" style="margin-top: 6px!important;">
+                                        <label for="fecha">DESCUENTO</label>
+                                        <input type="number" ng-model="nuevaFactura.descuento" ng-change="calcularTotalPago()" class="form-control text-right"  style="height: 30px!important;">
+                                    </div>
+                                    <div class="col-xs-6" style="margin-top: 6px!important;" ng-if="mostrarGiftCard">
+                                        <label for="metodo_pago">GIFT CARD</label>
+                                        <input type="number" ng-model="nuevaFactura.montoGiftCard" ng-change="calcularTotalPago()" class="form-control text-right"  style="height: 30px!important;">
+                                    </div>
+                                    <div class="col-xs-12" style="margin-top: 6px!important;">
+                                        <label for="metodo_pago">OBSERVACIÓN</label>
+                                        <textarea  cols="30" rows="3" ng-model="nuevaFactura.observacion" class="form-control text-uppercase"></textarea>
+                                    </div>
+                                   </div> 
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-8 col-lg-9">
+                        <div class="widget-box">
+                            <div class="widget-header">
+                                <h4 class="widget-title"><small class="blue lighter smaller bolder">DETALLE FACTURA</small></h4>
+                            </div>
+                            <div class="widget-body" style="overflow-x: hidden;">
+                                <div class="widget-main no-padding">
+                                    <div style="overflow-x: auto;">
+                                        <table class="table table-striped table-bordered table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>
+                                                        <label>PRODUCTO</label>
+                                                    </th>
+                                                    <th>
+                                                        <label>CÓDIGO</label>
+                                                    </th>
+                                                    <th>
+                                                        <label>U.M.</label>
+                                                    </th>
+                                                    <th ng-if="usuario.empresa.usar_vencimientos && usuario.empresa.usar_vencimiento_productos">
+                                                        <label>VCTO</label>
+                                                    </th>
+                                                    <th ng-if="usuario.empresa.usar_vencimientos && usuario.empresa.usar_vencimiento_productos">
+                                                        <label>LOTE</label>
+                                                    </th>
+                                                    <th>
+                                                        <label>STOCK</label>
+                                                    </th>
+                                                    <th>
+                                                        <label>P.U.</label>
+                                                    </th>
+                                                    <th>
+                                                        <label>CANT.</label>
+                                                    </th>
+                                                    <th>
+                                                        <label>IMP. {{usuario.empresa.ver_costos_dolares && venta.ver_dolares ? '($us)' : '(Bs)'}}</label>
+                                                    </th>
+                                                    <th ng-if="tipoEgreso==diccionario.EGRE_BAJA">
+                                                        <label>observación.</label>
+                                                    </th>
+                                                    <th>
+                                                        <label>ACC.</label>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>
+                                                        <div class="input-group">
+                                                            <input autocomplete="off" class="form-control input-sm" id="id_producto" ng-disabled="!nuevaFactura.almacen.id" type="text"
+                                                            ng-model="item.nombre"
+                                                            placeholder="Ingrese el nombre del producto..."
+                                                            uib-typeahead="producto as (producto.codigo+'-'+producto.nombre) for producto in buscarProducto($viewValue)" typeahead-wait-ms="750" typeahead-append-to-body="true"
+                                                            typeahead-show-hint="false" typeahead-select-on-exact="true"
+                                                            typeahead-min-length="3"
+                                                            typeahead-on-select="establecerProducto($item, $model, $label, $event)">
+                                                            <i class="ace-icon fa fa-search-plus bigger-110"></i>
+                                                            <!-- <span class="input-group-btn">
+                                                                <button ng-disabled="!venta.almacen" id="mostrar_inv" type="button" ng-click="abrirPopupInventario()"
+                                                                    class="btn btn-info btn-xs">
+                                                                    <i class="ace-icon fa fa-search-plus bigger-110"></i>
+                                                                </button>
+                                                            </span> -->
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        {{(item.codigo)}}
+                                                    </td>
+                                                    <td>
+                                                        {{item.unidad_medida}}
+                                                    </td>
+                                                    <td ng-if="usuario.empresa.usar_vencimientos && usuario.empresa.usar_vencimiento_productos">
+                                                        <!-- <select style="width:95px;" id="fechaVencimiento"
+                                                            name="fechaVencimiento" class="form-control input-sm"
+                                                            ng-if="item.activar_inventario"
+                                                            ng-model="item.fecha_vencimiento | date:'dd/MM/yyyy' "
+                                                            data-placeholder="Elija la fecha de vencimiento"
+                                                            ng-change="actualizarInventarioDisponibleFechaVencimiento(item)"
+                                                            >
+                                                        </select> -->
+                                                    </td>
+                                                    <td ng-if="usuario.empresa.usar_vencimientos && usuario.empresa.usar_vencimiento_productos">
+                                                        <!-- <select style="width:95px;" id="fechaVencimiento"
+                                                            name="fechaVencimiento" class="form-control input-sm"
+                                                            ng-if="item.activar_inventario"
+                                                            ng-model="item.lote"
+                                                            data-placeholder="Elija la fecha de vencimiento"
+                                                            ng-change="actualizarInventarioDisponibleFechaVencimiento(item)"
+                                                            > -->
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <div class="c100 p{{porcentaje}} small {{color}}"
+                                                            ng-if="item.activar_inventario">
+                                                            <span id="CantProd"
+                                                                style="color:black !important;">{{item.disponible}}</span>
+                                                            <div class="slice">
+                                                                <div class="bar"></div>
+                                                                <div class="fill"></div>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <input onfocus="this.select();" class="form-control input-sm"
+                                                            ng-keypress="interceptarTecla($event,'agregar_detalle_venta',false)"
+                                                            id="cantidad" name="cantidad" step="0.001" min="0.001" class="col-xs-12"
+                                                            ng-change="calcularImporte()" ng-model="item.precio_unitario"
+                                                            type="number" />
+                                                    </td>
+                                                    <td>
+                                                        <input onfocus="this.select();" class="form-control input-sm"
+                                                            ng-keypress="interceptarTecla($event,'agregar_detalle_venta',false)"
+                                                            id="cantidad" name="cantidad" step="0.001" min="0.001"
+                                                            max="{{item.disponible}}" class="col-xs-12"
+                                                            ng-change="calcularImporte()" ng-model="item.cantidad"
+                                                            type="number" />
+                                                        <div
+                                                            ng-show="formularioBusquedaProducto.cantidad.$dirty && formularioBusquedaProducto.cantidad.$invalid">
+                                                            <span class="invalid-message">La cantidad debe estar entre 0.01 y
+                                                                {{item.disponible}}.</span>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        {{(usuario.empresa.ver_costos_dolares && venta.ver_dolares ?
+                                                        item.importe_dolares :
+                                                        item.importe) | number : 2}}
+                                                    </td>
+                                                    <th ng-if="tipoEgreso==diccionario.EGRE_BAJA">
+                                                        <input type="text" name="obs" id="obs-p"
+                                                            ng-model="item.observaciones">
+                                                    </th>
+                                                    <td>
+                                                        <div class="btn-group btn-corner">
+                                                            <button id="agregar_detalle_venta" type="button" ng-click="agregarItem(item)" ng-disabled="!item || item.disponible == 0 || item.cantidad > item.disponible" class="btn btn-success btn-sm">
+                                                                <i class="ace-icon fa fa-plus bigger-110"></i>
+                                                            </button>
+                                                            <button id="mostrar_desc" type="button" ng-click="verDescuentos = !verDescuentos" class="btn btn-info btn-sm">
+                                                                <i class="ace-icon fa fa-exchange bigger-110"></i>
+                                                            </button>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr class="des-datos" ng-if="verDescuentos">
+                                                    <th>
+                                                        <label>DESCUENTOS (-)</label>
+                                                        <label>
+                                                            <input ng-disabled="detalleVenta.producto.descuento_fijo"
+                                                                class="ace ace-switch ace-switch-4" type="checkbox"
+                                                                ng-model="detalleVenta.tipo_descuento"
+                                                                ng-change="recalcular()" />
+                                                            <span class="lbl check-compra"></span>
+                                                        </label>
+                                                    </th>
+                                                    <th>
+                                                        <label>RECARGOS (+)</label>
+                                                        <label>
+                                                            <input class="ace ace-switch ace-switch-4" type="checkbox"
+                                                                ng-model="detalleVenta.tipo_recargo" ng-change="recalcular()" />
+                                                            <span class="lbl check-compra"></span>
+                                                        </label>
+                                                    </th>
+                                                    <th>
+                                                        <label>ICE (-)</label>
+                                                    </th>
+                                                    <th>
+                                                        <label>EXCENTOS (-)</label>
+                                                    </th>
+                                                    <th>
+                                                        <label>SUJETO A DF</label>
+                                                    </th>
+                                                </tr>
+                                                <tr class="des-datos" ng-if="verDescuentos">
+                                                    <td ng-if="(usuario.empresa.ver_costos_dolares && venta.ver_dolares)">
+                                                        <input ng-disabled="item.producto.descuento_fijo"
+                                                            ng-change="calcularImporte()"
+                                                            ng-model="item.descuento_dolares" step="0.001"
+                                                            class="col-xs-12" type="number" />
+                                                    </td>
+                                                    <td ng-if="!(usuario.empresa.ver_costos_dolares && venta.ver_dolares)">
+                                                        <input ng-disabled="item.producto.descuento_fijo"
+                                                            ng-change="calcularImporte()" ng-model="item.descuento"
+                                                            step="0" class="col-xs-12" type="number" value="0" />
+                                                    </td>
+                                                    <td ng-if="(usuario.empresa.ver_costos_dolares && venta.ver_dolares)">
+                                                        <input ng-change="calcularImporte()"
+                                                            ng-model="item.recargo_dolares" step="0" class="col-xs-12"
+                                                            type="number" value="0" />
+                                                    </td>
+                                                    <td ng-if="!(usuario.empresa.ver_costos_dolares && venta.ver_dolares)">
+                                                        <input ng-change="calcularImporte()"
+                                                            ng-model="item.recargo" step="0" class="col-xs-12"
+                                                            type="number" value="0" />
+                                                    </td>
+                                                    <td ng-if="(usuario.empresa.ver_costos_dolares && venta.ver_dolares)">
+                                                        <input ng-change="calcularImporte()"
+                                                            ng-model="item.ice_dolares" step="0" class="col-xs-12"
+                                                            type="number" value="0" />
+                                                    </td>
+                                                    <td ng-if="!(usuario.empresa.ver_costos_dolares && venta.ver_dolares)">
+                                                        <input ng-change="calcularImporte()"
+                                                            ng-model="item.ice" step="0" class="col-xs-12" type="number"
+                                                            value="0" />
+                                                    </td>
+                                                    <td ng-if="(usuario.empresa.ver_costos_dolares && venta.ver_dolares)">
+                                                        <input ng-change="calcularImporte()"
+                                                            ng-model="item.exento_dolares" step="0" class="col-xs-12"
+                                                            type="number" value="0" />
+                                                    </td>
+                                                    <td ng-if="!(usuario.empresa.ver_costos_dolares && venta.ver_dolares)">
+                                                        <input ng-change="calcularImporte()"
+                                                            ng-model="item.exento" step="0" class="col-xs-12"
+                                                            type="number" value="0" />
+                                                    </td>
+                                                    <td>
+                                                        {{(usuario.empresa.ver_costos_dolares && venta.ver_dolares ?
+                                                        detalleVenta.total_dolares :
+                                                        detalleVenta.total) | number : 2}}
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>  
+                                    <div style="margin-top: 7px!important; overflow: auto;">
+                                        <table class="table table-striped table-bordered table-hover" ng-if="items.length>0">
+                                            <thead>
+                                                <tr>
+                                                    <th>
+                                                        <label>#</label>
+                                                    </th>
+                                                    <th>
+                                                        <label>NOMBRE</label>
+                                                    </th>
+                                                    <th>
+                                                        <label>CÓD. ITEM</label>
+                                                    </th>
+                                                    <th>
+                                                        <label>UNID. MED.</label>
+                                                    </th>
+                                                    <th>
+                                                        <label>P.U.
+                                                            {{(usuario.empresa.ver_costos_dolares && venta.ver_dolares ? '($us/u)' :
+                                                            '(Bs/u)')}}</label>
+                                                    </th>
+                                                    <th>
+                                                        <label>CANT. (u)</label>
+                                                    </th>
+                                                    <th ng-if="usuario.empresa.usar_vencimientos">
+                                                        <label>VENC.</label>
+                                                    </th>
+                                                    <th
+                                                        ng-if="usuario.empresa.usar_vencimientos">
+                                                        <label>LOTE</label>
+                                                    </th>
+                                                    <th>
+                                                        <label>IMP. {{(usuario.empresa.ver_costos_dolares && venta.ver_dolares ? '($us)' :
+                                                            '(Bs)')}}</label>
+                                                    </th>
+                                                    <th>
+                                                        <label>DESC. (-)</label>
+                                                    </th>
+                                                    <th>
+                                                        <label>REC. (+)</label>
+                                                    </th>
+                                                    <th>
+                                                        <label>ICE (-)</label>
+                                                    </th>
+                                                    <th>
+                                                        <label>EXE. (-)</label>
+                                                    </th>
+                                                    <th>
+                                                        <label>SUJETO A DF</label>
+                                                    </th>
+                                                    <th ng-if="tipoEgreso==diccionario.EGRE_BAJA">
+                                                        <label>Observaciones</label>
+                                                    </th>
+                                                    <th>
+                                                        <label>ACCIONES</label>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr ng-repeat="detalle in items">
+                                                    <td> {{$index+1}} </td>
+                                                    <td>
+                                                        {{detalle.nombre}}
+                                                    </td>
+                                                    <td>
+                                                        {{detalle.codigo}}
+                                                    </td>
+                                                    <td>
+                                                        {{detalle.unidad_medida}}
+                                                    </td>
+                                                    <td>
+                                                        {{ detalle.precio_unitario }}
+                                                    </td>
+                                                    <td>
+                                                        {{detalle.cantidad}}
+                                                    </td>
+                                                    <td ng-if="usuario.empresa.usar_vencimientos">
+                                                        {{detalle.fecha_vencimiento | date:"dd/MM/yyyy"}}
+                                                    </td>
+                                                    <td
+                                                        ng-if="usuario.empresa.usar_vencimientos">
+                                                        {{detalle.lote}}
+                                                    </td>
+                                                    <td>
+                                                        {{(usuario.empresa.ver_costos_dolares && venta.ver_dolares ?
+                                                        detalle.importe_dolares :
+                                                        detalle.importe) | number: 2}}
+                                                    </td>
+                                                    <td>
+                                                        {{(detalle.total_descuento !== undefined ?
+                                                        (usuario.empresa.ver_costos_dolares && venta.ver_dolares ?
+                                                        detalle.total_descuento_dolares : detalle.total_descuento) :
+                                                        (usuario.empresa.ver_costos_dolares &&
+                                                        venta.ver_dolares ? detalle.descuento_dolares :
+                                                        detalle.descuento)) | number: 2}}
+                                                        <!--&nbsp;{{detalle.tipo_descuento ? '('+detalle.descuento+'%)':''}}-->
+                                                    </td>
+                                                    <td>
+                                                        {{(detalle.total_recargo !== undefined ?
+                                                        (usuario.empresa.ver_costos_dolares && venta.ver_dolares ?
+                                                        detalle.total_recargo_dolares : detalle.total_recargo) :
+                                                        (usuario.empresa.ver_costos_dolares &&
+                                                        venta.ver_dolares ? detalle.recargo_dolares : detalle.recargo)) |
+                                                        number: 2}}
+                                                        <!--&nbsp;{{detalle.tipo_recargo ? '('+detalle.recargo+'%)':''}}-->
+                                                    </td>
+                                                    <td>
+                                                        {{(usuario.empresa.ver_costos_dolares && venta.ver_dolares ?
+                                                        detalle.ice_dolares : detalle.ice) |
+                                                        number: 2}}
+                                                    </td>
+                                                    <td>
+                                                        {{(usuario.empresa.ver_costos_dolares && venta.ver_dolares ?
+                                                        detalle.excento_dolares :
+                                                        detalle.exento) | number: 2 }}
+                                                    </td>
+                                                    <td>
+                                                        {{(usuario.empresa.ver_costos_dolares && venta.ver_dolares ?
+                                                        detalle.total_dolares : detalle.df)
+                                                        | number: 2}}
+                                                    </td>
+                                                    <td ng-if="tipoEgreso==diccionario.EGRE_BAJA">
+                                                        {{detalle.observaciones}}
+                                                    </td>
+                                                    <td>
+                                                        <a class="red" href="javascript:void(0)"
+                                                            ng-click="eliminarItem($index)">
+                                                            <i class="ace-icon fa fa-trash-o bigger-130"></i>
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td></td>
+                                                    <td><b>TOTALES</b></td>
+                                                    <td>
+                                                    </td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td class="bolder">{{(usuario.empresa.ver_costos_dolares && venta.ver_dolares ?
+                                                        nuevaFactura.importe_dolares : nuevaFactura.total_bruto) | number:
+                                                        2}}
+                                                    </td>
+                                                    <td class="bolder">
+                                                        {{(usuario.empresa.ver_costos_dolares && nuevaFactura.ver_dolares ?
+                                                        nuevaFactura.total_descuento_dolares :
+                                                        nuevaFactura.total_descuentos) | number: 2}}
+                                                    </td>
+                                                    <td class="bolder">
+                                                        {{(usuario.empresa.ver_costos_dolares && nuevaFactura.ver_dolares ?
+                                                        nuevaFactura.total_recargo_dolares :
+                                                        nuevaFactura.total_recargos) | number: 2}}
+                                                    </td>
+                                                    <td class="bolder">
+                                                        {{(usuario.empresa.ver_costos_dolares && nuevaFactura.ver_dolares ?
+                                                        nuevaFactura.total_ice : nuevaFactura.total_ice) |
+                                                        number: 2 }}
+                                                    </td>
+                                                    <td class="bolder">
+                                                        {{nuevaFactura.total_exentos | number: 2}}
+                                                    </td>
+                                                    <td class="bolder">
+                                                        {{(usuario.empresa.ver_costos_dolares && nuevaFactura.ver_dolares ?
+                                                        nuevaFactura.total_dolares : nuevaFactura.total_sujeto_df)| number: 2}}
+                                                    </td>
+                                                    <td>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger btn-sm" ng-click="cerrarDialogNuevaFactura()"><i class="glyphicon glyphicon-remove" aria-hidden="true"></i> Salir</button>
+                <button type="submit" class="btn btn-primary btn-sm" ng-disabled="formFactura.$invalid || items==0 || nuevaFactura.pagado == 0 ||nuevaFactura.cambio<0"><i class="fa fa-floppy-o" aria-hidden="true"></i> Guardar</button>
+            </div>
+        </form>
+    </div>
+</div>
+<!-- FIN MODAL NUEVO FACTURA -->
+
+<!-- MODAL NUEVO CLIENTE -->
+<div class="modal" id="dialog-nuevo-cliente-facturacion">
+    <div class="modal-content">
+        <div class="modal-header bg-primary">
+            <button type="button" class="close" ng-click="cerrarNuevoCliente()" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h5 class=' text-center text-white text-uppercase'>REGISTRO NUEVO CLIENTE</h5>
+        </div>
+        <form  ng-submit="guardarCliente(formCliente)" id="formCliente" name="formCliente">
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-6 col-sm-4">
+                        <label for="inicio">CÓDIGO</label>
+                        <input required ng-update-hidden class="form-control" type="text" id="fecha_cod" ng-model="nuevoCliente.codigo">
+                    </div>
+                    <div class="col-xs-6 col-sm-4">
+                        <label for="fin">TIPO DOCUMENTO</label>
+                        <select class="form-control input-sm" name="tipo_doc" id="tipo_doc"
+                            ng-model="nuevoCliente.tipoDocumento" required
+                            ng-options="tipo as tipo.descripcion for tipo in tiposDoc">
+                        </select>
+                    </div>
+                    <div class="col-xs-6 col-sm-4">
+                        <label for="tipo">RAZÓN SOCIAL</label>
+                        <input required ng-update-hidden placeholder="Nombre o Razon Social" autocomplete="off" class="form-control text-uppercase" type="text" id="razon_soc" ng-model="nuevoCliente.razon_social">
+                    </div>
+                    <div class="col-xs-6 col-sm-4">
+                        <label for="cufd_evento">CI/NIT</label>
+                            <div class="input-group">
+                                <input type="text" required placeholder="9351944" ng-if="nuevoCliente.tipoDocumento.codigoTipoDocIdentidad == 1" autocomplete="off" ng-model="nuevoCliente.nit" class="input-sm form-control" style="width: 80%!important;" name="start">
+                                <input type="text" required placeholder="E-4571565" ng-if="nuevoCliente.tipoDocumento.codigoTipoDocIdentidad != 1" autocomplete="off" ng-model="nuevoCliente.nit" class="input-sm form-control"  name="start">
+                                <input type="text" placeholder="1P" ng-if="nuevoCliente.tipoDocumento.codigoTipoDocIdentidad == 1" ng-model="nuevoCliente.complemento" class="input-sm form-control" style="width: 20%!important;" name="end">
+                            </div>
+                    </div>
+                    <div class="col-xs-6 col-sm-4">
+                        <label for="cufd_evento">NÚMERO CONTACTO</label>
+                        <input ng-update-hidden class="form-control" placeholder="78331477" type="number" id="nro_contacto" ng-model="nuevoCliente.telefono">
+                    </div>
+                    <div class="col-xs-6 col-sm-4">
+                        <label for="cufd_evento">CORREO ELECTRÓNICO</label>
+                        <input ng-update-hidden class="form-control" placeholder="micorreo@correo.com" type="email" id="correo" ng-model="nuevoCliente.correo">
+                    </div>
+                    <div class="col-xs-12">
+                        <label for="cufd_evento">DIRECCIÓN</label>
+                        <input ng-update-hidden class="form-control" placeholder="Av. Oquendo #877" type="text" id="direccion_cliente" ng-model="nuevoCliente.direccion">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger btn-sm" ng-click="cerrarNuevoCliente()"><i class="glyphicon glyphicon-remove" aria-hidden="true"></i> Salir</button>
+                <button type="submit" class="btn btn-primary btn-sm"><i class="fa fa-floppy-o" aria-hidden="true" ng-disabled="formCliente.$invalid"></i> Guardar</button>
+            </div>
+        </form>
+    </div>
+</div>
+<!-- FIN MODAL NUEVO CLIENTE -->

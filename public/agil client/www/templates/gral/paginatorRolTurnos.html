@@ -1,0 +1,24 @@
+<div class="col-sm-6">
+    <div>
+      Mostrando página {{paginatorRolTurnos.currentPage}} de {{paginatorRolTurnos.pages.length}}
+    </div>
+  </div>
+  <div class="col-sm-6" align="right">
+    <ul class="pagination">
+      <li class="paginate_button">
+        <a href="javascript:void(0)" ng-click="paginatorRolTurnos.getFirstPage()">Primero</a>
+      </li>
+      <li class="paginate_button">
+        <a href="javascript:void(0)" e-disabled="paginatorRolTurnos.currentPage==1" ng-click="paginatorRolTurnos.getPreviousPage()"><<</a>
+      </li>
+      <li class="paginate_button" ng-class="{active:paginatorRolTurnos.currentPage==page}" ng-repeat="page in paginatorRolTurnos.pages" ng-if="abs(paginatorRolTurnos.currentPage-page)<4">
+        <a e-disabled="paginatorRolTurnos.currentPage==page" href="javascript:void(0)" ng-click="paginatorRolTurnos.getPage(page)">{{page}}</a>
+      </li>
+      <li class="paginate_button">
+        <a href="javascript:void(0)" e-disabled="paginatorRolTurnos.currentPage==paginatorRolTurnos.pages.length" ng-click="paginatorRolTurnos.getNextPage()">>></a>
+      </lidiv>
+      <li class="paginate_button">
+        <a href="javascript:void(0)" ng-click="paginatorRolTurnos.getLastPage()">Ultimo</a>
+      </li>
+    </ul>
+  </div>

@@ -1,0 +1,1 @@
+ALTER TABLE agil_cuenta_transaccion  add seguimiento  TINYINT(1) DEFAULT false;

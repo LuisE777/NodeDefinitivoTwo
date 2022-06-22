@@ -1,0 +1,2 @@
+ALTER TABLE agil_sucursal drop numero_correlativo_prestamo_rrhh;
+ALTER TABLE agil_rrhh_empleado_prestamo drop numero_correlativo;

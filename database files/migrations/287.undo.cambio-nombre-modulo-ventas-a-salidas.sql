@@ -1,0 +1,1 @@
+UPDATE sys_aplicacion SET titulo = 'VENTAS', url='ventas' WHERE id = 14;

@@ -1,0 +1,1 @@
+alter table sys_usuario add administrador_panel_venta tinyint(1);;

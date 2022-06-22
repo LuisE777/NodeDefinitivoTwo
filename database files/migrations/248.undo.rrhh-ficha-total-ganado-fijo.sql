@@ -1,0 +1,2 @@
+ALTER TABLE agil_rrhh_empleado_ficha drop total_ganado_fijo;
+ALTER TABLE agil_rrhh_empleado_ficha drop monto_total_ganado;

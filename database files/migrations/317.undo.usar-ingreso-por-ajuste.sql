@@ -1,0 +1,2 @@
+ALTER TABLE agil_empresa drop usar_ingreso_por_ajuste;
+ALTER TABLE agil_sucursal drop numero_correlativo_ingreso_por_ajuste;

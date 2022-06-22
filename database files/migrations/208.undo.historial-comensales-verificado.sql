@@ -1,0 +1,4 @@
+alter table agil_comensales_historial_comida_cliente_empresa drop column verificado;
+alter table agil_comensales_historial_comida_cliente_empresa drop column fecha_verificado;
+alter table agil_comensales_historial_comida_cliente_empresa drop column verificado_por;
+alter table agil_comensales_historial_comida_cliente_empresa drop column descartado;

@@ -1,0 +1,1 @@
+ALTER TABLE agil_proforma drop glosa_unica;

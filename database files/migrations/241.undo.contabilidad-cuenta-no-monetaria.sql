@@ -1,0 +1,2 @@
+ALTER TABLE agil_contabilidad_cuenta drop no_monetaria;
+ALTER TABLE agil_contabilidad_cuenta drop resultado_acumulado;

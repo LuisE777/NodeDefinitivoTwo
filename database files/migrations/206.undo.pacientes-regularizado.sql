@@ -1,0 +1,1 @@
+ALTER TABLE agil_medico_paciente DROP COLUMN regularizado;

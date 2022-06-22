@@ -1,0 +1,1 @@
+ALTER TABLE agil_medico_laboratorio drop eliminar;

@@ -1,0 +1,1 @@
+alter table agil_contabilidad_clasificacion_cuenta add usar_centro_costo tinyint(1) default 0;

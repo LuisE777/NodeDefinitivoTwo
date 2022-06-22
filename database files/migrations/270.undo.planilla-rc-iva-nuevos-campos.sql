@@ -1,0 +1,6 @@
+ALTER TABLE agil_rrhh_detalle_planilla_rc_iva DROP otros_ingresos;
+ALTER TABLE agil_rrhh_detalle_planilla_rc_iva DROP monto_ingresos_netos;
+ALTER TABLE agil_rrhh_detalle_planilla_rc_iva DROP saldo_anterior_arrastrado;
+ALTER TABLE agil_rrhh_detalle_planilla_rc_iva DROP otra_empresa;
+ALTER TABLE agil_rrhh_detalle_planilla_rc_iva DROP observaciones;
+ALTER TABLE agil_rrhh_detalle_planilla_rc_iva DROP nuevo_empleado;

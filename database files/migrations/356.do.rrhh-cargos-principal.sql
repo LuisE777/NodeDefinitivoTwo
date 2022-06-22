@@ -1,0 +1,1 @@
+ALTER TABLE agil_rrhh_empleado_cargo add principal  TINYINT(1) DEFAULT false;

@@ -1,0 +1,1 @@
+ALTER TABLE agil_gestion_orden_reposicion  add maximos  tinyint(1) DEFAULT false;

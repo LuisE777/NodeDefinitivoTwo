@@ -1,0 +1,6 @@
+ALTER TABLE agil_gestion_orden_reposicion DROP nro_correlativo_iso_recepcion;
+ALTER TABLE agil_gestion_orden_reposicion DROP nro_correlativo_iso_envio;
+ALTER TABLE agil_gestion_orden_reposicion DROP config_doc_iso_recepcion;
+ALTER TABLE agil_gestion_orden_reposicion DROP config_doc_iso_envio;
+ALTER TABLE agil_almacen DROP correlativo_iso_gestion_recepcion;
+ALTER TABLE agil_almacen DROP correlativo_iso_gestion_envio;

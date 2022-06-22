@@ -1,0 +1,58 @@
+<div class="row">
+	<div class="col-xs-12">
+		<h3 class="header smaller lighter blue">REPORTES DE COMPRAS </h3>
+
+		<form name="formularioReporte" novalidate>
+			<fieldset>
+				<legend>RANGO DE FECHAS</legend>
+				<div class="row">
+					<div class="form-group col-sm-6 col-md-3 col-lg-2">
+						<label> Desde</label>
+							<div ng-class="{'has-error-date':fechasIncorrectaInic}">
+								<datepicker date-format="dd/MM/yyyy" datepicker-mobile="true">
+								<input required autocomplete="off" class="form-control" type="text" id="fechainicio"
+									ng-model="reporte.fechaInicioTexto" placeholder="Ingrese la fecha inicial"
+									ng-change="validarFechaI(reporte.fechaInicioTexto, reporte.fechaFinTexto)" />
+									
+						</datepicker>
+							</div>
+					</div>
+					<div class="form-group col-sm-6 col-md-3 col-lg-2">
+						<label> Hasta</label>
+						
+							<div ng-class="{'has-error-date':fechasIncorrectaFin}">
+								<datepicker date-format="dd/MM/yyyy" datepicker-mobile="true">
+								<input required autocomplete="off" class="form-control" type="text" id="fechafin"
+									ng-model="reporte.fechaFinTexto" placeholder="Ingrese la fecha final"
+									ng-change="validarFechaF(reporte.fechaInicioTexto, reporte.fechaFinTexto)" />
+								</datepicker>
+							</div>
+					</div>
+
+					<div class="form-group col-sm-6 col-md-3 col-lg-2">
+						<label> FILTRAR SUCURSAL</label>
+						<select id="sucursal" name="sucursal"
+							ng-options="sucursal as sucursal.nombre for sucursal in sucursales track by sucursal.id"
+							ng-model="reporte.sucursal" required>
+						</select>
+					</div>
+					<div>
+
+						<button style="margin-top: 15px;" ng-disabled="formularioReporte.$invalid"
+							class="btn btn-danger" type="button" ng-click="generarPdfComprasMensuales(reporte)">
+							<i class="ace-icon fa fa-cloud-download align-top bigger-125"></i>
+							PDF
+						</button>
+						<button style="margin-top: 15px;" ng-disabled="formularioReporte.$invalid"
+							class="btn btn-success" type="button"
+							ng-click="generarExcelComprasMensuales(reporte,reporte.sucursal.id)">
+							<i class="ace-icon fa fa-cloud-download align-top bigger-125"></i>
+							Excel
+						</button>
+
+					</div>
+				</div>
+			</fieldset>
+		</form>
+	</div>
+</div>

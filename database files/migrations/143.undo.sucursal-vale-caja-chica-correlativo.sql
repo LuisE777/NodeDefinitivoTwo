@@ -1,0 +1,1 @@
+ALTER TABLE agil_sucursal drop vale_caja_chica_correlativo;

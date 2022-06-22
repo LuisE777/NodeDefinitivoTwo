@@ -1,0 +1,10 @@
+ALTER TABLE inv_solicitud_reposicion ADD solicitud_campamento INT(11);
+ALTER TABLE inv_detalle_solicitud_producto ADD detalle_solicitud_campamento INT(11);
+ALTER TABLE agil_gestion_orden_reposicion ADD orden_reposicion_campamento INT(11);
+ALTER TABLE agil_gestion_detalle_orden_reposicion ADD detalle_orden_reposicion_campamento INT(11);
+ALTER TABLE inv_solicitud_reposicion ADD campamento_sincronizado tinyint(1) default FALSE;
+ALTER TABLE inv_solicitud_reposicion ADD fecha_sincronizado datetime(0);
+ALTER TABLE agil_gestion_orden_reposicion ADD campamento_sincronizado tinyint(1) default FALSE;
+ALTER TABLE agil_gestion_orden_reposicion ADD fecha_sincronizado datetime(0);
+ALTER TABLE inv_venta ADD campamento_sincronizado tinyint(1) default FALSE;
+ALTER TABLE inv_venta ADD fecha_sincronizado datetime(0);

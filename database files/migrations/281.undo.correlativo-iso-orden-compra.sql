@@ -1,0 +1,2 @@
+ALTER TABLE agil_almacen drop numero_correlativo_iso_orden_compra;
+ALTER TABLE agil_pedidos drop numero_iso_orden_compra;

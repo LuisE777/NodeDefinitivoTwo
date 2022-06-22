@@ -1,0 +1,1 @@
+alter table agil_mantenimiento_orden_trabajo_mano_obra drop requerimiento_trabajo;

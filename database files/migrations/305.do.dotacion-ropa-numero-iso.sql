@@ -1,0 +1,1 @@
+alter table agil_rrhh_empleado_dotacion_ropa add numero_iso_dotacion_ropa int(11);

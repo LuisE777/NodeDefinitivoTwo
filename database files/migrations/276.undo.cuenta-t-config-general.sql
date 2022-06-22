@@ -1,0 +1,1 @@
+ALTER TABLE agil_contabilidad_configuracion_general_tipo_cuenta drop usar_en_comprobante;

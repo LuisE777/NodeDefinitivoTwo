@@ -1,0 +1,1316 @@
+<div class="">
+	<div class="row ">
+		<div class="col-xs-12">
+			<h3 class="header smaller lighter blue">COTIZACIONES</h3>
+			<!-- incluir ng-disabled="!aplicacion.puede_crear" en la sgte. linea-->
+			<div>
+				<button id="nuevo" class="btn-woBox button-glow" ng-click="crearNuevaCotizacion()">
+						<i class="ace-icon fa fa-plus align-top bigger-125"></i>
+						Nuevo
+				</button>
+				<button ng-if="usuario.empresa.usar_panel_cotizaciones" class="btn btn-danger" ng-click="abrirPopupPanel(null,null,null,null,null)">
+					<i class="ace-icon fa fa-th-large align-top bigger-125"></i>
+					Panel
+				</button>
+				<button id="nuevo" class="btn btn-success" ng-click="abrirFirmaUsuario()">
+						<i class="ace-icon fa fa-pencil align-top bigger-125"></i>
+						Firma
+				</button>
+			</div>
+				<br>
+			<form name="formularioFiltroCotizaciones" novalidate ng-submit="paginator.getSearch(filtro.busqueda,filtro,null)">
+				<fieldset>
+					<legend>Filtro Cotizaciones</legend>
+					<!-- visible xs sm  -->
+					
+				<!-- visible md lg	 -->
+					<table class="table table-striped table-bordered table-hover">
+						<tbody>
+							<tr>
+								<td>
+
+								</td>
+								<td>
+									<label>Desde</label>&nbsp
+								</td>
+								<td>
+									<label>Hasta</label>&nbsp
+								</td>
+								<td>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<label>PERIODO</label>&nbsp
+								</td>
+								<td>
+									<div  ng-class="{'has-error-date':fechasIncorrectaInic}">
+										<input required="" ng-update-hidden autocomplete="off" class="form-control date-picker" type="text" data-date-format="dd/mm/yyyy" id="fechainicioTab" ng-change="validarFechaI(filtro.inicio,filtro.fin);establecerFechas(filtro.inicio,filtro.fin)"
+										ng-model="filtro.inicio" placeholder="Ingrese la fecha inicial" />
+									</div>
+								</td>
+								<td>
+									<div  ng-class="{'has-error-date':fechasIncorrectaFin}">
+									<input required="" ng-update-hidden autocomplete="off" class="form-control date-picker" type="text" data-date-format="dd/mm/yyyy" id="fechafinTab" ng-change="validarFechaF(filtro.inicio,filtro.fin);establecerFechas(filtro.inicio,filtro.fin)"
+									 ng-model="filtro.fin" placeholder="Ingrese la fecha final" /> 
+									</div>&nbsp
+								</td>
+								<td>
+									<button type="submit" ng-disabled="formularioFiltroCotizaciones.$invalid || fechasIncorrectaInic || fechasIncorrectaFin " class="btn-primary btn btn-app btn-xs">
+														<i class="ace-icon fa fa-search align-top bigger-125"></i>
+														BUSCAR
+													</button>
+									<button id="pdfb" ng-disabled="!cotizaciones" class="btn btn-app btn-danger btn-xs" ng-click="imprimirFiltroCajaCartaOficio(cotizaciones,filtro.inicio,filtro.fin)">
+														<i class="ace-icon fa fa-print bigger-160"></i>
+														PDF
+													</button>
+									<button id="pdfc" ng-disabled="!cotizaciones" class="btn btn-app btn-success btn-xs" ng-click="imprimirFiltroExcelCajaCartaOficio(cotizaciones)">
+														<i class="ace-icon fa fa-print bigger-160"></i>
+														Excel
+													</button>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									&nbsp
+								</td>
+								<td>
+									<label>Razon Social</label>&nbsp
+								</td>
+								<td>
+									<label>NIT</label>&nbsp
+								</td>
+								<td>
+									<label>Monto</label>&nbsp
+								</td>
+								
+							</tr>
+							<tr>
+								<td>
+									FILTRO
+								</td>
+								<td>
+									<input type="text" ng-model="filtro.razon_social">
+								</td>
+								<td>
+									<input type="number" ng-model="filtro.nit">
+								</td>
+								<td>
+									<input type="number" ng-model="filtro.importe">
+								</td>
+							</tr>
+							<tr>
+								<td>
+									&nbsp
+								</td>
+								<!-- <td>
+									<label>Busqueda</label>&nbsp
+								</td> -->
+
+								<td>
+									<label>Sucursal</label>&nbsp
+								</td>
+								<td>
+									<label>Estado</label>&nbsp
+								</td>
+								<td>
+									<label>Usuario</label>&nbsp
+								</td>
+							</tr>
+							<tr>
+								<td>
+									&nbsp
+								</td>
+								<!-- <td>
+									<input type="text" ng-model="filtro.busqueda">
+								</td> -->
+								<td>
+									<select id="sucursal-filtro-cotizacion" name="sucursal" ng-model="filtro.sucursal" data-placeholder="Elija una sucursal">
+										<option value="0" selected>TODOS</option>
+										<option ng-repeat="sucursalFiltro in sucursales track by $index" value="{{sucursalFiltro.id}}">{{sucursalFiltro.nombre}}</option>
+									</select>
+								</td>
+								<td>
+									<select id="estado" name="estado" ng-model="filtro.estado">
+										<option value="0">TODOS</option>
+										<option value="ACEPTADO">ACEPTADO</option>
+										<option value="PENDIENTE">PENDIENTE</option>
+										<option value="RECHAZADO">RECHAZADO</option>
+									</select>
+								</td>
+								<td>
+									<input type="text" ng-model="filtro.usuario">
+								</td>
+								
+							</tr>
+						</tbody>
+					</table>
+				</fieldset>
+			</form>
+
+			<!-- Vista principal de cotizaciones -->
+			<div class="table-header">
+				Cotizaciones
+			</div>
+		
+		<!-- visible md lg xl -->
+			<div id="tabla-productos_wrapper" class="dataTables_wrapper form-inline no-footer" >
+				<table id="tabla-cotizacion" class="table table-striped table-bordered table-hover">
+
+					<thead>
+						<tr>
+							<th>Nº</th>
+							<th class="center">Sucursal </th>
+							<th class="center">Razon social</th>
+							<th class="center">NIT Cliente </th>
+							<th class="center">Fecha</th>
+							<th class="center">Monto</th>
+							<th class="center">Usuario</th>
+							<th class="center">Estado</th>
+							<th class="center">Acciones</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="cotizacion in cotizaciones">
+							<td>{{$index+1}}</td>
+							<td>{{cotizacion.sucursal.nombre}}</td>
+							<td>{{cotizacion.cliente.razon_social}}</td>
+							<td>{{cotizacion.cliente.nit}}</td>
+							<td>{{cotizacion.fecha | date:"dd/MM/yyyy"}}</td>
+							<td>{{cotizacion.importe}}</td>
+							<td>{{cotizacion.usuario.nombre_usuario}}</td>
+							<td>
+							
+								<span class="badge badge-info" ng-if="cotizacion.estado=='PENDIENTE'">{{cotizacion.estado}}</span>
+								<span class="badge badge-success" ng-if="cotizacion.estado=='ACEPTADO'">{{cotizacion.estado}}</span>
+								<span class="badge badge-danger" ng-if="cotizacion.estado=='RECHAZADO'">{{cotizacion.estado}}</span>
+								<span class="badge badge-warning puntero" ng-if="cotizacion.estado=='RECHAZADO'" popover-placement="right" uib-popover-template="dynamicPopoverRechazo.templateUrl" popover-trigger="outsideClick: outsideClick"
+                                            popover-title="RECHAZADO">
+									<i class="fa fa-info"></i>
+								</span>
+								<script type="text/ng-template" id="myPopoverTemplate.html">                                           
+                                    <div class="form-group">                                              
+                                      <p>Fecha: {{cotizacion.fecha_estado | date:"dd/MM/yyyy"}}</p>
+                                      <p>Observacion: {{cotizacion.observacion}}</p>
+                                    </div>                                           
+                                </script>
+
+							</td>
+							<td>
+								<a class="blue" href="javascript:void(0)" ng-click="ModificarCotizacion(cotizacion)">
+									<i class="ace-icon fa fa-pencil-square-o bigger-130"></i>
+								</a>
+								<a class="green" href="javascript:void(0)" ng-click="imprimirCotizacion(cotizacion, true)">
+									<i class="ace-icon fa fa-print bigger-130"></i>
+								</a>
+								<a class="red" ng-if="cotizacion.estado=='PENDIENTE'" href="javascript:void(0)" ng-click="abrirDialogDialogRechazo(cotizacion)">
+									<i class="ace-icon fa fa-ban bigger-130"></i>
+								</a>
+							</td>
+						</tr>
+						<tr ng-if="cotizaciones.length>0">
+							<td colspan="4"></td>
+							<td>
+								<b>TOTAL</b>
+							</td>
+							<td colspan="5">{{sumarMonto()|number:2 }}</td>
+						</tr>
+					</tbody>
+				</table>
+				
+			</div>
+		</div>
+	</div>
+	<!-- col-xs-12 -->
+
+</div>
+<!-- fin de vista principal cotizaciones -->
+
+<!-- Imodal de nueva cotizacion -->
+<div id="modal-wizard-cotizacion-nueva" class="modal wizard-posicion">
+	<div class="row">
+		<div class="col-sm-4">
+			<label class="col-md-3 pull-right">
+				<br>
+				<input ng-model="usuario.usar_lector_de_barra" ng-change="UsarLectorDeBarra()" checked="checked" type="checkbox" class="ace ace-switch ace-switch-5">
+				<span class="lbl" data-lbl="Si&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;No"></span>
+			</label>
+			<div class="widget-box">
+				<form id="formularioCotizacion" name="formularioCotizacion" novalidate ng-submit="guardarCotizacion(formularioCotizacion.$valid,cotizacion)">
+					<div class="widget-header">
+						<h4 class="widget-title" ng-if="!cotizacion.id">Nueva Cotización</h4>
+						<h4 class="widget-title" ng-if="cotizacion.id">Modificar Cotización</h4>
+						&nbsp;
+						<p>
+							<button id="guardarV" type="submit" ng-disabled="formularioCotizacion.$invalid ||cotizacion.detallesCotizacion.length==0" class="btn btn-primary">
+								<i class="ace-icon fa fa-floppy-o align-top bigger-125"></i>
+								GUARDAR
+							</button>
+							<button id="cerrarV" type="button" class="btn btn-primary btn-danger" ng-click="cerrarNuevaCotizacion()">
+								<i class="ace-icon fa fa-times red2 align-top bigger-125"></i>
+								CERRAR
+							</button>
+						</p>
+					</div>
+
+					<div class="widget-body">
+						<div class="widget-main">
+							<table class="table table-striped table-bordered table-hover">
+								<tr>
+									<td>
+										<label>Nombre</label>
+
+										<input ng-keypress="interceptarTecla($event,'id_producto',true)" autocomplete="off" data-validate="validate(required)" id="razon_social"
+										 name="razon_social" required type="text" ng-model="cotizacion.cliente.razon_social" placeholder="Ingrese la Razon Social"
+										 uib-typeahead="cliente as cliente.razon_social for cliente in buscarCliente($viewValue)" typeahead-wait-ms="2000"
+										 typeahead-template-url="templates/autocompletar.html" typeahead-show-hint="false" typeahead-min-length="0" typeahead-on-select="establecerCliente($item, $model, $label, $event)">
+
+										<span class="red">(*)</span>
+									</td>
+									<td >
+										<label>NIT CLIENTE</label>
+										<input  ng-keypress="interceptarTecla($event,'razon_social',true)"  id="nit" name="nit"
+										  type="number" min="0" ng-model="cotizacion.cliente.nit" placeholder="Ingrese el NIT" uib-typeahead="cliente as cliente.nit for cliente in buscarCliente($viewValue)"
+										 typeahead-wait-ms="2000" typeahead-template-url="templates/autocompletar.html" typeahead-show-hint="false" typeahead-min-length="0"
+										 typeahead-on-select="establecerCliente($item, $model, $label, $event)">
+										<span class="red">(*)</span>
+										<span class="invalid-message" ng-show="formularioVenta.nit.$dirty && formularioVenta.nit.$invalid">
+											Debe ingresar un número mayor o igual a 0.
+										</span>
+									</td>
+								</tr>
+								
+								<tr>
+									<td>
+										<label>SUCURSAL</label>
+
+										<select required id="sucursal-cotizacion" ng-keypress="interceptarTecla($event,'fechaSM',true)" ng-options="sucursal as sucursal.nombre for sucursal in sucursales track by sucursal.id"
+								 ng-model="cotizacion.sucursal"  ng-change="obtenerAlmacenes(cotizacion.sucursal)">
+								 <!-- <option disabled value="">Seleccione Sucursal...</option> -->
+								</select>
+										<span class="red">(*)</span>
+										<span class="invalid-message" ng-show="formularioVenta.sucursal.$dirty && formularioVenta.sucursal.$invalid">
+											Debe seleccionar una Sucursal.
+										</span>
+									</td>
+									<td>
+										<label>ALMACEN</label>
+										<select  required ng-disabled="venta.editable || venta.detallesVenta.length>0"   id="almacen" name="almacen" ng-model="cotizacion.almacen" ng-options="almacen as almacen.nombre for almacen in almacenes track by almacen.id"
+										 data-placeholder="Click para escoger">
+											<option value="" disabled>Selecione Almacen...</option>
+										</select>
+										<span class="red">(*)</span>
+										<span class="invalid-message" ng-show="formularioVenta.almacen.$dirty && formularioVenta.almacen.$invalid">
+											Debe seleccionar un Almacen.
+										</span>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<label>FECHA</label>
+
+										 <input required ng-keypress="interceptarTecla($event,'id_productoTB',true)" class="date-picker" type="text" data-date-format="dd/mm/yyyy"
+								 id="fechaSM" ng-model="cotizacion.fechaTexto" placeholder="Ingrese la fecha" />
+										<span class="red">(*)</span>
+										<span class="invalid-message" ng-show="formularioVenta.fecha.$dirty && formularioVenta.fecha.$invalid">
+											Dato requerido.
+										</span>
+									</td>
+									<td>
+										<label>PLAZO COTIZACION</label>
+										<input type="text" id="plazo-cotizacion" required ng-model="cotizacion.plazo" placeholder="15 Dias">
+										<span class="red">(*)</span>
+										<span class="invalid-message" ng-show="formularioVenta.fecha.$dirty && formularioVenta.fecha.$invalid">
+											Dato requerido.
+										</span>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<label>FIRMA</label>
+
+										 <input type="text" required  ng-model="cotizacion.firma" placeholder="Ingrese la nota" />
+										<span class="red">(*)</span>
+										<span class="invalid-message" ng-show="formularioVenta.fecha.$dirty && formularioVenta.fecha.$invalid">
+											Dato requerido.
+										</span>
+									</td>
+									<td>
+										<label>CARGO</label>
+										<input type="text" id="nombre" required ng-model="cotizacion.cargo">
+										<span class="red">(*)</span>
+										<span class="invalid-message" ng-show="formularioVenta.fecha.$dirty && formularioVenta.fecha.$invalid">
+											Dato requerido.
+										</span>
+									</td>
+								</tr>
+								<tr>
+									<td colspan="2">
+										<label>NOTA</label>
+
+										<textarea required ng-model="cotizacion.nota" placeholder="Los precios incluyen impuestos de ley" class="form-control limited ng-pristine ng-untouched ng-valid ng-empty ng-valid-maxlength" id="nota-al-pie" maxlength="100" style=" height: 35px;"></textarea>
+										<span class="red">(*)</span>
+										<span class="invalid-message" ng-show="formularioVenta.fecha.$dirty && formularioVenta.fecha.$invalid">
+											Dato requerido.
+										</span>
+									</td>
+								</tr>
+								<tr>
+									<td colspan="2">
+										<label>OBSERVACIÓN</label>
+										<textarea ng-model="cotizacion.descripcion" class="form-control limited ng-pristine ng-untouched ng-valid ng-empty ng-valid-maxlength" id="observacion" maxlength="100" style=" height: 35px;"></textarea>
+									</td>
+								</tr>
+							</table>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+		<div class="col-sm-8">
+			<div class="widget-box">
+				<div class="widget-header">
+					<h4 class="widget-title">BUSQUEDA PRODUCTO</h4>
+
+				</div>
+				<div class="widget-body">
+					<div class="widget-main">
+						<!-- <form id="formularioBusquedaProducto" name="formularioBusquedaProducto" novalidate> -->
+						<!-- visible en md lg xl  -->
+						<table class="table table-striped table-bordered table-hover">
+							<thead>
+								<tr>
+									<th>
+										<label>PRODUCTO</label>
+									</th>
+									<th>
+										<label>CÓD. ITEM</label>
+									</th>
+									<th>
+										<label>UNID. MED.</label>
+									</th>
+									<th>
+										<label>P.U. (Bs/u)</label>
+									</th>
+									<th>
+										<label>CANT. (u)</label>
+									</th>
+									<th>
+										<label>IMP. (Bs)</label>
+									</th>
+									<th>
+										<label>ACC.</label>
+									</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td class="col-md-2">
+										<input  required ng-keypress="interceptarTecla($event,'cantidadTB',true)" ng-disabled="!cotizacion.almacen" id="id_productoTB" required type="text" ng-model="detalleCotizacion.producto.nombre"
+										 placeholder="Ingrese el nombre del producto..." uib-typeahead="producto as (producto.codigo+'-'+producto.nombre+'-'+producto.grupo+'-'+producto.subgrupo) for producto in buscarProducto($viewValue)"
+										 typeahead-wait-ms="1000" typeahead-template-url="customItemTemplate.html" typeahead-show-hint="false" typeahead-min-length="3"
+										 typeahead-on-select="establecerProducto($item, $model, $label, $event)">
+										<script type="text/ng-template" id="customItemTemplate.html">
+											<a>
+												<i style="color: green" class="icon fa fa-cube bigger-200"></i>
+												
+												<span ng-bind-html="match.label | uibTypeaheadHighlight:query"></span>
+												<span ng-if="match.model.precioVenta" class="badge badge-success">Bs. {{match.model.precioVenta.split(',')[0]|number:2}} </span>
+												<span class="text-info bolder">{{match.model.precioVenta.split(',')[1]}} </span>
+												<span class="text-warning orange bolder" ng-if="!match.model.precioVenta"> Sin Dato de Venta</span>
+											</a>
+										</script>
+
+										<div class="space-6"></div>
+										<!-- <button id="mostrar_inv" type="button" ng-click="abrirPopupInventario()" class="btn btn-info btn-sm">
+													<i class="ace-icon fa fa-search-plus bigger-110"></i>
+												</button>
+										<span class="red" ng-if="!detalleCotizacion.producto.activar_inventario">Inventario Desactivado</span> -->
+									</td>
+									<td class="col-md-2">
+										{{detalleCotizacion.producto.codigo}}
+									</td>
+									<td class="col-md-2">
+										{{detalleCotizacion.producto.unidad_medida}}
+									</td>
+									
+									<td >
+										<div class="row">
+											<div class="col-sm-12">
+												<input required ng-disabled name="precio_unitario" step="0.001" min="0" max="10000000" required class="col-xs-12" ng-change="calcularImporte()"
+												 ng-model="detalleCotizacion.precio_unitario" type="number" />
+											</div>
+										</div>
+										<span class="blue">
+											Último precio
+										</span>
+										<span class="label label-danger label-white middle tooltip-info" ng-if="precio_inventario" data-rel="tooltip" tooltip-placement="top"
+										 uib-tooltip="Último precio de compra">{{precio_inventario}}</span>
+									</td>
+									<td>
+										<input onfocus="this.select();" ng-keypress="interceptarTecla($event,'agregar_detalle_cotizacionTB',true)" id="cantidadTB"
+										 name="cantidad" step="0.001" min="0.1" max="{{detalleCotizacion.inventario_disponible}}" required class="col-xs-12"
+										 ng-change="calcularImporte()" ng-model="detalleCotizacion.cantidad" type="number" />
+										<div ng-show="formularioBusquedaProducto.cantidad.$dirty && formularioBusquedaProducto.cantidad.$invalid">
+											<span class="invalid-message">La cantidad debe estar entre 0.1 y {{detalleCotizacion.inventario_disponible}}.</span>
+										</div>
+									</td>
+
+									<td>
+										{{detalleCotizacion.importe}}
+									</td>
+
+									<td>
+										<button ng-disabled="!productoSeleccionado" ng-keypress="interceptarTecla($event,'id_productoTB',true)" id="agregar_detalle_cotizacionTB" type="button" ng-click="agregarDetalleCotizacion(detalleCotizacion)"
+										 class="btn btn-success btn-sm">
+													<i class="ace-icon fa fa-plus bigger-110"></i>
+												</button>
+										<div class="space-6"></div>
+										<!-- <button id="mostrar_desc" type="button" ng-click="mostrarDescuentos()" class="btn btn-info btn-sm">
+													<i class="ace-icon fa fa-exchange bigger-110"></i>
+												</button> -->
+									</td>
+								</tr>
+								<tr class="des-datos" style="display:none;">
+									<td>
+										<input ng-disabled="detalleCotizacion.producto.descuento_fijo" required ng-change="calcularImporte()" ng-model="detalleCotizacion.descuento"
+										 ng-value="detalleCotizacion.producto.descuento" step="0.001" class="col-xs-12" type="number" value="0" />
+									</td>
+									<td>
+										<input required ng-change="calcularImporte()" ng-model="detalleCotizacion.recargo" step="0.001" class="col-xs-12" type="number"
+										 value="0" />
+									</td>
+									<td>
+										<input required ng-change="calcularImporte()" ng-model="detalleCotizacion.ice" step="0.001" class="col-xs-12" type="number"
+										 value="0" />
+									</td>
+									<td>
+										<input required ng-change="calcularImporte()" ng-model="detalleCotizacion.excento" step="0.001" class="col-xs-12" type="number"
+										 value="0" />
+									</td>
+									<td>
+										{{detalleCotizacion.total}}
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<!-- </form> -->
+					</div>
+				</div>
+			</div>
+			<div class="widget-box">
+				<div class="widget-header" ng-if="venta.detallesVenta.length>0">
+					<div class="row">
+						<div class="col-sm-6">
+							<h4 class="widget-title">DETALLE DE VENTA</h4>
+						</div>
+						<div class="col-sm-6">
+							<div class="inline pos-rel pull-right">
+								<a data-toggle="dropdown" href="javascript:void(0)" class="dropdown-toggle">
+									<i class="glyphicon  glyphicon-list-alt"></i>
+								</a>
+
+								<ul id="campos-detalle-venta" class="dropdown-menu-right dropdown-menu dropdown-yellow dropdown-caret">
+									<li>
+										<label>
+											<input class="ace ace-switch ace-switch-4" type="checkbox" ng-model="configuracionVentaVista.mostrar_producto" ng-change="guardarConfiguracionVentaVista()"
+											/>
+											<span class="lbl check-descuento"></span>
+										</label>
+										<label>NOMBRE</label>
+									</li>
+									<li>
+										<label>
+											<input class="ace ace-switch ace-switch-4" type="checkbox" ng-model="configuracionVentaVista.mostrar_codigo_producto" ng-change="guardarConfiguracionVentaVista()"
+											/>
+											<span class="lbl check-descuento"></span>
+										</label>
+										<label>CÓD. ITEM</label>
+									</li>
+									<li>
+										<label>
+											<input class="ace ace-switch ace-switch-4" type="checkbox" ng-model="configuracionVentaVista.mostrar_unidad_producto" ng-change="guardarConfiguracionVentaVista()"
+											/>
+											<span class="lbl check-descuento"></span>
+										</label>
+										<label>UNID. MED.</label>
+									</li>
+									<li>
+										<label>
+											<input class="ace ace-switch ace-switch-4" type="checkbox" ng-model="configuracionVentaVista.mostrar_precio_unitario" ng-change="guardarConfiguracionVentaVista()"
+											/>
+											<span class="lbl check-descuento"></span>
+										</label>
+										<label>P.U. (Bs/u)</label>
+									</li>
+									<li>
+										<label>
+											<input class="ace ace-switch ace-switch-4" type="checkbox" ng-model="configuracionVentaVista.mostrar_cantidad" ng-change="guardarConfiguracionVentaVista()"
+											/>
+											<span class="lbl check-descuento"></span>
+										</label>
+										<label>CANT. (u)</label>
+									</li>
+									<li ng-if="usuario.empresa.usar_vencimientos && usuario.empresa.usar_vencimiento_productos">
+										<label>
+											<input class="ace ace-switch ace-switch-4" type="checkbox" ng-model="configuracionVentaVista.mostrar_fecha_vencimiento" ng-change="guardarConfiguracionVentaVista()"
+											/>
+											<span class="lbl check-descuento"></span>
+										</label>
+										<label>VENC.</label>
+									</li>
+									<li ng-if="usuario.empresa.usar_vencimientos && usuario.empresa.usar_vencimiento_productos">
+										<label>
+											<input class="ace ace-switch ace-switch-4" type="checkbox" ng-model="configuracionVentaVista.mostrar_lote" ng-change="guardarConfiguracionVentaVista()"
+											/>
+											<span class="lbl check-descuento"></span>
+										</label>
+										<label>LOTE</label>
+									</li>
+									<li>
+										<label>
+											<input class="ace ace-switch ace-switch-4" type="checkbox" ng-model="configuracionVentaVista.mostrar_importe" ng-change="guardarConfiguracionVentaVista()"
+											/>
+											<span class="lbl check-descuento"></span>
+										</label>
+										<label>IMP. (Bs)</label>
+									</li>
+									<li>
+										<label>
+											<input class="ace ace-switch ace-switch-4" type="checkbox" ng-model="configuracionVentaVista.mostrar_descuento" ng-change="guardarConfiguracionVentaVista()"
+											/>
+											<span class="lbl check-descuento"></span>
+										</label>
+										<label>DESC. (-)</label>
+									</li>
+									<li>
+										<label>
+											<input class="ace ace-switch ace-switch-4" type="checkbox" ng-model="configuracionVentaVista.mostrar_recargo" ng-change="guardarConfiguracionVentaVista()"
+											/>
+											<span class="lbl check-descuento"></span>
+										</label>
+										<label>REC. (+)</label>
+									</li>
+									<li>
+										<label>
+											<input class="ace ace-switch ace-switch-4" type="checkbox" ng-model="configuracionVentaVista.mostrar_ice" ng-change="guardarConfiguracionVentaVista()"
+											/>
+											<span class="lbl check-descuento"></span>
+										</label>
+										<label>ICE (-)</label>
+									</li>
+									<li>
+										<label>
+											<input class="ace ace-switch ace-switch-4" type="checkbox" ng-model="configuracionVentaVista.mostrar_excento" ng-change="guardarConfiguracionVentaVista()"
+											/>
+											<span class="lbl check-descuento"></span>
+										</label>
+										<label>EXC. (-)</label>
+									</li>
+									<li>
+										<label>
+											<input class="ace ace-switch ace-switch-4" type="checkbox" ng-model="configuracionVentaVista.mostrar_total" ng-change="guardarConfiguracionVentaVista()"
+											/>
+											<span class="lbl check-descuento"></span>
+										</label>
+										<label>SUJETO A DF</label>
+									</li>
+									<li class="divider"></li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="widget-body" ng-if="cotizacion.detallesCotizacion.length >0">
+					<div class="widget-main">
+						<table class="table table-striped table-bordered table-hover table-responsive">
+					<thead>
+						<tr>
+							<th>
+								<label>#</label>
+							</th>
+							<th>
+								<label>NOMBRE</label>
+							</th>
+							<th>
+								<label>CÓD. ITEM</label>
+							</th>
+							<th>
+								<label>UNID. MED.</label>
+							</th>
+							<th>
+								<label>P.U. (Bs/u)</label>
+							</th>
+							<th>
+								<label>CANT. (u)</label>
+							</th>
+							<th>
+								<label>IMP. (Bs)</label>
+							</th>
+							<th>
+								<label>ACCIONES</label>
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-if="!detalleCotizacion.eliminado" ng-repeat="detalleCotizacion in cotizacion.detallesCotizacion">
+							<td>
+								{{$index+1}}
+							</td>
+							<td>
+								{{detalleCotizacion.producto.nombre}}
+							</td>
+							<td>
+								{{detalleCotizacion.producto.codigo}}
+							</td>
+							<td>
+								{{detalleCotizacion.producto.unidad_medida}}
+							</td>
+							<td>
+								{{detalleCotizacion.precio_unitario}}
+							</td>
+							<td>
+								{{detalleCotizacion.cantidad}}
+							</td>
+							<td>
+								{{detalleCotizacion.importe}}
+							</td>
+							<td>
+								<a class="red" href="javascript:void(0)" ng-click="eliminarDetalleCotizacion(detalleCotizacion)">
+											<i class="ace-icon fa fa-trash-o bigger-130"></i>
+										</a>
+							</td>
+						</tr>
+						<tr>
+							<td>
+
+							</td>
+							<td>
+								<b>TOTALES</b>
+							</td>
+							<td>
+
+							</td>
+							<td>
+
+							</td>
+							<td>
+
+							</td>
+							<td>
+
+							</td>
+							<td>
+								{{cotizacion.importe}}
+							</td>
+						</tr>
+					</tbody>
+				</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- =========== panel editar comentario ==================== -->
+<div id="dialog-editar-rechazo" class="modal wizard-posicion">
+    <!-- TOPBAR -->
+    <div class="ui-dialog-titlebar ui-widget-header ui-corner-all ui-helper-clearfix ui-draggable-handle">
+        <span id="ui-id-1" class="ui-dialog-title">
+            <div>
+                <h4 class="smaller">
+                    <i class="ace-icon fa fa-ban"></i>
+                    <label>RECHAZO
+                    </label>
+                </h4>
+            </div>
+        </span>
+        <button type="button" ng-click="cerrarDialogDialogRechazo()" class="ui-dialog-titlebar-close">
+        </button>
+    </div>
+    <!-- TOPBAR -->
+    <div class="container-fluid">
+        <div class="row">
+            <h4 class="blue titulo-pre-requisito">{{rechazo.cliente.razon_social}}</h4>
+        </div>
+    </div>
+    <form name="formRechazo" ng-submit="saveRechazo(cotizacion)" novalidate>
+        <div class="row">
+        	<div class="col-lg-12">
+                <label for="form-field-select-1">Fecha</label>
+				<input ng-update-hidden required="" autocomplete="off"  type="text"
+                                            data-date-format="dd/mm/yyyy" class="form-control date-picker" id="fecha-inicial"
+                                            ng-update-hidden ng-model="cotizacion.fechaTexto" name="fecha-inicial" >
+
+				<span class="red">(*)</span>
+            </div>
+            <div class="col-lg-12">
+                <label for="form-field-select-1">Observacion</label>
+                <textarea required="" ng-model="cotizacion.observacion" class="form-control limited ng-pristine ng-empty ng-invalid ng-invalid-required ng-valid-maxlength ng-touched"
+                    id="form-field-9" maxlength="100" style=" height: 90px;">
+            </textarea>
+            </div>
+
+        </div>
+        <div class="space-6"></div>
+        <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+            <div class="ui-dialog-buttonset">
+
+                <button  type="submit" ng-disabled="formRechazo.$invalid" id="guardarRequisitos" class="btn btn-primary" data-last="Finish">
+                    <i class="ace-icon fa fa-floppy-o bigger-110"></i>
+                    Guardar
+                </button>
+
+                <button type="button" ng-click="cerrarDialogDialogRechazo()" class="btn btn-danger" data-dismiss="modal">
+                    <i class="ace-icon fa fa-times"></i>
+                    Cancelar
+                </button>
+            </div>
+        </div>
+    </form>
+
+</div>
+
+<div id="dialog-firma-usuario" class="modal wizard-posicion">
+	<div class="">
+		<div class="modal-content">
+			<form ng-submit="saveFirma(usuario)">
+				<div id="modal-wizard-container-usuario-edicion">
+					<div class="modal-header bg-primary">
+						<h4 class="smaller text-white text-uppercase">
+							<i class="fa fa-openid fa-2x"></i>
+							<label> &nbsp;Firma  Usuario </label>
+						</h4>
+					</div>
+
+					<div class="modal-body">
+						<div class="form-group">
+							<div class="row">
+								<h3 ng-hide="firmaNew" class="blue lighter smaller control-label col-xs-12 col-sm-3 no-padding-right">
+									Foto
+								</h3>
+								<h3 ng-hide="!firmaNew" class="blue lighter smaller control-label col-xs-12 col-sm-3 no-padding-right">
+										Firmar
+								</h3>
+								
+								<!-- <div class="col-xs-12 col-xs-12 col-sm-9">
+									<img ng-if="usuario.id" ng-src="{{usuario.persona.firma?usuario.persona.firma:'img/icon.png'}}" width="100">
+									<input type="file" id="imagen-firma" onchange="uploadImage(this,'firma-persona-oculto')"/>
+									<input id="firma-persona-oculto" ng-model="usuario.persona.firma" name="imagen" type="hidden" ng-update-hidden>
+								</div> -->
+							</div>
+							<div class="row">
+								<div class="col-xs-12 col-xs-12 col-sm-9">
+									<img ng-hide="firmaNew" ng-src="{{usuario.persona.firma?usuario.persona.firma:'img/icon.png'}}" width="135%" height="200">
+									<div ng-hide="!firmaNew">
+										<canvas id="signature-pad" class="signature-pad" width="572%" height="200"></canvas>
+									</div>
+									
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="modal-footer wizard-actions">
+
+					<button type="button" class="btn btn-default btn-sm" ng-click="limpiarFirma()">
+						Nueva Firma 
+						<i class="ace-icon fa fa-openid"></i>
+					</button>
+					<div class="fileUpload btn btn-primary btn-success btn-sm">
+						<span class="fileUpload-button ace-icon fa fa-cloud-upload align-top bigger-125"> Cargar Foto</span>
+						<input  class="upload" type="file" custom-on-file-change="subirImagenFirma">
+					</div>
+					<button type="submit" class="btn btn-primary btn-sm">
+						Guardar
+						<i class="ace-icon fa fa-floppy-o"></i>
+					</button>
+
+					<button type="button" class="btn btn-danger btn-sm pull-left" data-dismiss="modal" ng-click="cerrarDialogFirmaUsuario()">
+						<i class="ace-icon fa fa-times"></i>
+						Cancelar
+					</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+<!-- <div id="dialog-imprimir-con-detalle" title="¿Impresion con Detalle?" class="modal">
+	<p>
+		<span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>¿Imprimir con detalle?</p>
+	<button type="button" class="btn btn-danger" ng-click="imprimirConDetalle()">Si</button>
+	<button type="button" class="btn btn-success" ng-click="imprimirSinDetalle()">No</button>
+</div> -->
+<!-- PAGE CONTENT ENDS -->
+<!-- ===== fin panel ============================= -->
+
+<div id="dialog-panel-ventas" class="modal wizard-posicion">
+	<div></div>
+	<div class="row">
+		<div class="col-sm-12">
+			<div class="widget-boxx">
+				<form id="formularioVentaPanel" name="formularioVentaPanel" novalidate
+					ng-submit="guardarCotizacion(formularioVentaPanel.$valid,cotizacion, true)">
+					<div class="widget-body">
+						<div class="widget-main {{color.style}}">
+							<div class="row">
+								<a type="button" href="javascript:void(0)" class="red button-close-modal"
+									ng-click="showHideFirstRow()">
+									<i class="ace-icon fa fa-chevron-circle-down align-top bigger-280"></i>
+								</a>
+								<div class="col-xs-7 col-sm-7 col-lg-1 col-md-1 col-xl-1 hidden-md hidden-lg"
+									align="center">
+									<div class="group-color-button" style="height: 40px;">
+										<button type="button" class="Vboton-verde-circle"
+											ng-click="cambiarColor('green-style','green-style-button')"></button>
+										<button type="button" class="Vboton-rojo-circle"
+											ng-click="cambiarColor('red-style','red-style-button')"></button>
+										<!-- circulo medio -->
+										<div class=" hidden-xs hidden-sm Vpunto"></div>
+										<button type="button" class="Vboton-azul-circle"
+											ng-click="cambiarColor('skyblue-style','skyblue-style-button')"></button>
+										<button type="button" class="Vboton-cafe-circle"
+											ng-click="cambiarColor('brown-style','brown-style-button')"></button>
+									</div>
+								</div>
+								<div class="col-xs-3 col-sm-3 hidden-md col-lg-2 hidden-lg text-center">
+									<div class="">
+										<label class="control-label label-responsive"
+											style="font-size:15px"><b>TOTAL :<span
+													class="hidden-md hidden-lg">{{venta.total}}</span>
+											</b></label>
+									</div>
+								</div>
+								<a type="button" href="javascript:void(0)" class="red pull-right button-close-modal"
+									ng-click="cerrarPopupPanel()">
+									<i class="ace-icon fa fa-times-circle-o align-top bigger-280"></i>
+								</a>
+
+								<div class="col-xs-12 col-sm-12">
+
+									<div class="row first-row">
+
+										<div class="col-xs-6 col-sm-6 col-lg-1 col-md-2 col-xl-2 margin-input">
+											<label>FECHA</label>
+											<input data-validate="validate(required)" required ng-update-hidden
+												class="form-control date-picker" type="text"
+												data-date-format="dd/mm/yyyy" id="fechaP"
+												ng-model="cotizacion.fechaTexto" placeholder="Ingrese la fecha" />
+										</div>
+										<div class="col-xs-6 col-sm-6 col-lg-1 col-md-2 col-xl-2 margin-input">
+											<label>MOVIMIENTO</label>
+											<select class="form-control"
+												id="movimiento" name="movimiento" ng-model="cotizacion.movimiento"
+												data-placeholder="Click para escoger"
+												ng-options="movimiento as movimiento.nombre for movimiento in movimientosEgreso track by movimiento.id">
+											</select>
+										</div>
+										
+										
+										<div class="col-xs-6 col-sm-6 col-lg-2 col-md-2 col-xl-2 margin-input">
+											<label>SUCURSAL</label>
+											<select class="form-control" data-validate="validate(required)" required
+												id="sucursalVentaPanel" name="sucursal"
+												ng-options="sucursal as sucursal.nombre for sucursal in sucursales track by sucursal.id"
+												ng-model="cotizacion.sucursal"
+												ng-change="obtenerAlmacenes(cotizacion.sucursal)">
+											</select>
+											
+										</div>
+
+										<div class="col-xs-6 col-sm-6 col-lg-2 col-md-1 col-xl-1 margin-input">
+											<label>ALMACEN</label>
+											<select class="form-control" ng-change="cargarProductos()"
+												data-validate="validate(required)" required id="almacen"
+												name="almacen" ng-model="cotizacion.almacen"
+												ng-options="almacen as almacen.nombre for almacen in almacenes track by almacen.id"
+												data-placeholder="Click para escoger"></select>
+												<div class="space-4"></div>
+										</div>
+										<div class="col-xs-6 col-sm-6 col-lg-1 col-md-1 col-xl-1 margin-input">
+											<label>PLAZO</label>
+											<input type="text" required="" placeholder="15 Dias" class="form-control" ng-model="cotizacion.plazo">
+											<div class="space-4"></div>
+										</div>
+										<div class="col-xs-6 col-sm-6 col-lg-2 col-md-1 col-xl-1 margin-input">
+											<label>NOTA</label>
+											<textarea required="" ng-model="cotizacion.nota" placeholder="Los precios incluyen impuestos de ley" class="form-control" id="nota-al-pie" maxlength="100" style="height: 34px; margin: 0px;"></textarea>
+											<div class="space-4"></div>
+										</div>
+										<div class="col-xs-6 col-sm-6 col-lg-2 col-md-1 col-xl-1 margin-input">
+											<label>OBSERVACIONES</label>
+											<textarea  ng-model="cotizacion.descripcion" class="form-control" id="nota-al-pie" maxlength="100" style="height: 34px; margin: 0px;"></textarea>
+											<div class="space-4"></div>
+										</div>
+
+										<div class="col-xs-6 col-sm-6 col-lg-1 col-md-1 col-xl-1 hidden-sm hidden-xs margin-input">
+											<div class="group-color-button pull-right" style="width: 80px">
+												<button type="button" class="btn Vboton-verde"
+													ng-click="cambiarColor('green-style','green-style-button')"></button>
+												<button type="button" class="btn Vboton-rojo"
+													ng-click="cambiarColor('red-style','red-style-button')"></button>
+												<!-- circulo medio -->
+												<div class="Vpunto"></div>
+												<button type="button" class="btn Vboton-azul"
+													ng-click="cambiarColor('skyblue-style','skyblue-style-button')"></button>
+												<button type="button" class="btn Vboton-cafe"
+													ng-click="cambiarColor('brown-style','brown-style-button')"></button>
+											</div>
+
+										</div>
+
+									</div>
+
+									<div class="row nit-row">
+										<div class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
+											<div class="align-panel-search">
+												<a href="javascript:void(0)" class="white"
+													ng-click="ordenarProductos(ordenProductos)">
+													<i class="fa fa-sort-amount-desc bigger-200" aria-hidden="true"
+														ng-if="ordenProductos"></i>
+													<i class="fa fa-sort-amount-asc bigger-200" aria-hidden="true"
+														ng-if="!ordenProductos"></i>
+												</a>
+											</div>
+										</div>
+
+										<div class="col-xs-3 col-sm-3 col-md-3 col-lg-2">
+											<div class="align-panel-search">
+												<a popover-placement="bottom" href="javascript:void(0)"
+													popover-enable="cotizacion.almacen" popover-is-open="popoverIsOpen"
+													uib-popover-template="dynamicPopoverGrupos.templateUrl"
+													popover-trigger="outsideClick: outsideClick"
+													popover-title="Grupos" popover-append-to-body="false"
+													class="white pull-right">
+													<i class="fa fa-list-ol bigger-200" aria-hidden="true"></i>
+												</a>
+												<label class="label-responsive">{{grupoSeleccionado.nombre}}</label>
+											</div>
+
+
+											<script type="text/ng-template" id="myPopoverTemplateGrupos.html">
+												<div class="form-group">
+												
+													<div ng-if="grupos_productos.length>0">
+														<div class="row">
+																<div class="col-xs-8">
+																		<input type="text" ng-model="filtroGrupo.nombre" class="from-control">
+																	</div>
+															<div class="inline pos-rel pull-left col-xs-4">
+																<a data-toggle="dropdown" href="javascript:void(0)"
+																	class="btn btn-danger btn-sm dropdown-toggle"
+																	aria-expanded="false">
+																	<i class="glyphicon  glyphicon-list-alt"></i>
+																	<span class="caret"></span>
+																</a>
+
+																<ul id="campos-detalle-venta"
+																	class="dropdown-menu-right dropdown-menu dropdown-yellow dropdown-caret button-check-group">
+
+																	<input type="text" ng-model="filterText"
+																		class="imput-search">
+																	<li ng-repeat="grupo in grupos_productos">
+
+
+																		<div class="checkbox">
+																			<label class="block"
+																				ng-show="grupo.nombre.toUpperCase().search(filterText.toUpperCase()) !== -1">
+																				<input name="form-field-checkbox"
+																					type="checkbox" class="ace input-lg"
+																					ng-model="grupo.selected"
+																					ng-click="saveCheckList()">
+																				<span class="lbl bigger-120 text-primary">
+																					{{grupo.nombre}}</span>
+																			</label>
+																		</div>
+																	</li>
+
+
+																	<li class="divider"></li>
+																</ul>
+															</div>
+
+														</div>
+														
+														<div class="row" style="height:400px !important;overflow: auto;">
+																<div class="col-xs-6">
+																		<button type="button" ng-click="clasificarGrupo()"
+																			class="button-style btn-panel btn-info btn-block btn-mini text-cut">Todos
+																		</button>
+																	</div>
+															<div class="col-xs-6"
+																ng-repeat="grupo in listChecked |filter:filtroGrupo">
+																<button type="button" ng-click="clasificarGrupo(grupo)"
+																	class="button-style btn-panel btn-info btn-block btn-mini text-cut"><b>{{grupo.nombre}}</b>
+																</button>
+															</div>
+														</div>
+													</div>
+													</div>
+												</div>
+													</script>
+										</div>
+										<div class="col-xs-7 col-sm-7 col-md-4 col-lg-6">
+											<div class="" data-barcode-scanner="barcodeScanned">
+												<input type="text" class="form-control align-panel-search"
+													placeholder="Buscar" id="inputGroup" ng-model="search" />
+											</div>
+										</div>
+										<div class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
+											
+										</div>
+										<div class="hidden-xs hidden-sm col-md-2 col-lg-2 text-center">
+											<div class="" data-barcode-scanner="barcodeScanned">
+												<label class="control-label align-panel-search"
+													style="font-size:17px">
+													<b>TOTAL :<span> {{cotizacion.importe}}</span>
+													</b>
+												</label>
+											</div>
+										</div>
+									</div>
+									<div class="space-4"></div>
+									<!--- =================== aqui la tabla resonsive ========== -->
+									<!-- ================= aqui termina ================== -->
+								</div>
+							</div>
+							<div class="row">
+								<div class="content"
+									style="position: absolute;z-index: 1000 !important; margin-top: -5px!important;">
+									<div class="panel-group accordion" id="accordion">
+										<div class="panel panel-default">
+											<div class="panel-heading" data-toggle="collapse"
+												data-parent="#accordion" data-target="#collapseOne">
+												<h4 class="panel-title">
+													<a href="javascript:void(0)">
+														<span class="toggle-icon glyphicon glyphicon-chevron-down"></span>
+													</a>
+												</h4>
+											</div>
+											<div id="collapseOne" class="panel-collapse collapse in">
+												<div class="panel-body">
+													<div class="cont ScrollStyle">
+														<h4 class="header blue lighter bigger">
+															<!-- <img src="img/CAJERA.png" width="8%"> -->
+															<i class="fa fa-file-text-o bigger-150"
+																aria-hidden="true"></i>
+															Datos de la Cotizacion
+														</h4>
+
+														<div class="row">
+															<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+																<label class="control-label label-responsive">NIT
+																	CLIENTE</label>
+																<input
+																	ng-keypress="buscarNit($event,cotizacion.cliente.nit)"
+																	ng-keyup="buscarNit($event,cotizacion.cliente.nit)"
+																	data-validate="validate(required)" id="nitP"
+																	required type="number" min="0"
+																	ng-model="cotizacion.cliente.nit"
+																	placeholder="Ingrese el NIT"
+																	class="form-control">
+															</div>
+															<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+																<label class="control-label label-responsive">RAZÓN
+																	SOCIAL CLIENTE</label>
+																<input
+																	data-validate="validate(required)"
+																	id="razon_socialP" required type="text"
+																	ng-model="cotizacion.cliente.razon_social"
+																	placeholder="Ingrese la Razon Social"
+																	class="form-control">
+
+															</div>
+
+															<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+																<label class="label-responsive">FIRMA:
+																</label>
+																<input  type="text"
+																	name="pagado" data-validate="validate(required)"
+																	required
+																	ng-model="cotizacion.firma"
+																	class="form-control" />
+															</div>
+															
+															<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+																<label class="label-responsive">CARGO:
+																</label>
+																<input type="text"
+																	required
+																	ng-model="cotizacion.cargo" class="form-control" />
+																<div class="space-4"></div>
+																<button type="submit"
+																	ng-disabled="cotizacion.detallesCotizacion.length==0 || !formularioVentaPanel.$valid"
+																	class="btn btn-success btn-sm button-guardar pull-right panel-guardar">
+																	<i
+																		class="ace-icon fa fa-floppy-o align-top bigger-110"></i>
+																	GUARDAR
+																</button>
+
+															</div>
+															<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+
+															</div>
+
+														</div>
+														<div class="scrolldetalle">
+															<div class="space-4"></div>
+															<table
+																class="table table-striped table-bordered table-hover">
+																<thead>
+																	<tr>
+																		<th class="hidden-sm hidden-xs">
+																			<label>#</label>
+																		</th>
+																		<th>
+																			<label>Cant.</label>
+																		</th>
+																		<th>
+																			<label>Producto</label>
+																		</th>
+																		<th class="hidden-sm hidden-xs">
+																			<label>P. U. (Bs)</label>
+																		</th>
+																		<th class="hidden-sm hidden-xs">
+																			<label>Imp. (Bs)</label>
+																		</th>
+																		<th class="hidden-sm hidden-xs">
+																			<label>Acciones</label>
+																		</th>
+																	</tr>
+																</thead>
+																<tbody>
+																	<tr
+																		ng-repeat="detalleCotizacion in cotizacion.detallesCotizacion">
+																		<td class="hidden-sm hidden-xs">
+																			{{$index+1}}
+																		</td>
+																		<td>
+																			{{detalleCotizacion.cantidad}}
+																		</td>
+																		<td>
+																			{{detalleCotizacion.producto.nombre}}
+																		</td>
+																		<td class="hidden-sm hidden-xs">
+																			<input type="number" class="form-control" 
+																			ng-model="detalleCotizacion.precio_unitario"
+																			required
+																			step="0.001"
+																			name="itemName{{$index}}"
+																			min="{{detalleCotizacion.producto.rango_negativo?detalleCotizacion.producto.rango_negativo:0}}"
+																			max="{{detalleCotizacion.producto.rango_positivo?detalleCotizacion.producto.rango_positivo:10000000}}"
+																			ng-change="calcularImportesCambio(detalleCotizacion)">
+																			<span class="invalid-message-a"
+																				ng-show="formularioVentaPanel['itemName' + $index].$dirty && formularioVentaPanel['itemName' + $index].$invalid">
+																				El precio debe estar entre
+																				{{detalleCotizacion.producto.rango_negativo}} y
+																				{{detalleCotizacion.producto.rango_positivo}}.
+																			</span>
+																		</td>
+																		<td class="hidden-sm hidden-xs">
+																			{{detalleCotizacion.total}}
+																		</td>
+																		<td class="hidden-sm hidden-xs">
+																			<div class="row">
+																				<div class="col-sm-6">
+																					<button type="button"
+																						ng-click="disminuirDetalleCotizacion(detalleCotizacion)"
+																						class="button-style btn red-style-button btn-xs">
+																						<i
+																							class="ace-icon fa fa-minus bigger-110"></i>
+																					</button>
+																				</div>
+																				<div class="col-sm-6">
+																					<button type="button"
+																						ng-click="eliminarDetalleCotizacionPanel(detalleCotizacion)"
+																						class="button-style btn red-style-button btn-xs">
+																						<i
+																							class="ace-icon fa fa-trash-o bigger-110"></i>
+																					</button>
+																				</div>
+																			</div>
+
+																		</td>
+																	</tr>
+
+																</tbody>
+															</table>
+														</div>
+														<div>
+
+															<h3><b>TOTAL</b>
+																&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+																&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+																<b>{{cotizacion.importe}}</b></h3>
+
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<!-- PAGE CONTENT BEGINS -->
+								<div class="col-xs-1 col-sm-1 col-md-1 col-lg-4"></div>
+								<div class="col-xs-11 col-sm-11  col-md-11 col-lg-12 pull-right">
+									<!-- PAGE CONTENT BEGINS -->
+									<div class="row" ng-if="cotizacion.detallesCotizacion.length>0">
+										<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+
+											<nav class="nav-grupo">
+												<ul class="nav-list-grupo">
+													<li data-rel="tooltip" data-placement="bottom"
+														tooltip-append-to-body="true"
+														uib-tooltip="{{detalleCotizacion.producto.nombre}}"
+														ng-repeat="detalleCotizacion in cotizacion.detallesCotizacion"><img
+															ng-src="{{detalleCotizacion.producto.imagen}}"
+															style="border-radius: 50%" height="40" width="40"><span
+															class="badge badge-success">{{detalleCotizacion.cantidad}}</span>
+													</li>
+
+												</ul>
+											</nav>
+
+										</div>
+
+									</div>
+									<div class="row height-productos" id="scrollproducto">
+										<div id="productos" class="col-xs-12" infinite-scroll='getProductosPanel()'
+											infinite-scroll-distance='0'
+											infinite-scroll-container="'#scrollproducto'">
+											<div>
+												<div>
+													<div ng-click="agregarDetalleCotizacionPanel(producto)"
+														ng-if="producto.visible"
+														class="button-panel-product btn-success swiper-slide productos-button"
+														ng-repeat="producto in productosProcesados">
+														<img ng-src="{{producto.imagen}}" width="100%"
+															class="foto-producto">
+														<h3 class="text-cut">{{producto.nombre}}</h3>
+
+													</div>
+												</div>
+												<!-- Add Pagination -->
+												<!--<div class="swiper-pagination"></div>-->
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<!-- /.col -->
+							</div>
+
+
+
+
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>

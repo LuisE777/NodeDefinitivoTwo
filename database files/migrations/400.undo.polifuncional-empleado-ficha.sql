@@ -1,0 +1,3 @@
+alter table agil_evaluacion_polifuncional drop ficha;
+ALTER TABLE agil_evaluacion_polifuncional DROP FOREIGN KEY agil_evaluacion_polifuncional_ibfk_1;
+ALTER TABLE agil_evaluacion_polifuncional ADD CONSTRAINT agil_evaluacion_polifuncional_ibfk_1 FOREIGN KEY (empleado) REFERENCES agil_medico_paciente (id);

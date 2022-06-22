@@ -1,0 +1,1 @@
+ALTER TABLE agil_sucursal drop numero_rendicion_fondo_gasto_correlativo;

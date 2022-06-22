@@ -1,0 +1,1 @@
+alter table agil_empresa add column ver_precio_compra_en_venta tinyint(1) default 0;

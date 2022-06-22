@@ -1,0 +1,5 @@
+
+INSERT INTO gl_clase(tipo,nombre,nombre_corto,createdAt,updatedAt,habilitado) VALUES ((SELECT gl_tipo.id from gl_tipo where nombre_corto = 'MOVING'), 'IMPORTACIONES','IMPORTACIÓN', '2017-12-27 12:34:47', '2017-12-27 12:34:47',1);
+INSERT INTO gl_clase(tipo,nombre,nombre_corto,createdAt,updatedAt,habilitado) VALUES ((SELECT gl_tipo.id from gl_tipo where nombre_corto = 'MOVING'), 'RETENCIÓN DE SERVICIOS','RETENCION SERVICIOS', '2017-12-27 12:34:47', '2017-12-27 12:34:47',1);
+INSERT INTO gl_clase(tipo,nombre,nombre_corto,createdAt,updatedAt,habilitado) VALUES ((SELECT gl_tipo.id from gl_tipo where nombre_corto = 'MOVING'), 'RETENCIÓN DE BIENES','RETENCIONES BIENES', '2017-12-27 12:34:47', '2017-12-27 12:34:47',1);
+INSERT INTO gl_clase(tipo,nombre,nombre_corto,createdAt,updatedAt,habilitado) VALUES ((SELECT gl_tipo.id from gl_tipo where nombre_corto = 'MOVING'), 'COMPRA S/F','COMPRA S/F', '2017-12-27 12:34:47', '2017-12-27 12:34:47',1);

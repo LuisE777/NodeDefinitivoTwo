@@ -1,0 +1,1 @@
+ALTER TABLE agil_proforma_factura_anulada ADD observacion varchar(250) DEFAULT 'Sin observaciones.';

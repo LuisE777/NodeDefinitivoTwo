@@ -1,0 +1,1 @@
+UPDATE inv_solicitud_reposicion as s SET s.monto=(select SUM(dm.importe) AS importe FROM inv_detalle_movimiento as dm where dm.movimiento = s.movimiento) where movimiento is not null;

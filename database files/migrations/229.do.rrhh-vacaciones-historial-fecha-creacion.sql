@@ -1,0 +1,1 @@
+ALTER TABLE agil_rrhh_empleado_vacaciones ADD fecha_creacion datetime;

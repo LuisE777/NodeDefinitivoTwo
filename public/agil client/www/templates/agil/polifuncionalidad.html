@@ -1,0 +1,1686 @@
+<div class="row">
+    <div class="col-xs-12">
+        <h3 class="header lighter blue">POLIFUNCIONALIDAD TRABAJADORES</h3>
+        <button ng-disabled="!aplicacion.puede_crear" class="btn-woBox button-glow"
+            ng-click="abrirNuevoEvaluacionPolifuncional()">
+            <i class="ace-icon fa fa-plus align-top bigger-125"></i>
+            Nuevo
+        </button>
+        <br>
+        <form name="formularioFiltroPolifuncionalidad" novalidate ng-submit="filtrarFiltroPolifuncionalidad(filtro)">
+            <fieldset>
+                <br>
+                <legend>Filtro Trabajadores Polifuncionalidad</legend>
+                <table class="table table-striped table-bordered table-hover">
+                    <tbody>
+                        <tr>
+                            <td>
+
+                            </td>
+                            <td>
+                                <label>Mes</label>
+                            </td>
+                            <td>
+                                <label>Año</label>
+                            </td>
+                            <td>
+                                Desempeño
+                            </td>
+                            <td>
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                PERIODO
+                            </td>
+                            <td>
+                                <select required id="mesPolifuncionalidad" name="mesPolifuncionalidad"
+                                    ng-options="mes as mes.nombre for mes in mesesFiltro track by mes.id"
+                                    ng-model="filtro.mes">
+                                    <option value="" selected>TODOS</option>
+                                </select>
+                            </td>
+                            <td>
+                                <select required id="anioPolifuncionalidad" name="anioPolifuncionalidad"
+                                    ng-options="anio as anio.nombre for anio in anios track by anio.id"
+                                    ng-model="filtro.anio">
+                                    <option value="" selected>TODOS</option>
+                                </select>
+                            </td>
+                            <td>
+                                <select required id="desempenioPolifuncionalidad" name="desempenioPolifuncionalidad"
+                                    ng-options="desempenio as desempenio.nombre for desempenio in listaDesempenio track by desempenio.id"
+                                    ng-model="filtro.desempenio">
+                                    <option value="" selected>TODOS</option>
+                                </select>
+                            </td>
+                            <td>
+                                <div class=" container-fluid">
+                                    <button type="submit" class="btn btn-app btn-primary btn-xs">
+                                        <i class="ace-icon fa fa-search align-top bigger-100"></i>
+                                        Filtrar
+                                    </button>
+                                    <button type="submit" class="btn btn-app btn-danger btn-xs">
+                                        <i class="ace-icon fa fa-print align-top bigger-100"></i>
+                                        PDF
+                                    </button>
+                                    <button type="submit" class="btn btn-app btn-success btn-xs">
+                                        <i class="ace-icon fa fa-print align-top bigger-100"></i>
+                                        Excel
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+
+                            </td>
+                            <td>
+                                <!-- <label>Mas de un campo</label> -->
+                            </td>
+                            <td>
+                                <label>Campo</label>
+                            </td>
+                            <td>
+                                <label>Cargo</label>
+                            </td>
+                            <td>
+                                <label>Estado</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                FILTRO
+                            </td>
+                            <td>
+                                <!-- <select required id="opcionCamposPolifuncionalidad" name="opcionCamposPolifuncionalidad" ng-options="opcionCampos as opcionCampos.nombre for opcionCampos in [{id:1,nombre:'Si'},{id:2,nombre:'No'}] track by opcionCampos.id"
+                                    ng-model="filtro.opcionCampos">
+                                    <option value="" selected>TODOS</option>
+                                </select> -->
+                            </td>
+                            <td>
+                                <!-- <select id="centroCostoPolifuncionalidad" name="centroCostoPolifuncionalidad" ng-options="centroCosto as centroCosto.nombre for centroCosto in centrosCostos track by centroCosto.id"
+                                    ng-model="filtro.centroCosto">
+                                    <option value="" selected>TODOS</option>
+                                </select> -->
+                                <select required id="campo-rol" name="centroDeCostos"
+                                    ng-options="centroCosto as centroCosto.nombre for centroCosto in centrosDeCostos track by centroCosto.id"
+                                    ng-model="filtro.campo">
+                                    <option value="">TODOS</option>
+                                </select>
+                            </td>
+                            <td>
+                                <select id="cargosPolifuncionalidad" name="cargosPolifuncionalidad"
+                                    ng-options="cargo as cargo.nombre for cargo in cargos track by cargo.id"
+                                    ng-model="filtro.cargo">
+                                    <option value="" selected>TODOS</option>
+                                </select>
+                            </td>
+                            <td style="max-width: 20%; width: 20%">
+                                <select style="max-width: 180px;width: 180px" id="estadoPolifuncionalidad"
+                                    name="estadoPolifuncionalidad"
+                                    ng-options="estado as estado.nombre for estado in listaEstados track by estado.id"
+                                    ng-model="filtro.estado">
+                                    <option value="" selected>TODOS</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+
+                            </td>
+                            <td>
+                                <label>Código</label>
+                            </td>
+                            <td>
+                                <label>Nombre</label>
+                            </td>
+                            <td>
+                                <label>Apellido</label>
+                            </td>
+                            <td>
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>
+                                <input type="text" name="nombrePoli" id="nombrePoli" ng-model="filtro.codigo">
+                            </td>
+                            <td>
+                                <input ng-model="filtro.nombre" type="text">
+                            </td>
+                            <td>
+                                <input ng-model="filtro.apellido" type="text">
+                            </td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </fieldset>
+        </form>
+        <div class="clearfix">
+            <div class="pull-right tableTools-container"></div>
+        </div>
+        <div class="table-header">
+            <label class="pull-left">&nbsp&nbsp</label>
+            <label class="center">Lista de Trabajadores</label>
+            <label class="pull-left">&nbsp&nbsp</label>
+            <label class="pull-left" data-rel="tooltip" tooltip-placement="top" uib-tooltip="Configuración">
+                <a class="blue" ng-click="abrirmodalParametrosPolifuncionalidad()">
+                    <i class="ace-icon fa fa-cogs text-white bigger-130"></i>
+                </a>
+            </label>
+            <label class="pull-left">&nbsp&nbsp</label>
+            <label class="pull-left" data-rel="tooltip" tooltip-placement="top" uib-tooltip="Reportes">
+                <a class="blue" ng-click="abriridModalReportes()">
+                    <i class="ace-icon fa fa-print text-white bigger-130"></i>
+                </a>
+            </label>
+            <label class="pull-left">&nbsp&nbsp</label>
+            <style type="text/css" scoped>
+                .dropdown-menu {
+                    min-width: 600px !important;
+                }
+            </style>
+            <label class="pull-right">
+                <div class="col-xs-10" ng-include src="'/templates/gral/fields-viewer.html'"></div>
+            </label>
+        </div>
+        <div id="tabla-pacientes_wrapper" class="dataTables_wrapper form-inline no-footer">
+            <div class="row" ng-include src="'/templates/gral/paginator-header-2.html'">
+            </div>
+            <table id="tabla-evaluaciones" class="table table-striped table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th class="center">
+                            <label>
+                                <input type="checkbox" class="ace" ng-model="proforma.seleccionada" />
+                                <span class="lbl"></span>
+                            </label>
+                        </th>
+                        <th ng-if="fieldViewer.getConfiguration().anio.show">Año</th>
+                        <th ng-if="fieldViewer.getConfiguration().mes.show">Mes</th>
+                        <th ng-if="fieldViewer.getConfiguration().estado.show">Estado</th>
+                        <th ng-if="fieldViewer.getConfiguration().codigo.show">Código</th>
+                        <th ng-if="fieldViewer.getConfiguration().nombre.show">Nombre Completo</th>
+                        <th ng-if="fieldViewer.getConfiguration().campo.show">Campo</th>
+                        <th ng-if="fieldViewer.getConfiguration().cargo.show">Cargo</th>
+                        <th ng-if="fieldViewer.getConfiguration().asis_capacitacion.show">
+                            <label data-rel="tooltip" tooltip-placement="top" uib-tooltip="Asistencia Capacitación"
+                                align="center">
+                                <img class="img-responsive img-circle bg-orange" style="width:80%;height:80%"
+                                    src="img/iconos-polifuncional/asistencia-capacitacion.png">
+                            </label>
+                        </th>
+                        <th ng-if="fieldViewer.getConfiguration().doc_actualizados.show">
+                            <label data-rel="tooltip" tooltip-placement="top" uib-tooltip="Documentos Actualizados"
+                                align="center">
+                                <img class="img-responsive img-circle bg-blue" style="width:80%;height:80%"
+                                    src="img/iconos-polifuncional/documentos-actualizados.png">
+                            </label>
+                        </th>
+                        <th ng-if="fieldViewer.getConfiguration().trab_equipo.show">
+                            <label data-rel="tooltip" tooltip-placement="top" uib-tooltip="Trabajo en equipo"
+                                align="center">
+                                <img class="img-responsive img-circle bg-black" style="width:80%;height:80%"
+                                    src="img/iconos-polifuncional/trabajo-en-equipo.png">
+                            </label>
+                        </th>
+                        <th ng-if="fieldViewer.getConfiguration().funciones_puntualidad.show">
+                            <label data-rel="tooltip" tooltip-placement="top"
+                                uib-tooltip="Cumplimiento de las funciones asignadas y puntualidad en el horario de trabajo"
+                                align="center">
+                                <img class="img-responsive img-circle bg-brown" style="width:80%;height:80%"
+                                    src="img/iconos-polifuncional/horario-de-trabajo.png">
+                            </label>
+                        </th>
+                        <th ng-if="fieldViewer.getConfiguration().higiene.show">
+                            <label data-rel="tooltip" tooltip-placement="top" uib-tooltip="Higiene personal"
+                                align="center">
+                                <img class="img-responsive img-circle bg-red" style="width:80%;height:80%"
+                                    src="img/iconos-polifuncional/higiene-personal.png">
+                            </label>
+                        </th>
+                        <th ng-if="fieldViewer.getConfiguration().puntualidad_asistencia_campo.show">
+                            <label data-rel="tooltip" tooltip-placement="top"
+                                uib-tooltip="Puntualidad a la asistencia de reunión de 5 minutos en campo"
+                                align="center">
+                                <img class="img-responsive img-circle bg-lila" style="width:80%;height:80%"
+                                    src="img/iconos-polifuncional/puntualidad-en-reunion.png">
+                            </label>
+                        </th>
+                        <th ng-if="fieldViewer.getConfiguration().ingreso_campo.show">
+                            <label data-rel="tooltip" tooltip-placement="top"
+                                uib-tooltip="Cumplimiento de ingreso a campo" align="center">
+                                <img class="img-responsive img-circle bg-silver" style="width:80%;height:80%"
+                                    src="img/iconos-polifuncional/cumplimiento-de-ingreso-a-campo.png">
+                            </label>
+                        </th>
+                        <th ng-if="fieldViewer.getConfiguration().llenado_correcto_sig.show">
+                            <label data-rel="tooltip" tooltip-placement="top"
+                                uib-tooltip="Aplicación y llenado correcto de los formularios del SIG" align="center">
+                                <img class="img-responsive img-circle bg-green" style="width:80%;height:80%"
+                                    src="img/iconos-polifuncional/aplicacion-y-llenado-correcto-de-for-sig.png">
+                            </label>
+                        </th>
+                        <th ng-if="fieldViewer.getConfiguration().nota_total.show">
+                            <label data-rel="tooltip" tooltip-placement="top" uib-tooltip="Nota total" align="center">
+                                <img class="img-responsive img-circle bg-black" style="width:80%;height:80%"
+                                    src="img/iconos-polifuncional/sumatoria.png">
+                            </label>
+                        </th>
+                        <th>
+                            Desempeño
+                        </th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- <tr> -->
+                    <tr ng-repeat="evaluacion in evaluaciones">
+                        <td class="center">
+                            <label>
+                                <input type="checkbox" class="ace" ng-model="evaluacion.seleccionada" />
+                                <span class="lbl"></span>
+                            </label>
+                        </td>
+                        <td ng-if="fieldViewer.getConfiguration().anio.show">{{evaluacion.anio}}</td>
+                        <td ng-if="fieldViewer.getConfiguration().mes.show">{{meses[evaluacion.mes].nombre}}</td>
+                        <td ng-if="fieldViewer.getConfiguration().estado.show">
+                            {{determinarEstado(evaluacion.ficha.empleado.eliminado)}}</td>
+                        <td ng-if="fieldViewer.getConfiguration().codigo.show">{{evaluacion.ficha.empleado.codigo}}</td>
+                        <td ng-if="fieldViewer.getConfiguration().nombre.show">
+                            {{evaluacion.ficha.empleado.persona.nombre_completo}}</td>
+                        <td ng-if="fieldViewer.getConfiguration().campo.show">{{evaluacion.ficha.empleado.campo.nombre}}
+                        </td>
+                        <td ng-if="fieldViewer.getConfiguration().cargo.show">
+                            <ol>
+                                <li ng-repeat="cargo in evaluacion.ficha.cargos">
+                                    {{cargo.cargo.nombre}}.
+                                </li>
+                                <ol>
+                        </td>
+                        <td ng-if="fieldViewer.getConfiguration().asis_capacitacion.show">
+                            {{evaluacion.asistencia_capacitacion}}</td>
+                        <td ng-if="fieldViewer.getConfiguration().doc_actualizados.show">
+                            {{evaluacion.documentos_actualizados}}</td>
+                        <td ng-if="fieldViewer.getConfiguration().trab_equipo.show">{{evaluacion.trabajo_equipo}}</td>
+                        <td ng-if="fieldViewer.getConfiguration().funciones_puntualidad.show">
+                            {{evaluacion.funciones_puntualidad}}</td>
+                        <td ng-if="fieldViewer.getConfiguration().higiene.show">{{evaluacion.higiene_personal}}</td>
+                        <td ng-if="fieldViewer.getConfiguration().puntualidad_asistencia_campo.show">
+                            {{evaluacion.asistencia_reunion}}</td>
+                        <td ng-if="fieldViewer.getConfiguration().ingreso_campo.show">{{evaluacion.ingreso_campo}}</td>
+                        <td ng-if="fieldViewer.getConfiguration().llenado_correcto_sig.show">
+                            {{evaluacion.llenado_formularios}}</td>
+                        <td ng-if="fieldViewer.getConfiguration().nota_total.show">{{evaluacion.nota_total}}</td>
+                        <td>
+                            <label
+                                class="{{determinarColor(evaluacion.id_desempenio)}}">&nbsp{{determinarDesempenio(evaluacion.id_desempenio)}}&nbsp</label>
+                        </td>
+                        <td>
+                            <div class="hidden-sm hidden-xs action-buttons">
+                                <a ng-disabled="!aplicacion.puede_crear" class="green"
+                                    ng-click="editar(evaluacion, false, true)" data-rel="tooltip"
+                                    tooltip-placement="top" uib-tooltip="Nuevo">
+                                    <i class="ace-icon fa fa-plus bigger-130"></i>
+                                </a>
+                                <a ng-disabled="!aplicacion.puede_modificar" class="orange"
+                                    ng-click="editar(evaluacion, true)" data-rel="tooltip" tooltip-placement="top"
+                                    uib-tooltip="Editar">
+                                    <i class="ace-icon fa fa-pencil-square-o bigger-130"></i>
+                                </a>
+                                <!-- <a popover-trigger="outsideClick : outsideClick" uib-popover-template="impresiones.templateUrl" popover-placement="left"
+                                    class="green" href="javascript:void(0)" data-rel="tooltip" tooltip-placement="top" uib-tooltip="Imprimir">
+                                    <i class="ace-icon fa fa-print bigger-130"></i>
+                                </a>
+                                <script type="text/ng-template" id="impresiones.html">													
+                                            
+                                         <div class="form-control">                            
+                                                    <a  class="blue" ng-click="imprimir(evaluacion,0)">Sin detalle</a>
+                                                </div>
+                                                <div class="form-control">   
+                                                    <a  class="blue" ng-click="imprimir(evaluacion,1)">Con detalle</a>
+                                                </div>
+                                                <div class="form-control">   
+                                                        <a  class="blue" ng-click="imprimir(evaluacion,2)">Mixta</a>
+                                                    </div>
+                                           
+                                        </script> -->
+                                <a ng-disabled="!aplicacion.puede_ver" class="blue" href="javascript:void(0)"
+                                    ng-click="editar(evaluacion,false,false,true)" data-rel="tooltip"
+                                    tooltip-placement="top" uib-tooltip="Ver">
+                                    <i class="ace-icon fa fa-search-plus bigger-130"></i>
+                                </a>
+                                <a ng-disabled="!aplicacion.puede_eliminar" class="red"
+                                    ng-click="abrirPopupConfirmacionEliminacion(eliminar,evaluacion)" data-rel="tooltip"
+                                    tooltip-placement="top" uib-tooltip="Eliminar">
+                                    <i class="ace-icon fa fa-trash-o bigger-130"></i>
+                                </a>
+                            </div>
+                            <div class="hidden-md hidden-lg">
+                                <div class="inline pos-rel">
+                                    <button class="btn btn-minier btn-yellow dropdown-toggle" data-toggle="dropdown"
+                                        data-position="auto">
+                                        <i class="ace-icon fa fa-caret-down icon-only bigger-120"></i>
+                                    </button>
+                                    <ul
+                                        class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-menu-right dropdown-caret dropdown-close">
+                                        <li>
+                                            <a ng-disabled="!aplicacion.puede_modificar" class="orange"
+                                                href="javascript:void(0)" ng-click="editar(evaluacion)">
+                                                <i class="ace-icon fa fa-pencil-square-o bigger-130"></i>
+                                            </a>
+                                        </li>
+                                        <!-- <li>
+                                            <a popover-trigger="outsideClick : outsideClick" uib-popover-template="impresiones.templateUrl" popover-placement="left"
+                                                class="green" href="javascript:void(0)" data-rel="tooltip" tooltip-placement="top"
+                                                uib-tooltip="Imprimir">
+                                                <i class="ace-icon fa fa-print bigger-130"></i>
+                                            </a>
+                                            <script type="text/ng-template" id="impresiones.html">													
+                                                        
+                                                     <div class="form-control">                            
+                                                                <a  class="blue" ng-click="imprimir(evaluacion,0)">Sin detalle</a>
+                                                            </div>
+                                                            <div class="form-control">   
+                                                                <a  class="blue" ng-click="imprimir(evaluacion,1)">Con detalle</a>
+                                                            </div>
+                                                            <div class="form-control">   
+                                                                    <a  class="blue" ng-click="imprimir(evaluacion,2)">Mixta</a>
+                                                                </div>
+                                                       
+                                                    </script>
+                                        </li> -->
+                                        <li>
+                                            <a ng-disabled="!aplicacion.puede_ver" class="blue"
+                                                href="javascript:void(0)" ng-click="ver(evaluacion)">
+                                                <i class="ace-icon fa fa-search-plus bigger-130"></i>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a ng-disabled="!aplicacion.puede_eliminar" class="red"
+                                                ng-if="solicitud.activo"
+                                                ng-click="abrirPopupConfirmacionEliminacion(eliminar,evaluacion)">
+                                                <i class="ace-icon fa fa-trash-o bigger-130"></i>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="row" ng-include src="'/templates/gral/paginator.html'" ng-if="evaluaciones.length > 0">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="dialog-Busqueda-centro-costo-polifuncional" style="overflow-x:hidden;" class="modal">
+    <div class="row">
+        <div class="widget-header">
+            <div class="container-fluid">
+                <div class="col-md-8">
+                    <label>Búsqueda:
+                        <input type="search" class="form-control input-sm" ng-model="textoBusquedaCentroCosto"
+                            ng-change="filtrarCentroCosto(textoBusquedaCentroCosto)">
+                    </label>
+                </div>
+                <div class="col-md-4">
+                    <button type="button" ng-click="cerrarmodalBusquedaCentroCosto()" class="btn btn-danger">
+                        <i class="ace-icon fa fa-close align-top bigger-125"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="container-fluid">
+            <div class="widget-box">
+                <div class="widget-body">
+                    <div class="widget-main">
+                        <div class="table-fixed-header">
+                            <table class="table table-striped table-bordered table-hover">
+                                <thead fix-head class="table-head-color">
+                                    <tr>
+                                        <th>
+                                            <label for="">N°</label>
+                                        </th>
+                                        <th>
+                                            Campo
+                                        </th>
+                                        <th>
+                                            Acciones
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="centroCosto in centrosDeCostosProcesado">
+                                        <td>
+                                            {{$index+1}}
+                                        </td>
+                                        <td>
+                                            {{centroCosto.nombre}}
+                                        </td>
+                                        <td>
+                                            <a ng-click="establecercentroCosto(centroCosto,true)">SELECCIONAR</a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="dialog-Busqueda-personal-polifuncional" style="overflow-x:hidden;" class="modal">
+    <div class="row">
+        <div class="widget-header">
+            <div class="container-fluid">
+                <div class="col-md-8">
+                    <label>Búsqueda:
+                        <input type="search" class="form-control input-sm" ng-model="textoBusquedaPersonal"
+                            ng-change="filtrarPersonal(textoBusquedaPersonal)">
+                    </label>
+                </div>
+                <div class="col-md-4">
+                    <button type="button" ng-click="cerrarmodalBusquedaPersonal()" class="btn btn-danger">
+                        <i class="ace-icon fa fa-close align-top bigger-125"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="container-fluid">
+            <div class="widget-box">
+                <div class="widget-body">
+                    <div class="widget-main">
+                        <div class="table-fixed-header">
+                            <table class="table table-striped table-bordered table-hover ">
+                                <thead fix-head class="table-head-color">
+                                    <tr>
+                                        <th>
+                                            <label for="">N°</label>
+                                        </th>
+                                        <th>
+                                            <label for="">
+                                                Código
+                                            </label>
+                                        </th>
+                                        <th>
+                                            Nombre Completo
+                                        </th>
+                                        <th>
+                                            Acciones
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="personal in personalProcesado">
+                                        <td>
+                                            {{$index+1}}
+                                        </td>
+                                        <td>
+                                            {{personal.codigo}}
+                                        </td>
+                                        <td>
+                                            {{personal.persona.nombre_completo}}
+                                        </td>
+                                        <td>
+                                            <a ng-click="establecerPersonal(personal,true)">SELECCIONAR</a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modal-wizard-polifuncional-edicion" class="modal wizard-posicion">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="formEvaluacionPolifuncional" ng-submit="guardarEvaluacion(evaluacion)">
+                <div id="modal-wizard-container-polifuncional-edicion">
+                    <div class="modal-header">
+                        <ul class="steps">
+                            <li data-step="1" class="active">
+                                <span class="step">1</span>
+
+                                <span class="title">Selección de personal</span>
+                            </li>
+
+                            <li data-step="2">
+                                <span class="step">2</span>
+                                <span class="title">Evaluación</span>
+                            </li>
+
+                            <li data-step="3">
+                                <span class="step">3</span>
+                                <span class="title">Finalizar</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="modal-body step-content">
+                        <div class="step-pane active" data-step="1">
+                            <div class="row">
+                                <div class="container-fluid">
+                                    <div class=" form-group">
+                                        <div class="col-md-6">
+                                            <label for="">Personal a evaluar</label>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <input ng-disabled="evaluacion.ver != undefined"
+                                                ng-keypress="interceptarTecla($event,'id_servicio',true)"
+                                                autocomplete="off" required type="text"
+                                                ng-model="evaluacion.ficha.empleado.persona.nombre_completo"
+                                                placeholder="Busqueda de personal..."
+                                                uib-typeahead="personal as personal.persona.nombre_completo for personal in buscarPersonal($viewValue)"
+                                                typeahead-wait-ms="2000"
+                                                typeahead-template-url="templates/autocompletar.html"
+                                                typeahead-show-hint="false" typeahead-min-length="1"
+                                                typeahead-on-select="establecerPersonal($item, $model, $label, $event)">                                            
+                                            <button ng-disabled="evaluacion.ver != undefined" type="button"
+                                                ng-click="abrirmodalBusquedaPersonal()" class="btn btn-info btn-sm">
+                                                <i class="ace-icon fa fa-search-plus bigger-110"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="step-pane" data-step="2">
+                            <div class="row">
+                                <div class="container-fluid">
+                                    <div class="row form-group">
+                                        <div class="center">
+                                            {{evaluacion.ficha.empleado.persona.nombre_completo}}
+                                        </div>
+                                    </div>
+                                    <div class="row form-group">
+                                        <div class="center">
+                                            <select ng-disabled="evaluacion.ver != undefined" required
+                                                id="mesEvaluacion" name="mes"
+                                                ng-options="mes as mes.nombre for mes in meses track by mes.id"
+                                                ng-model="evaluacion.mes">
+                                                <option value="" selected>Mes</option>
+                                            </select>
+                                            <select ng-disabled="evaluacion.ver != undefined" required
+                                                id="anioEvaluacion" name="anio"
+                                                ng-options="anio as anio.nombre for anio in anios track by anio.id"
+                                                ng-model="evaluacion.anio">
+                                                <option value="" selected>Año</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row form-group">
+                                        <div class="center">
+                                            <label for="">Encargado</label>
+                                            <label>
+                                                <input ng-disabled="evaluacion.ver != undefined" name="switch-field-1"
+                                                    tabindex="-1" ng-model="evaluacion.encargado"
+                                                    class="ace ace-switch ace-switch-4 ng-pristine ng-untouched ng-valid ng-empty"
+                                                    type="checkbox" ng-change="calcularTotalEvaluacion(evaluacion)">
+                                                <span class="lbl check-descuento"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="row form-group">
+                                        <div class="col-md-8">
+                                            <label class="col-md-3">
+                                                <img class="img-responsive img-circle bg-orange"
+                                                    style="width:50%;height:50% !important"
+                                                    src="img/iconos-polifuncional/asistencia-capacitacion.png">
+                                            </label>
+                                            <label class="col-md-7">Asistencia Capacitación</label>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div ng-if="!evaluacion.encargado">
+                                                <input ng-disabled="evaluacion.ver != undefined" required autofocus
+                                                    type="number" step="1" min="0"
+                                                    max="{{empleados.asistencia_capacitacion}}" class="form-control"
+                                                    ng-model="evaluacion.asistencia_capacitacion"
+                                                    ng-change="calcularTotalEvaluacion(evaluacion)"> Max.
+                                                {{empleados.asistencia_capacitacion}}
+                                            </div>
+                                            <div ng-if="evaluacion.encargado">
+                                                <input ng-disabled="evaluacion.ver != undefined" required autofocus
+                                                    type="number" step="1" min="0"
+                                                    max="{{encargados.asistencia_capacitacion}}" class="form-control"
+                                                    ng-model="evaluacion.asistencia_capacitacion"
+                                                    ng-change="calcularTotalEvaluacion(evaluacion)"> Max.
+                                                {{encargados.asistencia_capacitacion}}
+                                            </div>
+
+                                            <label>
+                                                <input ng-disabled="evaluacion.ver != undefined" name="switch-field-1"
+                                                    tabindex="-1" ng-model="opcion.asistencia_capacitacion"
+                                                    class="ace ace-switch ace-switch-4 ng-pristine ng-untouched ng-valid ng-empty"
+                                                    type="checkbox" ng-change="calcularTotalEvaluacion(evaluacion)">
+                                                <span class="lbl check-descuento"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="row form-group">
+                                        <div class="col-md-8">
+                                            <label class="col-md-3">
+                                                <img class="img-responsive img-circle bg-blue"
+                                                    style="width:50%;height:50% !important"
+                                                    src="img/iconos-polifuncional/documentos-actualizados.png">
+                                            </label>
+                                            <label class="col-md-7"> Actualizados</label>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div ng-if="!evaluacion.encargado">
+                                                <input ng-disabled="evaluacion.ver != undefined" required autofocus
+                                                    type="number" step="1" min="0"
+                                                    max="{{empleados.documentos_actualizados}}" class="form-control"
+                                                    ng-model="evaluacion.documentos_actualizados"
+                                                    ng-change="calcularTotalEvaluacion(evaluacion)"> Max.
+                                                {{empleados.documentos_actualizados}}
+                                            </div>
+                                            <div ng-if="evaluacion.encargado">
+                                                <input ng-disabled="evaluacion.ver != undefined" required type="number"
+                                                    step="1" min="0" max="{{encargados.documentos_actualizados}}"
+                                                    class="form-control" ng-model="evaluacion.documentos_actualizados"
+                                                    ng-change="calcularTotalEvaluacion(evaluacion)"> Max.
+                                                {{encargados.documentos_actualizados}}
+                                            </div>
+                                            <label>
+                                                <input ng-disabled="evaluacion.ver != undefined" name="switch-field-1"
+                                                    tabindex="-1" ng-model="opcion.documentos_actualizados"
+                                                    class="ace ace-switch ace-switch-4 ng-pristine ng-untouched ng-valid ng-empty"
+                                                    type="checkbox" ng-change="calcularTotalEvaluacion(evaluacion)">
+                                                <span class="lbl check-descuento"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="row form-group">
+                                        <div class="col-md-8">
+                                            <label class="col-md-3">
+                                                <img class="img-responsive img-circle bg-black"
+                                                    style="width:50%;height:50% !important"
+                                                    src="img/iconos-polifuncional/trabajo-en-equipo.png">
+                                            </label>
+                                            <label class="col-md-7">Trabajo en equipo</label>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div ng-if="!evaluacion.encargado">
+                                                <input ng-disabled="evaluacion.ver != undefined" required autofocus
+                                                    type="number" step="1" min="0" max="{{empleados.trabajo_equipo}}"
+                                                    class="form-control" ng-model="evaluacion.trabajo_equipo"
+                                                    ng-change="calcularTotalEvaluacion(evaluacion)"> Max.
+                                                {{empleados.trabajo_equipo}}
+                                            </div>
+                                            <div ng-if="evaluacion.encargado">
+                                                <input ng-disabled="evaluacion.ver != undefined" required type="number"
+                                                    step="1" min="0" max="{{encargados.trabajo_equipo}}"
+                                                    class="form-control" ng-model="evaluacion.trabajo_equipo"
+                                                    ng-change="calcularTotalEvaluacion(evaluacion)"> Max.
+                                                {{encargados.trabajo_equipo}}
+                                            </div>
+                                            <label>
+                                                <input ng-disabled="evaluacion.ver != undefined" name="switch-field-1"
+                                                    tabindex="-1" ng-model="opcion.trabajo_equipo"
+                                                    class="ace ace-switch ace-switch-4 ng-pristine ng-untouched ng-valid ng-empty"
+                                                    type="checkbox" ng-change="calcularTotalEvaluacion(evaluacion)">
+                                                <span class="lbl check-descuento"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="row form-group">
+                                        <div class="col-md-8">
+                                            <label class="col-md-3">
+                                                <img class="img-responsive img-circle bg-brown"
+                                                    style="width:50%;height:50% !important"
+                                                    src="img/iconos-polifuncional/horario-de-trabajo.png">
+                                            </label>
+                                            <label class="col-md-7">Cumplimiento de las funciones asignadas y
+                                                puntualidad en el horario de trabajo</label>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div ng-if="!evaluacion.encargado">
+                                                <input ng-disabled="evaluacion.ver != undefined" required autofocus
+                                                    type="number" step="1" min="0"
+                                                    max="{{empleados.funciones_puntualidad}}" class="form-control"
+                                                    ng-model="evaluacion.funciones_puntualidad"
+                                                    ng-change="calcularTotalEvaluacion(evaluacion)"> Max.
+                                                {{empleados.funciones_puntualidad}}
+                                            </div>
+                                            <div ng-if="evaluacion.encargado">
+                                                <input ng-disabled="evaluacion.ver != undefined" required type="number"
+                                                    step="1" min="0" max="{{encargados.funciones_puntualidad}}"
+                                                    class="form-control" ng-model="evaluacion.funciones_puntualidad"
+                                                    ng-change="calcularTotalEvaluacion(evaluacion)">Max.
+                                                {{encargados.funciones_puntualidad}}
+                                            </div>
+                                            <label>
+                                                <input ng-disabled="evaluacion.ver != undefined" name="switch-field-1"
+                                                    tabindex="-1" ng-model="opcion.funciones_puntualidad"
+                                                    class="ace ace-switch ace-switch-4 ng-pristine ng-untouched ng-valid ng-empty"
+                                                    type="checkbox" ng-change="calcularTotalEvaluacion(evaluacion)">
+                                                <span class="lbl check-descuento"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="row form-group">
+                                        <div class="col-md-8">
+                                            <label class="col-md-3">
+                                                <img class="img-responsive img-circle bg-red"
+                                                    style="width:50%;height:50% !important"
+                                                    src="img/iconos-polifuncional/higiene-personal.png">
+                                            </label>
+                                            <label class="col-md-7">Higiene personal</label>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div ng-if="!evaluacion.encargado">
+                                                <input ng-disabled="evaluacion.ver != undefined" required autofocus
+                                                    type="number" step="1" min="0" max="{{empleados.higiene_personal}}"
+                                                    class="form-control" ng-model="evaluacion.higiene_personal"
+                                                    ng-change="calcularTotalEvaluacion(evaluacion)">Max.
+                                                {{empleados.higiene_personal}}
+                                            </div>
+                                            <div ng-if="evaluacion.encargado">
+                                                <input ng-disabled="evaluacion.ver != undefined" required type="number"
+                                                    step="1" min="0" max="{{encargados.higiene_personal}}"
+                                                    class="form-control" ng-model="evaluacion.higiene_personal"
+                                                    ng-change="calcularTotalEvaluacion(evaluacion)">Max.
+                                                {{encargados.higiene_personal}}
+                                            </div>
+                                            <label>
+                                                <input ng-disabled="evaluacion.ver != undefined" name="switch-field-1"
+                                                    tabindex="-1" ng-model="opcion.higiene_personal"
+                                                    class="ace ace-switch ace-switch-4 ng-pristine ng-untouched ng-valid ng-empty"
+                                                    type="checkbox" ng-change="calcularTotalEvaluacion(evaluacion)">
+                                                <span class="lbl check-descuento"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="row form-group">
+                                        <div class="col-md-8">
+                                            <label class="col-md-3">
+                                                <img class="img-responsive img-circle bg-lila"
+                                                    style="width:50%;height:50% !important"
+                                                    src="img/iconos-polifuncional/puntualidad-en-reunion.png">
+                                            </label>
+                                            <label class="col-md-7">Puntualidad a la asistencia de reunión de 5 minutos
+                                                en campo</label>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div ng-if="!evaluacion.encargado">
+                                                <input ng-disabled="evaluacion.ver != undefined" required autofocus
+                                                    type="number" step="1" min="0"
+                                                    max="{{empleados.asistencia_reunion}}" class="form-control"
+                                                    ng-model="evaluacion.asistencia_reunion"
+                                                    ng-change="calcularTotalEvaluacion(evaluacion)">Max.
+                                                {{empleados.asistencia_reunion}}
+                                            </div>
+                                            <div ng-if="evaluacion.encargado">
+                                                <input ng-disabled="evaluacion.ver != undefined" required type="number"
+                                                    step="1" min="0" max="{{encargados.asistencia_reunion}}"
+                                                    class="form-control" ng-model="evaluacion.asistencia_reunion"
+                                                    ng-change="calcularTotalEvaluacion(evaluacion)">Max.
+                                                {{encargados.asistencia_reunion}}
+                                            </div>
+
+                                            <label>
+                                                <input ng-disabled="evaluacion.ver != undefined" name="switch-field-1"
+                                                    tabindex="-1" ng-model="opcion.asistencia_reunion"
+                                                    class="ace ace-switch ace-switch-4 ng-pristine ng-untouched ng-valid ng-empty"
+                                                    type="checkbox" ng-change="calcularTotalEvaluacion(evaluacion)">
+                                                <span class="lbl check-descuento"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="row form-group">
+                                        <div class="col-md-8">
+                                            <label class="col-md-3">
+                                                <img class="img-responsive img-circle bg-silver"
+                                                    style="width:50%;height:50% !important"
+                                                    src="img/iconos-polifuncional/cumplimiento-de-ingreso-a-campo.png">
+                                            </label>
+                                            <label class="col-md-7">Cumplimiento de ingreso a campo</label>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div ng-if="!evaluacion.encargado">
+                                                <input ng-disabled="evaluacion.ver != undefined" required autofocus
+                                                    type="number" step="1" min="0" max="{{empleados.ingreso_campo}}"
+                                                    class="form-control" ng-model="evaluacion.ingreso_campo"
+                                                    ng-change="calcularTotalEvaluacion(evaluacion)"> Max.
+                                                {{empleados.ingreso_campo}}
+                                            </div>
+                                            <div ng-if="evaluacion.encargado">
+                                                <input ng-disabled="evaluacion.ver != undefined" required type="number"
+                                                    step="1" min="0" max="{{encargados.ingreso_campo}}"
+                                                    class="form-control" ng-model="evaluacion.ingreso_campo"
+                                                    ng-change="calcularTotalEvaluacion(evaluacion)">Max.
+                                                {{encargados.ingreso_campo}}
+                                            </div>
+                                            <!-- <input required type="number" step="1" min="0" class="form-control" ng-model="evaluacion.ingreso_campo" ng-change="calcularTotalEvaluacion(evaluacion)"> -->
+                                            <label>
+                                                <input ng-disabled="evaluacion.ver != undefined" name="switch-field-1"
+                                                    tabindex="-1" ng-model="opcion.ingreso_campo"
+                                                    class="ace ace-switch ace-switch-4 ng-pristine ng-untouched ng-valid ng-empty"
+                                                    type="checkbox" ng-change="calcularTotalEvaluacion(evaluacion)">
+                                                <span class="lbl check-descuento"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="row form-group">
+                                        <div class="col-md-8">
+                                            <label class="col-md-3">
+                                                <img class="img-responsive img-circle bg-green"
+                                                    style="width:50%;height:50% !important"
+                                                    src="img/iconos-polifuncional/aplicacion-y-llenado-correcto-de-for-sig.png">
+                                            </label>
+                                            <label class="col-md-7">Aplicación y llenado correcto de los formularios del
+                                                SIG</label>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div ng-if="!evaluacion.encargado">
+                                                <input ng-disabled="evaluacion.ver != undefined" required autofocus
+                                                    type="number" step="1" min="0"
+                                                    max="{{empleados.llenado_formularios}}" class="form-control"
+                                                    ng-model="evaluacion.llenado_formularios"
+                                                    ng-change="calcularTotalEvaluacion(evaluacion)"> Max.
+                                                {{empleados.llenado_formularios}}
+                                            </div>
+                                            <div ng-if="evaluacion.encargado">
+                                                <input ng-disabled="evaluacion.ver != undefined" required type="number"
+                                                    step="1" min="0" max="{{encargados.llenado_formularios}}"
+                                                    class="form-control" ng-model="evaluacion.llenado_formularios"
+                                                    ng-change="calcularTotalEvaluacion(evaluacion)">Max.
+                                                {{encargados.llenado_formularios}}
+                                            </div>
+                                            <!-- <input required type="number" step="1" min="0" class="form-control" ng-model="evaluacion.llenado_formularios" ng-change="calcularTotalEvaluacion(evaluacion)"> -->
+                                            <label>
+                                                <input ng-disabled="evaluacion.ver != undefined" name="switch-field-1"
+                                                    tabindex="-1" ng-model="opcion.llenado_formularios"
+                                                    class="ace ace-switch ace-switch-4 ng-pristine ng-untouched ng-valid ng-empty"
+                                                    type="checkbox" ng-change="calcularTotalEvaluacion(evaluacion)">
+                                                <span class="lbl check-descuento"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="row form-group">
+                                        <div class="col-md-8">
+                                            <label class="col-md-3">
+                                                <img class="img-responsive img-circle bg-black"
+                                                    style="width:50%;height:50% !important"
+                                                    src="img/iconos-polifuncional/sumatoria.png">
+                                            </label>
+                                            <label class="col-md-7">Nota total</label>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label for="nota">{{evaluacion.nota_total}}</label>
+                                            <!-- <input required type="number" step="1" min="0" class="form-control" ng-model="evaluacion.nota" disabled> -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="step-pane" data-step="3">
+                            <div class="center">
+                                <h4 class="blue">Por favor vuelva atras y verifique los datos, faltan datos o el valor
+                                    no es correcto.
+                                </h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer wizard-actions">
+                    <button tabindex="-1" class="btn btn-sm btn-prev">
+                        <i class="ace-icon fa fa-arrow-left"></i>
+                        Anterior
+                    </button>
+
+                    <button type="submit" id="siguiente" class="btn btn-success btn-sm btn-next" data-last="Finish">
+                        Siguiente
+                        <i class="ace-icon fa fa-arrow-right icon-on-right"></i>
+                    </button>
+
+                    <button tabindex="-1" type="button" class="btn btn-danger btn-sm pull-left" data-dismiss="modal"
+                        ng-click="cerrarPopPupNuevoPolifuncional()">
+                        <i class="ace-icon fa fa-times"></i>
+                        Cancelar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div id="modal-wizard-polifuncional-ac-edicion" class="modal wizard-posicion">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="formConfiguracionEvaluacion" name="formConfiguracionEvaluacion"
+                ng-submit="guardarConfiguracionEvaluacion(parametro, encargados, empleados)">
+                <div id="modal-wizard-container-polifuncional-ac-edicion">
+                    <div class="modal-header">
+                        <ul class="steps">
+                            <li data-step="1" class="active">
+                                <span class="step">1</span>
+
+                                <span class="title">Evaluación</span>
+                            </li>
+
+                            <li data-step="2">
+                                <span class="step">2</span>
+                                <span class="title">Calificación</span>
+                            </li>
+
+                            <li data-step="3">
+                                <span class="step">3</span>
+                                <span class="title">Finalizar</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="modal-body step-content">
+                        <div class="step-pane active" data-step="1">
+
+                            <div class="row">
+                                <div class="container-fluid">
+                                    <div class="center">
+                                        <div class="col-md-5">
+                                            &nbsp
+                                        </div>
+                                        <div class="col-md-7">
+                                            <div class="col-md-4">
+                                                <label for="">Encargados</label>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label for="">Empleados</label>
+                                            </div>
+                                            <div class="col-md-4">
+                                                &nbsp
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="row form-group">
+                                        <div class="col-md-5">
+                                            <label for="">Asistencia Capacitación
+                                                <a>
+
+                                                </a>
+                                            </label>
+                                        </div>
+                                        <div class="col-md-7">
+                                            <div class="col-md-4">
+                                                <input required autofocus type="number" step="1" min="0"
+                                                    class="form-control"
+                                                    ng-change="calcularNotaTotalConfiguracion(empleados, encargados)"
+                                                    ng-model="encargados.asistencia_capacitacion">
+                                            </div>
+                                            <div class="col-md-4">
+                                                <input required type="number" step="1" min="0" class="form-control"
+                                                    ng-change="calcularNotaTotalConfiguracion(empleados, encargados)"
+                                                    ng-model="empleados.asistencia_capacitacion">
+                                            </div>
+                                            <div class="col-md-4">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row form-group">
+                                        <div class="col-md-5">
+                                            <label for="">Documentos Actualizados
+                                                <a>
+
+                                                </a>
+                                            </label>
+                                        </div>
+                                        <div class="col-md-7">
+                                            <div class="col-md-4">
+                                                <input required type="number" step="1" min="0" class="form-control"
+                                                    ng-change="calcularNotaTotalConfiguracion(empleados, encargados)"
+                                                    ng-model="encargados.documentos_actualizados">
+
+                                            </div>
+                                            <div class="col-md-4">
+                                                <input required type="number" step="1" min="0" class="form-control"
+                                                    ng-change="calcularNotaTotalConfiguracion(empleados, encargados)"
+                                                    ng-model="empleados.documentos_actualizados">
+
+                                            </div>
+                                            <div class="col-md-4">
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row form-group">
+                                        <div class="col-md-5">
+                                            <label for="">Trabajo en equipo
+                                                <a>
+
+                                                </a>
+                                            </label>
+                                        </div>
+                                        <div class="col-md-7">
+                                            <div class="col-md-4">
+                                                <input required type="number" step="1" min="0" class="form-control"
+                                                    ng-change="calcularNotaTotalConfiguracion(empleados, encargados)"
+                                                    ng-model="encargados.trabajo_equipo">
+
+                                            </div>
+                                            <div class="col-md-4">
+                                                <input required type="number" step="1" min="0" class="form-control"
+                                                    ng-change="calcularNotaTotalConfiguracion(empleados, encargados)"
+                                                    ng-model="empleados.trabajo_equipo">
+
+                                            </div>
+                                            <div class="col-md-4">
+                                                <!-- <label>
+                                                    <input name="switch-field-1" tabindex="-1" ng-model="parametros.usar_equipo" class="ace ace-switch ace-switch-4 ng-pristine ng-untouched ng-valid ng-empty"
+                                                        type="checkbox">
+                                                    <span class="lbl check-descuento"></span>
+                                                </label> -->
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <div class="row form-group">
+                                        <div class="col-md-5">
+                                            <label for="">Cumplimiento de las funciones asignadas y puntualidad en el
+                                                horario de trabajo
+                                                <a>
+
+                                                </a>
+                                            </label>
+                                        </div>
+                                        <div class="col-md-7">
+                                            <div class="col-md-4">
+                                                <input required type="number" step="1" min="0" class="form-control"
+                                                    ng-change="calcularNotaTotalConfiguracion(empleados, encargados)"
+                                                    ng-model="encargados.funciones_puntualidad">
+
+                                            </div>
+                                            <div class="col-md-4">
+                                                <input required type="number" step="1" min="0" class="form-control"
+                                                    ng-change="calcularNotaTotalConfiguracion(empleados, encargados)"
+                                                    ng-model="empleados.funciones_puntualidad">
+
+                                            </div>
+                                            <div class="col-md-4">
+                                                <!-- <label>
+                                                    <input name="switch-field-1" tabindex="-1" ng-model="parametros.usar_funciones" class="ace ace-switch ace-switch-4 ng-pristine ng-untouched ng-valid ng-empty"
+                                                        type="checkbox">
+                                                    <span class="lbl check-descuento"></span>
+                                                </label> -->
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row form-group">
+                                        <div class="col-md-5">
+                                            <label for="">Higiene personal
+                                                <a>
+
+                                                </a>
+                                            </label>
+                                        </div>
+                                        <div class="col-md-7">
+                                            <div class="col-md-4">
+                                                <input required type="number" step="1" min="0" class="form-control"
+                                                    ng-change="calcularNotaTotalConfiguracion(empleados, encargados)"
+                                                    ng-model="encargados.higiene_personal">
+
+                                            </div>
+                                            <div class="col-md-4">
+                                                <input required type="number" step="1" min="0" class="form-control"
+                                                    ng-change="calcularNotaTotalConfiguracion(empleados, encargados)"
+                                                    ng-model="empleados.higiene_personal">
+
+                                            </div>
+                                            <div class="col-md-4">
+                                                <!-- <label>
+                                                    <input name="switch-field-1" tabindex="-1" ng-model="parametros.usar_higiene" class="ace ace-switch ace-switch-4 ng-pristine ng-untouched ng-valid ng-empty"
+                                                        type="checkbox">
+                                                    <span class="lbl check-descuento"></span>
+                                                </label> -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row form-group">
+                                        <div class="col-md-5">
+                                            <label for="">Puntualidad a la asistencia de reunión de 5 minutos en campo
+                                                <a>
+
+                                                </a>
+                                            </label>
+                                        </div>
+                                        <div class="col-md-7">
+                                            <div class="col-md-4">
+                                                <input required type="number" step="1" min="0" class="form-control"
+                                                    ng-change="calcularNotaTotalConfiguracion(empleados, encargados)"
+                                                    ng-model="encargados.asistencia_reunion">
+
+                                            </div>
+                                            <div class="col-md-4">
+                                                <input required type="number" step="1" min="0" class="form-control"
+                                                    ng-change="calcularNotaTotalConfiguracion(empleados, encargados)"
+                                                    ng-model="empleados.asistencia_reunion">
+
+                                            </div>
+                                            <div class="col-md-4">
+                                                <!-- <label>
+                                                    <input name="switch-field-1" tabindex="-1" ng-model="parametros.usar_reunion" class="ace ace-switch ace-switch-4 ng-pristine ng-untouched ng-valid ng-empty"
+                                                        type="checkbox">
+                                                    <span class="lbl check-descuento"></span>
+                                                </label> -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row form-group">
+                                        <div class="col-md-5">
+                                            <label for="">Cumplimiento de ingreso a campo
+                                                <a>
+
+                                                </a>
+                                            </label>
+                                        </div>
+                                        <div class="col-md-7">
+                                            <div class="col-md-4">
+                                                <input required type="number" step="1" min="0" class="form-control"
+                                                    ng-change="calcularNotaTotalConfiguracion(empleados, encargados)"
+                                                    ng-model="encargados.ingreso_campo">
+
+                                            </div>
+                                            <div class="col-md-4">
+                                                <input required type="number" step="1" min="0" class="form-control"
+                                                    ng-change="calcularNotaTotalConfiguracion(empleados, encargados)"
+                                                    ng-model="empleados.ingreso_campo">
+
+                                            </div>
+                                            <div class="col-md-4">
+                                                <!-- <label>
+                                                    <input name="switch-field-1" tabindex="-1" ng-model="parametros.usar_ingreso" class="ace ace-switch ace-switch-4 ng-pristine ng-untouched ng-valid ng-empty"
+                                                        type="checkbox">
+                                                    <span class="lbl check-descuento"></span>
+                                                </label> -->
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row form-group">
+                                        <div class="col-md-5">
+                                            <label for="">Aplicación y llenado correcto de los formularios del SIG
+                                                <a>
+
+                                                </a>
+                                            </label>
+                                        </div>
+                                        <div class="col-md-7">
+                                            <div class="col-md-4">
+                                                <input required type="number" step="1" min="0" class="form-control"
+                                                    ng-change="calcularNotaTotalConfiguracion(empleados, encargados)"
+                                                    ng-model="encargados.llenado_formularios">
+
+                                            </div>
+                                            <div class="col-md-4">
+                                                <input required type="number" step="1" min="0" class="form-control"
+                                                    ng-change="calcularNotaTotalConfiguracion(empleados, encargados)"
+                                                    ng-model="empleados.llenado_formularios">
+
+                                            </div>
+                                            <div class="col-md-4">
+                                                <!-- <label>
+                                                    <input name="switch-field-1" tabindex="-1" ng-model="parametros.usar_formularios" class="ace ace-switch ace-switch-4 ng-pristine ng-untouched ng-valid ng-empty"
+                                                        type="checkbox">
+                                                    <span class="lbl check-descuento"></span>
+                                                </label> -->
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row form-group">
+                                        <div class="col-md-5">
+                                            <label for="">Nota total</label>
+                                        </div>
+                                        <div class="col-md-7">
+                                            <div class="col-md-4">
+                                                <!-- {{encargados.nota_total}} -->
+                                                <input required disabled type="number" step="1" min="0"
+                                                    class="form-control" ng-model="encargados.nota_total">
+
+                                            </div>
+                                            <div class="col-md-4">
+                                                <!-- {{empleados.nota_total}} -->
+                                                <input required disabled type="number" step="1" min="0"
+                                                    class="form-control" ng-model="empleados.nota_total">
+
+                                            </div>
+                                            <div class="col-md-4">
+                                                <!-- <label>
+                                                <input name="switch-field-1" tabindex="-1" ng-model="vacuna.asignada" class="ace ace-switch ace-switch-4 ng-pristine ng-untouched ng-valid ng-empty"
+                                                    type="checkbox">
+                                                <span class="lbl check-descuento"></span>
+                                            </label>
+                                             -->
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="step-pane" data-step="2">
+                            <div class="center">
+                                <!-- <h4 class="blue">Finalización</h4> -->
+                                <div class="container-fluid">
+                                    <div class="center">
+                                        <div class="col-md-5">
+                                            &nbsp
+                                        </div>
+                                        <div class="col-md-7">
+                                            <div class="col-md-4">
+                                                <label for="">Desde</label>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label for="">Hasta</label>
+                                            </div>
+                                            <div class="col-md-4">
+                                                &nbsp
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div ng-repeat="parametro in listaDesempenio track by $index"
+                                        class="row form-group">
+                                        <div class="col-md-5">
+                                            <label for="">{{parametro.nombre}}
+                                                <a>
+
+                                                </a>
+                                            </label>
+                                        </div>
+                                        <div class="col-md-7">
+                                            <div class="col-md-4">
+                                                <input required autofocus type="number" step="1" min="0"
+                                                    class="form-control" ng-model="parametro.desde">
+                                            </div>
+                                            <div class="col-md-4">
+                                                <input required type="number" step="1" min="0" class="form-control"
+                                                    ng-model="parametro.hasta">
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label>
+                                                    <input name="switch-field-1" tabindex="-1"
+                                                        ng-model="parametro.activo"
+                                                        class="ace ace-switch ace-switch-4 ng-pristine ng-untouched ng-valid ng-empty"
+                                                        type="checkbox">
+                                                    <span class="lbl check-descuento"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- <div class="row form-group">
+                                        <div class="col-md-5">
+                                            <label for="">Insatisfactorio
+                                                <a>
+
+                                                </a>
+                                            </label>
+                                        </div>
+                                        <div class="col-md-7">
+                                            <div class="col-md-4">
+                                                <input required autofocus type="number" step="1" min="0" class="form-control" ng-model="parametros.insatisfactorio.desde">
+                                            </div>
+                                            <div class="col-md-4">
+                                                <input required type="number" step="1" min="0" class="form-control" ng-model="parametros.insatisfactorio.hasta">
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label>
+                                                    <input name="switch-field-1" tabindex="-1" ng-model="parametros.insatisfactorio.usar" class="ace ace-switch ace-switch-4 ng-pristine ng-untouched ng-valid ng-empty"
+                                                        type="checkbox">
+                                                    <span class="lbl check-descuento"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row form-group">
+                                        <div class="col-md-5">
+                                            <label for="">Satisfactorio
+                                                <a>
+
+                                                </a>
+                                            </label>
+                                        </div>
+                                        <div class="col-md-7">
+                                            <div class="col-md-4">
+                                                <input required autofocus type="number" step="1" min="0" class="form-control" ng-model="parametros.satisfactorio.desde">
+                                            </div>
+                                            <div class="col-md-4">
+                                                <input required type="number" step="1" min="0" class="form-control" ng-model="parametros.satisfactorio.hasta">
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label>
+                                                    <input name="switch-field-1" tabindex="-1" ng-model="parametros.satisfactorio.usar" class="ace ace-switch ace-switch-4 ng-pristine ng-untouched ng-valid ng-empty"
+                                                        type="checkbox">
+                                                    <span class="lbl check-descuento"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row form-group">
+                                        <div class="col-md-5">
+                                            <label for="">Competente
+                                                <a>
+
+                                                </a>
+                                            </label>
+                                        </div>
+                                        <div class="col-md-7">
+                                            <div class="col-md-4">
+                                                <input required autofocus type="number" step="1" min="0" class="form-control" ng-model="parametros.competente.desde">
+                                            </div>
+                                            <div class="col-md-4">
+                                                <input required type="number" step="1" min="0" class="form-control" ng-model="parametros.competente.hasta">
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label>
+                                                    <input name="switch-field-1" tabindex="-1" ng-model="parametros.competente.usar" class="ace ace-switch ace-switch-4 ng-pristine ng-untouched ng-valid ng-empty"
+                                                        type="checkbox">
+                                                    <span class="lbl check-descuento"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div> -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="step-pane" data-step="3">
+                            <div class="center">
+                                <h4 class="blue">Todos los campos son requeridos, por favor vuelva atras y revise que
+                                    todos los campos esten
+                                    con valores númericos </h4>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="modal-footer wizard-actions">
+                    <button class="btn btn-sm btn-prev">
+                        <i class="ace-icon fa fa-arrow-left"></i>
+                        Anterior
+                    </button>
+
+                    <button type="submit" id="siguiente-conf" class="btn btn-success btn-sm btn-next"
+                        data-last="Finish">
+                        Siguiente
+                        <i class="ace-icon fa fa-arrow-right icon-on-right"></i>
+                    </button>
+
+                    <button type="button" class="btn btn-danger btn-sm pull-left" data-dismiss="modal"
+                        ng-click="cerrarmodalParametrosPolifuncionalidad()">
+                        <i class="ace-icon fa fa-times"></i>
+                        Cancelar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div id="dialog-reportes-polifuncional" style="overflow-x:hidden;" class="modal">
+    <div class="row">
+        <div class="widget-header">
+            <div class="row container-fluid">
+                <div class="row container-fluid">
+                    <div class="container-fluid pull-right">
+                        <button type="button" ng-click="cerraridModalReportes()" class="btn btn-danger ">
+                            <i class="ace-icon fa fa-close align-top bigger-125"></i>
+                        </button>
+                    </div>
+                    <h2 align="center" class="blue">REPORTES</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="container-fluid">
+            <div class="widget-box">
+                <div class="widget-body">
+                    <div class="widget-main">
+                        <div class="row">
+                            <h4 align="center">Promedios por meses de los trabajadores</h2>
+                        </div>
+                        <div class="space"></div>
+                        <div class="row form-group">
+                            <div class="col-md-12">
+                                <div class="col-md-7">
+                                    <div class="col-md-4">
+                                        <label for="">Desde
+                                            <a>
+                                                <!-- <i class="ace-icon fa fa-pencil bigger-130"></i> -->
+                                            </a>
+                                        </label>
+                                    </div>
+
+                                    <div class="col-md-8">
+                                        <div class="col-md-6">
+                                            <select required id="mesXmesesDesdePolifuncionalidad"
+                                                name="mesPolifuncionalidad"
+                                                ng-options="mes as mes.nombre for mes in meses track by mes.id"
+                                                ng-model="reporte.mesXmesesDesde">
+                                                <option disabled value="" selected>Mes</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <select required id="anioXmesesDesdePolifuncionalidad"
+                                                name="anioPolifuncionalidad"
+                                                ng-options="anio as anio.nombre for anio in anios track by anio.id"
+                                                ng-model="reporte.anioXmesesDesde">
+                                                <option disabled value="" selected>Año</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-5">
+                                    <p class="btn-group btn-corner">
+                                        <!-- <button type="button" class="btn  btn-primary btn-sm">
+                                            <i class="ace-icon fa fa-bar-chart-o align-top bigger-100"></i>
+
+                                        </button>
+                                        <button type="button" class="btn  btn-success btn-sm">
+                                            <i class="ace-icon fa fa-print align-top bigger-100"></i>
+                                            Excel
+                                        </button>
+                                        <button type="button" class="btn  btn-danger btn-sm">
+                                            <i class="ace-icon fa fa-print align-top bigger-100"></i>
+                                            pdf
+                                        </button> -->
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <div class="col-md-12">
+                                <div class="col-md-7">
+                                    <div class="col-md-4">
+                                        <label for="">Hasta
+                                            <a>
+                                                <!-- <i class="ace-icon fa fa-pencil bigger-130"></i> -->
+                                            </a>
+                                        </label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class="col-md-6">
+                                            <select required id="mesXmesesHastaReportesPolifuncionalidad"
+                                                name="mesPolifuncionalidad"
+                                                ng-options="mes as mes.nombre for mes in meses track by mes.id"
+                                                ng-model="reporte.mesXmesesHasta">
+                                                <option disabled value="" selected>Mes</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <select required id="anioXmesesHastaReportesPolifuncionalidad"
+                                                name="anioPolifuncionalidad"
+                                                ng-options="anio as anio.nombre for anio in anios track by anio.id"
+                                                ng-model="reporte.anioXmesesHasta">
+                                                <option disabled value="" selected>Año</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-5">
+                                    <p class="btn-group btn-corner">
+                                        <button type="button" class="btn  btn-primary btn-sm"
+                                            ng-click="reportePorMeses(reporte.mesXmesesDesde,reporte.anioXmesesDesde, reporte.mesXmesesHasta, reporte.anioXmesesHasta, true, true)">
+                                            <i class="ace-icon fa fa-bar-chart-o align-top bigger-100"></i>
+                                        </button>
+                                        <button type="button" class="btn  btn-success btn-sm"
+                                            ng-click="reportePorMeses(reporte.mesXmesesDesde,reporte.anioXmesesDesde, reporte.mesXmesesHasta, reporte.anioXmesesHasta)">
+                                            <i class="ace-icon fa fa-print align-top bigger-100"></i>
+                                            Excel
+                                        </button>
+                                        <button type="button" class="btn  btn-danger btn-sm"
+                                            ng-click="reportePorMeses(reporte.mesXmesesDesde,reporte.anioXmesesDesde, reporte.mesXmesesHasta, reporte.anioXmesesHasta, true)">
+                                            <i class="ace-icon fa fa-print align-top bigger-100"></i>
+                                            pdf
+                                        </button>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <h4 align="center">Promedios general por año</h2>
+                        </div>
+                        <div class="space"></div>
+                        <div class="row form-group">
+                            <div class="col-md-12">
+                                <div class="col-md-7">
+                                    <div class="col-md-6">
+                                        <select required id="anioXaniosReportePolifuncionalidad"
+                                            name="anioReportePolifuncionalidad"
+                                            ng-options="anio as anio.nombre for anio in anios track by anio.id"
+                                            ng-model="reporte.anioXcampo">
+                                            <option disabled value="" selected>Año</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <!-- <select id="centroCostoPolifuncionalidad" name="centroCostoPolifuncionalidad" ng-options="centroCosto as centroCosto.nombre for centroCosto in centrosCostos track by centroCosto.id"
+                                            ng-model="filtro.centroCosto">
+                                            <option value="" selected>TODOS</option>
+                                        </select> -->
+                                        <!-- <select required id="reportesCamposPolifuncionalidad" name="reportesCamposPolifuncionalidad" ng-options="centroCosto as centroCosto.nombre for centroCosto in centrosCostos track by centroCosto.id"
+                                            ng-model="reporte.campoXanio">
+                                            <option disabled value="" selected>Campo</option>
+                                        </select> -->
+                                        <!-- <input class="form-control" type="text" ng-model="reporte.campoXanio"> -->
+                                        <select required id="campo-rol" name="centroDeCostos"
+                                            ng-options="centroCosto as centroCosto.nombre for centroCosto in centrosDeCostos|filter:{habilitado:true} track by centroCosto.id"
+                                            ng-model="reporte.campoXanio">
+                                            <option disabled value="">--selecionar--</option>
+                                        </select>
+                                        <button type="button" ng-click="abrirmodalBusquedaCentroCosto()"
+                                            class="btn btn-info btn-sm">
+                                            <i class="ace-icon fa fa-search-plus bigger-110"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="col-md-5">
+                                    <p class="btn-group btn-corner">
+                                        <button type="button" class="btn  btn-primary btn-sm"
+                                            ng-click="reportePromediosGeneralExcel(reporte.anioXcampo, reporte.campoXanio, true, true)">
+                                            <i class="ace-icon fa fa-bar-chart-o align-top bigger-100"></i>
+                                        </button>
+                                        <button type="button" class="btn  btn-success btn-sm"
+                                            ng-click="reportePromediosGeneralExcel(reporte.anioXcampo, reporte.campoXanio)">
+                                            <i class="ace-icon fa fa-print align-top bigger-100"></i>
+                                            Excel
+                                        </button>
+                                        <button type="button" class="btn  btn-danger btn-sm"
+                                            ng-click="reportePromediosGeneralExcel(reporte.anioXcampo, reporte.campoXanio, true)">
+                                            <i class="ace-icon fa fa-print align-top bigger-100"></i>
+                                            pdf
+                                        </button>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <h4 align="center">Promedios por campo</h2>
+                        </div>
+                        <div class="space"></div>
+                        <div class="row form-group">
+                            <div class="col-md-12">
+                                <div class="col-md-7">
+                                    <div class="col-md-6">
+                                        <select required id="anioXaniosReportePolifuncionalidad"
+                                            name="anioReportePolifuncionalidad"
+                                            ng-options="anio as anio.nombre for anio in anios track by anio.id"
+                                            ng-model="reporte.anioXanio">
+                                            <option disabled value="" selected>Año</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">&nbsp</div>
+                                </div>
+                                <div class="col-md-5">
+                                    <p class="btn-group btn-corner">
+                                        <button type="button" class="btn  btn-primary btn-sm"
+                                            ng-click="reportePromediosCampoExcel(reporte.anioXanio, true, true)">
+                                            <i class="ace-icon fa fa-bar-chart-o align-top bigger-100"></i>
+                                        </button>
+                                        <button type="button" class="btn  btn-success btn-sm"
+                                            ng-click="reportePromediosCampoExcel(reporte.anioXanio)">
+                                            <i class="ace-icon fa fa-print align-top bigger-100"></i>
+                                            Excel
+                                        </button>
+                                        <button type="button" class="btn  btn-danger btn-sm"
+                                            ng-click="reportePromediosCampoExcel(reporte.anioXanio, true)">
+                                            <i class="ace-icon fa fa-print align-top bigger-100"></i>
+                                            Pdf
+                                        </button>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="reporte-grafico-polifuncional" style="overflow-x:hidden;" class="modal">
+    <div class="row">
+        <div class="modal-header">
+            <div class="container-fluid">
+                <button type="button" ng-click="cerraridModalReportesGrafico()" class="pull-right">
+                    <i class="ace-icon fa fa-close align-top bigger-125"></i>
+                </button>
+                <h2 align="center" class="blue">REPORTE GRAFÍCO</h2>
+
+            </div>
+        </div>
+    </div>
+    <div class="modal-body">
+        <div class="container-fluid">
+            <div class="container-fluid">
+                <div id="chartContainer" style="height: 800; width: 100%;">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

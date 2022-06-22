@@ -1,0 +1,4 @@
+ALTER TABLE agil_configuracion_general_factura DROP formato_con_firma_factura;
+
+
+ALTER TABLE agil_configuracion_factura DROP formato_con_firma_factura;

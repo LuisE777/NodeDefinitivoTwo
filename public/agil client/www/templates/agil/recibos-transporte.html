@@ -1,0 +1,677 @@
+<div class="col-xs-12">
+    <h3 class="header smaller lighter blue">RECIBOS</h3>
+</div>
+<div class="col-xs-12">
+    <button type="button" class="btn btn-primary" ng-click="abrirDialogNuevoRecibo()">
+        <i class="ace-icon fa fa-plus align-top bigger-125 pt-2"></i>  Nuevo
+    </button>
+    <div class="pull-right">
+        <button style="border-radius:5px;" class="btn btn-primary" type="button" ng-click="abrirDialogChoferes()"><i class="fa fa-user ace-icon icon-only bigger-150" aria-hidden="true"></i></button>
+        <button style="border-radius:5px;" class="btn btn-primary" type="button" ng-click="abrirDialogVehiculos()"><i class="fa fa-truck ace-icon icon-only bigger-150" aria-hidden="true"></i></button>
+        <button style="border-radius:5px;" class="btn btn-primary" type="button" ng-click="abrirDialogRutas()"><i class="fa fa-road ace-icon icon-only bigger-150" aria-hidden="true"></i></button>
+    </div>
+</div>
+<div class="col-xs-12">
+    <h4 class="header smaller lighter">Filtro recibos</h4>
+    <div class="col-xs-12">
+        <form ng-submit="obtenerRecibos(true)" id="formCargarRecibos" name="formCargarRecibos">
+            <div class="row">
+                <div class="col-xs-6 col-sm-3 col-md-3 col-lg-2">
+                    <label>Desde</label>
+                    <div class="input-group col-xs-12">
+                        <input ng-class="filtro.inicio?'filter-bg-skyblue':''" ng-update-hidden class="col-xs-12 form-control input-sm date-picker" type="text" data-date-format="dd/mm/yyyy" ng-model="filtro.inicio" placeholder="Fecha inicio" autocomplete="off">
+                    </div>
+                </div>
+                <div class="col-xs-6 col-sm-3 col-md-3 col-lg-2">
+                    <label>Hasta</label>
+                    <div class="input-group col-xs-12">
+                        <input ng-class="filtro.fin?'filter-bg-skyblue':''" ng-update-hidden class="col-xs-12 form-control input-sm date-picker" type="text" data-date-format="dd/mm/yyyy" ng-model="filtro.fin" placeholder="Fecha fin" autocomplete="off">
+                    </div>
+                </div>
+                <div style="padding-top: 8px;" class="col-xs-12 col-sm-6 col-md-6 col-lg-8">
+                    <button type="submit" class="pt-5 btn-sm btn-woBox">
+                        <i class="ace-icon fa fa-search align-top bigger-125 pt-2"></i>  Filtrar
+                    </button>
+                    <button type="button" class="pt-5 btn-sm btn-pdf" ng-click="reporteRecibosPdf(filtro)">
+                        <i class="ace-icon fa fa-file-pdf-o align-top bigger-125 pt-2"></i>  PDF
+                    </button>
+                    <button type="button" class="pt-5 btn-sm btn-xlsx" ng-click="reporteRecibosExcel(filtro)">
+                        <i class="ace-icon fa fa-file-excel-o align-top bigger-125 pt-2"></i>  EXCEL
+                    </button>
+                    <button style="border-radius:5px;" class="btn btn-inverse pull-right" ng-model="verFiltros" type="button" ng-click="verFiltros = !verFiltros">
+                        <i class="fa fa-sliders bigger-125" aria-hidden="true"></i>
+                    </button>
+
+                </div>
+            </div>
+            <div ng-show="verFiltros" style="padding-top: 8px;" class="row">
+                <div class="form-group col-xs-6 col-sm-4 col-md-3 col-lg-2">
+                    <label>Recibo Nro.</label>
+                    <input ng-class="filtro.recibo > 0?'filter-bg-skyblue':''" class="col-xs-12 input-sm" type="number" placeholder="Ingrese nro recibo" ng-model="filtro.recibo">
+                </div>
+                <div class="form-group col-xs-6 col-sm-4 col-md-3 col-lg-2">
+                    <label> Moneda</label>
+                    <div class="input-group col-xs-12">
+                        <select ng-class="filtro.moneda != 'TODOS'?'filter-bg-skyblue':''" ng-model="filtro.moneda" name="monto" class="form-control input-sm col-xs-12">
+                            <option selected value="TODOS">TODOS</option>
+                            <option value="true">BOLIVIANOS</option>
+                            <option value="false">DÓLARES</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group col-xs-6 col-sm-4 col-md-3 col-lg-2">
+                    <label> Monto</label>
+                    <div class="input-group col-xs-12">
+                        <input ng-class="filtro.monto?'filter-bg-skyblue':''" class="col-xs-12 input-sm" type="number" placeholder="Ingrese importe" ng-model="filtro.monto">
+                    </div>
+                </div>
+                <div class="form-group col-xs-6 col-sm-4 col-md-3 col-lg-2">
+                    <label>Conductor</label>
+                    <div class="input-group col-xs-12">
+                        <input ng-class="filtro.chofer?'filter-bg-skyblue':''" class="form-control input-sm col-xs-12" autocomplete="off" ng-keypress="interceptarTecla($event,'chofer', true)" data-validate="validate(required)" type="text" ng-model="filtro.chofer" placeholder="Ingrese conductor" uib-typeahead="chofer as chofer.persona.nombre_completo for chofer in listarChoferes($viewValue, true)"
+                        typeahead-wait-ms="1200" typeahead-template-url="templates/autocompletar.html" typeahead-show-hint="false" typeahead-min-length="2" typeahead-on-select="establecerChofer($item, true, $model, $label, $event)">
+                    </div>
+                </div>
+                <div class="form-group col-xs-6 col-sm-4 col-md-3 col-lg-2">
+                    <label>Placa</label>
+                    <input ng-class="filtro.vehiculo?'filter-bg-skyblue':''" class="col-xs-12 input-sm" autocomplete="off" ng-keypress="interceptarTecla($event,'vehiculo', true)" data-validate="validate(required)" type="text" ng-model="filtro.vehiculo" placeholder="Ingrese placa" uib-typeahead="vehiculo as vehiculo.placa for vehiculo in listarVehiculos($viewValue, true)" typeahead-wait-ms="1200" typeahead-template-url="templates/autocompletar.html" typeahead-show-hint="false" typeahead-min-length="2" typeahead-on-select="establecerVehiculo($item, true, $model, $label, $event)">
+                </div>
+                
+                <div class="form-group col-xs-6 col-sm-4 col-md-3 col-lg-2">
+                    <label>Estado</label>
+                    <select ng-class="filtro.estado != 'TODOS'?'filter-bg-skyblue':''" ng-model="filtro.estado"  name="color" class="form-control input-sm col-xs-12">
+                        <option selected value="TODOS" >TODOS</option>
+                        <option value="ABIERTO" >ABIERTO</option>
+                        <option value="CERRADO" >CERRADO</option>
+                        <option value="ANULADO" >ANULADO</option>
+                    </select>
+                </div>
+                <div class="form-group col-xs-6 col-sm-4 col-md-3 col-lg-2">
+                    <label>Método Pago</label>
+                    <select ng-class="filtro.metodo_pago != 'TODOS'?'filter-bg-skyblue':''" ng-model="filtro.metodo_pago"  name="color" class="form-control input-sm col-xs-12">
+                        <option selected value="TODOS" >TODOS</option>
+                        <option value="EFECTIVO" >EFECTIVO</option>
+                        <option value="CHEQUE" >CHEQUE</option>
+                        <option value="TRANSFERENCIA" >TRANSFERENCIA</option>
+                    </select>
+                </div>
+                <div class="form-group col-xs-6 col-sm-4 col-md-3 col-lg-2">
+                    <label>Banco Origen</label>
+                    <select ng-class="filtro.banco.id > 0?'filter-bg-skyblue':''" class="col-xs-12 input-sm"  ng-options="banco as (banco.nombre ? banco.numero ? banco.nombre+'-'+banco.numero : banco.nombre: '') for banco in bancos track by banco.id" ng-model="filtro.banco"></select>
+                </div>
+                <div class="form-group col-xs-6 col-sm-4 col-md-3 col-lg-2">
+                    <label>Banco Destino</label>
+                    <input ng-class="filtro.bancoDestino.id > 0?'filter-bg-skyblue':''" class="col-xs-12 input-sm" autocomplete="off" ng-keypress="interceptarTecla($event,'banco', true)" data-validate="validate(required)" type="text" ng-model="filtro.bancoDestino" placeholder="Ingrese banco destino" uib-typeahead="bancoDestino as bancoDestino.nombre for bancoDestino in listarBancosDestino($viewValue, true)" typeahead-wait-ms="1200" typeahead-template-url="templates/autocompletar.html" typeahead-show-hint="false" typeahead-min-length="2" typeahead-on-select="establecerBanco($item, true, $model, $label, $event)">
+                </div>
+                <div class="form-group col-xs-6 col-sm-4 col-md-3 col-lg-2">
+                    <label>Cheque</label>
+                    <input ng-class="filtro.nro_cheque?'filter-bg-skyblue':''" class="col-xs-12 input-sm" type="text" maxlength="20" placeholder="Ingrese nro cheque" ng-model="filtro.nro_cheque">
+                </div>
+                <div class="form-group col-xs-6 col-sm-4 col-md-3 col-lg-2">
+                    <label>Sucursal</label>
+                    <div class="input-group col-xs-12">
+                        <select ng-class="filtro.sucursal.id > 0?'filter-bg-skyblue':''" class="col-xs-12 input-sm" ng-options="sucursal as sucursal.nombre for sucursal in sucursales track by sucursal.id" ng-model="filtro.sucursal"></select>
+                    </div>
+                </div>
+                <div class="form-group col-xs-6 col-sm-4 col-md-3 col-lg-2">
+                    <label>Usuario</label>
+                    <div class="input-group col-xs-12">
+                        <select ng-class="filtro.usuario.id > 0 ?'filter-bg-skyblue':''" class="col-xs-12 input-sm" ng-options="usuario as usuario.nombre_usuario for usuario in usuarios track by usuario.id" ng-model="filtro.usuario"></select>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div style="padding-top: 8px;" class="col-xs-12">
+    <div class="table-header">
+        Lista de Recibos
+        <div class="inline pos-rel pull-right">
+            <div class="col-sm-10" ng-include src="'/templates/gral/fields-viewer.html'"></div>
+        </div>
+    </div>
+    <div>
+        <div id="tabla-comprobamte_wrapper" class="dataTables_wrapper form-inline no-footer">
+            <div class="row" ng-include src="'/templates/gral/paginator-header-1.html'">
+            </div>
+            <div style="overflow-x:auto;">
+                <table id="tabla-comprobantes" class="table table-striped table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <td  class="text-center">#</td>
+                            <td ng-if="fieldViewer.getConfiguration().fecha.show" class="text-center"><a href="javascript:void(0)" ng-click="paginator.sortColumn('fecha')">Hora Fecha
+                                <span id="comprobante" class="sort fa fa-sort icon-only"></span>
+                            </a></td>
+                            <td ng-if="fieldViewer.getConfiguration().correlativo.show" class="text-center"><a href="javascript:void(0)" ng-click="paginator.sortColumn('correlativo')">Recibo
+                                <span id="comprobante" class="sort fa fa-sort icon-only"></span>
+                            </a></td>
+                            <td ng-if="fieldViewer.getConfiguration().monto.show" class="text-center"><a href="javascript:void(0)" ng-click="paginator.sortColumn('monto')">Monto
+                                <span id="comprobante" class="sort fa fa-sort icon-only"></span>
+                            </a></td>
+                            <td ng-if="fieldViewer.getConfiguration().chofer.show" class="text-center"><a href="javascript:void(0)" ng-click="paginator.sortColumn('chofer')">Conductor
+                                <span id="comprobante" class="sort fa fa-sort icon-only"></span>
+                            </a></td>
+                            <td ng-if="fieldViewer.getConfiguration().placa.show" class="text-center"><a href="javascript:void(0)" ng-click="paginator.sortColumn('placa')">Placa
+                                <span id="comprobante" class="sort fa fa-sort icon-only"></span>
+                            </a></td>
+                            <td ng-if="fieldViewer.getConfiguration().metodo_pago.show" class="text-center"><a href="javascript:void(0)" ng-click="paginator.sortColumn('metodo_pago')">Método Pago
+                                <span id="comprobante" class="sort fa fa-sort icon-only"></span>
+                            </a></td>
+                            <td ng-if="fieldViewer.getConfiguration().banco.show" class="text-center"><a href="javascript:void(0)" ng-click="paginator.sortColumn('banco')">Banco Origen
+                                <span id="comprobante" class="sort fa fa-sort icon-only"></span>
+                            </a></td>
+                            <td ng-if="fieldViewer.getConfiguration().banco_destino.show" class="text-center"><a href="javascript:void(0)" ng-click="paginator.sortColumn('banco_destino')">Banco Destino
+                                <span id="comprobante" class="sort fa fa-sort icon-only"></span>
+                            </a></td>
+                            <td ng-if="fieldViewer.getConfiguration().nro_cheque.show" class="text-center"><a href="javascript:void(0)" ng-click="paginator.sortColumn('nro_cheque')">Cheque
+                                <span id="comprobante" class="sort fa fa-sort icon-only"></span>
+                            </a></td>
+                            <td ng-if="fieldViewer.getConfiguration().sucursal.show" class="text-center"><a href="javascript:void(0)" ng-click="paginator.sortColumn('sucursal')">Sucursal
+                                <span id="comprobante" class="sort fa fa-sort icon-only"></span>
+                            </a></td>
+                            <td ng-if="fieldViewer.getConfiguration().usuario.show" class="text-center"><a href="javascript:void(0)" ng-click="paginator.sortColumn('usuario')">Usuario
+                                <span id="comprobante" class="sort fa fa-sort icon-only"></span>
+                            </a></td>
+                            <td ng-if="fieldViewer.getConfiguration().estado.show" class="text-center"><a href="javascript:void(0)" ng-click="paginator.sortColumn('estado')">Estado
+                                <span id="comprobante" class="sort fa fa-sort icon-only"></span>
+                            </a></td>
+                            <td  class="text-center">Acciones</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="recibo in recibos">
+                            <td><p class="small"> {{ $index+1 }}</p></td>
+                            <td ng-if="fieldViewer.getConfiguration().fecha.show"><p class="small"> {{recibo.fecha | date : 'dd/M/yyyy': timezone}}&nbsp{{ recibo.fecha | date : 'HH:mm' : timezone}}</p></td>
+                            <td ng-if="fieldViewer.getConfiguration().correlativo.show" class="text-right"><p class="small">{{ recibo.correlativo ? recibo.correlativo : '' }}</p></td>
+                            <td ng-if="fieldViewer.getConfiguration().monto.show" class="text-right"><p class="small">{{ recibo.monto ? (recibo.monto | number:2) : '' }}</p></td>
+                            <td ng-if="fieldViewer.getConfiguration().chofer.show" class="text-uppercase"><p class="small">{{ recibo.nombre_chofer ? recibo.nombre_chofer : ''}}</p></td>
+                            <td ng-if="fieldViewer.getConfiguration().placa.show"><p class="small"> {{ recibo.placa ? recibo.placa : '' }}</p></td>
+                            <td ng-if="fieldViewer.getConfiguration().metodo_pago.show"><p class="small"> {{ recibo.metodo_pago ? recibo.metodo_pago : '' }}</p></td>
+                            <td ng-if="fieldViewer.getConfiguration().banco.show"><p class="small"> {{ recibo.banco_origen ? recibo.banco_origen : '' }}</p></td>
+                            <td ng-if="fieldViewer.getConfiguration().banco_destino.show"><p class="small"> {{ recibo.banco_destino ? recibo.banco_destino : '' }}</p></td>
+                            <td ng-if="fieldViewer.getConfiguration().nro_cheque.show"><p class="small"> {{ recibo.nro_cheque ? recibo.nro_cheque : '' }}</p></td>
+                            <td ng-if="fieldViewer.getConfiguration().sucursal.show" class="text-uppercase"><p class="small">{{ recibo.nombre_sucursal ? recibo.nombre_sucursal : '' }}</p></td>
+                            <td ng-if="fieldViewer.getConfiguration().usuario.show"><p class="small"> {{ recibo.nombre_usuario ? recibo.nombre_usuario : '' }}</p></td>
+                            <td ng-if="fieldViewer.getConfiguration().estado.show" class="text-center">
+                                <span class="label label-success" ng-if="recibo.nombre_estado == 'ABIERTO'"><small>{{ recibo.nombre_estado ? recibo.nombre_estado : '' }}</small></span>
+                                <span class="label label-info" ng-if="recibo.nombre_estado == 'CERRADO'"><small>{{ recibo.nombre_estado ? recibo.nombre_estado : '' }}</small></span>
+                                <span class="label label-danger" ng-if="recibo.nombre_estado == 'ANULADO'"><small>{{ recibo.nombre_estado ? recibo.nombre_estado : '' }}</small></span>
+                            </td>
+                            <td>
+                                <a class="info" href="javascript:void(0)" ng-click="abrirDialogNuevoRecibo(recibo, true)"><i class="fa fa-search-plus bigger-130"></i></a>
+                                <a class="red" href="javascript:void(0)" ng-click="generarPdfRecibo(recibo.id)"><i class="fa fa-print bigger-130"></i></a>
+                                <a class="info" href="javascript:void(0)" ng-show="recibo.nombre_estado == 'ABIERTO'" ng-click="abrirDialogNuevoRecibo(recibo, false)"><i class="fa fa-pencil-square-o bigger-130"></i></a>
+                                <a class="green" href="javascript:void(0)" ng-show="recibo.nombre_estado == 'ABIERTO'" ng-click="bloquearRecibo(recibo)"><i class="fa fa-unlock bigger-130"></i></a>
+                                <a class="red" href="javascript:void(0)" ng-show="recibo.nombre_estado == 'ABIERTO'" ng-click="deleteRecibo(recibo)"><i class="fa fa-trash-o bigger-130"></i></a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="row" ng-include src="'/templates/gral/paginator.html'">
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL NUEVO RECIBO -->
+<div class="modal" id="dialog-nuevo-recibo">
+    <div class="modal-content">
+        <div class="modal-header bg-primary">
+            <button type="button" class="close" ng-click="cerrarDialogNuevoRecibo()" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 ng-if="modoVista === undefined" class='text-center text-white text-uppercase'>NUEVO RECIBO</h4>
+            <h4 ng-if="modoVista === false"class='text-center text-white text-uppercase'>EDICIÓN DE RECIBO #{{ recibo.correlativo ? recibo.correlativo : ''}}</h4>
+            <h4 ng-if="modoVista === true"class='text-center text-white text-uppercase'>MODO VISTA RECIBO #{{ recibo.correlativo ? recibo.correlativo : ''}}</h4>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                    <form ng-submit="guardarRecibo(recibo)" id="formRecibo" name="formRecibo">
+                        <div class="col-xs-12 col-md-4">
+                            <div class="widget-box">
+                                <div class="widget-header">
+                                    <h6 class="widget-title bolder">DATOS DEL PAGO</h6>
+                                    <div class="pull-right" style="margin-top: 3px; margin-right: 3px;">
+                                        <button type="submit" class="btn btn-sm btn-primary" ng-disabled="detalles.length==detallesEliminados || formRecibo.$invalid || modoVista"><i class="fa fa-floppy-o" aria-hidden="true"></i>  Guardar</button>
+                                        <button type="button" class="btn btn-sm btn-danger" ng-click="cerrarDialogNuevoRecibo()"><i class="fa fa-times" aria-hidden="true"></i>  Cerrar</button>
+                                    </div>
+                                </div>
+                                <div class="widget-body">
+                                    <div class="widget-main">
+                                        <div class="row">
+                                            <div class="form-group col-xs-12 col-sm-6">
+                                                <label class="h6" for="cancelado-a">CANCELADO A <i class="text-danger">*</i></label>
+                                                <div class="col-xs-12 input-group">
+                                                    <input ng-disabled="modoVista" class="form-control input-sm" autocomplete="off" ng-keypress="interceptarTecla($event,'chofer', true)" data-validate="validate(required)" required type="text" ng-model="recibo.chofer" placeholder="Ingrese chofer" uib-typeahead="chofer as chofer.persona.nombre_completo for chofer in listarChoferes($viewValue, false)"
+                                                    typeahead-wait-ms="1200" typeahead-template-url="templates/autocompletar.html" typeahead-show-hint="false" typeahead-min-length="2"     typeahead-on-select="establecerChofer($item, false, $model, $label, $event)">
+                                                    <span ng-show="!modoVista" style="cursor: pointer;" class="input-group-addon green" ng-click="abrirDialogChoferes()"><i class="fa fa-pencil bigger-125" aria-hidden="true"></i></span>
+                                                </div>
+                                                <div style="background-color: orange;"><span ng-show="choferNoEncontrado" style=" color: white; width: 100%;">Chofer <strong>"{{choferBuscado}}"</strong> no encontrado.</span></div>
+                                            </div>
+                                            <div class="form-group col-xs-12 col-sm-6">
+                                                <label class="h6" for="fecha">FECHA <i class="text-danger">*</i></label>
+                                                <input ng-disabled="modoVista" required ng-update-hidden class="col-xs-12 form-control input-sm date-picker" type="text"
+                                                    data-date-format="dd/mm/yyyy" ng-model="recibo.fecha"
+                                                    placeholder="Marque fecha" autocomplete="off">
+                                            </div>
+                                            
+                                        </div>
+                                        <div class="row">
+                                            <div class="form-group col-xs-12 col-sm-6">
+                                                <label class="h6" for="placa">PLACA <i class="text-danger">*</i></label>
+                                                <div class="col-xs-12 input-group">
+                                                    <input ng-disabled="modoVista" class="form-control input-sm" autocomplete="off" ng-keypress="interceptarTecla($event,'vehiculo', true)" data-validate="validate(required)" required type="text" ng-model="recibo.vehiculo" placeholder="Ingrese placa" uib-typeahead="vehiculo as vehiculo.placa for vehiculo in listarVehiculos($viewValue, false)" typeahead-wait-ms="1200" typeahead-template-url="templates/autocompletar.html" typeahead-show-hint="false" typeahead-min-length="2" typeahead-on-select="establecerVehiculo($item, false, $model, $label, $event)">
+                                                    <span ng-show="!modoVista" style="cursor: pointer;" class="input-group-addon green" ng-click="abrirDialogVehiculos()"><i class="fa fa-pencil bigger-125" aria-hidden="true"></i></span>
+                                                </div>
+                                                <div style="background-color: orange;"><span ng-show="placaNoEncontrado" style=" color: white; width: 100%;">Placa <strong>"{{ placaBuscado }}"</strong> no encontrado.</span></div>
+                                            </div>
+                                            <div class="form-group col-xs-12 col-sm-6">
+                                                <label class="h6" for="moneda">MONEDA</label>
+                                                <div class="col-xs-12 input-group">
+                                                    <input ng-disabled="modoVista" class="ace ace-switch ace-switch-4 ng-valid ng-not-empty ng-dirty ng-valid-parse ng-touched" ng-change="asignarBancosEmpresa();" ng-model="recibo.moneda" type="checkbox" >
+                                                    <span id="check-moneda" class="lbl check-moneda"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="form-group col-xs-12 col-sm-6">
+                                                <label class="h6" for="banco">MÉTODO DE PAGO</label>
+                                                <div class="col-xs-12 input-group">
+                                                    <select ng-disabled="modoVista" style="min-width: 65px; width:100%;" ng-change="asignarBancosEmpresa();" ng-model="recibo.metodo_pago">
+                                                        <option value="EFECTIVO">EFECTIVO</option>
+                                                        <option value="CHEQUE">CHEQUE</option>
+                                                        <option value="TRANSFERENCIA">TRANSFERENCIA BANCARIA</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>  
+                                        <div class="row">
+                                            <div ng-if="recibo.metodo_pago != 'EFECTIVO'" class="form-group col-xs-12 col-sm-6">
+                                                <label ng-if="recibo.metodo_pago === 'CHEQUE'" class="h6" for="banco">BANCO</label>
+                                                <label ng-if="recibo.metodo_pago === 'TRANSFERENCIA'" class="h6" for="banco-origen">BANCO ORIGEN</label>
+                                                <div ng-if="recibo.metodo_pago != 'EFECTIVO'" class="col-xs-12 input-group">
+                                                    <select ng-disabled="modoVista" style="min-width: 65px; width:100%;" ng-options="banco as (banco.nombre+'-'+banco.numero) for banco in bancos track by banco.id" ng-model="recibo.banco"></select>
+                                                </div>
+                                            </div>
+                                            <div ng-if="recibo.metodo_pago =='CHEQUE'" class="form-group col-xs-12 col-sm-6">
+                                                <label class="h6" for="cheque">CHEQUE</label>
+                                                <input ng-disabled="modoVista" class="col-xs-12 input-sm" ng-model="recibo.nro_cheque" maxlength="50" type="text" placeholder="Nro de cheque">
+                                            </div>
+                                            <div ng-if="recibo.metodo_pago =='TRANSFERENCIA'" class="form-group col-xs-12 col-sm-6">
+                                                <label class="h6" for="cheque">BANCO DESTINO</label>
+                                                <input ng-disabled="modoVista" class="form-control input-sm" autocomplete="off" ng-keypress="interceptarTecla($event,'banco', true)" data-validate="validate(required)" type="text" ng-model="recibo.bancoDestino" placeholder="Ingrese banco" uib-typeahead="bancoDestino as bancoDestino.nombre for bancoDestino in listarBancosDestino($viewValue, false)" typeahead-wait-ms="1200" typeahead-template-url="templates/autocompletar.html" typeahead-show-hint="false" typeahead-min-length="2" typeahead-on-select="establecerBanco($item, false, $model, $label, $event)">
+                                                <div style="background-color: orange;"><span ng-show="bancoNoEncontrado" style=" color: white; width: 100%;">Banco <strong>"{{bancoBuscado}}"</strong> no encontrado.</span></div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-xs-12 col-md-12">
+                                                <label class="h6" for="observaciones">OBSERVACIONES</label>
+                                                <input ng-disabled="modoVista" class="col-xs-12 input-sm" ng-model="recibo.observacion" maxlength="210" type="text" placeholder="Escriba su observación">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="col-xs-12 col-md-8">
+                        <div class="widget-box">
+                            <div class="widget-header">
+                                <h6 class="widget-title bolder">CONCEPTO</h6>
+                            </div>
+                            <div class="widget-body">
+                                <div class="widget-main">
+                                        <table class="table table-striped table-bordered table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th class="text-center"><label style="display: flex; flex-direction: row;">RUTA <span ng-show="!modoVista" style="cursor: pointer; padding: 0px 0px 0px 3px!important;" class="input-group-addon green pull-right" ng-click="abrirDialogRutas()"><i class="fa fa-pencil bigger-125" aria-hidden="true"></i></span></label></th>
+                                                    <th class="text-center"><label>PESO</label></th>
+                                                    <th class="text-center"><label>UND.</label></th>
+                                                    <th class="text-center"><label>MONTO</label></th>
+                                                    <th class="text-center"><label>DESCUENTOS</label></th>
+                                                    <th class="text-center"><label>OBSERVACIÓN</label></th>
+                                                    <th class="text-center"><label>ACC.</label></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>
+                                                        <input ng-disabled="modoVista" style="min-width: 70px; width:100%;" class="form-control input-sm" autocomplete="off" ng-keypress="interceptarTecla($event,'ruta', true)" data-validate="validate(required)" required type="text" ng-model="concepto.ruta" placeholder="Ingrese ruta" uib-typeahead="ruta as (ruta.origen.toUpperCase()+' - '+ruta.destino.toUpperCase()) for ruta in listarRutas($viewValue)" typeahead-wait-ms="1500" typeahead-template-url="templates/autocompletar.html" typeahead-show-hint="false" typeahead-min-length="2" typeahead-on-select="establecerRuta($item, $model, $label, $event)">
+                                                        <div style="left: 0px; padding: 0px; width: 250px!important;" class="alert alert-danger custom-popup-no-result" ng-show="rutaNoEncontrado">
+                                                            <button type="button" class="close" ng-click="rutaNoEncontrado=false">
+                                                                <i class="ace-icon fa fa-times"></i>
+                                                            </button>
+                                                            <strong>Ruta "{{rutaBuscado}}" no encontrado.</strong>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <input type="number" ng-disabled="!concepto.ruta.id || modoVista" style="min-width: 50px; max-width: 80px; width:100%;" ng-model="concepto.peso">
+                                                    </td>
+                                                    <td>
+                                                        <select style="min-width: 65px; width:100%;" ng-disabled="!concepto.ruta.id || modoVista" ng-model="concepto.unidad">
+                                                            <option style="width:100%;" value="Kg" selected>KG</option>
+                                                            <option style="width:100%;" value="Tn">TN</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <input style="min-width: 70px; width:100%;"  required ng-disabled="!concepto.ruta.id || modoVista" type="number" placeholder="Importe" ng-model="concepto.importe">
+                                                    </td>
+                                                    <td>
+                                                        <input style="width:100%;" ng-disabled="!concepto.ruta.id || modoVista" type="text" maxlength="140" ng-model="concepto.descripcion_descuento" placeholder="Escriba el motivo">
+                                                    </td>
+                                                    <td>
+                                                        <input style="width:100%;" ng-disabled="!concepto.ruta.id || modoVista" type="text" maxlength="140" ng-model="concepto.observacion" placeholder="Observación">
+                                                    </td>
+                                                    <td>
+                                                        <button  type="button" ng-disabled="!concepto.ruta.id || modoVista"  ng-click="agregarConcepto(concepto)" class="btn btn-success btn-sm" >
+                                                            <i class="ace-icon fa fa-plus bigger-110"></i>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                        <div class="widget-box">
+                            <div class="widget-header">
+                                <h6 class="widget-title bolder">DETALLE</h6>
+                            </div>
+                            <div class="widget-body">
+                                <div class="widget-main">
+                                        <table class="table table-striped table-bordered table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th class="text-center"><label>#</label></th>
+                                                    <th class="text-center"><label style="display: flex; flex-direction: row;">RUTA</label></th>
+                                                    <th class="text-center"><label>PESO</label></th>
+                                                    <th class="text-center"><label>UND.</label></th>
+                                                    <th class="text-center"><label>MONTO</label></th>
+                                                    <th class="text-center"><label>DESCUENTO</label></th>
+                                                    <th class="text-center"><label>OBSERVACIÓN</label></th>
+                                                    <th class="text-center"><label>ACC.</label></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr ng-repeat="detalle in detalles track by $index" ng-if="!detalle.eliminado"">
+                                                    <td>{{ $index+1 }}</td>
+                                                    <td class="text-uppercase">{{ detalle.ruta ? detalle.ruta.origen+'-'+detalle.ruta.destino : '' }}</td>
+                                                    <td>{{ detalle.peso ? detalle.peso : '' }}</td>
+                                                    <td>{{ detalle.unidad ? detalle.unidad : '' }}</td>
+                                                    <td class="text-right">{{ detalle.importe ? (detalle.importe | number:2 ) : '' }}</td>
+                                                    <td>{{ detalle.descripcion_descuento ? detalle.descripcion_descuento : ''}}</td>
+                                                    <td>{{ detalle.observacion ? detalle.observacion : ''}}</td>
+                                                    <td class="text-center text-danger">
+                                                        <a ng-show="!modoVista" class="info" href="javascript:void(0)" ng-click="addToEditDetalle(detalle, $index)">
+                                                            <i class="fa fa-pencil-square-o bigger-130"></i>
+                                                        </a>
+                                                        <a ng-show="!modoVista" class="red" href="javascript:void(0)" ng-click="deleteDetalle(detalle, $index)">
+                                                            <i class="fa fa-trash-o bigger-130"></i>
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td class=" text-right bolder">{{ totalDetalles | number:2}}</td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+        </div>
+        <div class="modal-footer">
+        </div>
+    </div>
+</div>
+<!-- FIN MODAL NUEVO RECIBO -->
+
+<!-- MODAL CHOFERES -->
+<div class="modal" id="dialog-choferes">
+    <div class="modal-content">
+        <div class="modal-header bg-primary">
+            <button type="button" class="close" ng-click="cerrarDialogChoferes()" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class='smaller text-center text-white text-uppercase'>CHOFERES</h4>
+        </div>
+        <div class="modal-body">
+            <form  ng-submit="guardarChofer()" id="formChofer" name="formChofer">
+                <div style="padding-bottom: 8px;" class="row">
+                    <div class="col-xs-12">
+                        <div class="form-group col-xs-12 col-sm-6">
+                            <label class="col-xs-12 col-sm-12 col-md-6 small" for="nombre-completo">Nombre Completo <i class="text-danger">*</i></label>
+                            <input class="col-xs-12 col-sm-12 col-md-6 input-sm small" ng-model="chofer.nombre_completo" required type="text" placeholder="Ingrese nombre completo">
+                        </div>
+                        <div class="form-group col-xs-12 col-sm-6">
+                            <label class="col-xs-12 col-sm-12 col-md-6 small" for="ci">C.I.</label>
+                            <input class="col-xs-12 col-sm-12 col-md-6 input-sm" ng-model="chofer.ci" type="text" placeholder="Número CI">
+                        </div>
+                        <div class="form-group col-xs-12 col-sm-6">
+                            <label class="col-xs-12 col-sm-12 col-md-6 small" for="categoria">Categoría</label>
+                            <select class="col-xs-12 col-sm-12 col-md-6 input-sm" ng-options="categoria as categoria.nombre for categoria in categorias track by categoria.id" ng-model="chofer.categoria">
+                            </select>
+                        </div>
+                        <div class="form-group col-xs-12 col-sm-6">
+                            <label class="col-xs-12 col-sm-12 col-md-6 small" for="direccion">Dirección</label>
+                            <input class="col-xs-12 col-sm-12 col-md-6 small input-sm " ng-model="chofer.direccion" type="text" placeholder="Ingrese dirección">
+                        </div>
+                        <div class="form-group col-xs-12 col-sm-6">
+                            <label class="col-xs-12 col-sm-12 col-md-6 small" for="vencimiento">Vencimiento licencia</label>
+                            <input ng-update-hidden autocomplete="off" class="col-xs-12 col-sm-12 col-md-6 date-picker input-sm small"
+										type="text" data-date-format="dd/mm/yyyy" id="fechaInicio"
+										ng-model="chofer.licencia" placeholder="Ingrese fecha de Expiración">
+                        </div>
+                        <div class="form-group col-xs-12 col-sm-6">
+                            <label class="col-xs-12 col-sm-12 col-md-6 small" for="telefono">Teléfono</label>
+                            <input class="col-xs-12 col-sm-12 col-md-6 input-sm small" ng-model="chofer.telefono" type="text" placeholder="Ingrese número de contacto">
+                        </div>
+                    </div>
+                </div>
+                <div style="padding-bottom:10px; margin-right: 15px;" class="row">
+                    <div class="pull-right">
+                        <button ng-show="edicion" ng-disabled="formChofer.$invalid" type="submit" class="btn btn-success btn-sm"><i class="glyphicon glyphicon-ok" aria-hidden="true"></i> Editar</button>
+                        <button ng-show="!edicion" ng-disabled="formChofer.$invalid" type="submit" class="btn btn-primary btn-sm"><i class="glyphicon glyphicon-ok" aria-hidden="true"></i> Guardar</button>
+                    </div>
+                </div>
+            </form>
+            <div class="table-responsive">
+                <div class="table-fixed-header">
+                    <table class="table table-striped table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Nombre Completo</th>
+                                <th>C.I.</th>
+                                <th>Cat.</th>
+                                <th>Dirección</th>
+                                <th>Teléfonos</th>
+                                <th>Vcto. Licencia</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody >
+                            <tr ng-repeat="chofer in choferes">
+                                <td class="small">{{ $index+1 }}</td>
+                                <td class="text-uppercase small">{{ chofer.persona ? chofer.persona.nombre_completo : ''}}</td>
+                                <td class="small">{{ chofer.persona ? chofer.persona.ci : ''}}</td>
+                                <td class="text-center small">{{ chofer.categoria ? chofer.categoria.nombre : ''}}</td>
+                                <td class="small">{{ chofer.persona ? chofer.persona.direccion : '' }}</td>
+                                <td class="small">{{ chofer.persona ? chofer.persona.telefonos.length>0 ? chofer.persona.telefonos[0].numero : '' : '' }}</td>
+                                <td class="small">{{ chofer.vencimiento ? fechaATexto(chofer.vencimiento) : '' }}</td>
+                                <td class="small">
+                                    <a class="info" href="javascript:void(0)" ng-click="addToEdit(chofer)">
+                                        <i class="fa fa-pencil-square-o bigger-130"></i>
+                                    </a>
+                                    <a class="red" href="javascript:void(0)" ng-click="deleteChofer(chofer)">
+                                        <i class="fa fa-trash-o bigger-130"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-danger btn-sm" ng-click="cerrarDialogChoferes()"><i class="glyphicon glyphicon-remove" aria-hidden="true"></i> Salir</button>
+        </div>
+    </div>
+</div>
+<!-- FIN MODAL CHOFERES -->
+
+<!-- MODAL VEHICULOS -->
+<div class="modal" id="dialog-vehiculos">
+    <div class="modal-content">
+        <div class="modal-header bg-primary">
+            <button type="button" class="close" ng-click="cerrarDialogVehiculos()" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class='smaller text-center text-white text-uppercase'>VEHÍCULOS</h4>
+        </div>
+        <div class="modal-body">
+            <form  ng-submit="guardarVehiculo()" id="formVehiculo" name="formVehiculo">
+                <div style="padding-bottom: 8px;" class="row">
+                    <div class="col-xs-12">
+                        <div style="margin-top: 5px;" class="col-xs-12 col-sm-6">
+                            <label class="col-xs-12 col-sm-12 col-md-6" for="placa">Placa <i class="text-danger">*</i></label>
+                            <input class="col-xs-12 col-sm-12 col-md-6 smaller" required ng-model="vehiculo.placa" type="text" placeholder="Ingrese la placa del vehículo">
+                        </div>
+                        <div style="margin-top: 5px;" class="col-xs-12 col-sm-6">
+                            <label class="col-xs-12 col-sm-12 col-md-6" for="marca">Marca</label>
+                            <input class="col-xs-12 col-sm-12 col-md-6 smaller" ng-model="vehiculo.marca" type="text" placeholder="Ingrese la marca del vehículo">
+                        </div>
+                        <div style="margin-top: 5px;" class="col-xs-12 col-sm-6">
+                            <label class="col-xs-12 col-sm-12 col-md-6" for="modelo">Modelo</label>
+                            <input class="col-xs-12 col-sm-12 col-md-6 smaller" ng-model="vehiculo.modelo" type="text" placeholder="Ingrese el modelo del vehículo">
+                        </div>
+                        <div style="margin-top: 5px;" class="col-xs-12 col-sm-6">
+                            <label class="col-xs-12 col-sm-12 col-md-6" for="capacidad">Capacidad</label>
+                            <input class="col-xs-12 col-sm-12 col-md-6 smaller" ng-model="vehiculo.capacidad" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" type="text" placeholder="Capacidad en TN">
+                        </div>
+                    </div>
+                </div>
+                <div style="padding-bottom:10px; margin-right: 15px;" class="row">
+                    <div class="pull-right">
+                        <button ng-show="edicion" ng-disabled="formVehiculo.$invalid" type="submit" class="btn btn-success btn-sm"><i class="glyphicon glyphicon-ok" aria-hidden="true"></i> Editar</button>
+                        <button ng-show="!edicion" ng-disabled="formVehiculo.$invalid" type="submit" class="btn btn-primary btn-sm"><i class="glyphicon glyphicon-ok" aria-hidden="true"></i> Guardar</button>
+                    </div>
+                </div>
+            </form>
+            <div class="table-responsive">
+                <div class="table-fixed-header">
+                    <table class="table table-striped table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Placa</th>
+                                <th>Marca</th>
+                                <th>Modelo</th>
+                                <th>Capacidad</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody >
+                            <tr ng-repeat="vehiculo in vehiculos">
+                                <td>{{ $index + 1}}</td>
+                                <td>{{ vehiculo.placa ? vehiculo.placa : ''}}</td>
+                                <td class="text-uppercase">{{ vehiculo.marca ? vehiculo.marca : '' }}</td>
+                                <td class="text-uppercase">{{ vehiculo.modelo ? vehiculo.modelo : '' }}</td>
+                                <td>{{ vehiculo.capacidad ? vehiculo.capacidad +' TN' : '' }}</td>
+                                <td class="text-right">
+                                    <a class="info" href="javascript:void(0)" ng-click="addToEditVehiculo(vehiculo)">
+                                        <i class="fa fa-pencil-square-o bigger-130"></i>
+                                    </a>
+                                    <a class="red" href="javascript:void(0)" ng-click="deleteVehiculo(vehiculo)">
+                                        <i class="fa fa-trash-o bigger-130"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-danger btn-sm" ng-click="cerrarDialogVehiculos()"><i class="glyphicon glyphicon-remove" aria-hidden="true"></i> Salir</button>
+        </div>
+    </div>
+</div>
+<!-- FIN MODAL VEHICULOS -->
+
+<!-- MODAL RUTAS -->
+<div class="modal" id="dialog-rutas">
+    <div class="modal-content">
+        <div class="modal-header bg-primary">
+            <button type="button" class="close" ng-click="cerrarDialogRutas()" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class='smaller text-center text-white text-uppercase'>RUTAS</h4>
+        </div>
+        <form  ng-submit="guardarRuta()" id="formRuta" name="formRuta">
+            <div class="modal-body">
+                <div style="padding-bottom: 8px;" class="row">
+                    <div class="col-xs-12">
+                        <div style="margin-top: 5px;" class="col-xs-12 col-sm-6">
+                            <label class="col-xs-12 col-sm-12 col-md-6" for="origen">Origen <i class="text-danger">*</i></label>
+                            <input class="col-xs-12 col-sm-12 col-md-6" ng-model="ruta.origen" type="text" required placeholder="Ingrese origen">
+                        </div>
+                        <div style="margin-top: 5px;" class="col-xs-12 col-sm-6">
+                            <label class="col-xs-12 col-sm-12 col-md-6" for="destino">Destino <i class="text-danger">*</i></label>
+                            <input class="col-xs-12 col-sm-12 col-md-6" ng-model="ruta.destino" type="text" required placeholder="Ingrese destino">
+                        </div>
+                        <div style="margin-top: 5px;" class="col-xs-12 col-sm-6">
+                            <label class="col-xs-12 col-sm-12 col-md-6" for="costo">Costo</label>
+                            <input class="col-xs-12 col-sm-12 col-md-6" ng-model="ruta.costo" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" type="text" placeholder="Ingrese costo">
+                        </div>
+                    </div>
+                </div>
+                <div style="padding-bottom:10px; margin-right: 15px;" class="row">
+                    <div class="pull-right">
+                        <button ng-show="edicion" ng-disabled="formRuta.$invalid" type="submit" class="btn btn-success btn-sm"><i class="glyphicon glyphicon-ok" aria-hidden="true"></i> Editar</button>
+                        <button ng-show="!edicion" ng-disabled="formRuta.$invalid" type="submit" class="btn btn-primary btn-sm"><i class="glyphicon glyphicon-ok" aria-hidden="true"></i> Guardar</button>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <div class="table-fixed-header">
+                        <table class="table table-striped table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">#</th>
+                                    <th class="text-center">Origen</th>
+                                    <th class="text-center">Destino</th>
+                                    <th class="text-center">Costo</th>
+                                    <th class="text-center">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody >
+                                <tr ng-repeat="ruta in rutas">
+                                    <td>{{ $index+1 }}</td>
+                                    <td class="text-uppercase">{{ ruta.origen }}</td>
+                                    <td class="text-uppercase">{{ ruta.destino }}</td>
+                                    <td class="text-right">{{ ruta.costo ? ruta.costo : '' }}</td>
+                                    <td class="text-right">
+                                        <a class="info" href="javascript:void(0)" ng-click="addToEditRuta(ruta)">
+                                            <i class="fa fa-pencil-square-o bigger-130"></i>
+                                        </a>
+                                        <a class="red" href="javascript:void(0)" ng-click="deleteRuta(ruta)">
+                                            <i class="fa fa-trash-o bigger-130"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger btn-sm" ng-click="cerrarDialogRutas()"><i class="glyphicon glyphicon-remove" aria-hidden="true"></i> Salir</button>
+            </div>
+        </form>
+    </div>
+</div>
+<!-- FIN MODAL RUTAS -->

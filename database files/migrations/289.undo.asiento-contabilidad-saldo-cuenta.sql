@@ -1,0 +1,2 @@
+alter table agil_asiento_contabilidad drop saldo_cuenta_bs;
+alter table agil_asiento_contabilidad drop saldo_cuenta_sus;

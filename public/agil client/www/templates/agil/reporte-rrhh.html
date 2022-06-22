@@ -1,0 +1,196 @@
+<div id="tab-ausencias-vacaciones" class="ui-tabs ui-widget ui-widget-content ui-corner-all">
+    <ul class="inbox-tabs nav nav-tabs  tab-size-bigger tab-space-1 ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all" role="tablist">
+        <li class="ui-state-default ui-corner-top ui-tabs-active ui-state-active" role="tab" tabindex="0" aria-controls="tabs-1" aria-labelledby="ausencia-medica" aria-selected="true" aria-expanded="true">
+            <a id="ausencia-medica" class="blue ui-tabs-anchor" href="#tabs-1" role="presentation" tabindex="-1">
+                <i class="ace-icon icono-pre2 bigger-200"></i>
+                    AUSENCIAS
+            </a>
+        </li>
+        
+       
+    </ul>
+
+    <div id="tabs-1" aria-labelledby="ausencia-medica" class="ui-tabs-panel ui-widget-content ui-corner-bottom" role="tabpanel" aria-hidden="false">
+      
+        <form ng-submit="obtenerHistorialEmpresaOtrasAusencias(filtroOtrasAusencias)">
+            <div class="row">
+                <div class="form-group col-sm-12 col-md-2">
+                    <label>Desde</label>
+                    <div  ng-class="{'has-error-date':fechasIncorrectaInic}">
+                        <input type="text" class="form-control date-picker" autocomplete="off" ng-update-hidden
+                            ng-model="filtroOtrasAusencias.inicio" data-date-format="dd/mm/yyyy" id="filtro-otras-ausencias-desde" placeholder="Seleccione fecha" ng-change="validarFechaI(filtroOtrasAusencias.inicio,filtroOtrasAusencias.fin)">
+                    </div>
+                </div>
+                <div class="form-group col-sm-12 col-md-2">
+                    <label>Hasta</label>
+                    <div  ng-class="{'has-error-date':fechasIncorrectaFin}">
+                    <input type="text" class="form-control date-picker" autocomplete="off" ng-update-hidden
+                        ng-model="filtroOtrasAusencias.fin" data-date-format="dd/mm/yyyy" id="filtro-otras-ausencias-hasta" placeholder="Seleccione fecha" ng-change="validarFechaF(filtroOtrasAusencias.inicio,filtroOtrasAusencias.fin)">
+                    </div>
+                </div>
+                <div class="form-group col-sm-12 col-md-2">
+                    <label for="sexo">Tipo</label>
+                    <div class="input-group">
+                        <select ng-model="filtroOtrasAusencias.tipo_ausencia" class="form-control"
+                            ng-options="ausencia.id as ausencia.nombre for ausencia in tiposOtrasAusencias.ausencias | filter:{habilitado:true}  track by ausencia.id">
+                            <option value="">--Ninguno--</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group col-sm-12 col-md-2">
+                    <label for="sexo">estado</label>
+                    <div class="input-group">
+                        <select ng-model="filtroOtrasAusencias.estado" class="form-control"
+                            ng-options="ausencia.id as ausencia.nombre for ausencia in estadosDeAusencias.clases | filter:{habilitado:true}  track by ausencia.id">
+                            <option value="">--Ninguno--</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group col-sm-12 col-md-4">
+                    <div class="buttons-align">
+                        <button type="submit" class="btn btn-primary btn-sm">
+                            <i class=" fa fa-search-plus align-top "></i>
+                            Filtrar
+                        </button>
+                        <button type="button" class="btn btn-danger btn-sm"
+                            ng-click="generarPDFAusencias(historialEmpresaOtrasAusencias)">
+                            <i class=" fa fa-print align-top "></i>
+                            Pdf
+                        </button>
+                        <button type="button" class="btn btn-success btn-sm"
+                            ng-click="generarExcelAusencias(historialEmpresaOtrasAusencias)">
+                            <i class=" fa fa-print align-top "></i>
+                            Excel
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <div class="row">
+            <div class="col-sm-6">
+                <div>
+                    <label>
+                        Mostrar <select ng-model="paginatorAusencia.itemsPerPage"
+                            ng-change="paginatorAusencia.getFirstPage()" name="tabla-proveedores_length"
+                            aria-controls="tabla-proveedores" class="form-control input-sm">
+                            <option value="0">Todos</option>
+                            <option ng-selected="true" value="10">10</option>
+                            <option value="25">25</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
+                        </select> Elementos</label>
+                </div>
+            </div>
+            <div class="col-sm-6" align="right">
+                <div>
+                    <label>Buscar:(Beneficiario)
+                        <input autofocus class="form-control input-sm" type="search" ng-model="textSearch"
+                            ng-model-options='{ debounce: 600 }'
+                            ng-change="paginatorAusencia.getSearch(textSearch,paginatorAusencia.filter,$event)">
+                    </label>
+                </div>
+            </div>
+        </div>
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Desde</th>
+                    <th>Hasta</th>
+                    <th align="center">Horas</th>
+                    <th>Concepto</th>
+                    <th>Detalle</th>
+                    <th>Estado</th>
+                    <th>Autorizador</th>
+                    <th>Deducibles</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="ausencia in historialEmpresaOtrasAusencias track by $index">
+                    <td>{{ausencia.ficha.empleado.persona.nombre_completo}}</td>
+                    <td>{{ausencia.fecha_inicio|date:'dd/MM/yyyy - HH:mm'}}</td>
+                    <td>{{ausencia.fecha_fin|date:'dd/MM/yyyy - HH:mm'}}</td>
+                    <td>{{ausencia.hours}}</td>
+                    <td>{{ausencia.tipoAusencia.nombre}}</td>
+                    <td>{{ausencia.observacion}}</td>
+                    <td>{{ausencia.estado.nombre}}</td>
+                    <td>
+                        <span
+                            ng-if="!ausencia.id_autorizador">{{ausencia.usuario.persona.nombre_completo}}</span>
+                        <span
+                            ng-if="ausencia.id_autorizador">{{ausencia.autorizador.persona.nombre_completo}}</span>
+                    </td>
+                    <td>falta informacion</td>
+                    <td>
+                        <!--  <a class="blue">
+                            <span class="fa fa-search-plus bigger-130" aria-hidden="true"></span>
+                        </a> -->
+                        <a class="green" href="javascript:void(0)"
+                            ng-click="generarPdfSalidaPersonal(ausencia)">
+                            <i class="ace-icon fa fa-print bigger-130"></i>
+                        </a>
+                    </td>
+                </tr>
+                <!-- <tr ng-if="historialEmpresaOtrasAusencias.length>0">
+                    <td colspan="5"></td>
+                    <td>Total</td>
+                    <td>0</td>
+                </tr> -->
+
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="2"></td>
+                    <td>Total</td>
+                    <td>{{TotalHoras}}</td>
+                </tr>
+            </tfoot>
+        </table>
+        <div class="row">
+            <div class="col-sm-6">
+                <div>
+                    Mostrando página {{paginatorAusencia.currentPage}} de {{paginatorAusencia.pages.length}}
+                </div>
+            </div>
+            <div class="col-sm-6" align="right">
+                <ul class="pagination">
+                    <li class="paginate_button">
+                        <a href="javascript:void(0)" ng-click="paginatorAusencia.getFirstPage()">Primero</a>
+                    </li>
+                    <li class="paginate_button">
+                        <a href="javascript:void(0)" e-disabled="paginatorAusencia.currentPage==1"
+                            ng-click="paginatorAusencia.getPreviousPage()">
+                            <<</a> </li> <li class="paginate_button"
+                                ng-class="{active:paginatorAusencia.currentPage==page}"
+                                ng-repeat="page in paginatorAusencia.pages"
+                                ng-if="abs(paginatorAusencia.currentPage-page)<4">
+                                <a e-disabled="paginatorAusencia.currentPage==page" href="javascript:void(0)"
+                                    ng-click="paginatorAusencia.getPage(page)">{{page}}</a>
+                    </li>
+                    <li class="paginate_button">
+                        <a href="javascript:void(0)"
+                            e-disabled="paginatorAusencia.currentPage==paginatorAusencia.pages.length"
+                            ng-click="paginatorAusencia.getNextPage()">>></a>
+                        </lidiv>
+                    <li class="paginate_button">
+                        <a href="javascript:void(0)" ng-click="paginatorAusencia.getLastPage()">Ultimo</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+
+
+        
+        
+    </div>
+
+  <!--  <div id="tabs-2" aria-labelledby="vacacion" class="ui-tabs-panel ui-widget-content ui-corner-bottom" role="tabpanel" aria-hidden="true" style="display: none;">
+    
+    </div>
+
+    <div id="tabs-3" aria-labelledby="otra-ausencia" class="ui-tabs-panel ui-widget-content ui-corner-bottom" role="tabpanel" aria-hidden="true" style="display: none;">
+   
+    </div> -->
+</div>

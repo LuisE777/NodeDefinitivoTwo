@@ -1,0 +1,1 @@
+ALTER TABLE agil_medico_prerequisito ADD habilitado tinyint default 1;

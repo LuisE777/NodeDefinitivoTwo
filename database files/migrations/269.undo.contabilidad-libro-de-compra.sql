@@ -1,0 +1,2 @@
+ALTER TABLE agil_contabilidad_cuenta drop libro_de_compra;
+ALTER TABLE agil_contabilidad_cuenta drop almacen_lc;

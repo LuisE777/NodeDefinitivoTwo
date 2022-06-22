@@ -1,0 +1,107 @@
+<div class="row">
+	<div class="col-sm-12">
+		<div class="clearfix">
+			<div class="pull-right tableTools-container"></div>
+		</div>
+		<div class="tabbable">
+			
+			<ul class="nav nav-tabs" id="myTab">
+				<li class="active">
+					<a data-toggle="tab" href="javascript:void(0)" data-target="#tab-venta1" aria-expanded="true">
+						<i class="blue ace-icon fa fa-newspaper-o bigger-170"></i>
+						Ventas-1
+					</a>
+				</li>
+
+				<li class="" >
+					<a data-toggle="tab" href="javascript:void(0)" data-target="#tab-venta2" aria-expanded="false">
+						<i class="blue ace-icon fa fa-truck bigger-170"></i>
+						Ventas-2
+					</a>
+				</li>
+			</ul>
+
+			<div class="tab-content">
+				<div id="tab-venta1" class="tab-pane fade active in">
+					<fieldset>
+                        <div class="row">
+                            <div class="form-group col-sm-6 col-md-3 col-lg-2">
+                                <label> Desde</label>
+                                <div  ng-class="{'has-error-date':fechasIncorrectaInic}">
+                                    <input required ng-update-hidden autocomplete="off" class="form-control date-picker" type="text" data-date-format="dd/mm/yyyy" id="fechainicio" ng-model="reporte.fechaInicioTexto" placeholder="Ingrese la fecha inicial" ng-change="validarFechaI(reporte.fechaInicioTexto, reporte.fechaFinTexto)" />
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-6 col-md-3 col-lg-2">
+                                <label> Hasta</label>
+                                <div  ng-class="{'has-error-date':fechasIncorrectaFin}">
+                                    <input required ng-update-hidden autocomplete="off" class="form-control date-picker" type="text" data-date-format="dd/mm/yyyy" id="fechafin" ng-model="reporte.fechaFinTexto" placeholder="Ingrese la fecha final" ng-change="validarFechaF(reporte.fechaInicioTexto, reporte.fechaFinTexto)"/>
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-6 col-md-3 col-lg-2">
+                                <label> FILTRAR SUCURSAL</label>
+                                <select  id="sucursal" name="sucursal" 
+                                    ng-options="sucursal as sucursal.nombre for sucursal in sucursales track by sucursal.id" 
+                                    ng-model="reporte.sucursal" required>								
+                                </select>
+                            </div>
+                            <div >
+                                <button style="margin-top: 15px;" class="btn-woBox button-glow" ng-if="!reporte.fechaInicioTexto || !reporte.fechaFinTexto || !reporte.sucursal" ng-click="" 
+                                    data-rel="tooltip" tooltip-placement="top" uib-tooltip="Primero debe seleccionar las fechas y sucursal">
+                                    <i class="ace-icon fa fa-cloud-download align-top bigger-125"></i> GENERAR  DATOS
+                                </button>
+                                <button style="margin-top: 15px;"
+                                 class="btn-xlsx button-glow" type="button" ng-if="reporte.fechaInicioTexto && reporte.fechaFinTexto && reporte.sucursal" ng-click="filtrarVentasTablasDinamic(reporte,reporte.sucursal.id)">
+                                    <i class="ace-icon fa fa-cloud-download align-top bigger-125"></i>
+                                    GENERAR  DATOS
+                                </button>
+                            </div>	 
+                        </div>
+                        <hr style="margin-top: 0px;margin-bottom: 0px;border: 0;border-top: 1px solid #eee;">
+                        <div id="tablaDinamicaVentas"></div>
+                        <br><br><br><br>
+                        <div id="googlechart-containerr" style="height:600px;"></div>
+				    </fieldset>
+				</div>
+
+                <div id="tab-venta2" class="tab-pane">
+                    <fieldset>
+                        <div class="row">
+                            <div class="form-group col-sm-6 col-md-3 col-lg-2">
+                                <label> Desde</label>
+                                <div  ng-class="{'has-error-date':fechasIncorrectaInic}">
+                                    <input required ng-update-hidden autocomplete="off" class="form-control date-picker" type="text" data-date-format="dd/mm/yyyy" id="fechainicio" ng-model="reportee.fechaInicioTexto" placeholder="Ingrese la fecha inicial" ng-change="validarFechaI(reportee.fechaInicioTexto, reportee.fechaFinTexto)" />
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-6 col-md-3 col-lg-2">
+                                <label> Hasta</label>
+                                <div  ng-class="{'has-error-date':fechasIncorrectaFin}">
+                                    <input required ng-update-hidden autocomplete="off" class="form-control date-picker" type="text" data-date-format="dd/mm/yyyy" id="fechafin" ng-model="reportee.fechaFinTexto" placeholder="Ingrese la fecha final" ng-change="validarFechaF(reportee.fechaInicioTexto, reportee.fechaFinTexto)"/>
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-6 col-md-3 col-lg-2">
+                                <label> FILTRAR SUCURSAL</label>
+                                <select  id="sucursal" name="sucursal" 
+                                    ng-options="sucursal as sucursal.nombre for sucursal in sucursales track by sucursal.id" 
+                                    ng-model="reportee.sucursal" required>								
+                                </select>
+                            </div>
+                            <div >
+                                <button style="margin-top: 15px;" class="btn-woBox button-glow" ng-if="!reportee.fechaInicioTexto || !reportee.fechaFinTexto || !reportee.sucursal" ng-click="" 
+                                    data-rel="tooltip" tooltip-placement="top" uib-tooltip="Primero debe seleccionar las fechas y sucursal">
+                                    <i class="ace-icon fa fa-cloud-download align-top bigger-125"></i> GENERAR  DATOS
+                                </button>
+                                <button style="margin-top: 15px;"
+                                class="btn-xlsx button-glow" type="button" ng-if="reportee.fechaInicioTexto && reportee.fechaFinTexto && reportee.sucursal" ng-click="filtrarComprasTablasDinamicc(reportee,reportee.sucursal.id)">
+                                    <i class="ace-icon fa fa-cloud-download align-top bigger-125"></i>
+                                    GENERAR  DATOS
+                                </button>
+                            </div>	 
+                        </div>
+                        <hr style="margin-top: 0px;margin-bottom: 0px;border: 0;border-top: 1px solid #eee;"><br>
+                        <div id="tablaDinamicaComprasII"></div>
+				    </fieldset>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

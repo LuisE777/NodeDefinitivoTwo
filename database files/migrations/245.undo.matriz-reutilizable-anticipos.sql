@@ -1,0 +1,1 @@
+ALTER TABLE agil_rrhh_empleado_anticipo drop matriz_reutilizable;

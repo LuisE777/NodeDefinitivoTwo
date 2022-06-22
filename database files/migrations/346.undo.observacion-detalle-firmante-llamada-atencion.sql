@@ -1,0 +1,3 @@
+ALTER TABLE agil_rrhh_empleado_llamada_atencion DROP firmante;
+ALTER TABLE agil_rrhh_empleado_llamada_atencion DROP detalle;
+ALTER TABLE agil_rrhh_empleado_llamada_atencion DROP observacion;

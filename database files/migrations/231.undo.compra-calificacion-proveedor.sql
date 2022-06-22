@@ -1,0 +1,2 @@
+ALTER TABLE agil_empresa DROP usar_calificaciones_proveedor;
+alter TABLE inv_compra drop calificacion_proveedor;

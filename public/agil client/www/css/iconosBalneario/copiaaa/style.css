@@ -1,0 +1,141 @@
+@font-face {
+  font-family: 'icons-balneario';
+  src:  url('fonts/icons-balneario.eot?r7z9j6');
+  src:  url('fonts/icons-balneario.eot?r7z9j6#iefix') format('embedded-opentype'),
+    url('fonts/icons-balneario.ttf?r7z9j6') format('truetype'),
+    url('fonts/icons-balneario.woff?r7z9j6') format('woff'),
+    url('fonts/icons-balneario.svg?r7z9j6#icons-balneario') format('svg');
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+
+[class^="icon-balneario-"], [class*=" icon-balneario-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'icons-balneario' !important;
+  speak: never;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-balneario-ducha2:before {
+  content: "\e900";
+}
+.icon-balneario-ducha3:before {
+  content: "\e901";
+}
+.icon-balneario-ducha4:before {
+  content: "\e902";
+}
+.icon-balneario-ducha5:before {
+  content: "\e903";
+}
+.icon-balneario-parrilla:before {
+  content: "\e904";
+}
+.icon-balneario-parrilla2:before {
+  content: "\e905";
+}
+.icon-balneario-piscina:before {
+  content: "\e906";
+}
+.icon-balneario-piscina2:before {
+  content: "\e907";
+}
+.icon-balneario-piscina3:before {
+  content: "\e908";
+}
+.icon-balneario-restaurante:before {
+  content: "\e909";
+}
+.icon-balneario-restaurante2:before {
+  content: "\e90a";
+}
+.icon-balneario-restaurante3:before {
+  content: "\e90b";
+}
+.icon-balneario-restaurante4:before {
+  content: "\e90c";
+}
+.icon-balneario-sauna:before {
+  content: "\e90d";
+}
+.icon-balneario-sauna2:before {
+  content: "\e90e";
+}
+.icon-balneario-sauna3:before {
+  content: "\e90f";
+}
+.icon-balneario-tenis:before {
+  content: "\e910";
+}
+.icon-balneario-voleibol:before {
+  content: "\e911";
+}
+.icon-balneario-voleibol2:before {
+  content: "\e912";
+}
+.icon-balneario-voleibol3:before {
+  content: "\e913";
+}
+.icon-balneario-baloncesto:before {
+  content: "\e914";
+}
+.icon-balneario-baloncesto2:before {
+  content: "\e915";
+}
+.icon-balneario-baloncesto3:before {
+  content: "\e916";
+}
+.icon-balneario-baloncesto4:before {
+  content: "\e917";
+}
+.icon-balneario-bar:before {
+  content: "\e918";
+}
+.icon-balneario-bar2:before {
+  content: "\e919";
+}
+.icon-balneario-cancha:before {
+  content: "\e91a";
+}
+.icon-balneario-ducha:before {
+  content: "\e91b";
+}
+.icon-balneario-home:before {
+  content: "\e91c";
+}
+.icon-balneario-home2:before {
+  content: "\e91d";
+}
+.icon-balneario-home3:before {
+  content: "\e91e";
+}
+.icon-balneario-image:before {
+  content: "\e91f";
+}
+.icon-balneario-music:before {
+  content: "\e920";
+}
+.icon-balneario-books:before {
+  content: "\e921";
+}
+.icon-balneario-clock:before {
+  content: "\e94e";
+}
+.icon-balneario-clock2:before {
+  content: "\e94f";
+}
+.icon-balneario-user:before {
+  content: "\e971";
+}
+.icon-balneario-spoon-knife:before {
+  content: "\e9a3";
+}

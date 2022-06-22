@@ -1,0 +1,24 @@
+<div class="col-sm-6">
+    <div>
+      Mostrando página {{paginatorReporteFacturasProformas.currentPage}} de {{paginatorReporteFacturasProformas.pages.length && paginatorReporteFacturasProformas.pages.length || 1}}
+    </div>
+  </div>
+  <div ng-if="paginatorReporteFacturasProformas.pages.length > 0" class="col-sm-6" align="right">
+    <ul class="pagination">
+      <li class="paginate_button">
+        <a href="javascript:void(0)" ng-click="paginatorReporteFacturasProformas.getFirstPage()">Primero</a>
+      </li>
+      <li class="paginate_button">
+        <a href="javascript:void(0)" e-disabled="paginatorReporteFacturasProformas.currentPage==1" ng-click="paginatorReporteFacturasProformas.getPreviousPage()"><<</a>
+      </li>
+      <li class="paginate_button" ng-class="{active:paginatorReporteFacturasProformas.currentPage==page}" ng-repeat="page in paginatorReporteFacturasProformas.pages" ng-if="abs(paginatorReporteFacturasProformas.currentPage-page)<4">
+        <a e-disabled="paginatorReporteFacturasProformas.currentPage==page" href="javascript:void(0)" ng-click="paginatorReporteFacturasProformas.getPage(page)">{{page}}</a>
+      </li>
+      <li class="paginate_button">
+        <a href="javascript:void(0)" e-disabled="paginatorReporteFacturasProformas.currentPage==paginatorReporteFacturasProformas.pages.length" ng-click="paginatorReporteFacturasProformas.getNextPage()">>></a>
+      </lidiv>
+      <li class="paginate_button">
+        <a href="javascript:void(0)" ng-click="paginatorReporteFacturasProformas.getLastPage()">Ultimo</a>
+      </li>
+    </ul>
+  </div>

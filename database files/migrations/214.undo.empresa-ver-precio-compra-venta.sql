@@ -1,0 +1,1 @@
+alter table agil_empresa drop column ver_precio_compra_en_venta;

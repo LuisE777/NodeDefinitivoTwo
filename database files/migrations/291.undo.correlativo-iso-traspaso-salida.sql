@@ -1,0 +1,2 @@
+ALTER TABLE agil_almacen drop numero_correlativo_iso_traspaso_salida;
+ALTER TABLE inv_venta drop numero_iso_traspaso;

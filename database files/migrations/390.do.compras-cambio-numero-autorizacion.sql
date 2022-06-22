@@ -1,0 +1,1 @@
+alter table inv_compra MODIFY autorizacion varchar(255);

@@ -1,0 +1,1 @@
+alter table agil_empresa add nombre_comercial varchar(255) default NULL;

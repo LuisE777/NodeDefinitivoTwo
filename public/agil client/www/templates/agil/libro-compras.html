@@ -1,0 +1,363 @@
+<div class="conteiner">
+	
+		<div class="col-xs-12">
+			<h3 class="header smaller lighter blue">REPORTE LIBRO DE COMPRAS</h3>
+			
+			<form name="formularioReporte" novalidate>
+				<fieldset>
+					<legend>PERIODO FISCAL</legend>
+					<table>
+						<tbody>
+							<tr>
+								<td>
+									<label>AÑO</label>&nbsp
+								</td>
+								<td>
+									<select required id="gestion" name="gestion" 
+										ng-options="gestion.nombre_corto as gestion.nombre for gestion in gestiones | orderBy:'-nombre' track by gestion.id" 
+										ng-model="reporte.gestion">
+										
+									</select>&nbsp
+								</td>
+								<td>
+									<label>MES</label>&nbsp
+								</td>
+								<td>
+									<select required id="mes" name="mes" ng-model="reporte.mes">
+										<option value="1-ENERO">ENERO</option>
+										<option value="2-FEBRERO">FEBRERO</option>
+										<option value="3-MARZO">MARZO</option>
+										<option value="4-ABRIL">ABRIL</option>
+										<option value="5-MAYO">MAYO</option>
+										<option value="6-JUNIO">JUNIO</option>
+										<option value="7-JULIO">JULIO</option>
+										<option value="8-AGOSTO">AGOSTO</option>
+										<option value="9-SEPTIEMBRE">SEPTIEMBRE</option>
+										<option value="10-OCTUBRE">OCTUBRE</option>
+										<option value="11-NOVIEMBRE">NOVIEMBRE</option>
+										<option value="12-DICIEMBRE">DICIEMBRE</option>
+									</select>&nbsp
+								</td>
+								<td>
+									<select id="movimiento-ingreso" name="movimiento-ingreso" 
+										ng-options="movimientoIngreso as movimientoIngreso.nombre for movimientoIngreso in movimientosIngreso track by movimientoIngreso.id" 
+										ng-model="reporte.conceptoMoviviento">
+										<option value="">--seleccionar--</option>
+									</select>&nbsp
+								</td>
+								<td>
+									<button ng-disabled="formularioReporte.$invalid" class="btn btn-xs btn-info" type="button" ng-click="obtenerLC(reporte)">
+										<i class="ace-icon fa fa-search align-top bigger-125"></i>
+										Filtrar
+									</button>
+									<button ng-disabled="!reporte.gestion || !reporte.mes" class="btn btn-xs btn-danger" type="button" ng-click="generarPdfLibroCompras(reporte)">
+										<i class="ace-icon fa fa-cloud-download align-top bigger-125"></i>
+									 PDF
+									</button>
+									<button ng-disabled="!reporte.gestion || !reporte.mes" class="btn btn-xs btn-success" type="button" ng-click="generarExcelLibroCompras(reporte)">
+										<i class="ace-icon fa fa-cloud-download align-top bigger-125"></i>
+										Excel
+									</button>
+									<button ng-disabled="!reporte.gestion || !reporte.mes" class="btn btn-xs btn-warning" type="button" ng-click="generarTXTLibroCompras(reporte)">
+										<i class="ace-icon fa fa-cloud-download align-top bigger-125"></i>
+										TXT
+									</button>
+									<button ng-disabled="!reporte.gestion || !reporte.mes" class="btn btn-xs btn-info" type="button" ng-click="generarSiatLibroCompras(reporte)">
+										<i class="ace-icon fa fa-cloud-download align-top bigger-125"></i>
+										SIAT
+									</button>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</fieldset>
+			</form>
+		</div>
+	
+
+
+		<div class="clearfix">
+            <div class="pull-right tableTools-container"></div>
+        </div>
+        <div class="table-header">
+            Lista de Compras
+            <label class="row pull-right">
+                <div class="col-xs-10" ng-include src="'/templates/gral/fields-viewer.html'"></div>
+            </label>
+        </div>
+	<!--lista de comprobanntes ng-repeat-->
+	<div >
+		<div id="tabla-compra_wrapper" class="dataTables_wrapper form-inline no-footer">
+			<div class="row" ng-include src="'/templates/gral/paginator-header-lc.html'">
+			</div>
+			<div style="overflow-x:auto;">
+				<table id="tabla-compras" class="table table-striped table-bordered table-hover">
+					<thead >
+						<tr>
+							<th>#</th>
+							<th ng-if="fieldViewer.getConfiguration().fecha.show"><a href="javascript:void(0)" ng-click="paginatorLc.sortColumn('fecha')">Fecha
+								<span id="fecha" class="sort fa fa-sort icon-only"></span>
+							</a></th>
+							<th ng-if="fieldViewer.getConfiguration().nit.show">
+								<a href="javascript:void(0)" ng-click="paginatorLc.sortColumn('nit')">NIT
+									<span id="comprobante" class="sort fa fa-sort icon-only"></span>
+								</a>
+							</th>
+							<th ng-if="fieldViewer.getConfiguration().razon_social.show">
+								<a href="javascript:void(0)" ng-click="paginatorLc.sortColumn('razon_social')">Razón Social
+									<span id="numero" class="sort fa fa-sort icon-only"></span>
+								</a>
+							</th>
+							<th ng-if="fieldViewer.getConfiguration().factura.show">
+								<a href="javascript:void(0)" ng-click="paginatorLc.sortColumn('factura')">Factura
+									<span id="comprobante" class="sort fa fa-sort icon-only"></span>
+								</a>
+							</th>
+							<th ng-if="fieldViewer.getConfiguration().dui.show">
+								<a href="javascript:void(0)" ng-click="paginatorLc.sortColumn('dui')">DUI
+									<span id="Sucursal" class="sort fa fa-sort icon-only"></span>
+								</a>
+							</th>
+							<th ng-if="fieldViewer.getConfiguration().autorizacion.show">
+								<a href="javascript:void(0)" ng-click="paginatorLc.sortColumn('autorizacion')">Autorización
+									<span id="HoraFecha" class="sort fa fa-sort icon-only"></span>
+								</a>
+							</th>
+							<th ng-if="fieldViewer.getConfiguration().importe.show">
+								<a href="javascript:void(0)" ng-click="paginatorLc.sortColumn('importe')">Importe
+									<span id="monto" class="sort fa fa-sort icon-only"></span>
+								</a>
+							</th>
+							<th ng-if="fieldViewer.getConfiguration().no_cf.show">
+								<a href="javascript:void(0)">No sujeto a CF</a>
+							</th>
+							<th ng-if="fieldViewer.getConfiguration().subtotal.show">
+								<a href="javascript:void(0)" ">Subtotal</a>
+							</th>
+							<th ng-if="fieldViewer.getConfiguration().desc.show">
+								<a href="javascript:void(0)" ng-click="paginatorLc.sortColumn('descuento')">Desc.
+									<span id="usuario" class="sort fa fa-sort icon-only"></span>
+								</a>
+							</th>
+							<th ng-if="fieldViewer.getConfiguration().base_cf.show">
+								<a href="javascript:void(0)" ng-click="paginatorLc.sortColumn('base_cf')">Base CF
+									<span id="usuario" class="sort fa fa-sort icon-only"></span>
+								</a>
+							</th>
+							<th ng-if="fieldViewer.getConfiguration().cf.show">
+								<a href="javascript:void(0)" >CF</a>
+							</th>
+							<th ng-if="fieldViewer.getConfiguration().cod_control.show">
+								<a href="javascript:void(0)" ng-click="paginatorLc.sortColumn('codigo_control')">Cod. Control
+									<span id="usuario" class="sort fa fa-sort icon-only"></span>
+								</a>
+							</th>
+							<th ng-if="fieldViewer.getConfiguration().comp.show">
+								<a href="javascript:void(0)" ng-click="paginatorLc.sortColumn('tipo_comprobante')">Comp.
+									<span id="usuario" class="sort fa fa-sort icon-only"></span>
+								</a>
+							</th>
+							<th  ng-if="fieldViewer.getConfiguration().nro_comp.show">
+								<a href="javascript:void(0)" ng-click="paginatorLc.sortColumn('numero_comprobante')">N° Comp.
+									<span id="usuario" class="sort fa fa-sort icon-only"></span>
+								</a>
+							</th>
+							<th ng-if="fieldViewer.getConfiguration().cajachica.show">
+								<a href="javascript:void(0)" ng-click="paginatorLc.sortColumn('numero_caja')">Caja Chica
+									<span id="usuario" class="sort fa fa-sort icon-only"></span>
+								</a>
+							</th>
+							<th>Acciones</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="registro in compras.facturas track by $index">
+							<td>{{($index+1)}}</td>
+							<td ng-if="fieldViewer.getConfiguration().fecha.show" class="text-right">{{registro.fecha | date:"dd/MM/yyyy"}}</td>
+							<td ng-if="fieldViewer.getConfiguration().nit.show" class="text-right">{{registro.nit}}</td>
+							<td ng-if="fieldViewer.getConfiguration().razon_social.show">{{registro.razon_social}}</td>
+							<td ng-if="fieldViewer.getConfiguration().factura.show" class="text-right">{{registro.factura}}</td>
+							<td ng-if="fieldViewer.getConfiguration().dui.show" class="text-right">{{registro.dui}}</td>
+							<td ng-if="fieldViewer.getConfiguration().autorizacion.show" class="text-right">{{registro.autorizacion }}</td>
+							<td ng-if="fieldViewer.getConfiguration().importe.show" class="text-right">{{registro.importe | number:2}}</td>
+							<td ng-if="fieldViewer.getConfiguration().no_cf.show" class="text-right">{{(registro.excento + registro.ice) | number: 2}}</td>
+
+							<td ng-if="fieldViewer.getConfiguration().subtotal.show" class="text-right">{{ (registro.importe - (registro.excento + registro.ice)) | number:2}}</td>
+
+							<td ng-if="fieldViewer.getConfiguration().desc.show" class="text-right">{{registro.descuento | number: 2}}</td>
+							<td ng-if="fieldViewer.getConfiguration().base_cf.show" class="text-right">{{ (registro.base_cf) | number: 2}}</td>
+							<td ng-if="fieldViewer.getConfiguration().cf.show" class="text-right">{{ registro.base_cf * .13| number: 2}}</td>
+							<td ng-if="fieldViewer.getConfiguration().cod_control.show" >{{registro.codigo_control}}</td>
+							<td ng-if="fieldViewer.getConfiguration().comp.show" >{{registro.tipo_comprobante}}</td>
+							<td ng-if="fieldViewer.getConfiguration().nro_comp.show" >{{registro.numero_comprobante}}</td>
+							<td ng-if="fieldViewer.getConfiguration().cajachica.show" >{{registro.numero_caja}}</td>
+							<td>
+								<div class="action-buttons">
+									<a class="green" href="javascript:void(0)"
+										ng-click="abrirModificarCompra(registro)">
+										<i class="ace-icon fa fa-pencil bigger-130"></i>
+									</a>
+								</div>
+							</td>
+						</tr>
+
+					</tbody>
+					<tfoot ng-show="compras.facturas.length>0">
+						<tr>
+							<td></td>
+							<td ng-if="fieldViewer.getConfiguration().fecha.show"></td>
+							<td ng-if="fieldViewer.getConfiguration().nit.show"></td>
+							<td ng-if="fieldViewer.getConfiguration().razon_social.show"></td>
+							<td ng-if="fieldViewer.getConfiguration().factura.show"></td>
+							<td ng-if="fieldViewer.getConfiguration().dui.show"></td>
+							<td ng-if="fieldViewer.getConfiguration().autorizacion.show" style="text-align: right; font-weight: bold;">SUBTOTALES</td>
+							<td ng-if="fieldViewer.getConfiguration().importe.show" style="text-align: right; font-weight: bold;">{{importesTotales.registros.importe | number:2}}</td>
+							<td ng-if="fieldViewer.getConfiguration().no_cf.show" style="text-align: right; font-weight: bold;">{{importesTotales.registros.no_sujeto| number: 2}}</td>
+
+							<td ng-if="fieldViewer.getConfiguration().subtotal.show" style="text-align: right; font-weight: bold;">{{ importesTotales.registros.subtotal | number:2}}</td>
+
+							<td ng-if="fieldViewer.getConfiguration().desc.show" style="text-align: right; font-weight: bold;">{{importesTotales.registros.descuentos | number: 2}}</td>
+							<td ng-if="fieldViewer.getConfiguration().base_cf.show" style="text-align: right; font-weight: bold;">{{ importesTotales.registros.base_cf | number: 2}}</td>
+							<td ng-if="fieldViewer.getConfiguration().cf.show" style="text-align: right; font-weight: bold;">{{ importesTotales.registros.cf| number: 2}}</td>
+							<td ng-if="fieldViewer.getConfiguration().cod_control.show"></td>
+							<td ng-if="fieldViewer.getConfiguration().comp.show"></td>
+							<td ng-if="fieldViewer.getConfiguration().nro_comp.show"></td>
+							<td ng-if="fieldViewer.getConfiguration().cajachica.show"></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td ng-if="fieldViewer.getConfiguration().fecha.show"></td>
+							<td ng-if="fieldViewer.getConfiguration().nit.show"></td>
+							<td ng-if="fieldViewer.getConfiguration().razon_social.show"></td>
+							<td ng-if="fieldViewer.getConfiguration().factura.show"></td>
+							<td ng-if="fieldViewer.getConfiguration().dui.show"></td>
+							</strong><td ng-if="fieldViewer.getConfiguration().autorizacion.show" style="text-align: right; font-weight: bold;">TOTALES</td>
+							<td ng-if="fieldViewer.getConfiguration().importe.show" style="text-align: right; font-weight: bold;">{{importesTotales.importe | number:2}}</td>
+							<td ng-if="fieldViewer.getConfiguration().no_cf.show" style="text-align: right; font-weight: bold;">{{importesTotales.no_sujeto | number: 2}}</td>
+
+							<td ng-if="fieldViewer.getConfiguration().subtotal.show" style="text-align: right; font-weight: bold;">{{ importesTotales.subtotal | number:2}}</td>
+
+							<td ng-if="fieldViewer.getConfiguration().desc.show" style="text-align: right; font-weight: bold;">{{importesTotales.descuentos | number: 2}}</td>
+							<td ng-if="fieldViewer.getConfiguration().base_cf.show" style="text-align: right; font-weight: bold;">{{ importesTotales.base_cf | number: 2}}</td>
+							<td ng-if="fieldViewer.getConfiguration().cf.show" style="text-align: right; font-weight: bold;">{{ importesTotales.cf| number: 2}}</td>
+							<td ng-if="fieldViewer.getConfiguration().cod_control.show"></td>
+							<td ng-if="fieldViewer.getConfiguration().comp.show"></td>
+							<td ng-if="fieldViewer.getConfiguration().nro_comp.show"></td>
+							<td ng-if="fieldViewer.getConfiguration().cajachica.show"></td>
+						</tr>
+					</tfoot>
+				</table>
+			</div>
+			<!--fin tabla comprobantes-->
+			<div class="row">
+				<div class="col-sm-6">
+					<div>
+					  Mostrando página {{paginatorLc.currentPage}} de {{paginatorLc.pages.length}}
+					</div>
+				  </div>
+				  <div class="col-sm-6" align="right">
+					<ul class="pagination">
+					  <li class="paginate_button">
+						<a href="javascript:void(0)" ng-click="paginatorLc.getFirstPage()">Primero</a>
+					  </li>
+					  <li class="paginate_button">
+						<a href="javascript:void(0)" e-disabled="paginatorLc.currentPage==1" ng-click="paginatorLc.getPreviousPage()"><<</a>
+					  </li>
+					  <li class="paginate_button" ng-class="{active:paginatorLc.currentPage==page}" ng-repeat="page in paginatorLc.pages" ng-if="abs(paginatorLc.currentPage-page)<4">
+						<a e-disabled="paginatorLc.currentPage==page" href="javascript:void(0)" ng-click="paginatorLc.getPage(page)">{{page}}</a>
+					  </li>
+					  <li class="paginate_button">
+						<a href="javascript:void(0)" e-disabled="paginatorLc.currentPage==paginatorLc.pages.length" ng-click="paginatorLc.getNextPage()">>></a>
+					  </lidiv>
+					  <li class="paginate_button">
+						<a href="javascript:void(0)" ng-click="paginatorLc.getLastPage()">Ultimo</a>
+					  </li>
+					</ul>
+				  </div>
+			</div>
+		</div>
+	</div>
+
+	<div id="modal-compra" class="modal">
+        <div class="modal-header ficha">
+            <h4 class="modal-title" id="myModalLabel">
+                <img height="30" width="30" src="assets/avatars/otros-bonos2.png" style="padding-bottom: 5px">
+                Compra
+            </h4>
+            <h5 class="modal-title">{{compra_get.fecha | date:"dd/MM/yyyy"}}</h5>
+        </div>
+        <form ng-submit="modificarCompra(compra_get)" name="formModificarCompra">
+            <div class="modal-body">
+
+                <div class="row">
+                    <div class="form-group col-sm-6">
+                        <label for="sexo">NIT</label>
+						<input id="nit"
+							required type="number" min="0"
+							ng-model="compra_get.proveedor.nit" placeholder="Ingrese el NIT..."
+							uib-typeahead="proveedor as proveedor.nit for proveedor in buscarProveedor($viewValue)"
+							typeahead-wait-ms="2000"
+							typeahead-template-url="templates/autocompletar.html"
+							typeahead-show-hint="false" typeahead-min-length="0"
+							typeahead-on-select="establecerProveedor($item, $model, $label, $event)">
+                    </div>
+                    <div class="form-group col-sm-6">
+                        <label for="sexo">RAZÓN SOCIAL</label>
+						<input id="razon_social"
+						required type="text"
+						ng-model="compra_get.proveedor.razon_social"
+						placeholder="Ingrese la Razon Social"
+						uib-typeahead="proveedor as proveedor.razon_social for proveedor in buscarProveedor($viewValue)"
+						typeahead-append-to-body="true"
+						typeahead-wait-ms="2000"
+						typeahead-template-url="templates/autocompletar.html"
+						typeahead-show-hint="false" typeahead-min-length="0"
+						typeahead-on-select="establecerProveedor($item, $model, $label, $event)">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-sm-6">
+                        <label>NÚM. FACTURA</label>
+                        <input type="number" autofocus name="monto" class="form-control"
+                            placeholder="Monto" ng-model="compra_get.factura">
+					</div>
+					<div class="form-group col-sm-6">
+                        <label>NÚM. AUTORIZACIÓN</label>
+                        <input type="number" autofocus name="monto" class="form-control"
+                            placeholder="Monto" ng-model="compra_get.autorizacion">
+                    </div>
+				</div>
+				<div class="row">
+                    <div class="form-group col-sm-12">
+                        <label>CÓDIGO DE CONTROL</label>
+                        <input type="text" autofocus name="monto"  class="form-control text-uppercase"
+                            placeholder="Monto" ng-model="compra_get.codigo_control" onkeypress="()=>{return ((event.charCode >= 48 && event.charCode <= 57) || (event.charCode >= 65 && event.charCode <= 70) || (event.charCode >= 97 && event.charCode <= 102) || event.charCode == 45)}">
+					</div>
+                </div>
+                <div>
+                    <div class="form-group">
+                        <label>Observación</label>
+                        <textarea class="form-control" id="form-field-8" placeholder="Observación"
+                            ng-model="compra_get.observacion"></textarea>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer wizard-actions">
+				<button
+					ng-disabled="formModificarCompra.$invalid"
+                    class="btn btn-primary btn-sm" type="submit">
+                    <i class="glyphicon glyphicon-floppy-disk"></i>Modificar
+                </button>
+                <button type="button" class="btn btn-danger btn-sm" ng-click="cerrarModificarCompra()">
+                    <i class="ace-icon fa fa-times"></i>Cancelar
+                </button>
+
+            </div>
+        </form>
+    </div>
+
+
+
+</div>
+

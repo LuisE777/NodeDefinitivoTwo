@@ -1,0 +1,1893 @@
+<div class="row">
+    <div class="col-xs-12">
+        <h3 class="header smaller lighter blue">Capacitaciones</h3>
+
+        <button ng-disabled="!aplicacion.puede_crear" class="btn-woBox button-glow" ng-click="crearCapacitacion()">
+            <i class="ace-icon fa fa-plus align-top bigger-125"></i>
+            Nuevo
+        </button>
+        <br>
+        <fieldset>
+            <legend>Filtro Capacitaciones</legend>
+
+            <form novalidate ng-submit="paginadorListaCapacitaciones()">
+                <div class="row">
+                    <div class="form-group col-sm-6 col-md-3">
+                        <label for="desde-cap">Desde</label>
+                        <datepicker date-format="dd/MM/yyyy" datepicker-mobile="true">
+                            <input type="text" class="form-control" id="desde-cap"
+                                name="desde-cap" ng-model="filtroCapacitacion.inicio" autocomplete="off"
+                                placeholder="Ingrese la fecha inicial" />
+                        </datepicker>
+                    </div>
+                    <div class="form-group col-sm-6 col-md-3">
+                        <label for="hasta-cap">Hasta</label>
+                        <datepicker date-format="dd/MM/yyyy" datepicker-mobile="true">
+                            <input class="form-control" ng-model="filtroCapacitacion.fin" id="hasta-cap"
+                                name="hasta-cap" autocomplete="off" placeholder="Ingrese la fecha fin" />
+                        </datepicker>
+                    </div>
+                    <div class="form-group col-sm-6 col-md-3">
+
+                        <button id="boton-filtro" type="submit" class="btn-primary btn btn-app btn-xs">
+                            <i class="ace-icon fa fa-search align-top bigger-125"></i>
+                            BUSCAR
+                        </button>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label class="pull-left inline">
+                            <p class="muted smaller-90">Detalle:</p>
+
+                            <input id="id-button-detalle" ng-model="filtroCapacitacion.detallado"
+                                name="switch-view-detail" checked="checked" type="checkbox"
+                                class="ace ace-switch ace-switch-4">
+                            <span class="lbl check-detalle"
+                                data-lbl="Si&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;No"></span>
+                        </label>
+
+                        <button id="boton-filtro" type="button" class="btn-danger btn btn-app btn-xs"
+                            ng-click="pdfCapacitaciones()">
+                            <i class="ace-icon fa fa-file-pdf-o align-top bigger-125"></i>
+                            PDF
+                        </button>
+                        <button id="boton-filtro" type="button" class="btn-success btn btn-app btn-xs"
+                            ng-click="excelCapacitaciones()">
+                            <i class="ace-icon fa fa-file-excel-o align-top bigger-125"></i>
+                            EXCEL
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </fieldset>
+
+        <div class="table-header">
+            <div class="action-buttons pos-rel pull-left" style="padding-top: 5px">
+                <a href="javascript:void(0)" e-disabled="!aplicacion.puede_modificar"
+                    ng-click="abrirDialogConceptoEdicion(tipoClaseCalificacion)" role="button" data-rel="tooltip"
+                    data-placement="top" uib-tooltip="Tipo Curso">
+                    <span class="fa fa-pencil-square-o fa-2x text-white"></span>
+                </a>
+
+                <a href="javascript:void(0)" e-disabled="!aplicacion.puede_modificar" ng-click="registrosPonderacion()"
+                    role="button" data-rel="tooltip" data-placement="top" uib-tooltip="Ponderaciones">
+                    <span class="fa fa-plus-circle fa-2x text-white"></span>
+                </a>
+                <a href="javascript:void(0)" e-disabled="!aplicacion.puede_modificar" ng-click="registrosCalificacion()"
+                    role="button" data-rel="tooltip" data-placement="top" uib-tooltip="Calificaciones">
+                    <span class="fa fa-list-ol fa-2x text-white"></span>
+                </a>
+                <a href="javascript:void(0)" e-disabled="!aplicacion.puede_modificar" ng-click="registrosCertificado()"
+                    role="button" data-rel="tooltip" data-placement="top" uib-tooltip="Certificados">
+                    <span class="icono-credencial_salud icono-font text-white"></span>
+                </a>
+            </div>Lista de Capacitaciones
+            <div class="pull-right tableTools-container">
+                <a class="btn btn-primary btn-xs" e-disabled="!aplicacion.puede_ver" ng-click="abrirModalReportes()"
+                    role="button" data-rel="tooltip" data-placement="top" uib-tooltip="Reportes">
+                    <i class="menu-icon fa fa-bar-chart-o"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- div.table-responsive -->
+
+        <!-- div.dataTables_borderWrap -->
+        <div id="tabla-capacitaciones_wrapper" class="dataTables_wrapper form-inline no-footer">
+            <div class="row" style="margin-top: 5px;">
+                <div class="col-xs-6 col-sm-6 col-md-6">
+                    <div>
+                        <label>
+                            Mostrar <select ng-model="paginadorCapacitacion.itemsPerPage"
+                                ng-change="paginadorCapacitacion.getFirstPage()" name="tabla-capacitaciones_length"
+                                aria-controls="tabla-capacitaciones" class="form-control input-sm">
+                                <option value="0">Todos</option>
+                                <option ng-selected="true" value="10">10</option>
+                                <option value="25">25</option>
+                                <option value="50">50</option>
+                                <option value="100">100</option>
+                            </select> Elementos</label>
+                    </div>
+                </div>
+                <div class="col-xs-6 col-sm-6 col-md-6">
+                    <div class="col-sm-5">
+
+                    </div>
+                    <div class="col-sm-3">
+                        <label style="margin-top: 5px;">Buscar:</label>
+                    </div>
+                    <div class="col-xs-12 col-sm-4 col-md-3 col-lg-3" style="padding: 0px 0px;">
+                        <div>
+                            <input style="margin: 0px 0px !important; width: 100%;" id="searchBox" name="searchBox"
+                                class="input-sm" type="search" ng-model="filtroCapacitacion.search"
+                                ng-model-options='{ debounce: 600 }' ng-change="paginadorListaCapacitaciones()">
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div style="overflow-x: auto">
+                <table id="tabla-bancos" class="table table-striped table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th class="center">Nro</th>
+                            <th class="center">Curso</th>
+                            <th class="center">Fecha Creación</th>
+                            <th class="center">Fecha Inicio</th>
+                            <th class="center">Fecha Fin</th>
+                            <th class="center">Descripción</th>
+                            <th class="center">Docente</th>
+                            <th class="center">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-class="{'text-danger':registro.eliminado}"
+                            ng-repeat="registro in listaPaginadaCapacitaciones">
+                            <td class="center">
+                                {{($index+1)+(paginadorCapacitacion.itemsPerPage*(paginadorCapacitacion.currentPage-1))}}
+                            </td>
+
+                            <td>{{registro.curso}}</td>
+                            <td>{{registro.fecha|date:'dd/MM/yyyy'}}</td>
+                            <td>{{registro.fecha_inicio|date:'dd/MM/yyyy'}}</td>
+                            <td>{{registro.fecha_fin|date:'dd/MM/yyyy'}}</td>
+                            <td>{{registro.descripcion}}</td>
+                            <td>
+                                <ol>
+                                    <li ng-repeat="docente in registro.docentes">{{docente.detalle_docente}}</li>
+                                </ol>
+                            </td>
+                            <td>
+                                <div class="hidden-sm hidden-xs action-buttons">
+                                    <a class="text-info" href="javascript:void(0)" e-disabled="!aplicacion.puede_ver"
+                                        ng-click="verCapacitacion(registro)">
+                                        <i class="ace-icon fa fa-search-plus bigger-130"></i>
+                                    </a>
+
+                                    <a ng-if="!registro.eliminado && !registro.cerrado" class="green"
+                                        href="javascript:void(0)" e-disabled="!aplicacion.puede_modificar"
+                                        ng-click="modificarCapacitacion(registro)">
+                                        <i class="ace-icon fa fa-pencil bigger-130"></i>
+                                    </a>
+                                    <a ng-if="!registro.eliminado && !registro.cerrado" class="purple"
+                                        href="javascript:void(0)" e-disabled="!aplicacion.puede_modificar"
+                                        ng-click="registrosEmpleado(registro)">
+                                        <i class="ace-icon fa fa-plus bigger-130"></i>
+                                    </a>
+                                    <a ng-if="!registro.eliminado"
+                                        e-disabled="!registro.cerrado || !aplicacion.puede_modificar" class="green"
+                                        href="javascript:void(0)" ng-click="cerrarCapacitacion(registro)">
+                                        <i ng-if="!registro.cerrado" class="ace-icon fa fa-unlock bigger-130"></i>
+                                        <i ng-if="registro.cerrado" class="ace-icon fa fa-lock bigger-130"></i>
+                                    </a>
+                                    <a ng-if="!registro.cerrado && !registro.eliminado" class="text-info"
+                                        href="javascript:void(0)" e-disabled="!aplicacion.puede_modificar"
+                                        ng-click="imprimirCertificado(registro)">
+                                        <i class="ace-icon fa fa-file-text-o bigger-130"></i>
+                                    </a>
+
+                                    <a ng-if="!registro.cerrado && !registro.eliminado" class="red"
+                                        href="javascript:void(0)" e-disabled="!aplicacion.puede_modificar"
+                                        ng-click="eliminarRegistroCapacitacion(registro)">
+                                        <i class="ace-icon fa fa-trash-o bigger-130"></i>
+                                    </a>
+
+                                    <a href="javascript:void(0)" class="fileUpload boton-importar"
+                                        style="position: relative;top:8px;" data-rel="tooltip"
+                                        tooltip-append-to-body="true" tooltip-popup-close-delay='2000'
+                                        uib-tooltip-template="'toolTipexampleImp.html'" tooltip-trigger="mouseenter">
+                                        <span
+                                            class="fileUpload-button ace-icon fa fa-cloud-upload blue  bigger-160"></span>
+                                        <input class="upload" type="file"
+                                            ng-mouseover="seleccionarRegistroImp(registro)"
+                                            custom-on-file-change="subirExcelEmpleadosCalificaciones" />
+                                    </a>
+                                    <script type="text/ng-template" id="toolTipexampleImp.html">
+                                        <div>
+                                                <p>ejemplo Excel &nbsp;
+                                                    <a href="/recursos/EJEMPLO-CAPACITACION-EMPLEADO-CALIFICACION.xlsx"
+                                                        class="boton-importar pull-right">
+                                                        <i class="fa  fa-cloud-download green fa-2x"></i></p>
+                                                </a>
+                                            </div>
+                                        </script>
+                                </div>
+
+                                <div class="hidden-md hidden-lg">
+                                    <div class="inline pos-rel">
+                                        <button class="btn btn-minier btn-yellow dropdown-toggle" data-toggle="dropdown"
+                                            data-position="auto">
+                                            <i class="ace-icon fa fa-caret-down icon-only bigger-120"></i>
+                                        </button>
+
+                                        <ul class="dropdown-menu
+                      dropdown-only-icon
+                      dropdown-yellow
+                      dropdown-menu-right
+                      dropdown-caret
+                      dropdown-close">
+                                            <li>
+                                                <a class="text-info" href="javascript:void(0)"
+                                                    e-disabled="!aplicacion.puede_ver"
+                                                    ng-click="verCapacitacion(registro)">
+                                                    <i class="ace-icon fa fa-search-plus bigger-130"></i>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a ng-if="!registro.eliminado && !registro.cerrado" class="green"
+                                                    href="javascript:void(0)" e-disabled="!aplicacion.puede_modificar"
+                                                    ng-click="modificarCapacitacion(registro)">
+                                                    <i class="ace-icon fa fa-pencil bigger-130"></i>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a ng-if="!registro.eliminado && !registro.cerrado" class="purple"
+                                                    href="javascript:void(0)" e-disabled="!aplicacion.puede_modificar"
+                                                    ng-click="registrosEmpleado(registro)">
+                                                    <i class="ace-icon fa fa-plus bigger-130"></i>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a ng-if="!registro.eliminado"
+                                                    e-disabled="!registro.cerrado || !aplicacion.puede_modificar"
+                                                    class="green" href="javascript:void(0)"
+                                                    ng-click="cerrarCapacitacion(registro)">
+                                                    <i ng-if="!registro.cerrado"
+                                                        class="ace-icon fa fa-unlock bigger-130"></i>
+                                                    <i ng-if="registro.cerrado"
+                                                        class="ace-icon fa fa-lock bigger-130"></i>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a ng-if="!registro.cerrado && !registro.eliminado" class="text-info"
+                                                    href="javascript:void(0)" e-disabled="!aplicacion.puede_modificar"
+                                                    ng-click="nombreFuncion2Capacitacion(registro)">
+                                                    <i class="ace-icon fa fa-file-text-o bigger-130"></i>
+                                                </a>
+                                            </li>
+                                            <li>
+
+                                                <a ng-if="!registro.cerrado && !registro.eliminado" class="red"
+                                                    href="javascript:void(0)" e-disabled="!aplicacion.puede_modificar"
+                                                    ng-click="eliminadoCapacitacion(registro)">
+                                                    <i class="ace-icon fa fa-trash-o bigger-130"></i>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="dataTables_info" id="tabla-capacitacion_info" role="status" aria-live="polite">
+                            Mostrando página {{paginadorCapacitacion.currentPage}} de
+                            {{paginadorCapacitacion.pages.length}}
+                        </div>
+                        <!-- <div class="dataTables_info" id="tabla-capacitacion_info" role="status" aria-live="polite">Mostrando página {{cotizacion}} de {{cotizaciones.length}}</div> -->
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="col-sm-6" align="right">
+                            <ul class="pagination">
+                                <li class="paginate_button">
+                                    <a href="javascript:void(0)"
+                                        ng-click="paginadorCapacitacion.getFirstPage()">Primero</a>
+                                </li>
+                                <li class="paginate_button">
+                                    <a href="javascript:void(0)" e-disabled="paginadorCapacitacion.currentPage==1"
+                                        ng-click="paginadorCapacitacion.getPreviousPage()">
+                                        <i class="fa  fa-angle-double-right"></i> </a>
+                                </li>
+                                <li class="paginate_button" ng-class="{active:paginadorCapacitacion.currentPage==page}"
+                                    ng-repeat="page in paginadorCapacitacion.pages"
+                                    ng-if="abs(paginadorCapacitacion.currentPage-page)<4">
+                                    <a e-disabled="paginadorCapacitacion.currentPage==page" href="javascript:void(0)"
+                                        ng-click="paginadorCapacitacion.getPage(page)">{{page}}</a>
+                                </li>
+                                <li class="paginate_button">
+                                    <a href="javascript:void(0)"
+                                        e-disabled="paginadorCapacitacion.currentPage==paginadorCapacitacion.pages.length"
+                                        ng-click="paginadorCapacitacion.getNextPage()">>></a>
+                                    </lidiv>
+                                <li class="paginate_button">
+                                    <a href="javascript:void(0)"
+                                        ng-click="paginadorCapacitacion.getLastPage()">Ultimo</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modal-wizard-capacitacion" class="modal wizard-posicion">
+    <div class="modal-content">
+        <form id="capacitacionForm" ng-submit="guardarCapacitacion(capacitacion)">
+        </form>
+        <form id="docentesForm" ng-submit="agregarDocente(docentesForm)">
+        </form>
+        <div class="modal-header">
+            <h3 class="modal-title center">Registro Capacitacion</h3>
+        </div>
+
+        <div class="modal-body">
+            <legend class="smaller lighter blue">Datos del Curso</legend>
+
+            <div class="row">
+                <div class="col-sm-6 col-md-6">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label for="curso">Curso</label>
+                                <input type="text" class="form-control" id="curso" placeholder="Curso"
+                                    form="capacitacionForm" ng-model="registroCapacitacion.curso" autocomplete="off"
+                                    required>
+                            </div>
+
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label for="fecha-registro">Fecha Registro</label>
+                                <datepicker date-format="dd/MM/yyyy" datepicker-mobile="true">
+                                <input  class="form-control" type="text"
+                                    form="capacitacionForm" required 
+                                    ng-model="registroCapacitacion.fecha" autocomplete="off" id="fecha-registro"
+                                    placeholder="Fecha">
+                                </datepicker>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-6 col-md-6">
+                    <div class="form-group">
+                        <label for="descripcion">Descripción</label>
+                        <textarea rows="5" class="form-control" id="descripcion" placeholder="Descripción"
+                            form="capacitacionForm" ng-model="registroCapacitacion.descripcion" autocomplete="off"
+                            required></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="fecha-inicio-curso">Fecha Inicio</label>
+                        <datepicker date-format="dd/MM/yyyy" datepicker-mobile="true">
+                        <input class="form-control" type="text"
+                            autocomplete="off" id="fecha-inicio-curso"
+                            placeholder="Fecha Inicio" form="capacitacionForm"
+                            ng-model="registroCapacitacion.fecha_inicio" required>
+                        </datepicker>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="fecha-fin-curso">Fecha Fin</label>
+                        <datepicker date-format="dd/MM/yyyy" datepicker-mobile="true">
+                        <input class="form-control" type="text"
+                            autocomplete="off" id="fecha-fin-curso"
+                            placeholder="Fecha Fin" form="capacitacionForm" ng-model="registroCapacitacion.fecha_fin"
+                            required>
+                        </datepicker>
+                    </div>
+                </div>
+            </div>
+            <legend class="smaller lighter blue">Datos Adicionales</legend>
+            <div class="row">
+                <div class="col-sm-6 col-md-3">
+                    <div class="form-group">
+                        <label for="tipo_curso">Tipo de curso</label>
+                        <select required id="tipo_curso" name="tipo_curso" form="capacitacionForm"
+                            ng-model="registroCapacitacion.tipoCurso" class="form-control"
+                            ng-options="tipoClase as tipoClase.nombre for tipoClase in tipoClaseCalificacion.clases track by tipoClase.id"
+                            data-placeholder="Click para escoger"></select>
+                    </div>
+
+                </div>
+                <div class="col-sm-6 col-md-3">
+                    <div class="form-group">
+                        <label for="ponderacion-curso">Ponderación</label>
+                        <select required id="ponderacion-curso" name="ponderacion-curso" form="capacitacionForm"
+                            ng-model="registroCapacitacion.ponderacion" class="form-control"
+                            ng-options="ponderacion as ponderacion.nombre for ponderacion in listaPonderaciones track by ponderacion.id"
+                            data-placeholder="Click para escoger"></select>
+                    </div>
+
+                </div>
+                <div class="col-sm-6 col-md-3">
+                    <div class="form-group">
+                        <label for="horas-curso">Hrs Capacitacion</label>
+                        <input type="text" class="form-control" name="horas-curso" id="horas-curso"
+                            placeholder="horas curso" ng-model="registroCapacitacion.duracion" required
+                            form="capacitacionForm">
+
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-3">
+                    <div class="form-group">
+                        <label for="certificado-curso">Certificado</label>
+                        <select required id="certificado-curso" name="certificado-curso" form="capacitacionForm"
+                            ng-model="registroCapacitacion.certificado" class="form-control"
+                            ng-options="certificado as ('modelo: '+certificado.modelo+' titulo: '+certificado.titulo) for certificado in listaCertificados track by certificado.id"
+                            data-placeholder="Click para escoger"></select>
+
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-8">
+                    <div class="form-group">
+                        <label for="docente-curso">Docente</label>
+                        <textarea name="docente-curso" id="docente-curso" rows="2" ng-model="registroCapdocente"
+                            class="form-control" form="docentesForm" required>
+                            </textarea>
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <button type="submit" class="btn-info btn btn-app btn-xs" form="docentesForm">
+                        <i class="ace-icon fa fa-plus align-top bigger-125"></i>
+                        Agregar
+                    </button>
+                </div>
+                <div class="col-sm-2" data-rel="tooltip" tooltip-append-to-body="true"
+                    uib-tooltip-template="'toolTipCapEmpleados.html'" tooltip-trigger="outsideClick">
+                    <a href="javascript:void(0)" role="button">
+                        <span class="fa fa-list-ul fa-4x"></span>
+                    </a>
+                    <script type="text/ng-template" id="toolTipCapEmpleados.html">
+                        <ul>
+                            <li ng-repeat="registro in registroCapacitacion.docentes">
+                                {{registro.detalle_docente}} <a href="" class="fa fa-pencil"></a>
+                            </li>
+                        </ul>
+                      </script>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-success btn-sm btn-next" form="capacitacionForm">
+                Guardar
+                <i class="ace-icon fa fa-save icon-on-right"></i>
+            </button>
+            <button type="button" class="btn btn-danger btn-sm pull-left" data-dismiss="modal"
+                ng-click="cerrarModalCapacitacion()">
+                <i class="ace-icon fa fa-times"></i>
+                Cancelar
+            </button>
+        </div>
+    </div>
+</div>
+<div class="modal" id="modal-ponderacion">
+    <div class="modal-content">
+        <div class="modal-header ficha">
+            <h5 class="modal-title">Ponderación</h5>
+        </div>
+        <div class="modal-body">
+            <form id="ponderacionForm" ng-submit="guardarPonderacion(registroPonderacion)"></form>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="nombre">Nombre</label>
+                        <input type="text" class="form-control" name="nombre" id="nombre" placeholder="Nombre"
+                            ng-model="registroPonderacion.nombre" required form="ponderacionForm">
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label for="minima">Nota Minima</label>
+                        <input type="text" class="form-control" name="minima-letras" id="minima-letras"
+                            pattern="[a-zA-Z]*" ng-if="!registroPonderacion.numerico" placeholder="minima"
+                            ng-model="registroPonderacion.nota_minima" required form="ponderacionForm">
+                        <input type="number" class="form-control" name="minima-letras" id="minima-letras"
+                            max="{{registroPonderacion.nota_maxima}}" ng-if="registroPonderacion.numerico"
+                            placeholder="minima" ng-model="registroPonderacion.nota_minima" required
+                            form="ponderacionForm">
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label for="maxima">Nota Maxima</label>
+                        <input type="text" class="form-control" name="maxima" id="maxima" pattern="[a-zA-Z]*"
+                            ng-if="!registroPonderacion.numerico" placeholder="maxima"
+                            ng-model="registroPonderacion.nota_maxima" required form="ponderacionForm">
+                        <input type="number" class="form-control" name="maxima" id="maxima"
+                            min="{{registroPonderacion.nota_minima}}" ng-if="registroPonderacion.numerico"
+                            placeholder="maxima" ng-model="registroPonderacion.nota_maxima" required
+                            form="ponderacionForm">
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label for="numerico">Numerico</label>
+                        <p>
+                            <input name="switch-field-1" class="ace ace-switch ace-switch-4" type="checkbox"
+                                ng-model="registroPonderacion.numerico" form="ponderacionForm" />
+                            <span class="lbl check-descuento"></span>
+
+                        </p>
+
+                    </div>
+                </div>
+                <div class="col-md-1">
+                    <button type="submit" class="btn-info btn btn-app btn-xs" form="ponderacionForm">
+                        <i class="ace-icon fa fa-save align-top bigger-125"></i>
+                        {{registroPonderacion.id?'Actualizar':'Guardar'}}
+                    </button>
+                </div>
+                <div class="col-md-1">
+                    <button ng-if="registroPonderacion.id" type="button" class="btn-warning btn btn-app btn-xs"
+                        form="ponderacionForm" ng-click="cancelarEdicionPonderacion()">
+                        <i class="ace-icon fa fa-times align-top bigger-125"></i>
+                        Cancelar
+                    </button>
+                </div>
+            </div>
+            <hr>
+
+            <div>
+                <div class="table-header cabezera-pacientes">
+                    Lista Ponderaciones
+                </div>
+                <div class="dataTables_wrapper form-inline no-footer">
+                    <div class="row" style="margin-top: 5px;">
+                        <div class="col-xs-6 col-sm-6 col-md-6">
+                            <div>
+                                <label>
+                                    Mostrar <select ng-model="paginadorPonderacion.itemsPerPage"
+                                        ng-change="paginadorPonderacion.getFirstPage()" name="tabla_length"
+                                        aria-controls="tabla" class="form-control input-sm">
+                                        <option value="0">Todos</option>
+                                        <option ng-selected="true" value="10">10</option>
+                                        <option value="25">25</option>
+                                        <option value="50">50</option>
+                                        <option value="100">100</option>
+                                    </select> Elementos</label>
+                            </div>
+                        </div>
+                        <div class="col-xs-6 col-sm-6 col-md-6">
+                            <div class="col-sm-5">
+
+                            </div>
+                            <div class="col-sm-3">
+                                <label style="margin-top: 5px;">Buscar:</label>
+                            </div>
+                            <div class="col-xs-12 col-sm-4 col-md-3 col-lg-3" style="padding: 0px 0px;">
+                                <div>
+                                    <input style="margin: 0px 0px !important; width: 100%;" id="searchBox"
+                                        name="searchBox" class="input-sm" type="search"
+                                        ng-model="filtroPonderacion.search" ng-model-options='{ debounce: 600 }'
+                                        ng-change="paginadorPonderacion.getSearch('', filtroPonderacion, null);">
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+
+
+
+                        <table class="table  table-responsive-actual table-striped table-inverse">
+                            <thead class="thead-inverse">
+                                <tr>
+                                    <th>Nº</th>
+                                    <th>Nombre</th>
+                                    <th>Nota Minima</th>
+                                    <th>Nota Maxima</th>
+                                    <th>Numèrico</th>
+                                    <th>Habilitar</th>
+                                    <th>Estado</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr
+                                    ng-if="listaPaginadaPonderaciones.length == 0 && filtroPonderacion.search.length == 0">
+                                    <td colspan="7">
+                                        <div class="center">
+                                            <img class="img-responsive center-block" src="./img/add-records.png" alt=""
+                                                height="100" width="100" />
+                                            <p class="text-info"> Registros de ponderaciones vacio.</p>
+                                            <p class="text-info"> ¡Empesemos guardando una nueva ponderacion!</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr ng-class="{'text-danger':registro.eliminado}"
+                                    ng-repeat="registro in listaPaginadaPonderaciones">
+                                    <td data-label="Nº" scope="row">
+                                        {{($index+1)+(paginadorPonderacion.itemsPerPage*(paginadorPonderacion.currentPage-1))}}
+                                    </td>
+                                    <td data-label="Nombre">{{registro.nombre}}</td>
+                                    <td data-label="Nota Minima"> {{registro.nota_minima}}</td>
+                                    <td data-label="Nota Maxima"> {{registro.nota_maxima}}</td>
+                                    <td data-label="Numèrico"> {{registro.numerico?'SI':'No'}}</td>
+                                    <td data-label="Habilitar"> <label>
+                                            <input name="switch-field-1" class="ace ace-switch ace-switch-4"
+                                                type="checkbox" ng-model="registro.habilitado"
+                                                ng-change="habilitarPonderacion(registro)" />
+                                            <span class="lbl check-descuento"></span>
+
+                                        </label>
+
+                                    </td>
+                                    <td data-label="Estado"> {{registro.eliminado?'Eliminado':'Activo'}}</td>
+                                    <td data-label="Acciones">
+                                        <div class="hidden-sm hidden-xs action-buttons">
+                                            <a class="text-success" href="javascript:void(0)"
+                                                e-disabled="!aplicacion.puede_modificar" ng-if="!registro.eliminado"
+                                                ng-click="modificarPonderacion(registro)">
+                                                <i class="ace-icon fa fa-pencil bigger-130"></i>
+                                            </a>
+                                            <a class="text-danger" href="javascript:void(0)"
+                                                e-disabled="!aplicacion.puede_modificar" ng-if="!registro.eliminado"
+                                                ng-click="eliminarPonderacion(registro)">
+                                                <i class="ace-icon fa fa-trash-o bigger-130"></i>
+                                            </a>
+                                        </div>
+                                        <div class="hidden-md hidden-lg">
+                                            <div class="inline pos-rel">
+                                                <button class="btn btn-minier btn-yellow dropdown-toggle"
+                                                    data-toggle="dropdown" data-position="auto">
+                                                    <i class="ace-icon fa fa-caret-down icon-only bigger-120"></i>
+                                                </button>
+
+                                                <ul class="dropdown-menu
+                                                     dropdown-only-icon
+                                                     dropdown-yellow
+                                                     dropdown-menu-right
+                                                     dropdown-caret
+                                                     dropdown-close">
+                                                    <li>
+                                                        <a class="text-success" href="javascript:void(0)"
+                                                            e-disabled="!aplicacion.puede_modificar"
+                                                            ng-if="!registro.eliminado"
+                                                            ng-click="modificarPonderacion(registro)">
+                                                            <i class="ace-icon fa fa-pencil bigger-130"></i>
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a class="text-danger" href="javascript:void(0)"
+                                                            e-disabled="!aplicacion.puede_modificar"
+                                                            ng-if="!registro.eliminado"
+                                                            ng-click="eliminarPonderacion(registro)">
+                                                            <i class="ace-icon fa fa-trash-o bigger-130"></i>
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div>
+                                Mostrando página {{paginadorPonderacion.currentPage}} de
+                                {{paginadorPonderacion.pages.length}}
+                            </div>
+                        </div>
+                        <div class="col-sm-6" align="right">
+                            <ul class="pagination">
+                                <li class="paginate_button">
+                                    <a href="javascript:void(0)"
+                                        ng-click="paginadorPonderacion.getFirstPage()">Primero</a>
+                                </li>
+                                <li class="paginate_button">
+                                    <a href="javascript:void(0)" e-disabled="paginadorPonderacion.currentPage==1"
+                                        ng-click="paginadorPonderacion.getPreviousPage()">
+                                        <i class="fa  fa-angle-double-right"></i> </a>
+                                </li>
+                                <li class="paginate_button" ng-class="{active:paginadorPonderacion.currentPage==page}"
+                                    ng-repeat="page in paginadorPonderacion.pages"
+                                    ng-if="abs(paginadorPonderacion.currentPage-page)<4">
+                                    <a e-disabled="paginadorPonderacion.currentPage==page" href="javascript:void(0)"
+                                        ng-click="paginadorPonderacion.getPage(page)">{{page}}</a>
+                                </li>
+                                <li class="paginate_button">
+                                    <a href="javascript:void(0)"
+                                        e-disabled="paginadorPonderacion.currentPage==paginadorPonderacion.pages.length"
+                                        ng-click="paginadorPonderacion.getNextPage()">>></a>
+                                    </lidiv>
+                                <li class="paginate_button">
+                                    <a href="javascript:void(0)"
+                                        ng-click="paginadorPonderacion.getLastPage()">Ultimo</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-danger float-right" data-dismiss="modal"
+                ng-click="cerrarModalPonderacion()">
+                <i class="ace-icon fa fa-times"></i>Cerrar</button>
+        </div>
+    </div>
+</div>
+<div class="modal" id="modal-calificacion">
+    <div class="modal-content">
+        <div class="modal-header ficha">
+            <h5 class="modal-title">Calificaciones</h5>
+        </div>
+        <div class="modal-body">
+            <div class="container-fluid">
+                <div class="row">
+                    <form id="calificacionForm" ng-submit="agregarCalificacion(detalleCalificacion)"></form>
+                    <form id="guardarCalificacionForm" ng-submit="guardarCalificacion(registroCalificacion)"></form>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="ponderacion-cal">Ponderación</label>
+                            <select ng-disabled="registroCalificacion.detallesCalificacion.length > 0" required
+                                id="ponderacion-cal" name="ponderacion-cal" form="calificacionForm"
+                                ng-model="registroCalificacion.ponderacion" class="form-control"
+                                ng-options="ponderacion as ponderacion.nombre for ponderacion in listaPonderaciones track by ponderacion.id"
+                                data-placeholder="Click para escoger"
+                                ng-change="setValidatorCalificacion(ponderacion)"></select>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="Calificacion">Calificación</label>
+                            <input type="text" name="Calificacion" id="Calificacion" class="form-control"
+                                placeholder="calificacion" form="calificacionForm" ng-model="detalleCalificacion.nombre"
+                                required />
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="desde-calificacion">Desde</label>
+                            <input ng-if="!registroCalificacion.ponderacion.numerico" type="text"
+                                name="desde-calificacion" id="desde-calificacion" pattern="[a-zA-Z]*"
+                                class="form-control" ng-model="detalleCalificacion.desde" placeholder="desde"
+                                form="calificacionForm" required>
+                            <input ng-if="registroCalificacion.ponderacion.numerico" type="number"
+                                name="desde-calificacion" id="desde-calificacion" class="form-control"
+                                ng-model="detalleCalificacion.desde" placeholder="desde" form="calificacionForm"
+                                required max="{{detalleCalificacion.hasta-1}}" min="{{minNumberPonderacion}}">
+
+                            <small class="text-info" ng-if="registroCalificacion.ponderacion.numerico">
+                                minimo:{{minNumberPonderacion?minNumberPonderacion:registroCalificacion.ponderacion.nota_minima}}
+                            </small>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="Haste">Hasta</label>
+                            <input ng-if="!registroCalificacion.ponderacion.numerico" type="text" name="Haste"
+                                ng-model="detalleCalificacion.hasta" id="Haste" pattern="[a-zA-Z]*" class="form-control"
+                                placeholder="Hasta" form="calificacionForm" required>
+                            <input ng-if="registroCalificacion.ponderacion.numerico" type="number" name="Haste"
+                                ng-model="detalleCalificacion.hasta" id="Haste" class="form-control"
+                                min="{{detalleCalificacion.desde+1}}" max="{{maxNumberPonderacion}}" placeholder="Hasta"
+                                form="calificacionForm" required>
+
+                            <small class="text-info" ng-if="registroCalificacion.ponderacion">
+                                maximo:{{registroCalificacion.ponderacion.nota_maxima}}
+                            </small>
+                        </div>
+                    </div>
+                    <div class="col-md-1">
+                        <button type="submit" class="btn-info btn btn-app btn-xs" form="calificacionForm">
+                            <i class="ace-icon fa fa-plus align-top bigger-125"></i>
+                            Agregar
+                        </button>
+                    </div>
+                </div>
+                <div class="text-center" ng-if="notaMaximaIsSet">
+                    <h4 class="text-success"><i class="fa fa-check-circle" aria-hidden="true"></i>La nota maxima de
+                        la ponderacion ya fue asignada. </h4>
+                    <h5 class="text-warning"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>Ya no se
+                        puede agregar mas detalles. </h5>
+                </div>
+                <div ng-if="registroCalificacion.detallesCalificacion.length > 0">
+                    <div class="table-header cabezera-pacientes">
+                        DETALLE PONDERACIÓN {{registroCalificacion.ponderacion.nombre.toUpperCase()}}
+                    </div>
+                    <div>
+                        <table class="table table-responsive-actual table-striped table-inverse">
+                            <thead class="thead-inverse">
+                                <tr>
+                                    <th>Nº</th>
+                                    <th>Calificación</th>
+                                    <th>Desde</th>
+                                    <th>Hasta</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="item in registroCalificacion.detallesCalificacion">
+                                    <td data-label="Nº" scope="row">{{$index+1}}</td>
+                                    <td data-label="Calificación">{{item.nombre}}</td>
+                                    <td data-label="Desde">{{item.desde}}</td>
+                                    <td data-label="Hasta">{{item.hasta}}</td>
+                                    <td data-label="Acciones">
+                                        <div ng-if="$index+1 === registroCalificacion.detallesCalificacion.length"
+                                            class="hidden-sm hidden-xs action-buttons ">
+                                            <a class="text-success" href="javascript:void(0)"
+                                                e-disabled="!aplicacion.puede_modificar"
+                                                ng-click="modificarDetalleCalificacion(item)">
+                                                <i class="ace-icon fa fa-pencil bigger-130"></i>
+                                            </a>
+                                            <a class="text-danger" href="javascript:void(0)"
+                                                e-disabled="!aplicacion.puede_modificar"
+                                                ng-click="eliminarDetalleCalifiacion(registro)">
+                                                <i class="ace-icon fa fa-trash-o bigger-130"></i>
+                                            </a>
+                                        </div>
+                                        <div class="hidden-md hidden-lg"
+                                            ng-if="$index+1 === registroCalificacion.detallesCalificacion.length">
+                                            <div class="inline pos-rel">
+                                                <button class="btn btn-minier btn-yellow dropdown-toggle"
+                                                    data-toggle="dropdown" data-position="auto">
+                                                    <i class="ace-icon fa fa-caret-down icon-only bigger-120"></i>
+                                                </button>
+
+                                                <ul class="dropdown-menu
+                                                                 dropdown-only-icon
+                                                                 dropdown-yellow
+                                                                 dropdown-menu-right
+                                                                 dropdown-caret
+                                                                 dropdown-close">
+                                                    <li>
+                                                        <a class="text-success" href="javascript:void(0)"
+                                                            e-disabled="!aplicacion.puede_modificar"
+                                                            ng-click="modificarDetalleCalificacion(registro)">
+                                                            <i class="ace-icon fa fa-pencil bigger-130"></i>
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a class="text-danger" href="javascript:void(0)"
+                                                            e-disabled="!aplicacion.puede_modificar"
+                                                            ng-click="eliminarDetalleCalifiacion(registro)">
+                                                            <i class="ace-icon fa fa-trash-o bigger-130"></i>
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="text-center">
+                            <p ng-if="!notaMaximaIsSet" class="text-info">Para guardar complete la configuración. </p>
+                            <p ng-if="notaMaximaIsSet" class="text-success"><i class="fa fa-check-circle"
+                                    aria-hidden="true"></i>Configuración completada puede guardar. </p>
+                        </div>
+                    </div>
+                </div>
+                <div ng-hide="registroCalificacion.detallesCalificacion.length != 0">
+                    <div class="table-header cabezera-pacientes">
+                        Lista Calificiaciones
+                    </div>
+                    <div class="dataTables_wrapper form-inline no-footer">
+                        <div class="row" style="margin-top: 5px;">
+                            <div class="col-xs-6 col-sm-6 col-md-6">
+                                <div>
+                                    <label>
+                                        Mostrar <select ng-model="paginadorCalificacion.itemsPerPage"
+                                            ng-change="paginadorCalificacion.getFirstPage()" name="tabla_length"
+                                            aria-controls="tabla" class="form-control input-sm">
+                                            <option value="0">Todos</option>
+                                            <option ng-selected="true" value="10">10</option>
+                                            <option value="25">25</option>
+                                            <option value="50">50</option>
+                                            <option value="100">100</option>
+                                        </select> Elementos</label>
+                                </div>
+                            </div>
+                            <div class="col-xs-6 col-sm-6 col-md-6">
+                                <div class="col-sm-5">
+
+                                </div>
+                                <div class="col-sm-3">
+                                    <label style="margin-top: 5px;">Buscar:</label>
+                                </div>
+                                <div class="col-xs-12 col-sm-4 col-md-3 col-lg-3" style="padding: 0px 0px;">
+                                    <div>
+                                        <input style="margin: 0px 0px !important; width: 100%;" id="searchBox"
+                                            name="searchBox" class="input-sm" type="search"
+                                            ng-model="filtroCalificacion.search" ng-model-options='{ debounce: 600 }'
+                                            ng-change="paginadorCalificacion.getSearch('', filtroCalificacion, null);">
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <table class="table table-responsive-actual table-striped table-inverse">
+                                <thead class="thead-inverse">
+                                    <tr>
+                                        <th>Nº</th>
+                                        <th>Ponderación</th>
+                                        <th>Estado</th>
+                                        <th>Predefinido</th>
+                                        <th>Calificaciones</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr
+                                        ng-if="listaPaginadaCalificacion.length == 0 && filtroCalificacion.search.length == 0">
+                                        <td colspan="6">
+
+                                            <div class="center">
+                                                <img class="img-responsive center-block" src="./img/add-records.png"
+                                                    alt="" height="100" width="100" />
+                                                <p class="text-info"> Registros de calificaciones vacio.</p>
+                                                <p class="text-info"> ¡Empesemos guardando una nueva calificacion!
+                                                </p>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr ng-class="{'text-danger':registro.eliminado}"
+                                        ng-repeat="registro in listaPaginadaCalificacion">
+
+                                        <td data-label="Nº" scope="row">
+                                            {{($index+1)+(paginadorCalificacion.itemsPerPage*(paginadorCalificacion.currentPage-1))}}
+                                        </td>
+                                        <td data-label="Ponderación">{{registro.ponderacion.nombre}}</td>
+                                        <td data-label="Estado"> {{registro.eliminado?'Eliminado':'Activo'}}</td>
+                                        <td data-label="Predefinido"><label>
+                                                <input name="switch-field-1" class="ace ace-switch ace-switch-4"
+                                                    type="checkbox" ng-model="registro.predefinido"
+                                                    ng-change="habilitarPredefinidoCalificacion(registro)" />
+                                                <span class="lbl check-descuento"></span>
+
+                                            </label></td>
+                                        <td data-label="Calificaciones">
+
+                                            <a href="javascript:void(0)" role="button" data-rel="tooltip"
+                                                tooltip-append-to-body="true"
+                                                uib-tooltip-template="'toolTipCalificaciones.html'">
+                                                <span class="fa fa-list-ol fa-3x"></span>
+                                            </a>
+                                            <script type="text/ng-template" id="toolTipCalificaciones.html">
+                                                <table class="table table-hover">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Calificacion</th>
+                                                        <th>Desde</th>
+                                                        <th>Hasta</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr ng-repeat="item in registro.detallesCalificacion">
+                                                        <td >{{item.nombre}}</td>
+                                                        <td>{{item.desde}}</td>
+                                                        <td>{{item.hasta}}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                            
+                                            </script>
+                                        </td>
+
+                                        <td data-label="Acciones">
+                                            <div class="hidden-sm hidden-xs action-buttons">
+                                                <a class="text-success" href="javascript:void(0)"
+                                                    e-disabled="!aplicacion.puede_modificar" ng-if="!registro.eliminado"
+                                                    ng-click="modificarCalificacion(registro)">
+                                                    <i class="ace-icon fa fa-pencil bigger-130"></i>
+                                                </a>
+                                                <a class="text-danger" href="javascript:void(0)"
+                                                    e-disabled="!aplicacion.puede_modificar" ng-if="!registro.eliminado"
+                                                    ng-click="eliminarCalificacion(registro)">
+                                                    <i class="ace-icon fa fa-trash-o bigger-130"></i>
+                                                </a>
+                                            </div>
+                                            <div class="hidden-md hidden-lg">
+                                                <div class="inline pos-rel">
+                                                    <button class="btn btn-minier btn-yellow dropdown-toggle"
+                                                        data-toggle="dropdown" data-position="auto">
+                                                        <i class="ace-icon fa fa-caret-down icon-only bigger-120"></i>
+                                                    </button>
+
+                                                    <ul class="dropdown-menu
+                                                             dropdown-only-icon
+                                                             dropdown-yellow
+                                                             dropdown-menu-right
+                                                             dropdown-caret
+                                                             dropdown-close">
+                                                        <li>
+                                                            <a class="text-success" href="javascript:void(0)"
+                                                                e-disabled="!aplicacion.puede_modificar"
+                                                                ng-if="!registro.eliminado"
+                                                                ng-click="modificarCalificacion(registro)">
+                                                                <i class="ace-icon fa fa-pencil bigger-130"></i>
+                                                            </a>
+                                                        </li>
+                                                        <li>
+                                                            <a class="text-danger" href="javascript:void(0)"
+                                                                e-disabled="!aplicacion.puede_modificar"
+                                                                ng-if="!registro.eliminado"
+                                                                ng-click="eliminarCalificacion(registro)">
+                                                                <i class="ace-icon fa fa-trash-o bigger-130"></i>
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div>
+                                    Mostrando página {{paginadorCalificacion.currentPage}} de
+                                    {{paginadorCalificacion.pages.length}}
+                                </div>
+                            </div>
+                            <div class="col-sm-6" align="right">
+                                <ul class="pagination">
+                                    <li class="paginate_button">
+                                        <a href="javascript:void(0)"
+                                            ng-click="paginadorCalificacion.getFirstPage()">Primero</a>
+                                    </li>
+                                    <li class="paginate_button">
+                                        <a href="javascript:void(0)" e-disabled="paginadorCalificacion.currentPage==1"
+                                            ng-click="paginadorCalificacion.getPreviousPage()">
+                                            <i class="fa  fa-angle-double-right"></i> </a>
+                                    </li>
+                                    <li class="paginate_button"
+                                        ng-class="{active:paginadorCalificacion.currentPage==page}"
+                                        ng-repeat="page in paginadorCalificacion.pages"
+                                        ng-if="abs(paginadorCalificacion.currentPage-page)<4">
+                                        <a e-disabled="paginadorCalificacion.currentPage==page"
+                                            href="javascript:void(0)"
+                                            ng-click="paginadorCalificacion.getPage(page)">{{page}}</a>
+                                    </li>
+                                    <li class="paginate_button">
+                                        <a href="javascript:void(0)"
+                                            e-disabled="paginadorCalificacion.currentPage==paginadorCalificacion.pages.length"
+                                            ng-click="paginadorCalificacion.getNextPage()">>></a>
+                                        </lidiv>
+                                    <li class="paginate_button">
+                                        <a href="javascript:void(0)"
+                                            ng-click="paginadorCalificacion.getLastPage()">Ultimo</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-danger float-right" data-dismiss="modal"
+                ng-click="cerrarModalCalificacion()">
+                <i class="ace-icon fa fa-times"></i>Cerrar</button>
+            <button type="submit" class="btn btn-primary" form="guardarCalificacionForm" ng-disabled="!notaMaximaIsSet"
+                ng-show="registroCalificacion.detallesCalificacion.length != 0">
+                Guardar <i class="ace-icon fa fa-save"></i></button>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="modal-certificado">
+    <div class="modal-content">
+        <div class="modal-header ficha">
+            <h5 class="modal-title">Certificados</h5>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-sm-1">
+                    <button type="button" class="btn-info btn btn-app btn-xs"
+                        ng-click="nuevoCertificado=!nuevoCertificado; verCertificadoPrevio(registroCertificado)">
+                        <i class="ace-icon fa fa-file-pdf-o align-top bigger-125"></i>
+                        Nuevo
+                    </button>
+                </div>
+                <div class="col-sm-11">
+                    <div ng-show="nuevoCertificado">
+                        <div class="form-group">
+                            <label for="titulo">Nombre Certificado</label>
+                            <input type="text" required name="titulo" id="titulo" class="form-control"
+                                placeholder="Titulo" ng-model="registroCertificado.titulo" form="certificadoForm">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div ng-show="nuevoCertificado">
+                <form id="certificadoForm" ng-submit="guardarCertificado(registroCertificado)"></form>
+                <div class="container-fluid">
+                    <div class="text-center">
+                        <h3> Modelo: {{registroCertificado.modelo}}</h3>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-5">
+                            <div>
+                                <div class="table-header cabezera-pacientes">
+                                    Configuraciones
+                                </div>
+                                <table class="table table-striped table-inverse table-responsive-actual">
+                                    <thead class="thead-inverse">
+                                        <tr>
+                                            <th>nombre</th>
+                                            <th>Configuración</th>
+                                            <th>Color</th>
+                                            <th>tamaño</th>
+                                            <th>Tipo letra</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Texto 1(Titulo)</td>
+                                            <td> <input type="text" name="" id="" class="form-control" placeholder=""
+                                                    ng-model="registroCertificado.texto_uno" form="certificadoForm"
+                                                    ng-model-options="{ debounce: 500 }"
+                                                    ng-change="verCertificadoPrevio(registroCertificado)"></td>
+                                            <td><input form="certificadoForm" type="color" class="form-control"
+                                                    ng-model="registroCertificado.color_texto_uno"
+                                                    ng-change="verCertificadoPrevio(registroCertificado)" /></td>
+                                            <td><input form="certificadoForm" type="number" max="50"
+                                                    ng-model="registroCertificado.dimencion_texto_uno"
+                                                    ng-change="verCertificadoPrevio(registroCertificado)"
+                                                    class="form-control width-50-input"></td>
+                                            <td><select required id="orientacion-cer" name="orientacion-cer"
+                                                    form="certificadoForm" ng-model="registroCertificado.fontTextoUno"
+                                                    ng-model-options="{ debounce: 500 }"
+                                                    ng-change="verCertificadoPrevio(registroCertificado)"
+                                                    class="form-control"
+                                                    ng-options="tipoLetra as tipoLetra.nombre for tipoLetra in fontsHoja.clases track by tipoLetra.id"
+                                                    data-placeholder="Click para escoger"></select></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Subtitulo</td>
+                                            <td></td>
+                                            <td><input form="certificadoForm" type="color" class="form-control"
+                                                    ng-model="registroCertificado.color_subtitulo"
+                                                    ng-change="verCertificadoPrevio(registroCertificado)" /></td>
+                                            <td><input form="certificadoForm" type="number" max="40"
+                                                    ng-model="registroCertificado.dimencion_subtitulo"
+                                                    ng-change="verCertificadoPrevio(registroCertificado)"
+                                                    class="form-control width-50-input"></td>
+                                            <td><select required id="orientacion-cer" name="orientacion-cer"
+                                                    form="certificadoForm" ng-model="registroCertificado.fontSubtitulo"
+                                                    ng-model-options="{ debounce: 500 }"
+                                                    ng-change="verCertificadoPrevio(registroCertificado)"
+                                                    class="form-control"
+                                                    ng-options="tipoLetra as tipoLetra.nombre for tipoLetra in fontsHoja.clases track by tipoLetra.id"
+                                                    data-placeholder="Click para escoger"></select></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Cerficiado a</td>
+                                            <td></td>
+                                            <td><input form="certificadoForm" type="color" class="form-control"
+                                                    ng-model="registroCertificado.color_detalle_estudiante"
+                                                    ng-change="verCertificadoPrevio(registroCertificado)" /></td>
+                                            <td><input form="certificadoForm" type="number" max="40"
+                                                    ng-model="registroCertificado.dimencion_detalle_estudiante"
+                                                    ng-change="verCertificadoPrevio(registroCertificado)"
+                                                    class="form-control width-50-input"></td>
+                                            <td><select required id="orientacion-cer" name="orientacion-cer"
+                                                    form="certificadoForm"
+                                                    ng-model="registroCertificado.fontDetalleEstudiante"
+                                                    ng-model-options="{ debounce: 500 }"
+                                                    ng-change="verCertificadoPrevio(registroCertificado)"
+                                                    class="form-control"
+                                                    ng-options="tipoLetra as tipoLetra.nombre for tipoLetra in fontsHoja.clases track by tipoLetra.id"
+                                                    data-placeholder="Click para escoger"></select></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Texto 2</td>
+                                            <td><input type="text" name="" id="" class="form-control" placeholder=""
+                                                    ng-model="registroCertificado.texto_dos" form="certificadoForm"
+                                                    ng-model-options="{ debounce: 500 }"
+                                                    ng-change="verCertificadoPrevio(registroCertificado)"></td>
+                                            <td><input form="certificadoForm" type="color" class="form-control"
+                                                    ng-model="registroCertificado.color_texto_dos"
+                                                    ng-change="verCertificadoPrevio(registroCertificado)" /></td>
+                                            <td><input form="certificadoForm" type="number" max="40"
+                                                    ng-model="registroCertificado.dimencion_texto_dos"
+                                                    ng-change="verCertificadoPrevio(registroCertificado)"
+                                                    class="form-control width-50-input"></td>
+                                            <td><select required id="orientacion-cer" name="orientacion-cer"
+                                                    form="certificadoForm" ng-model="registroCertificado.fontTextoDos"
+                                                    ng-model-options="{ debounce: 500 }"
+                                                    ng-change="verCertificadoPrevio(registroCertificado)"
+                                                    class="form-control"
+                                                    ng-options="tipoLetra as tipoLetra.nombre for tipoLetra in fontsHoja.clases track by tipoLetra.id"
+                                                    data-placeholder="Click para escoger"></select></td>
+                                        </tr>
+                                        <tr>
+                                            <td>nombre Docente</td>
+                                            <td></td>
+                                            <td><input form="certificadoForm" type="color" class="form-control"
+                                                    ng-model="registroCertificado.color_nombre_docente"
+                                                    ng-change="verCertificadoPrevio(registroCertificado)" /></td>
+                                            <td></td>
+                                            <td><select required id="orientacion-cer" name="orientacion-cer"
+                                                    form="certificadoForm"
+                                                    ng-model="registroCertificado.fontNombreDocente"
+                                                    ng-model-options="{ debounce: 500 }"
+                                                    ng-change="verCertificadoPrevio(registroCertificado)"
+                                                    class="form-control"
+                                                    ng-options="tipoLetra as tipoLetra.nombre for tipoLetra in fontsHoja.clases track by tipoLetra.id"
+                                                    data-placeholder="Click para escoger"></select></td>
+                                        </tr>
+                                        <tr>
+                                            <td>subtitulo Docente</td>
+                                            <td></td>
+                                            <td><input form="certificadoForm" type="color" class="form-control"
+                                                    ng-model="registroCertificado.color_subtitulo_docente"
+                                                    ng-change="verCertificadoPrevio(registroCertificado)" /></td>
+                                            <td></td>
+                                            <td><select required id="orientacion-cer" name="orientacion-cer"
+                                                    form="certificadoForm"
+                                                    ng-model="registroCertificado.fontSubtituloDocente"
+                                                    ng-model-options="{ debounce: 500 }"
+                                                    ng-change="verCertificadoPrevio(registroCertificado)"
+                                                    class="form-control"
+                                                    ng-options="tipoLetra as tipoLetra.nombre for tipoLetra in fontsHoja.clases track by tipoLetra.id"
+                                                    data-placeholder="Click para escoger"></select></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Orientación</td>
+                                            <td colspan="4"><select required id="orientacion-cer" name="orientacion-cer"
+                                                    form="certificadoForm" ng-model="registroCertificado.orientacion"
+                                                    ng-model-options="{ debounce: 500 }"
+                                                    ng-change="verCertificadoPrevio(registroCertificado)"
+                                                    class="form-control"
+                                                    ng-options="orientacion as orientacion.nombre for orientacion in orientacionesHoja.clases track by orientacion.id"
+                                                    data-placeholder="Click para escoger"></select></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Tamaño</td>
+                                            <td colspan="4"><select required id="tamaño-cer" name="tamaño-cer"
+                                                    form="certificadoForm" ng-model="registroCertificado.dimencion"
+                                                    ng-change="verCertificadoPrevio(registroCertificado)"
+                                                    class="form-control"
+                                                    ng-options="dimiencion as dimiencion.nombre for dimiencion in dimencionesHoja.clases track by dimiencion.id"
+                                                    data-placeholder="Click para escoger"></select></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Plantilla</td>
+                                            <td> <label>
+                                                    <input name="switch-field-1" class="ace ace-switch ace-switch-4"
+                                                        type="checkbox" ng-model="registroCertificado.plantilla"
+                                                        ng-change="verCertificadoPrevio(registroCertificado)"
+                                                        form="certificadoForm" />
+                                                    <span class="lbl check-descuento"></span>
+                                                </label>
+                                            </td>
+                                            <td><input form="certificadoForm" type="color" class="form-control"
+                                                    ng-model="registroCertificado.color_plantilla_uno"
+                                                    ng-change="verCertificadoPrevio(registroCertificado)" /></td>
+                                            <td><input form="certificadoForm" type="color" class="form-control"
+                                                    ng-model="registroCertificado.color_plantilla_dos"
+                                                    ng-change="verCertificadoPrevio(registroCertificado)" /></td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td>¿Usar imagen empleado?</td>
+                                            <td colspan="4"> <label>
+                                                    <input name="switch-field-1" class="ace ace-switch ace-switch-4"
+                                                        type="checkbox"
+                                                        ng-model="registroCertificado.usar_imagen_empleado"
+                                                        ng-change="verCertificadoPrevio(registroCertificado)"
+                                                        form="certificadoForm" />
+                                                    <span class="lbl check-descuento"></span>
+                                                </label>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Imagen Fondo</td>
+                                            <td colspan="4">
+                                                <div class="row">
+                                                    <div class="col-sm-2">
+                                                        <img ng-if="registroCertificado.id && registroCertificado.imagen"
+                                                            ng-src="{{registroCertificado.imagen}}" width="100">
+                                                    </div>
+                                                    <div class="col-sm-8" style="height: 50px;">
+                                                        <input type="file" id="imagen-certificado"
+                                                            onchange="uploadImage(this,'imagen-certificado-oculto')" />
+                                                        <input id="imagen-certificado-oculto"
+                                                            ng-model="registroCertificado.imagen" name="imagen"
+                                                            type="hidden"
+                                                            ng-change="verCertificadoPrevio(registroCertificado)"
+                                                            ng-update-hidden form="certificadoForm">
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="col-md-7">
+                            <div id="pdfviewCertificato"></div>
+                            <div>
+                                <button type="submit" class="btn-success btn btn-app btn-xs" form="certificadoForm">
+                                    <i class="ace-icon fa fa-save align-top bigger-125"></i>
+                                    {{registroCertificado.id?'Actualizar':'Guardar'}}
+                                </button>
+                                <button ng-if="registroCertificado.id" type="button"
+                                    class="btn-warning btn btn-app btn-xs" form="ponderacionForm"
+                                    ng-click="cancelarEdicionCertificado()">
+                                    <i class="ace-icon fa fa-times align-top bigger-125"></i>
+                                    Cancelar
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div ng-if="!nuevoCertificado">
+                <div class="table-header cabezera-pacientes">
+                    Lista Certificados
+                </div>
+                <div class="dataTables_wrapper form-inline no-footer">
+                    <div class="row" style="margin-top: 5px;">
+                        <div class="col-xs-6 col-sm-6 col-md-6">
+                            <div>
+                                <label>
+                                    Mostrar <select ng-model="paginadorCertificado.itemsPerPage"
+                                        ng-change="paginadorCertificado.getFirstPage()" name="tabla_length"
+                                        aria-controls="tabla" class="form-control input-sm">
+                                        <option value="0">Todos</option>
+                                        <option ng-selected="true" value="10">10</option>
+                                        <option value="25">25</option>
+                                        <option value="50">50</option>
+                                        <option value="100">100</option>
+                                    </select> Elementos</label>
+                            </div>
+                        </div>
+                        <div class="col-xs-6 col-sm-6 col-md-6">
+                            <div class="col-sm-5">
+
+                            </div>
+                            <div class="col-sm-3">
+                                <label style="margin-top: 5px;">Buscar:</label>
+                            </div>
+                            <div class="col-xs-12 col-sm-4 col-md-3 col-lg-3" style="padding: 0px 0px;">
+                                <div>
+                                    <input style="margin: 0px 0px !important; width: 100%;" id="searchBox"
+                                        name="searchBox" class="input-sm" type="search"
+                                        ng-model="filtroCertificado.search" ng-model-options='{ debounce: 600 }'
+                                        ng-change="paginadorCertificado.getSearch('',filtroCertificado, null)">
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <table class="table table-striped table-inverse table-responsive-actual">
+                        <thead class="thead-inverse">
+                            <tr>
+                                <th>Modelo</th>
+                                <th>Titulo</th>
+                                <th>Textos</th>
+                                <th>Plantilla</th>
+                                <th>Imagen</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-class="{'text-danger':registro.eliminado}"
+                                ng-repeat="registro in listaPaginadaCertificados track by $index">
+                                <td data-label="Modelo">{{registro.modelo}}</td>
+                                <td data-label="Titulo">{{registro.titulo}}</td>
+                                <td data-label="Textos">
+                                    <ol>
+                                        <li>{{registro.texto_uno}}</li>
+                                        <li>{{registro.texto_dos}}</li>
+                                    </ol>
+                                </td>
+                                <td data-label="Plantilla">{{registro.plantilla?"SI":"NO"}}</td>
+                                <td data-label="Imagen"><img ng-src="{{registro.imagen}}" alt="Imagen plantilla"
+                                        width="50" onClick="this.width=300;" onmouseout="this.width=50;" ;></td>
+                                <td data-label="Estado">{{registro.eliminado?'Eliminado':'Activo'}}</td>
+                                <td data-label="Acciones">
+                                    <div class="hidden-sm hidden-xs action-buttons">
+                                        <a class="text-success" href="javascript:void(0)"
+                                            e-disabled="!aplicacion.puede_modificar" ng-if="!registro.eliminado"
+                                            ng-click="modificarCertificado(registro)">
+                                            <i class="ace-icon fa fa-pencil bigger-130"></i>
+                                        </a>
+                                        <a class="text-danger" href="javascript:void(0)"
+                                            e-disabled="!aplicacion.puede_modificar" ng-if="!registro.eliminado"
+                                            ng-click="eliminarCertificado(registro)">
+                                            <i class="ace-icon fa fa-trash-o bigger-130"></i>
+                                        </a>
+                                    </div>
+                                    <div class="hidden-md hidden-lg">
+                                        <div class="inline pos-rel">
+                                            <button class="btn btn-minier btn-yellow dropdown-toggle"
+                                                data-toggle="dropdown" data-position="auto">
+                                                <i class="ace-icon fa fa-caret-down icon-only bigger-120"></i>
+                                            </button>
+
+                                            <ul class="dropdown-menu
+                                                         dropdown-only-icon
+                                                         dropdown-yellow
+                                                         dropdown-menu-right
+                                                         dropdown-caret
+                                                         dropdown-close">
+                                                <li>
+                                                    <a class="text-success" href="javascript:void(0)"
+                                                        e-disabled="!aplicacion.puede_modificar"
+                                                        ng-if="!registro.eliminado"
+                                                        ng-click="modificarCertificado(registro)">
+                                                        <i class="ace-icon fa fa-pencil bigger-130"></i>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a class="text-danger" href="javascript:void(0)"
+                                                        e-disabled="!aplicacion.puede_modificar"
+                                                        ng-if="!registro.eliminado"
+                                                        ng-click="eliminarCertificado(registro)">
+                                                        <i class="ace-icon fa fa-trash-o bigger-130"></i>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div>
+                            Mostrando página {{paginadorCertificado.currentPage}} de
+                            {{paginadorCertificado.pages.length}}
+                        </div>
+                    </div>
+                    <div class="col-sm-6" align="right">
+                        <ul class="pagination">
+                            <li class="paginate_button">
+                                <a href="javascript:void(0)" ng-click="paginadorCertificado.getFirstPage()">Primero</a>
+                            </li>
+                            <li class="paginate_button">
+                                <a href="javascript:void(0)" e-disabled="paginadorCertificado.currentPage==1"
+                                    ng-click="paginadorCertificado.getPreviousPage()">
+                                    <i class="fa  fa-angle-double-right"></i> </a>
+                            </li>
+                            <li class="paginate_button" ng-class="{active:paginadorCertificado.currentPage==page}"
+                                ng-repeat="page in paginadorCertificado.pages"
+                                ng-if="abs(paginadorCertificado.currentPage-page)<4">
+                                <a e-disabled="paginadorCertificado.currentPage==page" href="javascript:void(0)"
+                                    ng-click="paginadorCertificado.getPage(page)">{{page}}</a>
+                            </li>
+                            <li class="paginate_button">
+                                <a href="javascript:void(0)"
+                                    e-disabled="paginadorCertificado.currentPage==paginadorCertificado.pages.length"
+                                    ng-click="paginadorCertificado.getNextPage()">>></a>
+                                </lidiv>
+                            <li class="paginate_button">
+                                <a href="javascript:void(0)" ng-click="paginadorCertificado.getLastPage()">Ultimo</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-danger float-right" data-dismiss="modal"
+                ng-click="cerrarModalCertificado()">
+                <i class="ace-icon fa fa-times"></i>Cerrar</button>
+        </div>
+    </div>
+</div>
+<div class="modal" id="modal-empleado">
+    <div class="modal-content">
+        <div class="modal-header ficha">
+            <h5 class="modal-title">Empleados</h5>
+        </div>
+        <div class="modal-body">
+            <form id="empleadoForm" ng-submit="guardarEmpleado(registroEmpleado)"></form>
+            <form id="empleadosForm" ng-submit="guardarNotaEmpleados()"></form>
+            <div class="row">
+                <div class="col-xs-7">
+                    <div class="form-group">
+                        <label for="">Personal a evaluar</label>
+                        <input ng-disabled="evaluacion.ver != undefined" class="form-control"
+                            ng-keypress="interceptarTecla($event,'id_servicio',true)" autocomplete="off" required
+                            form="empleadoForm" type="text" ng-model="registroEmpleado.empleado"
+                            placeholder="Busqueda de personal..."
+                            uib-typeahead="personal as personal.persona.nombre_completo for personal in buscarPersonal($viewValue)"
+                            typeahead-wait-ms="2000" typeahead-template-url="templates/autocompletar.html"
+                            typeahead-show-hint="false" typeahead-min-length="1"
+                            typeahead-on-select="establecerPersonal($item, $model, $label, $event)">
+                    </div>
+                </div>
+                <div class="col-xs-1">
+                    <button type="submit" class="btn-info btn btn-app btn-xs" form="empleadoForm">
+                        <i class="ace-icon fa fa-save align-top bigger-125"></i>
+                        {{registroEmpleado.id?'Actualizar':'Guardar'}}
+                    </button>
+                </div>
+                <div class="col-xs-1">
+                    <button ng-if="registroEmpleado.id" type="button" class="btn-warning btn btn-app btn-xs"
+                        form="empleadoForm" ng-click="cancelarEdicionEmpleado()">
+                        <i class="ace-icon fa fa-times align-top bigger-125"></i>
+                        Cancelar
+                    </button>
+                </div>
+            </div>
+            <div class="table-header cabezera-pacientes">
+                Lista Empleados
+            </div>
+            <div class="dataTables_wrapper form-inline no-footer">
+                <div class="row" style="margin-top: 5px;">
+                    <div class="col-xs-6 col-sm-6 col-md-6">
+                        <div>
+                            <label>
+                                Mostrar <select ng-model="paginadorEmpleado.itemsPerPage"
+                                    ng-change="paginadorEmpleado.getFirstPage()" name="tabla_length"
+                                    aria-controls="tabla" class="form-control input-sm">
+                                    <option value="0">Todos</option>
+                                    <option ng-selected="true" value="10">10</option>
+                                    <option value="25">25</option>
+                                    <option value="50">50</option>
+                                    <option value="100">100</option>
+                                </select> Elementos</label>
+                        </div>
+                    </div>
+                    <div class="col-xs-6 col-sm-6 col-md-6">
+                        <div class="col-sm-5">
+
+                        </div>
+                        <div class="col-sm-3">
+                            <label style="margin-top: 5px;">Buscar:</label>
+                        </div>
+                        <div class="col-xs-12 col-sm-4 col-md-3 col-lg-3" style="padding: 0px 0px;">
+                            <div>
+                                <input style="margin: 0px 0px !important; width: 100%;" id="searchBox" name="searchBox"
+                                    class="input-sm" type="search" ng-model="filtroEmpleado.search"
+                                    ng-model-options='{ debounce: 600 }'
+                                    ng-change="paginadorEmpleado.getSearch('',filtroEmpleado, null)">
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <table class="table table-striped table-inverse table-responsive-actual">
+                        <thead class="thead-inverse">
+                            <tr>
+                                <td>Nº</td>
+                                <td>Empleado/trabajador</td>
+                                <td>C.I.</td>
+                                <td>Campo</td>
+                                <td>Nota</td>
+                                <td>Acciones</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-class="{'text-danger':registro.eliminado}"
+                                ng-repeat="registro in listaPaginadaEmpleados track by $index">
+                                <td data-label="Nº">{{$index}} </td>
+                                <td data-label="Empleado/trabajador">{{registro.nombre_empleado}}</td>
+                                <td data-label="C.I.">{{registro.ci}}</td>
+                                <td data-label="Campo">{{registro.campo}}</td>
+                                <td data-label="Nota"><input type="text" ng-model="registro.nota" class="form-control"
+                                        ng-if="!registroCapacitacion.ponderacion.numerico" form="empleadosForm"
+                                        ng-change="registro.modificado=true">
+                                    <input type="number" ng-model="registro.nota" class="form-control"
+                                        ng-if="registroCapacitacion.ponderacion.numerico" form="empleadosForm"
+                                        ng-change="registro.modificado=true"
+                                        min="{{parseFloat(registroCapacitacion.ponderacion.nota_minima)}}"
+                                        max="{{parseFloat(registroCapacitacion.ponderacion.nota_maxima)}}">
+                                </td>
+                                <td data-label="Acciones">
+                                    <div class="hidden-sm hidden-xs action-buttons">
+                                        <a class="text-success" href="javascript:void(0)"
+                                            e-disabled="!aplicacion.puede_modificar" ng-if="!registro.eliminado"
+                                            ng-click="modificarEmpleado(registro)">
+                                            <i class="ace-icon fa fa-pencil bigger-130"></i>
+                                        </a>
+                                        <a class="text-danger" href="javascript:void(0)"
+                                            e-disabled="!aplicacion.puede_modificar" ng-if="!registro.eliminado"
+                                            ng-click="eliminarEmpleado(registro)">
+                                            <i class="ace-icon fa fa-trash-o bigger-130"></i>
+                                        </a>
+                                        <a class="text-info" href="javascript:void(0)"
+                                            e-disabled="!aplicacion.puede_modificar" ng-if="!registro.eliminado"
+                                            data-rel="tooltip" tooltip-append-to-body="true"
+                                            tooltip-trigger="outsideClick"
+                                            uib-tooltip-template="'toolTipComentEmpleado.html'">
+                                            <i class="ace-icon fa fa-comment-o bigger-130"></i>
+                                        </a>
+                                        <a ng-if="!registro.cerrado && !registro.eliminado" class="text-info"
+                                            href="javascript:void(0)" e-disabled="!aplicacion.puede_modificar"
+                                            ng-click="imprimirCertificado(registroCapacitacion,registro)">
+                                            <i class="ace-icon fa fa-file-text-o bigger-130"></i>
+                                        </a>
+                                        <script type="text/ng-template" id="toolTipComentEmpleado.html">
+                                            <label for="coment"><i class="fa fa-comment" aria-hidden="true"></i>Comentario</label>
+                                               
+                                                <div class="input-group">                                                    
+                                                    <textarea name="coment" id="coment" cols="15" rows="5" ng-model="registro.comentario"
+                                                    ng-change="registro.modificado=true"></textarea>
+                                                  </div>
+                                            </table>
+                                            
+                                            </script>
+                                    </div>
+                                    <div class="hidden-md hidden-lg">
+                                        <div class="inline pos-rel">
+                                            <button class="btn btn-minier btn-yellow dropdown-toggle"
+                                                data-toggle="dropdown" data-position="auto">
+                                                <i class="ace-icon fa fa-caret-down icon-only bigger-120"></i>
+                                            </button>
+
+                                            <ul class="dropdown-menu
+                                                     dropdown-only-icon
+                                                     dropdown-yellow
+                                                     dropdown-menu-right
+                                                     dropdown-caret
+                                                     dropdown-close">
+                                                <li>
+                                                    <a class="text-success" href="javascript:void(0)"
+                                                        e-disabled="!aplicacion.puede_modificar"
+                                                        ng-if="!registro.eliminado"
+                                                        ng-click="modificarEmpleado(registro)">
+                                                        <i class="ace-icon fa fa-pencil bigger-130"></i>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a class="text-danger" href="javascript:void(0)"
+                                                        e-disabled="!aplicacion.puede_modificar"
+                                                        ng-if="!registro.eliminado"
+                                                        ng-click="eliminarEmpleado(registro)">
+                                                        <i class="ace-icon fa fa-trash-o bigger-130"></i>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a class="text-info" href="javascript:void(0)"
+                                                        e-disabled="!aplicacion.puede_modificar"
+                                                        ng-if="!registro.eliminado"
+                                                        ng-click="agregarComentario(registro)">
+                                                        <i class="ace-icon fa fa-comment-o bigger-130"></i>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div>
+                            Mostrando página {{paginadorEmpleado.currentPage}} de
+                            {{paginadorEmpleado.pages.length}}
+                        </div>
+                    </div>
+                    <div class="col-sm-6" align="right">
+                        <ul class="pagination">
+                            <li class="paginate_button">
+                                <a href="javascript:void(0)" ng-click="paginadorEmpleado.getFirstPage()">Primero</a>
+                            </li>
+                            <li class="paginate_button">
+                                <a href="javascript:void(0)" e-disabled="paginadorEmpleado.currentPage==1"
+                                    ng-click="paginadorEmpleado.getPreviousPage()">
+                                    <i class="fa  fa-angle-double-right"></i> </a>
+                            </li>
+                            <li class="paginate_button" ng-class="{active:paginadorEmpleado.currentPage==page}"
+                                ng-repeat="page in paginadorEmpleado.pages"
+                                ng-if="abs(paginadorEmpleado.currentPage-page)<4">
+                                <a e-disabled="paginadorEmpleado.currentPage==page" href="javascript:void(0)"
+                                    ng-click="paginadorEmpleado.getPage(page)">{{page}}</a>
+                            </li>
+                            <li class="paginate_button">
+                                <a href="javascript:void(0)"
+                                    e-disabled="paginadorEmpleado.currentPage==paginadorEmpleado.pages.length"
+                                    ng-click="paginadorEmpleado.getNextPage()">>></a>
+                                </lidiv>
+                            <li class="paginate_button">
+                                <a href="javascript:void(0)" ng-click="paginadorEmpleado.getLastPage()">Ultimo</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" ng-if="listaPaginadaEmpleados.length>=1">
+                <button type="button" class="btn btn-danger float-right" data-dismiss="modal"
+                    ng-click="cerrarModalEmpleado()">
+                    <i class="ace-icon fa fa-times"></i>Cerrar</button>
+                <button type="submit" class="btn btn-success float-right" form="empleadosForm">
+                    <i class="ace-icon fa fa-times"></i>Guardar Notas</button>
+            </div>
+        </div>
+    </div>
+    <div id="dialog-conceptos" class="modal" ng-include src="'/templates/gral/concepto-edicion.html'"></div>
+
+    <script type="text/ng-template" id="modalVerificacionEmpleados.html">
+
+        <div class="modal-header">
+            <h2 class="modal-title" id="modal-title-modalVerificacionEmpleados">Verificar registros</h2>
+        </div>
+        <div class="modal-body" id="modal-body-modalVerificacionEmpleados" style="margin:0 20px">
+            <div class="row">
+              <!--   <div class="col-md-4" ng-if="masDeUnRegistroEnPersona.length>=1">
+                    <h5  class="text-info">Mas de 1 reigstro de persona</h5>
+                    <ul>
+                        <li ng-repeat="item in masDeUnRegistroEnPersona track by $index">
+                            <label>
+                                <input type="checkbox" class="ace" ng-model="selectTodos"
+                                    ng-change="selecionarEmpleados(null,true,selectTodos)" />
+                                <span class="lbl"></span>
+                            </label> {{item.registroEmpleado.nombre_completo}}</li>
+                    </ul>
+                </div> -->
+                <div class="col-md-4">
+                    <h4  class="text-info">Registros Nuevos de Empleados</h4>
+                    <p class="text-info"> Seleccione los empleados nuevos que desea ingresar a la lista de empleados de la capacitación. </p>
+                    <ul style="list-style: none;">
+                        <li ng-repeat="item in  detallesCapacitacionImportacion |filter:{registrosNuevos:true} track by $index">  <label>
+                            <input type="checkbox" class="ace" ng-model="item.seleccionado"/>
+                            <span class="lbl"></span>
+                        </label>{{item.nombre_empleado}}
+                        </li>
+                    </ul>
+                </div>
+                <div   class="col-md-4">
+                    <h4  class="text-info">No existen en RRHH</h4>
+                    <p class="text-warning">Si continua los siguientes empleados no se agregaran a la lista de empleados de la capactiación.</p>
+                    <ul style="list-style: none;">
+                        <li ng-repeat="item in detallesCapacitacionImportacion |filter:{sinRegistroRRHH:true} track by $index" class="text-danger" style="text-decoration:line-through"> 
+                         {{item.nombre_empleado}}</li>
+                    </ul>
+                    
+                </div>
+                <div>
+                    <h4  class="text-info">Inactivos en RRHH</h4>
+                    <p class="text-info"> Seleccione los empleados nuevos que desea ingresar a la lista de empleados de la capacitación. </p>
+                    <ul style="list-style: none;">
+                        <li ng-repeat="item in detallesCapacitacionImportacion |filter:{inactivosRRHH:true} track by $index">  <label>
+                            <input type="checkbox" class="ace" ng-model="item.seleccionado"/>
+                            <span class="lbl"></span>
+                        </label>{{item.nombre_empleado}}
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" type="button" ng-click="$close(guardarImportacionEmpleadosNotas())">OK</button>
+            <button class="btn btn-warning" type="button" ng-click="$dismiss('cancel')">Cancel</button>
+        </div>
+    </script>
+
+    <script type="text/ng-template" id="modalReportesCapacitacion.html">
+
+        <div class="modal-header">
+            <h2 class="modal-title" id="modal-title-reportes">Reportes</h2>
+        </div>
+        <div class="modal-body" id="modal-body-reportes" style="margin:0 20px">
+            <div class="row">
+                <div class="form-group col-md-4">
+                    <label for="desde-repo">Desde</label>
+                    <input type="date" name="desde-repo" id="desde-repo" class="form-control" placeholder="Desde"
+                        ng-model="filtroReporte.desde" aria-describedby="fecha inicio">
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="hasta-repo">Hasta</label>
+                    <input type="date" name="hasta-repo" id="hasta-repo" class="form-control" placeholder="Hasta"
+                    ng-model="filtroReporte.hasta" aria-describedby="fecha fin">
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="curso-repo">Empleado</label>
+                    <input  class="form-control"
+                        ng-keypress="interceptarTecla($event,'id_servicio',true)" autocomplete="off" required
+                        type="text" ng-model="filtroReporte.empleado"
+                        placeholder="Busqueda de personal..."
+                        uib-typeahead="personal as personal.persona.nombre_completo for personal in buscarPersonal($viewValue)"
+                        typeahead-wait-ms="2000" typeahead-template-url="templates/autocompletar.html"
+                        typeahead-show-hint="false" typeahead-min-length="1"
+                        typeahead-on-select="establecerPersonalReporte($item, $model, $label, $event)">
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="curso-repo">curso</label>
+                        <select id="curso-repo" name="curso-repo"  class="form-control" ng-model="filtroReporte.curso" ng-options="obj as obj.nombre for obj in tipoClaseCalificacion.clases"></select>
+                </div><!-- 
+                <div class="form-group col-md-4">
+                    <label for="tema-repo">Tema</label>
+                        <select id="tema-repo" 
+                        name="tema-repo" ng-model="filtroReporte.tema"  class="form-control" ng-options="obj as obj.titulo for obj in listaCertificados"></select>
+                </div> -->
+                <div class="form-group col-md-4">
+                    <label for="cargo">Cargo</label>
+                    <label class="pull-right">
+                        <input name="form-field-checkbox" uib-tooltip="Permite ver activos e inactivos "
+                            type="checkbox" class="ace" ng-model="cargo_activo">
+                        <span class="lbl text-info" ng-if="!cargo_activo">Activos</span>
+                        <span class="lbl text-info" ng-if="cargo_activo">Inactivos</span>
+                    </label>
+                    <div class="input-group">
+                        <ui-select ng-model="filtroReporte.cargo" theme="select2" style="width: 160px;"
+                            title="Seleccionar cargo" >
+                            <ui-select-match placeholder="seleccionar cargo..." allow-clear="true"><span
+                                    style="color:black">{{$select.selected.nombre}}</span>
+                            </ui-select-match>
+                            <ui-select-choices
+                                repeat="cargo in listaCargos.clases | filter:{nombre:$select.search,habilitado:!cargo_activo} | orderBy:'nombre'">
+
+                                <span>
+                                    {{cargo.nombre}}
+                                </span>
+                            </ui-select-choices>
+                        </ui-select>
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="campo-repo">Campo</label>
+                    <label class="pull-right">
+                        <input name="form-field-checkbox" uib-tooltip="Permite ver activos e inactivos "
+                            type="checkbox" class="ace" ng-model="campo_activo">
+                        <span class="lbl text-info" ng-if="!campo_activo">Activos</span>
+                        <span class="lbl text-info" ng-if="campo_activo">Inactivos</span>
+                    </label>
+                    <div class="input-group">
+                        <ui-select ng-model="filtroReporte.campo" theme="select2" style="width: 160px;"
+                            title="Seleccionar campo" >
+                            <ui-select-match placeholder="seleccionar campo..." allow-clear="true"><span
+                                    style="color:black">{{$select.selected.nombre}}</span>
+                            </ui-select-match>
+                            <ui-select-choices
+                                repeat="campo in centrosDeCostos | filter:{nombre:$select.search,habilitado:!campo_activo} | orderBy:'nombre'">
+
+                                <span>
+                                    {{campo.nombre}}
+                                </span>
+                            </ui-select-choices>
+                        </ui-select>
+                        </span>
+                    </div>
+                </div>               
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" type="button"
+                ng-click="generarReportesEspesificos(filtroReporte)"> <i class="fa fa-file-pdf-o" aria-hidden="true"></i> generar Reporte</button>
+            <button class="btn btn-warning" type="button" ng-click="$dismiss('cancel')">Cancel</button>
+        </div>
+    </script>

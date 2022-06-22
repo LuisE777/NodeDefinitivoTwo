@@ -1,0 +1,9 @@
+ALTER TABLE agil_rrhh_empleado_configuracion_ropa drop meses_uso;
+ALTER TABLE agil_empresa drop usar_configuracion_iso;
+ALTER TABLE agil_pedidos drop id_tipo_pago;   
+ALTER TABLE agil_pedidos drop dias_credito;   
+ALTER TABLE agil_pedidos drop total;
+ALTER TABLE agil_pedidos drop a_cuenta;
+ALTER TABLE agil_pedidos drop saldo;
+ALTER TABLE agil_detalles_pedidos drop costo_unitario;
+ALTER TABLE agil_detalles_pedidos drop codigo_equipo;

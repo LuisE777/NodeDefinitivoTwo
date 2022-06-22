@@ -1,0 +1,1 @@
+ALTER TABLE inv_venta add id_movimiento_eliminado int(11);

@@ -1,0 +1,2 @@
+ALTER TABLE agil_rrhh_empleado_prestamo drop observacion_eliminado;
+ALTER TABLE agil_rrhh_empleado_ficha drop horas_extra;

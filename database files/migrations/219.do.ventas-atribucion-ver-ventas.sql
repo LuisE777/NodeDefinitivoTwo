@@ -1,0 +1,1 @@
+alter table sys_usuario add ver_listado_ventas tinyint default 1;

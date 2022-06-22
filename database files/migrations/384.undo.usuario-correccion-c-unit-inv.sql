@@ -1,0 +1,1 @@
+ALTER TABLE sys_usuario drop correccion_costo_unitario;

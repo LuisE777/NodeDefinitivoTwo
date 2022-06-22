@@ -1,0 +1,1 @@
+ALTER TABLE agil_empresa DROP usar_panel_cotizaciones;

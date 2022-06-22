@@ -1,0 +1,2 @@
+ALTER TABLE agil_rrhh_detalle_planilla_rc_iva drop f110_monto_declarado;
+ALTER TABLE agil_rrhh_detalle_planilla_rc_iva drop f110_munero_facturas;

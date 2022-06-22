@@ -1,0 +1,1 @@
+alter table inv_detalle_compra add caja_chica_detalle_rendicion int(11);

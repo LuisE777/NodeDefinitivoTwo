@@ -1,0 +1,13 @@
+ALTER TABLE agil_rrhh_empleado_configuracion_ropa add meses_uso int(11);    
+ALTER TABLE agil_empresa add usar_configuracion_iso tinyint default 0;
+ALTER TABLE agil_pedidos add id_tipo_pago int(11);   
+ALTER TABLE agil_pedidos add dias_credito int(11);   
+ALTER TABLE agil_pedidos add total DECIMAL(20,4);
+ALTER TABLE agil_pedidos add a_cuenta DECIMAL(20,4);
+ALTER TABLE agil_pedidos add saldo DECIMAL(20,4);
+ALTER TABLE agil_pedidos add fecha_recepcion datetime;
+ALTER TABLE agil_pedidos add forma_entrega  varchar(255);
+ALTER TABLE agil_detalles_pedidos add costo_unitario  DECIMAL(20,4);
+ALTER TABLE agil_detalles_pedidos add codigo_equipo varchar(255);
+ALTER TABLE agil_pedidos add observacion  varchar(255);
+ALTER TABLE agil_detalles_pedidos add saldo_inventario  DECIMAL(20,4);

@@ -1,0 +1,1 @@
+ALTER TABLE sys_usuario  ADD correccion_costo_unitario TINYINT(11) DEFAULT false;

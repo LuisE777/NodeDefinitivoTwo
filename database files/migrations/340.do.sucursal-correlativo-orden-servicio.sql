@@ -1,0 +1,1 @@
+ALTER TABLE agil_sucursal ADD numero_correlativo_orden_servicio INT(11);

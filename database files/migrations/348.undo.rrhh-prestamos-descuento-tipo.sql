@@ -1,0 +1,2 @@
+ALTER TABLE agil_rrhh_empleado_prestamo drop descuento_planilla;
+ALTER TABLE agil_rrhh_empleado_prestamo drop tipo_prestamo;

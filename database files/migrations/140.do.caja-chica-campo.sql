@@ -1,0 +1,1 @@
+ALTER TABLE agil_caja_chica add campo int(11);

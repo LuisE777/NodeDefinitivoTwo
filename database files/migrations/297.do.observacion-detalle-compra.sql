@@ -1,0 +1,1 @@
+alter table inv_detalle_compra add observacion varchar(255) default NULL;

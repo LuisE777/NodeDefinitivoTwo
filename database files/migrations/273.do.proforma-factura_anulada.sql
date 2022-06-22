@@ -1,0 +1,1 @@
+ALTER TABLE agil_proforma_factura_anulada ADD factura_anulada tinyint default 1;

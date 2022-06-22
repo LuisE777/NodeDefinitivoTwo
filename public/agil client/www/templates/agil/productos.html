@@ -1,0 +1,2099 @@
+<div class="row">
+	<div class="col-xs-12">
+		<h3 class="header smaller lighter blue">PRODUCTOS</h3>
+
+		<button ng-disabled="!aplicacion.puede_crear" class="btn-woBox button-glow"
+			ng-click="crearNuevoProducto()">
+			<i class="ace-icon fa fa-plus align-top bigger-125"></i>
+			Nuevo
+		</button>
+		<!-- <div class="fileUpload btn btn-primary btn-success">
+			<span class="fileUpload-button ace-icon fa fa-cloud-upload align-top bigger-125">&nbsp&nbspImportar Productos</span>
+			<input ng-disabled="!aplicacion.puede_crear" class="upload" type="file" custom-on-file-change="subirExcelProductos" />&nbsp&nbsp
+		</div>
+		<div class="fileUpload btn btn-primary btn-success">
+			<span class="fileUpload-button ace-icon fa fa-cloud-upload align-top bigger-125">&nbsp&nbspImportar Formulacion Productos</span>
+			<input ng-disabled="!aplicacion.puede_crear" class="upload" type="file" custom-on-file-change="subirExcelFormulacionProductos" />&nbsp&nbsp
+		</div>
+		<a href="/recursos/EJEMPLO-DATOS-PRODUCTOS.xlsx" class="btn btn-primary btn-danger">
+			<i class="ace-icon fa fa-cloud-download align-top bigger-125"></i>
+			Ejemplo Importacion Productos
+		</a>
+		<a href="/recursos/EJEMPLO-DATOS-FORMULACION-PRODUCTO.xlsx" class="btn btn-primary btn-danger">
+			<i class="ace-icon fa fa-cloud-download align-top bigger-125"></i>
+			Ejemplo Importacion Formulacion </a> -->
+		<button type="button" ng-disabled="!aplicacion.puede_modificar" class="btn btn-warning"
+			ng-click="descargarCatalogo()">
+			<i class="ace-icon fa fa-print bigger-125"></i>
+			Descargar Catálogo Productos</button>
+		<button type="button" ng-disabled="!aplicacion.puede_modificar" class="btn-xlsx"
+			ng-click="abrirModalReporteProductosKardex()">
+			<i class="ace-icon fa fa-print bigger-125"></i>
+			Reporte Productos Kardex</button>
+		<div class="clearfix">
+			<div class="pull-right tableTools-container"></div>
+		</div>
+		<fieldset>
+			<legend>Filtro Productos</legend>
+
+			<div class="row">
+				<div class="form-group col-sm-6 col-md-3 col-lg-3"> 
+					<label>Grupos: &nbsp;</label>
+					<div class="input-group" style="display: block;">
+						<ui-select ng-class="{'button-glow' : !filtro.grupo}" class="col-sm-10" required
+							ng-change="obtenerProductos(filtro)" id="selectGruposProductos" name="selectGruposProductos"
+							ng-model="filtro.grupo" theme="select2" title="Todos" append-to-body="true"
+							style="min-width: 250px; padding-left: 0px; padding-right: 0px;">
+							<ui-select-match placeholder="Todos"><span
+									style="color:black">{{$select.selected.nombre}}</span>
+							</ui-select-match>
+							<ui-select-choices
+								repeat="grupo.id as grupo in gruposProducto.clases  | filter: $select.search">
+								<span> {{grupo.nombre}} </span>
+								<hr style="margin-top: 0px;margin-bottom: 0px;border: 0;border-top: 1px solid #eee;">
+							</ui-select-choices>
+						</ui-select>
+						<span class="input-group-btn">
+							<button type="button" ng-show="filtro.grupo" class="btn btn-purple btn-sm"
+								data-rel="tooltip" tooltip-placement="top" uib-tooltip="Quitar Área seleccionada"
+								ng-click="filtro.grupo=undefined;obtenerProductos(filtro)" style="font-size:12px;">
+								<span class="ace-icon fa fa-trash icon-on-right bigger-110"></span>
+							</button>
+						</span>
+					</div>
+					<!-- <select class="form-control" style="width:150px;" ng-change="obtenerProductos(filtro)" required
+						id="selectGruposProductos" name="selectGruposProductos" ng-model="filtro.grupo"
+						ng-options="grupo.id as grupo.nombre for grupo in gruposProducto.clases track by grupo.id"
+						data-placeholder="Click para escoger">
+						<option value="">Todos</option>
+					</select> -->
+				</div>
+				<div class="form-group col-sm-6 col-md-3 col-lg-3"> 
+					<label>Sub Grupos: &nbsp;</label>
+					<div class="input-group" style="display: block;">
+						<ui-select ng-class="{'button-glow' : !filtro.subGrupo && filtro.grupo}" class="col-sm-10"
+							required ng-change="obtenerProductos(filtro)" id="selectGruposProductos"
+							name="selectGruposProductos" ng-model="filtro.subGrupo" theme="select2" title="Todos"
+							append-to-body="true" style="min-width: 250px; padding-left: 0px; padding-right: 0px;">
+							<ui-select-match placeholder="Todos"><span
+									style="color:black">{{$select.selected.nombre}}</span>
+							</ui-select-match>
+							<ui-select-choices
+								repeat="subgrupo.id as subgrupo in seleccionarGrupos(subgruposProducto,filtro.grupo) | filter: $select.search" >
+								<span > {{subgrupo.nombre}} </span>
+								<hr style="margin-top: 0px;margin-bottom: 0px;border: 0;border-top: 1px solid #eee;">
+							</ui-select-choices>
+						</ui-select>
+						<span class="input-group-btn">
+							<button type="button" ng-show="filtro.subGrupo" class="btn btn-purple btn-sm"
+								data-rel="tooltip" tooltip-placement="top" uib-tooltip="Quitar Área seleccionada"
+								ng-click="filtro.subGrupo=undefined;obtenerProductos(filtro)" style="font-size:12px;">
+								<span class="ace-icon fa fa-trash icon-on-right bigger-110"></span>
+							</button>
+						</span>
+					</div>
+
+
+
+					<!-- <select class="form-control" style="width:150px;" ng-change="obtenerProductos(filtro)" required
+						id="selectGruposProductos" name="selectGruposProductos" ng-model="filtro.subGrupo"
+						ng-options="subgrupo.id as subgrupo.nombre for subgrupo in subgruposProducto track by subgrupo.id"
+						data-placeholder="Click para escoger">
+						<option value="">Todos</option>
+					</select> -->
+				</div>
+				<div class="form-group col-sm-6 col-md-3 col-lg-3"> 
+					<label>Tipo de Producto: &nbsp;</label>
+					<select class="form-control" 
+						ng-change="paginator.getSearch(tipoProducto.nombre,paginator.filter,$event)"
+						name="tipo_producto" id="tipo_producto" ng-model="tipoProducto"
+						ng-options="tipoProducto as tipoProducto.nombre for tipoProducto in tipoProductos track by tipoProducto.id">
+						<option value="" selected>Todos</option>
+					</select>
+				</div>
+				<div class="form-group col-sm-6 col-md-3 col-lg-3"> 
+					<label>Relacion: &nbsp;</label>
+				<!-- 	<select multiple name="relaciones_producto" id="relaciones_producto" ng-model="producto.padres"
+					ng-options="relacion as relacion.nombre for relacion in productosPadre track by relacion.id">
+					<option value="">Ninguno</option> -->
+				</select>
+				</div>
+			</div>
+
+		</fieldset>
+		<div class="space-4"></div>
+		<div class="table-header">
+			Lista de Productos
+			<div class="inline pos-rel pull-right">
+				<!--   <a data-toggle="dropdown" href="javascript:void(0)" class="dropdown-toggle button-columna" aria-expanded="false">
+					<i class="glyphicon  glyphicon-list-alt"></i>
+				</a> -->
+				<div class="col-sm-10" ng-include src="'/templates/gral/fields-viewer.html'"></div>
+			</div>
+			<!-- boton importar -->
+			<div class="pos-rel pull-right">
+				<a data-toggle="dropdown" class="btn btn-primary btn-xs dropdown-toggle" id="zoomBtn">
+					<i class="ace-icon fa fa-wrench  bigger-110 icon-only "></i>
+				</a>
+				<ul
+					class="dropdown-menu-right dropdown-navbar navbar-orange dropdown-menu dropdown-caret dropdown-close importar-text">
+					<li class="dropdown-header header-importar">
+						<i class="ace-icon fa fa-wrench white"></i>
+						Importaciones
+					</li>
+					<li class="dropdown-content">
+						<ul class="dropdown-menu dropdown-navbar navbar-pink">
+							<li>
+								<div class="clearfix">
+									<span class="pull-left" style="color:rgb(85, 128, 163) !important">
+										Productos
+									</span>
+
+									<a href="/recursos/EJEMPLO-DATOS-PRODUCTOS.xlsx" class="boton-importar pull-right">
+										<i class="fa  fa-cloud-download green bigger-125"></i>
+									</a>
+
+									<div class="fileUpload boton-importar pull-right">
+										<span
+											class="fileUpload-button ace-icon fa fa-cloud-upload blue bigger-125"></span>
+										<input ng-disabled="!aplicacion.puede_crear" class="upload" type="file"
+											custom-on-file-change="subirExcelProductos" />
+									</div>
+								</div>
+							</li>
+							<li>
+								<div class="clearfix">
+									<span class="pull-left" style="color:rgb(85, 128, 163) !important">
+										Productos Heredados
+									</span>
+
+									<a href="/recursos/EJEMPLO-DATOS-PRODUCTO-HEREDADO.xlsx"
+										class="boton-importar pull-right">
+										<i class="fa  fa-cloud-download green bigger-125"></i>
+									</a>
+
+									<div class="fileUpload boton-importar pull-right">
+										<span
+											class="fileUpload-button ace-icon fa fa-cloud-upload blue bigger-125"></span>
+										<input ng-disabled="!aplicacion.puede_crear" class="upload" type="file"
+											custom-on-file-change="subirExcelProductosHeredados" />
+									</div>
+								</div>
+							</li>
+							<li>
+								<div class="clearfix">
+									<span class="pull-left" style="color:rgb(85, 128, 163) !important">
+										Formulacion productos
+									</span>
+									<a href="/recursos/EJEMPLO-DATOS-FORMULACION-PRODUCTO.xlsx"
+										class="boton-importar pull-right">
+										<i class="fa  fa-cloud-download green bigger-125"></i>
+									</a>
+									<div class="fileUpload boton-importar pull-right">
+										<span
+											class="fileUpload-button ace-icon fa fa-cloud-upload blue bigger-125"></span>
+										<input ng-disabled="!aplicacion.puede_crear" class="upload" type="file"
+											custom-on-file-change="subirExcelFormulacionProductos" />
+									</div>
+								</div>
+							</li>
+							<li>
+								<div class="clearfix">
+									<span class="pull-left" style="color:rgb(85, 128, 163) !important">
+										Precios Productos
+									</span>
+									<a href="/recursos/EJEMPLO-DATOS-PRECIOS-PRODUCTOS.xlsx"
+										class="boton-importar pull-right">
+										<i class="fa  fa-cloud-download green bigger-125"></i>
+									</a>
+									<div class="fileUpload boton-importar pull-right">
+										<span
+											class="fileUpload-button ace-icon fa fa-cloud-upload blue bigger-125"></span>
+										<input ng-disabled="!aplicacion.puede_crear" class="upload" type="file"
+											custom-on-file-change="subirExcelProductosPrecio" />
+									</div>
+								</div>
+							</li>
+						</ul>
+					</li>
+					<li class="dropdown-footer"></li>
+				</ul>
+			</div>
+		</div>
+
+
+		<!-- div.table-responsive -->
+
+		<!-- div.dataTables_borderWrap -->
+		<div>
+			<div id="tabla-productos_wrapper" class="dataTables_wrapper form-inline no-footer">
+				<div class="row">
+
+					<!-- <div class="col-md-12" ng-include src="'/templates/gral/paginator-header-1.html'">
+					</div> -->
+					<div class="col-md-12">
+						<div class="col-sm-6">
+							<div>
+								<label>
+									Mostrar <select ng-model="paginator.itemsPerPage"
+										ng-change="paginator.getFirstPage()" name="tabla-proveedores_length"
+										aria-controls="tabla-proveedores" class="form-control input-sm">
+										<option value="0">Todos</option>
+										<option ng-selected="true" value="10">10</option>
+										<option value="25">25</option>
+										<option value="50">50</option>
+										<option value="100">100</option>
+									</select> Elementos</label>
+							</div>
+						</div>
+						<div class="col-sm-6" align="right">
+							<div class="col-sm-5">
+
+							</div>
+							<div class="col-sm-3">
+								<label style="margin-top: 5px;">Buscar:</label>
+							</div>
+							<div class="col-xs-12 col-sm-4 col-md-3 col-lg-3" style="padding: 0px 0px;">
+								<div ng-class="{ 'button-glow' :!textSearch.length>0 }">
+									<input style="margin: 0px 0px !important; width: 100%;"
+										class="form-control input-sm" type="search" ng-model="textSearch">
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div style="overflow-x:auto;">
+					<table id="tabla-productos" class="table table-striped table-bordered table-hover table-responsive">
+						<thead>
+							<tr>
+								<th class="center">
+									Nº
+								</th>
+								<th class="center"
+									ng-if="usuario.empresa.usar_panel && fieldViewer.getConfiguration().publicado_panel.show">
+									<a href="javascript:void(0)"
+										ng-click="paginator.sortColumn('publicar_panel')">¿Publicado Panel?
+										<span id="publicar_panel" class="sort fa fa-sort icon-only"></span>
+									</a>
+								</th>
+								<th class="center" ng-if="fieldViewer.getConfiguration().inventario_activado.show">
+									<a href="javascript:void(0)"
+										ng-click="paginator.sortColumn('activar_inventario')">¿Inventario Activado?
+										<span id="activar_inventario" class="sort fa fa-sort icon-only"></span>
+									</a>
+								</th>
+								<th class="center"
+									ng-if="usuario.empresa.usar_promocion_producto && fieldViewer.getConfiguration().usar_promociones.show">
+									<a href="javascript:void(0)"
+										ng-click="paginator.sortColumn('usar_promociones')">¿Usar promociones?
+										<span id="usar_promociones" class="sort fa fa-sort icon-only"></span>
+									</a>
+								</th>
+								<th class="center"
+									ng-if="usuario.empresa.usar_promocion_producto && fieldViewer.getConfiguration().usar_promociones.show">
+									<a href="javascript:void(0)">¿Usar promociones solo en dias hablitados?
+									</a>
+								</th>
+								<th class="center" ng-if="fieldViewer.getConfiguration().codigo.show">
+									<a href="javascript:void(0)" ng-click="paginator.sortColumn('codigo')">Código
+										<span class="sort fa fa-sort icon-only"></span>
+									</a>
+								</th>
+								<th class="center" ng-if="fieldViewer.getConfiguration().nombre.show">
+									<a href="javascript:void(0)" ng-click="paginator.sortColumn('nombre')">Nombre
+										<span class="sort fa fa-sort icon-only"></span>
+									</a>
+								</th>
+								<th ng-if="fieldViewer.getConfiguration().imagen.show">Imagen</th>
+								<th class="center" ng-if="fieldViewer.getConfiguration().unidad_medida.show">
+									<a href="javascript:void(0)" ng-click="paginator.sortColumn('unidad_medida')">Unidad
+										de Medida
+										<span id="unidad_medida" class="sort fa fa-sort icon-only"></span>
+									</a>
+								</th>
+								<th class="center" ng-if="fieldViewer.getConfiguration().precio_unitario.show">
+									<a href="javascript:void(0)"
+										ng-click="paginator.sortColumn('precio_unitario')">Precio Unitario
+										<span class="sort fa fa-sort icon-only"></span>
+									</a>
+								</th>
+								<th class="center" ng-if="fieldViewer.getConfiguration().inventario_minimo.show">
+									<a href="javascript:void(0)"
+										ng-click="paginator.sortColumn('inventario_minimo')">Inventario Mínimo
+										<span id="inventario_minimo" class="sort fa fa-sort icon-only"></span>
+									</a>
+								</th>
+								<th class="center" ng-if="fieldViewer.getConfiguration().descripcion_uno.show">
+									<a href="javascript:void(0)"
+										ng-click="paginator.sortColumn('descripcion')">Descripcion
+										<span id="descripcion" class="sort fa fa-sort icon-only"></span>
+									</a>
+								</th>
+								<th class="center" ng-if="fieldViewer.getConfiguration().carac_esp_uno.show">
+									caracteristica especial 1
+
+								</th>
+								<th class="center" ng-if="fieldViewer.getConfiguration().carac_esp_dos.show">
+									caracteristica especial 2
+
+								</th>
+								<th class="center" ng-if="fieldViewer.getConfiguration().grupo.show">
+									<a href="javascript:void(0)" ng-click="paginator.sortColumn('grupo')">Grupo
+										<span id="grupo" class="sort fa fa-sort icon-only"></span>
+									</a>
+								</th>
+								<th class="center" ng-if="fieldViewer.getConfiguration().subgrupo.show">
+									<a href="javascript:void(0)" ng-click="paginator.sortColumn('subgrupo')">Subgrupo
+										<span id="subgrupo" class="sort fa fa-sort icon-only"></span>
+									</a>
+								</th>
+								<th class="center"
+									ng-if="fieldViewer.getConfiguration().padre.show && usuario.empresa.usar_productos_derivados_panel">
+									Padre
+								</th>
+								<th class="center" ng-if="fieldViewer.getConfiguration().tipo_producto.show">
+									Tipo Producto
+								</th>
+								<th>Acciones</th>
+							</tr>
+						</thead>
+
+						<tbody>
+							<tr ng-repeat="producto in productos">
+								<td class="center">
+									{{($index+1)+(paginator.itemsPerPage*(paginator.currentPage-1))}}
+								</td>
+								<th class="center"
+									ng-if="usuario.empresa.usar_panel && fieldViewer.getConfiguration().publicado_panel.show">
+									<label>
+										<input ng-change="actualizarProducto(producto)" name="switch-field-1"
+											class="ace ace-switch ace-switch-4" type="checkbox"
+											ng-model="producto.publicar_panel" />
+										<span class="lbl check-descuento"></span>
+									</label>
+									</td>
+								<td ng-if="fieldViewer.getConfiguration().inventario_activado.show">
+									<label>
+										<input ng-change="actualizarProducto(producto)" name="switch-field-1"
+											class="ace ace-switch ace-switch-4" type="checkbox"
+											ng-disabled="producto.tipoProducto=='PRODUCTO FINAL'"
+											ng-model="producto.activar_inventario" />
+										<span class="lbl check-descuento"></span>
+									</label>
+								</td>
+								<td
+									ng-if="usuario.empresa.usar_promocion_producto && fieldViewer.getConfiguration().usar_promociones.show">
+									<label>
+										<input ng-change="actualizarProducto(producto)" name="switch-field-1"
+											class="ace ace-switch ace-switch-4" type="checkbox"
+											ng-model="producto.usar_promocion" />
+										<span class="lbl check-descuento"></span>
+									</label>
+								</td>
+								<td
+									ng-if="usuario.empresa.usar_promocion_producto && fieldViewer.getConfiguration().usar_promociones.show">
+									<label>
+										<input ng-change="actualizarProducto(producto)" name="switch-field-1"
+											class="ace ace-switch ace-switch-4" type="checkbox"
+											ng-model="producto.usar_promocion_en_dias_habilitados" />
+										<span class="lbl check-descuento"></span>
+									</label>
+								</td>
+								<td ng-if="fieldViewer.getConfiguration().codigo.show">
+									{{producto.codigo}}
+								</td>
+								<td ng-if="fieldViewer.getConfiguration().nombre.show">
+									{{producto.nombre}}
+								</td>
+								<td ng-if="fieldViewer.getConfiguration().imagen.show">
+									<img ng-src="{{producto.imagen}}" width="50" name="imgProducto"
+										onmouseover="this.width=300;" onmouseout="this.width=50;">
+								</td>
+								<td ng-if="fieldViewer.getConfiguration().unidad_medida.show">{{producto.unidad_medida}}
+								</td>
+								<script type="text/ng-template" id="PopoverListaPreciosProductos.html">
+									<div >                            
+											   <p ng-repeat="precio in producto.tipoPrecio track by $index">
+												   {{precio.nombre}} : {{precio.precio_unitario}}
+											   </p>
+										   </div>										  
+								   </script>
+								<td ng-if="fieldViewer.getConfiguration().precio_unitario.show">
+									<div>
+										<a class="green" href="javascript:void(0)" popover-trigger="mouseenter"
+											uib-popover-template="PopoverListaPreciosProductos.templateUrl"
+											popover-placement="left" popover-title="Precios alternativos">
+											{{producto.precio_unitario | number:2}} &nbsp; <i
+												class="fa fa-exclamation-circle green"></i>
+										</a>
+									</div>
+									<!-- <div ng-if="producto.tipoPrecio.length == 0" data-rel="tooltip" tooltip-placement="top" uib-tooltip="Sin información de precios.">
+											{{producto.precio_unitario | number:2}}
+									</div> -->
+
+								</td>
+
+								<td ng-if="fieldViewer.getConfiguration().inventario_minimo.show">
+									{{producto.inventario_minimo}}
+								</td>
+								<td ng-if="fieldViewer.getConfiguration().descripcion_uno.show">
+									{{producto.descripcion}}
+								</td>
+								<td ng-if="fieldViewer.getConfiguration().carac_esp_uno.show">
+									{{producto.caracteristica_especial1}}
+								</td>
+								<td ng-if="fieldViewer.getConfiguration().carac_esp_dos.show">
+									{{producto.caracteristica_especial2}}
+								</td>
+								<td ng-if="fieldViewer.getConfiguration().grupo.show">
+									{{producto.grupo}}
+								</td>
+								<td ng-if="fieldViewer.getConfiguration().subgrupo.show">
+									{{producto.subgrupo}}
+								</td>
+								<td
+									ng-if="fieldViewer.getConfiguration().padre.show && usuario.empresa.usar_productos_derivados_panel">
+									{{producto.nombre_relacion}}
+								</td>
+								<td ng-if="fieldViewer.getConfiguration().tipo_producto.show">
+									{{producto.tipoProducto}}
+								</td>
+								<td>
+									<div class="hidden-sm hidden-xs action-buttons">
+										<a class="blue" href="javascript:void(0)" e-disabled="!aplicacion.puede_ver"
+											ng-click="verProducto(producto)">
+											<i class="ace-icon fa fa-search-plus bigger-130"></i>
+										</a>
+
+										<a class="green" href="javascript:void(0)"
+											e-disabled="!aplicacion.puede_modificar"
+											ng-click="modificarProducto(producto)">
+											<i class="ace-icon fa fa-pencil bigger-130"></i>
+										</a>
+
+										<a class="orange" href="javascript:void(0)"
+											ng-click="kardexProducto(producto);">
+											<i class="ace-icon fa fa-file-text bigger-130"></i>
+										</a>
+
+										<a href="javascript:void(0)"
+											ng-if="usuario.empresa.usar_promocion_producto && usuario.empresa.usar_promocion_producto_puntos"
+											popover-placement="left"
+											uib-popover-template="dynamicPopoverPromociones.templateUrl"
+											popover-trigger="outsideClick: outsideClick" class="blue">
+											<img src="img/promo2.png" height="20" width="20" alt="">
+										</a>
+
+										<script type="text/ng-template" id="myPopoverPromociones.html">
+											<div>
+												<div class="infobox infobox-blue infobox-promociones">
+													<a href="javascript:void(0)" ng-click="abrirModalPromocionesProducto(producto)">
+														<font size="4">
+														<i class="fa fa-tags" aria-hidden="true"></i> Promociones
+														</font>
+													</a>
+												</div>
+				
+												<div class="infobox infobox-blue infobox-promociones">
+													<a href="javascript:void(0)" ng-click="abrirModalPromocionesPuntajes(producto)">
+														<font size="4">
+															<i class="fa fa-star" aria-hidden="true"></i> Puntajes
+														</font>
+													</a>
+												</div>
+											</div>
+										</script>
+
+										<a class="red" href="javascript:void(0)"
+											ng-if="usuario.empresa.usar_promocion_producto && !usuario.empresa.usar_promocion_producto_puntos"
+											e-disabled="!aplicacion.puede_modificar"
+											ng-click="abrirModalPromocionesProducto(producto)">
+											<img src="img/promo2.png" height="20" width="20" alt="">
+										</a>
+										<a class="red" href="javascript:void(0)"
+											ng-if="!usuario.empresa.usar_promocion_producto && usuario.empresa.usar_promocion_producto_puntos"
+											e-disabled="!aplicacion.puede_modificar"
+											ng-click="abrirModalPromocionesPuntajes(producto)">
+											<img src="img/promo2.png" height="20" width="20" alt="">
+										</a>
+									</div>
+
+									<div class="hidden-md hidden-lg">
+										<div class="inline pos-rel">
+											<button class="btn btn-minier btn-yellow dropdown-toggle"
+												data-toggle="dropdown" data-position="auto">
+												<i class="ace-icon fa fa-caret-down icon-only bigger-120"></i>
+											</button>
+
+											<ul
+												class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-menu-right dropdown-caret dropdown-close">
+												<li>
+													<a href="javascript:void(0)" e-disabled="!aplicacion.puede_ver"
+														ng-click="verProducto(producto)" class="tooltip-info"
+														data-rel="tooltip" title="View">
+														<span class="blue">
+															<i class="ace-icon fa fa-search-plus bigger-120"></i>
+														</span>
+													</a>
+												</li>
+
+												<li>
+													<a href="javascript:void(0)"
+														e-disabled="!aplicacion.puede_modificar"
+														ng-click="modificarProducto(producto)" class="tooltip-success"
+														data-rel="tooltip" title="Edit">
+														<span class="green">
+															<i class="ace-icon fa fa-pencil-square-o bigger-120"></i>
+														</span>
+													</a>
+												</li>
+
+												<!-- <li>
+													<a href="javascript:void(0)" e-disabled="!aplicacion.puede_eliminar" ng-click="mostrarConfirmacionEliminacion(producto)"
+													 class="tooltip-error" data-rel="tooltip" title="Delete">
+														<span class="red">
+															<i class="ace-icon fa fa-trash-o bigger-120"></i>
+														</span>
+													</a>
+												</li> -->
+												<li>
+													<a href="javascript:void(0)" ng-click="kardexProducto(producto)"
+														class="tooltip-info" data-rel="tooltip" title="View">
+														<span class="orange">
+															<i class="ace-icon fa fa-file-text bigger-120"></i>
+														</span>
+													</a>
+												</li>
+											</ul>
+										</div>
+									</div>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+
+				<div class="row" ng-include src="'/templates/gral/paginator.html'">
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="modal-wizard-producto-edicion" class="modal wizard-posicion">
+	<div class="modal-content">
+		<form ng-submit="saveForm(formularioProducto.$valid,producto, false)" id="formularioProducto"
+			name="formularioProducto">
+			<div id="modal-wizard-container-producto-edicion">
+				<div class="modal-header">
+					<ul class="steps">
+						<li id="cabeza-datos-producto" data-step="1" class="active">
+							<span class="step">1</span>
+							<span class="title">Datos del Producto</span>
+						</li>
+						<li id="cabeza-datos-precio" data-step="2" ng-click="stepWizard(2)"
+							ng-if="usuario.empresa.usar_tipo_precio || usuario.empresa.usar_precio_por_sucursal">
+							<span class="step">2</span>
+							<span class="title">Precios</span>
+						</li>
+						<li id="cabeza-datos-adicionales" data-step="3" ng-click="stepWizard(3)">
+							<span class="step">3</span>
+							<span class="title">Datos Adicionales</span>
+						</li>
+						<li id="cabeza-tipo-producto" data-step="4" ng-click="stepWizard(4)">
+							<span class="step">4</span>
+							<span class="title">Tipo de Producto</span>
+						</li>
+						<li data-step="5" ng-click="stepWizard(5)">
+							<span class="step">5</span>
+							<span class="title">ERP</span>
+						</li>
+						<li data-step="6">
+							<span class="step">6</span>
+							<span class="title">Finalizar</span>
+						</li>
+					</ul>
+				</div>
+
+				<div class="modal-body step-content">
+					<div id="cuerpo-datos-producto" class="step-pane active" data-step="1">
+						<div class="row">
+							<div class="form-group col-sm-4">
+								<label for="codigo">Código
+									<span ng-if="!producto.id">(Último Generado:
+										<b>{{ultimo_codigo}}</b>)</span>
+								</label>
+								<input required type="text" ng-model="producto.codigo" placeholder="Código" autocomplete="off"
+								typeahead-wait-ms="1000" typeahead-min-length="3" ng-model-options='{ debounce: 1000 }'
+								ng-change="validarCodigo(producto.codigo)" class="form-control" />
+								
+								<div ng-if="cargadorCodigo" class="blue">
+									<i class="fa fa-spinner fa-spin fa-2x fa-fw margin-bottom"></i>
+									<span class="">Validando codigo...</span>
+								</div> 
+								<div ng-if="respuesta">
+									<p ng-if="respuesta.length == 0" ng-class="{'text-red':data.type,'text-green':!data.type}" class="ng-binding text-green">{{mensajeCodigo}}</p>
+									<p ng-if="respuesta.length != 0" ng-class="{'text-red':data.type,'text-green':data.type}" class="ng-binding text-red">{{mensajeCodigo}}</p>
+								</div>
+								
+ 							</div>
+							<div class="form-group col-sm-4">
+								<label for="nombre">Nombre</label>
+								<input required type="text" ng-model="producto.nombre" placeholder="Nombre" class="form-control" ng-change="busquedaCAEF(producto.nombre)"/>
+							</div>
+							<div class="form-group col-sm-4" ng-if="usuario.empresa.usar_facturacion_electronica" >
+								<label for="nombre">Nro de IMEI</label>
+								<input type="text" ng-model="producto.numero_imei" class="form-control" /> 
+							</div>
+							<div class="form-group col-sm-4">
+								<label for="unidad_medida">Unidad de Medida</label> 
+								<div class="input-group"  style="display: block;">
+									<ui-select class="col-sm-9"  
+										ng-click="listaUnidadMedidaSin(producto)" id="selectGruposProductos" name="selectGruposProductos"
+										ng-model="producto.unidad_medida" theme="select2" title="Todos" append-to-body="true"
+										style="min-width: 100px; width: 100%; padding-left: 0px; padding-right: 0px;">
+										<ui-select-match placeholder="Todos"><span
+												style="color:black">{{$select.selected.descripcion}}</span>
+										</ui-select-match>
+										<ui-select-choices
+											repeat="unidMed as unidMed in unidadesMedida  | filter: $select.search">
+											<span> {{unidMed.descripcion}} </span>
+											<hr style="margin-top: 0px;margin-bottom: 0px;border: 0;border-top: 1px solid rgb(195, 193, 193);">
+										</ui-select-choices>
+									</ui-select>
+								</div>
+							</div>
+							<div class="form-group col-sm-4" ng-if="usuario.empresa.usar_facturacion_electronica">
+								<label for="nombre">Actividad Económica CAEF</label>
+								<div class="input-group" style="display: block;">
+									<ui-select  class="col-sm-10"
+									id="selectGruposProductos" name="selectGruposProductos" ng-click="listaActividadesSin()"
+										on-select="listaProductoServicioSin($item); producto.productoServicio=undefined"
+										ng-model="producto.activEconomica" theme="select2" title="Todos" append-to-body="true"
+										style="min-width: 100px; width: 100%; padding-left: 0px; padding-right: 0px;">
+										<ui-select-match placeholder="Todos"><span
+												style="color:black">{{$select.selected.codigoCaeb}} - {{$select.selected.descripcion}}</span>
+										</ui-select-match>
+										<ui-select-choices
+											repeat="actividadEco as actividadEco in actividadesSin  | filter: $select.search">
+											<span> {{actividadEco.codigoCaeb}} - {{actividadEco.descripcion}} </span>
+											<hr style="margin-top: 0px;margin-bottom: 0px;border: 0;border-top: 1px solid rgb(195, 193, 193);">
+										</ui-select-choices>
+									</ui-select>
+								</div>
+							</div>
+							<div class="form-group col-sm-4" ng-if="usuario.empresa.usar_facturacion_electronica">
+								<label for="nombre">Producto SIN</label>
+								<div class="input-group" style="display: block;">
+									<ui-select class="col-sm-10"
+										id="selectGruposProductos" name="selectGruposProductos"
+										ng-model="producto.productoServicio" theme="select2" title="Todos" append-to-body="true"
+										style="min-width: 100px; width: 100%; padding-left: 0px; padding-right: 0px;">
+										<ui-select-match placeholder="Todos"><span
+												style="color:black">{{$select.selected.codigoProducto}} - {{$select.selected.descripcionProducto}}</span>
+										</ui-select-match>
+										<ui-select-choices
+											repeat="productServicio as productServicio in productoServicioSin | filter: $select.search">
+											<span>{{productServicio.codigoProducto}} - {{productServicio.descripcionProducto}} </span>
+											<hr style="margin-top: 0px;margin-bottom: 0px;border: 0;border-top: 1px solid rgb(195, 193, 193);">
+										</ui-select-choices>
+									</ui-select>
+								</div>
+							</div>
+						</div>
+						<div class="space-4"></div>
+						<div class="row form-group">
+							<div class="col-sm-3"></div>
+							<div class="col-sm-5"></div>
+							<div class="col-sm-2">Rango -</div>
+							<div class="col-sm-2">Rango +</div>
+						</div>
+						<div class="row form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="precio_unitario">Precio
+								Estándar</label>
+
+							<div class="col-sm-5">
+								<input required type="number" step="0.001" ng-model="producto.precio_unitario"
+									placeholder="Precio de Venta" class="form-control" />
+							</div>
+							<div class="col-sm-2">
+								<input type="number" step="0.01" ng-model="producto.rango_negativo"
+									placeholder="Rango -" class="form-control" />
+							</div>
+							<div class="col-sm-2">
+								<input type="number" step="0.01" ng-model="producto.rango_positivo"
+									placeholder="Rango +" class="form-control" />
+							</div>
+						</div>
+
+						<div class="row form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="descripcion">Descripción</label>
+
+							<div class="col-sm-9">
+								<input type="text" id="descripcion" ng-model="producto.descripcion"
+									placeholder="Descripción" class="form-control" />
+							</div>
+						</div>
+						<div class="row form-group">
+							<label class="control-label col-xs-12 col-sm-3 no-padding-right">Imagen</label>
+							<div class="col-xs-12 col-xs-12 col-sm-9">
+								<img ng-if="producto.id" ng-src="{{producto.imagen}}" width="100">
+								<input type="file" id="imagen-producto"
+									onchange="uploadImage(this,'imagen-producto-oculto')" />
+								<input id="imagen-producto-oculto" ng-model="producto.imagen" name="imagen"
+									type="hidden" ng-update-hidden>
+							</div>
+						</div>
+					</div>
+					<div id="cuerpo-datos-precio" class="step-pane" data-step="2"
+						ng-if="usuario.empresa.usar_tipo_precio || usuario.empresa.usar_precio_por_sucursal">
+						<div class="row form-group" ng-if="usuario.empresa.usar_tipo_precio">
+							<label class="col-sm-3 control-label no-padding-right" for="precio_unitario"><b>Tipos de
+									Precios</b></label>
+						</div>
+						<div class="row form-group" ng-if="usuario.empresa.usar_tipo_precio">
+							<div class="col-sm-2">
+								<p>Sucursal</p>
+								<div class="input-group">
+									<select ng-model="tipoDePrecio.sucursal" id="precioSucT" name="precioSucT"
+										ng-options="sucursal as sucursal.nombre for sucursal in sucursales track by sucursal.id">
+									</select>
+									<p class="red" ng-show="formularioProducto.precioSuc.$invalid">Este campo es
+										requerido.</p>
+								</div>
+							</div>
+							<div class="col-sm-3">
+								<p>Tipo Precio</p>
+								<div class="input-group">
+									<span class="input-group-addon glyphicon glyphicon-pencil point-edit green"
+										aria-hidden="true"
+										ng-click="abrirDialogConceptoEdicion(tiposPrecios,'tiposPagosC')"></span>
+									<select name="tipoprecio" id="tipoprecio" class="form-control"
+										ng-options="tipoPrecio as tipoPrecio.nombre for tipoPrecio in tiposPrecios.clases | filter:{habilitado:true} track by tipoPrecio.id"
+										ng-model="tipoDePrecio.tipoPrecio"></select>
+									<p class="red" ng-show="formularioProducto.tipoprecio.$invalid">Este campo es
+										requerido.</p>
+								</div>
+							</div>
+
+							<div class="col-sm-2">
+								<p>Precio Unitario</p>
+								<input name="PrecioProductoTipo" id="PrecioProductoTipo" type="number" step="0.001"
+									ng-model="tipoDePrecio.precio_unitario" placeholder="Precio de Venta"
+									class="form-control" />
+								<p class="red" ng-show="formularioProducto.PrecioProductoTipo.$invalid">Este campo es
+									requerido.</p>
+							</div>
+							<div class="col-sm-2">
+								<p>Rango+</p>
+								<input type="number" name="rangoPositivoTipo" id="rangoPositivoTipo" step="0.01"
+									ng-model="tipoDePrecio.rango_positivo" placeholder="Rango +" class="form-control" />
+
+							</div>
+							<div class="col-sm-2">
+								<p>Rango-</p>
+								<input type="number" step="0.01" name="rangoNegativoTipo" id="rangoNegativoTipo"
+									ng-model="tipoDePrecio.rango_negativo" placeholder="Rango -" class="form-control" />
+
+							</div>
+							<div class="col-sm-1">
+								<p>Accion</p>
+								<button class="btn btn-success btn-sm" type="button"
+									ng-click="agregarTipoPrecio(tipoDePrecio,formularioProducto)"><i
+										class="fa fa-plus"></i></button>
+
+							</div>
+						</div>
+						<div ng-if="usuario.empresa.usar_tipo_precio">
+							<table class="table table-striped table-bordered table-hover table-responsive">
+								<thead>
+									<tr>
+										<th>
+											<b>Nro</b>
+										</th>
+										<th>
+											<b>sucursal</b>
+										</th>
+										<th>
+											<b>Tipo</b>
+										</th>
+										<th>
+											<b>Precio</b>
+										</th>
+										<th>
+											<b>Rango+</b>
+										</th>
+										<th>
+											<b>Rango-</b>
+										</th>
+										<th>
+											<b>Acciones</b>
+										</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr ng-repeat="tipoPrecio in producto.tiposPrecio | filter:{eliminado:false}">
+										<td>
+											{{$index+1}}
+										</td>
+										<td>
+											{{tipoPrecio.sucursal.nombre}}
+										</td>
+										<td>
+											{{tipoPrecio.tipoPrecio.nombre}}
+										</td>
+										<td>
+											{{tipoPrecio.precio_unitario}}
+										</td>
+										<td>
+											{{tipoPrecio.rango_positivo}}
+										</td>
+										<td>
+											{{tipoPrecio.rango_negativo}}
+										</td>
+										<td>
+											<a class="green" href="javascript:void(0)"
+												ng-click="editarTipoPrecioProducto(tipoPrecio)">
+												<i class="ace-icon fa fa-pencil-square-o bigger-130"></i>
+											</a>
+											<a class="red" href="javascript:void(0)"
+												ng-click="eliminarTipoPrecioProducto(tipoPrecio,$index)">
+												<i class="ace-icon fa fa-trash-o bigger-130"></i>
+											</a>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+
+						</div>
+						<div class="row form-group" ng-if="usuario.empresa.usar_precio_por_sucursal">
+							<label class="col-sm-3 control-label no-padding-right"><b>Precio por
+									Sucursal</b></label>
+						</div>
+						<div class="row form-group" ng-if="usuario.empresa.usar_precio_por_sucursal">
+							<div class="col-sm-5">
+								<p>Sucursal</p>
+								<div class="input-group">
+									<select ng-model="precioSucursal.sucursal" id="precioSuc" name="precioSuc"
+										ng-options="sucursal as sucursal.nombre for sucursal in sucursales track by sucursal.id">
+									</select>
+									<p class="red" ng-show="formularioProducto.precioSuc.$invalid">Este campo es
+										requerido.</p>
+								</div>
+							</div>
+
+							<div class="col-sm-2">
+								<p>Precio Unitario</p>
+								<input name="PrecioUniSucursal" id="PrecioUniSucursal" type="number" step="0.001"
+									ng-model="precioSucursal.precio_unitario" placeholder="Precio de Venta"
+									class="form-control" />
+								<p class="red" ng-show="formularioProducto.PrecioUniSucursal.$invalid">Este campo es
+									requerido.</p>
+							</div>
+							<div class="col-sm-2">
+								<p>Rango+</p>
+								<input type="number" name="rangoPositivoTipo" id="rangoPositivoTipo2" step="0.01"
+									ng-model="precioSucursal.rango_positivo" placeholder="Rango +"
+									class="form-control" />
+
+							</div>
+							<div class="col-sm-2">
+								<p>Rango-</p>
+								<input type="number" step="0.01" name="rangoNegativoTipo" id="rangoNegativoTipo2"
+									ng-model="precioSucursal.rango_negativo" placeholder="Rango -"
+									class="form-control" />
+
+							</div>
+							<div class="col-sm-1">
+								<p>Accion</p>
+								<button class="btn btn-success btn-sm" type="button"
+									ng-click="agregarPrecioPorSucursal(precioSucursal,formularioProducto)"><i
+										class="fa fa-plus"></i></button>
+
+							</div>
+						</div>
+						<div ng-if="usuario.empresa.usar_precio_por_sucursal">
+							<table class="table table-striped table-bordered table-hover table-responsive">
+								<thead>
+									<tr>
+										<th>
+											<b>Nro</b>
+										</th>
+										<th>
+											<b>Sucursal</b>
+										</th>
+										<th>
+											<b>Precio</b>
+										</th>
+										<th>
+											<b>Rango+</b>
+										</th>
+										<th>
+											<b>Rango-</b>
+										</th>
+										<th>
+											<b>Acciones</b>
+										</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr
+										ng-repeat="precioPorSucursal in producto.preciosPorSucursales | filter:{eliminado:false}">
+										<td>
+											{{$index+1}}
+										</td>
+										<td>
+											{{precioPorSucursal.sucursal.nombre}}
+										</td>
+										<td>
+											{{precioPorSucursal.precio_unitario}}
+										</td>
+										<td>
+											{{precioPorSucursal.rango_positivo}}
+										</td>
+										<td>
+											{{precioPorSucursal.rango_negativo}}
+										</td>
+										<td>
+											<a class="green" href="javascript:void(0)"
+												ng-click="editarPrecioPorSucursal(precioPorSucursal)">
+												<i class="ace-icon fa fa-pencil-square-o bigger-130"></i>
+											</a>
+											<a class="red" href="javascript:void(0)"
+												ng-click="eliminarPrecioPorSucursal(precioPorSucursal,$index)">
+												<i class="ace-icon fa fa-trash-o bigger-130"></i>
+											</a>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+
+						</div>
+					</div>
+					<div id="cuerpo-datos-adicionales" class="step-pane" data-step="3">
+						<div class="row form-group">
+							<div class=" form-" ng-if="usuario.empresa.usar_panel">
+								<label class="control-label col-xs-3 no-padding-right" for="panel">¿Publicar
+									Panel?</label>
+								<div class="col-xs-3">
+									<label>
+										<input id="panel" name="switch-field-1" class="ace ace-switch ace-switch-4"
+											type="checkbox" ng-model="producto.publicar_panel" />
+										<span class="lbl check-descuento"></span>
+									</label>
+								</div>
+							</div>
+
+						</div>
+						<div class="row form-group">
+							<div class=" form-">
+								<label class="control-label col-xs-3 no-padding-right" for="herencia">Usar Herencia?</label>
+								<div class="col-xs-3">
+									<label>
+										<input id="herencia" name="switch-field-1" class="ace ace-switch ace-switch-4"
+											type="checkbox" ng-model="producto.usar_herencia" />
+										<span class="lbl check-descuento"></span>
+									</label>
+								</div>
+							</div>
+
+						</div>
+						<div class="row form-group" ng-if="usuario.empresa.restar_solo_despacho">
+							<label class="control-label col-xs-3 no-padding-right">¿Descuento solo en despacho?</label>
+							<div class="col-xs-3">
+								<label>
+									<input name="switch-field-1" class="ace ace-switch ace-switch-4" type="checkbox"
+										ng-model="producto.restar_solo_despacho" />
+									<span class="lbl check-descuento"></span>
+								</label>
+							</div>
+						</div>
+
+						<div class="row form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="inventario_minimo">Inventario
+								Mínimo</label>
+
+							<div class="col-sm-9">
+								<input type="number" id="inventario_minimo" ng-model="producto.inventario_minimo"
+									placeholder="Inventario Mínimo" class="form-control" />
+							</div>
+						</div>
+
+						<div class="row form-group">
+							<label class="col-sm-3 control-label no-padding-right">Grupo</label>
+							<div class="col-sm-6" style="padding-right: 0px;">
+								<ui-select required name="grupo_producto" id="grupo_producto" ng-model="producto.grupo"
+									theme="select2" style="min-width: 100% !important;" title="Elegir...">
+									<ui-select-match placeholder="Elegir..."><span
+											style="color:black">{{$select.selected.nombre}}</span>
+									</ui-select-match>
+									<ui-select-choices
+										repeat="grupoProducto as grupoProducto in gruposProducto.clases | filter:{nombre:$select.search, habilitado: true } track by grupoProducto.id">
+										<span>
+											{{grupoProducto.nombre}}
+										</span>
+									</ui-select-choices>
+								</ui-select>
+							</div>
+							<div class="col-sm-3" style="padding-left: 0px;">
+								<span class="input-group-btn">
+									<button type="button" ng-show="producto.grupo" class="btn btn-purple btn-sm"
+										data-rel="tooltip" tooltip-placement="top" uib-tooltip="Quitar  selección"
+										ng-click="producto.grupo = undefined;">
+										<span class="ace-icon fa fa-trash icon-on-right bigger-110"></span>
+									</button>
+								</span>
+								<span style="cursor: pointer;" class="input-group-addon  glyphicon glyphicon-pencil"
+									ng-click="abrirDialogConceptoEdicion(gruposProducto)"></span>
+							</div>
+							<label ng-if="usuario.empresa.usar_productos_derivados_panel"
+								class="col-sm-3 control-label no-padding-right">Relacion</label>
+							<div ng-if="usuario.empresa.usar_productos_derivados_panel" class="col-sm-3">
+								<!-- <select multiple name="relaciones_producto" id="relaciones_producto" ng-model="producto.padres"
+									ng-options="relacion as relacion.nombre for relacion in productosPadre">
+									<option value="">Ninguno</option>
+								</select> -->
+								<ui-select multiple name="subgrupo_producto" id="subgrupo_producto"
+									ng-model="producto.padres" theme="select2" style="min-width: 100% !important;"
+									title="Elegir...">
+									<ui-select-match placeholder="Elegir..."><span
+											style="color:black">{{$item.nombre}}</span>
+									</ui-select-match>
+									<ui-select-choices
+										repeat="productoPadre as productoPadre in productosPadre | filter:{nombre:$select.search} track by productoPadre.id">
+										<span>
+											{{productoPadre.nombre}}
+										</span>
+									</ui-select-choices>
+								</ui-select>
+							</div>
+						</div>
+						<div class="row form-group">
+							<label class="col-sm-3 control-label no-padding-right">Sub-Grupo</label>
+							<div class="col-sm-6 " style="padding-right: 0px;">
+								<ui-select required name="subgrupo_producto" id="subgrupo_producto"
+									ng-model="producto.subgrupo" theme="select2" style="min-width: 100% !important;"
+									title="Elegir...">
+									<ui-select-match placeholder="Elegir..."><span
+											style="color:black">{{$select.selected.nombre}}</span>
+									</ui-select-match>
+									<ui-select-choices
+										repeat="subgrupoProducto as subgrupoProducto in seleccionarGrupos(subgruposProducto,producto.grupo.id) | filter:{nombre:$select.search, habilitado: 1} track by subgrupoProducto.id">
+										<span>
+											{{subgrupoProducto.nombre}}
+										</span>
+									</ui-select-choices>
+								</ui-select>
+							</div>
+							<div class="col-sm-3" style="padding-left: 0px;">
+								<span class="input-group-btn align-left">
+									<button type="button" ng-show="producto.subgrupo" class="btn btn-purple btn-sm"
+										data-rel="tooltip" tooltip-placement="top" uib-tooltip="Quitar selección"
+										ng-click="producto.subgrupo = undefined;">
+										<span class="ace-icon fa fa-trash icon-on-right bigger-110"></span>
+									</button>
+								</span>
+							</div>
+						</div>
+						<div class="row form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="caresp1">Carac. Esp. 1</label>
+
+							<div class="col-sm-9">
+								<input type="text" id="caracteristica_especial1"
+									ng-model="producto.caracteristica_especial1" placeholder="Caracteristica Especial 1"
+									class="form-control" />
+							</div>
+						</div>
+						<div class="row form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="caresp2">Carac. Esp. 2</label>
+							<div class="col-sm-9">
+								<input type="text" id="caresp2" ng-model="producto.caracteristica_especial2"
+									placeholder="Caracteristica Especial 2" class="form-control" />
+							</div>
+						</div>
+						<div class="row form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="caresp2">Marca</label>
+							<div class="col-sm-9">
+								<input type="text" id="marca" ng-model="producto.marca" placeholder="Marca"
+									class="form-control" />
+							</div>
+						</div>
+						<div class="row form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="modelo">Modelo</label>
+							<div class="col-sm-3">
+								<input type="text" id="modelo" ng-model="producto.modelo" placeholder="Modelo"
+									class="form-control" />
+							</div>
+							<label class="col-sm-3 control-label no-padding-right" for="anio">Año</label>
+							<div class="col-sm-3">
+								<input type="text" id="anio" ng-model="producto.anio" placeholder="Año"
+									class="form-control" />
+							</div>
+						</div>
+						<div class="row form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="codfab">Codigo fabrica</label>
+							<div class="col-sm-3">
+								<input type="text" id="codfab" ng-model="producto.codigo_fabrica"
+									placeholder="Codigo fabrica" class="form-control" />
+							</div>
+							<label class="col-sm-3 control-label no-padding-right" for="comision">Comisión</label>
+							<div class="col-sm-3">
+								<input type="number" step="0.01" id="comision" ng-model="producto.comision"
+									placeholder="Comisión" class="form-control" />
+							</div>
+
+						</div>
+
+						<div class="row">
+							<div class="col-md-6 col-sm-12 row form-group"
+								ng-if="usuario.empresa.usar_vencimientos && usuario.empresa.usar_vencimiento_productos">
+								<label class="col-sm-12 col-md-6 control-label no-padding-right" for="alerta">Alerta de
+									Vencimiento</label>
+								<div class="col-sm-12 col-md-6">
+									<input type="number" id="alerta" ng-model="producto.alerta" placeholder="Alerta"
+										class="form-control" />
+								</div>
+							</div>
+							<div class="col-md-6 col-sm-12 row form-group"
+								ng-if="usuario.empresa.usar_indice_rotacion_producto">
+								<label class="col-sm-12 col-md-6 control-label no-padding-right">Indice
+									Rotación</label>
+								<div class="col-sm-12 col-md-6">
+									<input type="number" step="0.01" ng-model="producto.indice_rotacion"
+										placeholder="Inicide Rotacion" class="form-control" />
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-6 col-sm-12 row form-group"
+								ng-if="usuario.empresa.usar_descuentos && usuario.empresa.usar_vencimiento_productos">
+								<label class="col-sm-4 col-md-4 control-label no-padding-right"
+									for="descuento">Descuento</label>
+								<div class="col-sm-4 col-md-4">
+									<input type="number" id="descuento" ng-model="producto.descuento"
+										placeholder="Descuento" class="form-control" />
+								</div>
+								<div class="col-sm-4 col-md-4">
+									<label>
+										<input name="switch-field-1" class="ace ace-switch ace-switch-4" type="checkbox"
+											ng-model="producto.descuento_fijo" />
+										<span class="lbl check-descuento-opcion"></span>
+									</label>
+								</div>
+							</div>
+							<div class="col-md-6 col-sm-12 row form-group"
+								ng-if="usuario.empresa.usar_restaurante_express">
+
+								<label class="col-sm-12 col-md-6 control-label no-padding-right" for="comision">Unidad
+									Economíca</label>
+								<div class="col-sm-12 col-md-6">
+									<input type="number" step="0.01" ng-model="producto.unidad_economica"
+										placeholder="unidad economica" class="form-control" />
+								</div>
+							</div>
+						</div>
+						<div class="row form-group" ng-if="usuario.empresa.usar_prestacion_compra">
+							<label class="col-sm-3 control-label no-padding-right" for="presCompra">Prestación en
+								compra</label>
+							<div class="col-sm-3">
+								<input type="number" id="presCompra" ng-model="producto.cantidad_prestacion_compra"
+									placeholder="Prestación compra" class="form-control" />
+							</div>
+						</div>
+					</div>
+					<div id="cuerpo-tipo-producto" class="step-pane" data-step="4">
+						<div class="row">
+							<div class="  form-groupcol-sm-3 col-lg-3">
+								<label>Tipo Producto</label>
+								<select ng-disabled="!usuario.empresa.usar_consumos" required name="tipo_producto"
+									id="tipo_producto" ng-model="producto.tipoProducto"
+									ng-change="cambiarUsarInvetario(producto)"
+									ng-options="tipoProducto as tipoProducto.nombre for tipoProducto in tipoProductos track by tipoProducto.id">
+								</select>
+							</div>
+							<div class=" form-group col-sm-3 col-lg-3"
+								ng-if="producto.tipoProducto.nombre_corto==diccionario.TIPO_PRODUCTO_BASE">
+								<p>¿Activar Inventario?</p>
+
+								<label>
+									<input name="switch-field-1" class="ace ace-switch ace-switch-4" type="checkbox"
+										ng-model="producto.activar_inventario" />
+									<span class="lbl check-descuento"></span>
+								</label>
+							</div>
+							<div class=" form-group col-sm-3 col-lg-3"
+								ng-if="producto.tipoProducto.nombre_corto==diccionario.TIPO_PRODUCTO_BASE">
+								<p>¿Activo fijo?</p>
+
+								<label>
+									<input name="switch-field-1" class="ace ace-switch ace-switch-4" type="checkbox"
+										ng-model="producto.activo_fijo" ng-change="activoFijoAplicarDatePicker()" />
+									<span class="lbl check-descuento"></span>
+								</label>
+							</div>
+							<div class=" form-group col-sm-3 col-lg-3"
+								ng-if="producto.tipoProducto.nombre_corto==diccionario.TIPO_PRODUCTO_BASE">
+								<p>Sujeto a mantenimiento?</p>
+
+								<label>
+									<input name="switch-field-1" class="ace ace-switch ace-switch-4" type="checkbox"
+										ng-model="producto.sujeto_mantenimiento" ng-change="activarMantenimiento()" />
+									<span class="lbl check-descuento"></span>
+								</label>
+							</div>
+							<div class=" form-group col-sm-2 col-lg-2"
+								ng-if="producto.tipoProducto.nombre_corto==diccionario.TIPO_PRODUCTO_FINAL">
+								<p>¿Combo?</p>
+
+								<label>
+									<input class="ace ace-switch ace-switch-4" type="checkbox"
+										ng-model="producto.combo" />
+									<span class="lbl check-descuento"></span>
+								</label>
+							</div>
+						</div>
+
+						
+						<div class="container-fluid" ng-if="producto.activo_fijo">
+							<table>
+								<thead>
+									<th>
+										<label>Valor Actualizado</label>
+									</th>
+									<th>
+										&nbsp;
+									</th>
+									<th>
+										<label>Dep. Acum. Actual</label>
+									</th>
+									<th>&nbsp;</th>
+									<th>
+										<label>Fecha</label>
+									</th>
+								</thead>
+								<tbody>
+									<td>
+										<input required id="producto-valorActualizado" class="form-control"
+											type="number" ng-model="producto.valor_actualizado">
+									</td>
+									<td>
+										&nbsp;
+									</td>
+									<td>
+										<input required id="producto-DepAcumulada" class="form-control" type="number"
+											ng-model="producto.depreciacion_acumulada">
+									</td>
+									<td>
+										&nbsp;
+									</td>
+									<td>
+										<datepicker date-format="dd/MM/yyyy" datepicker-mobile="true">
+										<input id="producto-Fecha_ingreso" required
+											class="form-control" type="text"
+											ng-model="producto.fecha_ingreso" placeholder="Ingrese la fecha">
+										</datepicker>
+									</td>
+								</tbody>
+							</table>
+						</div>
+
+						<div class="form-group"
+							ng-if="producto.tipoProducto.nombre_corto!=diccionario.TIPO_PRODUCTO_BASE">
+
+							<table class="table table-striped table-bordered table-hover"
+								ng-if="producto.tipoProducto.nombre_corto!=diccionario.TIPO_PRODUCTO_BASE">
+								<thead>
+									<tr>
+										<th>
+											<label>PRODUCTO</label>
+										</th>
+										<th>
+											<label>CODIGO</label>
+										</th>
+										<th>
+											<label>UND. MEDIDA</label>
+										</th>
+										<th>
+											<label>FORMULACIÓN</label>
+										</th>
+										<th>
+											<label>ACCIÓN</label>
+										</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>
+											<input ng-keypress="interceptarTecla($event,'cantidad',true)"
+												id="id_producto" name="id_producto" type="text"
+												ng-model="productoBaseSeleccion.producto"
+												placeholder="Ingrese el nombre del producto..."
+												uib-typeahead="producto as (producto.codigo+'-'+producto.nombre+'-'+producto.grupo+'-'+producto.subgrupo) for producto in buscarProducto($viewValue)"
+												typeahead-wait-ms="1000"
+												typeahead-template-url="templates/autocompletar.html"
+												typeahead-show-hint="false" typeahead-min-length="3"
+												typeahead-on-select="establecerProductoBase($item, $model, $label, $event)">
+										</td>
+										<td>
+											{{productoBase.Codigo}}
+										</td>
+										<td>
+											{{productoBase.unidad_medida}}
+										</td>
+										<td>
+											<input type="number" ng-model="productoBase.formulacion"
+												class="ng-pristine ng-untouched ng-valid ng-empty" step="0.001" min="0">
+										</td>
+										<td>
+											<button ng-disabled="formularioProducto.id_producto.$invalid"
+												id="agregar_detalle_producto" type="button"
+												ng-click="agregarDetalleProductosBase(productoBase,productoBaseSeleccion.producto)"
+												class="btn btn-success btn-sm">
+												<i class="ace-icon fa fa-plus bigger-110"></i>
+											</button>
+										</td>
+
+									</tr>
+								</tbody>
+							</table>
+							<div class="widget-box" ng-if="producto.productosBase.length>0">
+								<div class="widget-header">
+									<h4 class="widget-title">COMPOSICIÓN</h4>
+								</div>
+								<div class="widget-body">
+									<div class="widget-main">
+										<table class="table table-striped table-bordered table-hover">
+											<thead>
+												<tr>
+													<th>
+														<label>PRODUCTO</label>
+													</th>
+													<th>
+														<label>CODIGO</label>
+													</th>
+													<th>
+														<label>UND. MEDIDA</label>
+													</th>
+													<th>
+														<label>FORMULACIÓN</label>
+													</th>
+													<th>
+														<label>COSTO U</label>
+													</th>
+													<th>
+														<label>TOTAL</label>
+													</th>
+													<th>
+														<label>HABILITAR CAMBIO</label>
+													</th>
+													<th>
+														<label>ACCIONES</label>
+													</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr ng-repeat="productoBase in producto.productosBase track by $index"
+													ng-if="!productoBase.eliminado">
+													<td>
+														{{productoBase.productoBase.nombre}}
+													</td>
+													<td>
+														{{productoBase.productoBase.codigo}}
+													</td>
+													<td>
+														{{productoBase.productoBase.unidad_medida}}
+													</td>
+													<td>
+														{{productoBase.formulacion}}
+													</td>
+													<td>
+														{{productoBase.productoBase.precio_unitario}}
+													</td>
+													<td>
+														{{productoBase.productoBase.precio_unitario*productoBase.formulacion}}
+													</td>
+													<td>
+														<label>
+															<input class="ace ace-switch ace-switch-4" type="checkbox"
+																ng-model="productoBase.habilitar_cambio" />
+															<span class="lbl check-descuento"></span>
+														</label>
+													</td>
+													<td>
+														<a class="red" href="javascript:void(0)"
+															ng-click="eliminarDetalleProductosBase(productoBase)">
+															<i class="ace-icon fa fa-trash-o bigger-130"></i>
+														</a>
+													</td>
+												</tr>
+
+
+											</tbody>
+											<tfoot>
+												<tr>
+													<td colspan="5">
+														<b>TOTAL</b>
+													</td>
+													<td>
+														{{producto.totalBase}}
+													</td>
+												</tr>
+											</tfoot>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="step-pane" data-step="5">
+						<div class="row form-group">
+							<label class="control-label col-xs-6 col-sm-6 no-padding-right">Sucursal</label>
+							<div class="col-xs-6 col-sm-6">
+								<select ng-disabled="!usuario.empresa.usar_mantenimiento" name="sucursal_erp"
+									id="sucursal_erp" ng-model="producto.sucursal_erp"
+									ng-options="sucursal as sucursal.nombre for sucursal in sucursales track by sucursal.id"
+									ng-change="obtenerAlmacenes(producto.sucursal_erp.id)">
+								</select>
+							</div>
+						</div>
+						<div class="row form-group">
+							<label class="control-label col-xs-6 col-sm-6 no-padding-right">Almacen</label>
+							<div class="col-xs-6 col-sm-6">
+								<select ng-disabled="!usuario.empresa.usar_mantenimiento" name="almacen_erp"
+									id="almacen_erp" ng-model="producto.almacenErp"
+									ng-options="almacen as almacen.nombre for almacen in almacenes track by almacen.id">
+								</select>
+							</div>
+						</div>
+						<div class="row form-group">
+							<label class="control-label col-xs-6 col-sm-6 no-padding-right">Cuenta</label>
+							<div class="col-xs-6 col-sm-6">
+								<input ng-disabled="!usuario.empresa.usar_mantenimiento" name="asignarCuenta"
+									ng-keypress="interceptarTecla($event,'cantidad',true)" id="asignarCuenta"
+									type="text" ng-model="producto.cuenta" placeholder="Busqueda..."
+									uib-typeahead="cuenta as (cuenta.codigo+'-'+cuenta.nombre+'-'+cuenta.descripcion+'-'+cuenta.tipoCuenta.nombre) for cuenta in buscarCuentas($viewValue)"
+									typeahead-wait-ms="1000" typeahead-template-url="templates/autocompletar.html"
+									typeahead-show-hint="false" typeahead-min-length="3"
+									typeahead-on-select="establecerCuenta(producto.cuenta)">
+							</div>
+						</div>
+					</div>
+					<div class="step-pane" data-step="6">
+						<div class="center">
+							<h4 class="blue">Step 5</h4>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="modal-footer wizard-actions">
+				<button type="button" class="btn btn-primary btn-sm " ng-if="!nuevoOt.ver"
+					ng-click="saveForm(formularioProducto.$valid,producto, true)">
+					<i class="ace-icon fa fa-floppy-o bigger-110"></i>&nbsp; Guardar</button>
+				<button id="anterior" class="btn btn-sm btn-prev" ng-click="regresarwizard()">
+					<i class="ace-icon fa fa-arrow-left"></i>
+					Anterior
+				</button>
+
+				<button type="submit" id="siguiente" ng-click="ValidarForm(formularioProducto,steps,'anterior-n')"
+					class="btn btn-success btn-sm btn-next" data-last="Finish">
+					Siguiente
+					<i class="ace-icon fa fa-arrow-right icon-on-right"></i>
+				</button>
+
+				<button type="button" class="btn btn-danger btn-sm pull-left" data-dismiss="modal"
+					ng-click="cerrarPopPupEdicion()">
+					<i class="ace-icon fa fa-times"></i>
+					Cancelar
+				</button>
+			</div>
+		</form>
+	</div>
+
+</div>
+
+<div id="modal-wizard-producto-vista" class="modal wizard-posicion">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div id="modal-wizard-container-producto-vista">
+				<div class="modal-header">
+					<ul class="steps">
+						<li data-step="1" class="active">
+							<span class="step">1</span>
+							<span class="title">Datos del Producto</span>
+						</li>
+						<li data-step="2">
+							<span class="step">2</span>
+							<span class="title">Datos Adicionales</span>
+						</li>
+						<li data-step="3">
+							<span class="step">3</span>
+							<span class="title">Finalizar</span>
+						</li>
+					</ul>
+				</div>
+
+				<div class="modal-body step-content">
+					<div class="step-pane active" data-step="1">
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="codigo">Código</label>
+
+							<div class="col-sm-9">
+								<input disabled required type="text" ng-model="producto.codigo" placeholder="Código"
+									class="col-xs-10 col-sm-5" />
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="nombre">Nombre</label>
+
+							<div class="col-sm-9">
+								<input disabled required type="text" ng-model="producto.nombre" placeholder="Nombre"
+									class="col-xs-10 col-sm-5" />
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="unidad_medida">Unidad de
+								Medida</label>
+
+							<div class="col-sm-9">
+								<input disabled required type="text" id="unidad_medidaDisabled"
+									ng-model="producto.unidad_medida" placeholder="unidad de medida"
+									class="form-control" />
+							</div>
+						</div>
+
+						<div class="space-4"></div>
+
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="precio_unitario">Precio
+								Unitario</label>
+
+							<div class="col-sm-9">
+								<input disabled required type="number" step="0.01" ng-model="producto.precio_unitario"
+									placeholder="Precio Unitario" class="form-control" />
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="descripcion">Descripción</label>
+
+							<div class="col-sm-9">
+								<input disabled type="text" id="descripcionDisabled" ng-model="producto.descripcion"
+									placeholder="Descripción" class="form-control" />
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-xs-12 col-sm-3 no-padding-right">Imagen</label>
+							<div class="col-xs-12 col-xs-12 col-sm-9">
+								<img ng-src="{{producto.imagen}}" width="100">
+							</div>
+						</div>
+					</div>
+
+					<div class="step-pane" data-step="2">
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="inventario_minimo">Inventario
+								Mínimo</label>
+
+							<div class="col-sm-9">
+								<input disabled type="number" id="inventario_minimoDisabled"
+									ng-model="producto.inventario_minimo" placeholder="Inventario Mínimo"
+									class="form-control" />
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="grupo">Grupo</label>
+
+							<div class="col-sm-9">
+								<select required disabled name="grupo_producto" id="grupo_productoDisabled"
+									ng-model="producto.grupo"
+									ng-options="grupoProducto as grupoProducto.nombre for grupoProducto in gruposProducto.clases | filter:{habilitado:1} track by grupoProducto.id">
+								</select>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="subgrupo">Sub-Grupo</label>
+
+							<div class="col-sm-9">
+								<select required disabled name="subgrupo_producto" id="subgrupo_productoDisabled"
+									ng-model="producto.subgrupo"
+									ng-options="subgrupoProducto as subgrupoProducto.nombre for subgrupoProducto in subgruposProducto | filter:{habilitado:1} track by subgrupoProducto.id">
+								</select>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="caresp1">Carac. Esp. 1</label>
+
+							<div class="col-sm-9">
+								<input disabled type="text" id="caracteristica_especial1_Disabled"
+									ng-model="producto.caracteristica_especial1" placeholder="Caracteristica Especial 1"
+									class="form-control" />
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="caresp2">Carac. Esp. 2</label>
+							<div class="col-sm-9">
+								<input disabled type="text" id="caracteristica_especial2_Disabled"
+									ng-model="producto.caracteristica_especial2" placeholder="Caracteristica Especial 2"
+									class="form-control" />
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="codfab">Codigo fabrica</label>
+							<div class="col-sm-9">
+								<input disabled type="text" id="codfabDisabled" ng-model="producto.codigo_fabrica"
+									placeholder="Codigo fabrica" class="form-control" />
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="comision">Comisión</label>
+
+							<div class="col-sm-9">
+								<input disabled type="number" step="0.01" id="comisionDisabled"
+									ng-model="producto.comision" placeholder="Comisión" class="form-control" />
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-xs-12 col-sm-3 no-padding-right">¿Publicar Panel?</label>
+
+							<div class="col-sm-9">
+								<label>
+									<input disabled name="switch-field-1" class="ace ace-switch ace-switch-4"
+										type="checkbox" ng-model="producto.publicar_panel" />
+									<span class="lbl check-descuento"></span>
+								</label>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="modal-footer wizard-actions">
+				<button class="btn btn-sm btn-prev">
+					<i class="ace-icon fa fa-arrow-left"></i>
+					Anterior
+				</button>
+
+				<button type="submit" id="siguiente" class="btn btn-success btn-sm btn-next" data-last="Finish">
+					Siguiente
+					<i class="ace-icon fa fa-arrow-right icon-on-right"></i>
+				</button>
+
+				<button type="button" class="btn btn-danger btn-sm pull-left" data-dismiss="modal"
+					ng-click="cerrarPopPupVista()">
+					<i class="ace-icon fa fa-times"></i>
+					Cancelar
+				</button>
+			</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+<div id="dialog-eliminar-producto" title="¿Eliminación de Producto?" class="modal">
+	<p>
+		<span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>¿Esta seguro de eliminar el
+		producto
+		seleccionado?
+	</p>
+	<button type="button" class="btn btn-danger" ng-click="eliminarProducto(producto)">Si</button>
+	<button type="button" class="btn btn-success" ng-click="cerrarConfirmacionEliminacion()">No</button>
+</div>
+
+<div id="dialog-reporte-productos-kardex" title="¿Eliminación de Producto?" class="modal">
+	<form ng-submit="reporteProductosKardex(imp)" name="formularioKardexReporte">
+		<div class="modal-header primary">
+			Reporte Productos Kardex
+		</div>
+		<div class="modal-body">
+
+
+			<div>
+				<label>SUCURSAL</label>&nbsp
+
+				<select required
+					ng-options="sucursal as sucursal.nombre for sucursal in sucursales track by sucursal.id"
+					ng-model="imp.sucursal" ng-change="obtenerAlmacenes(imp.sucursal.id)">
+				</select>&nbsp
+			</div>
+			<div>
+				<label>ALMACEN</label>&nbsp
+
+				<select required ng-model="imp.almacen"
+					ng-options="almacen.id as almacen.nombre for almacen in almacenes track by almacen.id"
+					data-placeholder="Click para escoger" required=""></select>&nbsp
+
+			</div>
+			<div>
+				<span>Grupos: &nbsp;</span>
+				<select class="form-control" style="width:150px;" id="selectGruposProductos"
+					name="selectGruposProductos" ng-model="imp.grupo"
+					ng-options="grupo.id as grupo.nombre for grupo in gruposProducto.clases track by grupo.id"
+					data-placeholder="Click para escoger">
+					<option value="" selected>Todos</option>
+				</select>
+			</div>
+
+		</div>
+		<div class="modal-footer">
+			<button type="submit" ng-disabled="formularioKardexReporte.$invalid"
+				class="btn btn-primary btn-sm pull-right">
+				<i class="ace-icon fa fa-search"></i>
+				Generar Reporte
+			</button>&nbsp
+			<button type="button" class="btn btn-danger btn-sm pull-left"
+				ng-click="cerrarModalReporteProductosKardex()">
+				<i class="ace-icon fa fa-search"></i>
+				Cancelar
+			</button>&nbsp
+		</div>
+	</form>
+</div>
+<!-- inicio promociones -->
+<div id="dialog-promociones-producto" class="modal">
+	<div class="modal-dialog modal-rh-nuevo">
+		<div class="modal-header ficha">
+			<h4 class="modal-title" id="myModalLabel">Promociones</h4>
+			<h5 class="modal-title">{{producto.nombre}}</h5>
+		</div>
+
+		<div class="modal-body">
+			<form ng-submit="agregarPromocion(promocion,diaspromo)">
+				<div class="row">
+					<div class="col-md-4">
+						<label class="inline">
+							<span class="lbl">Nombre Promoción</span>
+						</label>
+					</div>
+
+					<div class="col-md-8">
+						<input type="text" required ng-model="promocion.nombre">
+					</div>
+				</div>
+				<div class="space-4"></div>
+				<div class="row" ng-if="!promocion.edit">
+					<div class="col-md-4">
+						<label class="inline">
+							<span class="lbl">Dias</span>
+						</label>
+					</div>
+
+					<div class="col-md-8">
+						<select required multiple ng-disabled="cajaChica.ver" ng-model-options="{updateOn: 'submit'}"
+							ng-model="prom.dias" class="form-control"
+							ng-options="dia as dia.nombre for dia in dias track by dia.id">
+							<option value="">Seleccionar</option>
+						</select>
+						<p class="red" ng-if="diaExistente==true">{{mensajedias}}</p>
+						<p class="red" ng-if="diaExistente==true">no se puede crear 2 configuraciones.</p>
+					</div>
+				</div>
+				<div class="row" ng-if="promocion.edit">
+					<div class="col-md-4">
+						<label class="inline">
+							<span class="lbl">Dia</span>
+						</label>
+					</div>
+
+					<div class="col-md-8">
+						<select required ng-disabled="cajaChica.ver" ng-model-options="{updateOn: 'submit'}"
+							ng-model="promocion.dia" class="form-control"
+							ng-options="dia as dia.nombre for dia in dias track by dia.id">
+							<option value="">Seleccionar</option>
+						</select>
+						<p class="red" ng-if="diaExistente==true">{{mensajedias}}</p>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-4">
+						<label class="inline">
+							<span class="lbl">tipo Promoción</span>
+						</label>
+					</div>
+					<div class="col-md-8">
+						<label class="checkbox-align">
+							<input class="ace ace-switch ace-switch-5 big-switch" ng-model="promocion.tipo_promocion"
+								type="checkbox">
+							<span class="lbl"
+								data-lbl="HORAS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DÍA"></span>
+						</label>
+					</div>
+				</div>
+				<div class="row" ng-if="promocion.tipo_promocion==true">
+					<div class="col-md-4">
+						<label class="inline">
+							<div class="space-4"></div>
+							<span class="lbl">Horas</span>
+						</label>
+					</div>
+					<div class="col-md-4">
+						<p>inicio</p>
+						<input type="time" name="time" class="form-control" id="horas-extras-hora-inicio" name="nombres"
+							ng-model="promocion.hora_inicio" required>
+					</div>
+					<div class="col-md-4">
+						<p>fin</p>
+						<input type="time" name="time" class="form-control" id="horas-extras-hora-inicio" name="nombres"
+							ng-model="promocion.hora_fin" required>
+					</div>
+				</div>
+				<div class="space-4"></div>
+				<div class="row">
+					<div class="col-md-4">
+						<label class="inline">
+							<span class="lbl">Precio</span>
+						</label>
+					</div>
+
+					<div class="col-md-8">
+						<input class="form-control" step="0.001" required min="0"
+							ng-model-options="{updateOn: 'submit'}" type="number" ng-model="promocion.precio">
+					</div>
+				</div>
+				<div class="space-4"></div>
+				<div>
+					<button type="submit" class="btn btn-primary btn-sm pull-right">
+						<i class="ace-icon fa fa-times"></i>Agregar
+					</button>
+				</div>
+			</form>
+			<div>
+				<table class="table table-bordered table-striped table-hover">
+					<thead>
+						<tr>
+							<th>Nombre</th>
+							<th>Dia</th>
+							<th>tipo</th>
+							<th>Hora inicio</th>
+							<th>Hora fin</th>
+							<th>Precio</th>
+							<th>Habilitar</th>
+							<th>Acciones</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="promocion in promociones">
+							<th>{{promocion.nombre}}</th>
+							<td>{{promocion.dia.nombre}}</td>
+							<td>
+								<p ng-if="promocion.tipo_promocion">horas</p>
+								<p ng-if="!promocion.tipo_promocion">dia completo</p>
+
+							</td>
+							<td>{{promocion.hora_inicio|date:'HH:mm'}}</td>
+							<td>{{promocion.hora_fin|date:'HH:mm'}}</td>
+							<td>{{promocion.precio}}</td>
+							<td>
+								<label>
+									<input name="switch-field-1" class="ace ace-switch ace-switch-4" type="checkbox"
+										ng-model="promocion.habilitado" />
+									<span class="lbl check-descuento"></span>
+								</label>
+							</td>
+							<td>
+								<a class="green" href="javascript:void(0)" e-disabled="!aplicacion.puede_modificar"
+									ng-click="modificarPromocion(promocion)">
+									<i class="ace-icon fa fa-pencil bigger-130"></i>
+								</a>
+						</tr>
+					</tbody>
+
+				</table>
+			</div>
+		</div>
+
+		<div class="modal-footer">
+			<button type="button" class="btn btn-success btn-sm pull-right" ng-click="guardarConfiguracionPromocion()">
+				<i class="ace-icon fa fa-"></i>Guardar
+			</button>
+			<button type="button" class="btn btn-danger btn-sm pull-left" ng-click="cerrarModalPromocionesProducto()">
+				<i class="ace-icon fa fa-times"></i>Cancelar
+			</button>
+		</div>
+
+	</div>
+</div>
+
+
+<!-- fin promocion -->
+<!-- inicio promociones puntajes-->
+<div id="dialog-promociones-puntajes" class="modal">
+	<div>
+		<div class="modal-header ficha">
+			<h4 class="modal-title" id="myModalLabel">Puntajes</h4>
+			<h5 class="modal-title">{{producto.nombre}}</h5>
+		</div>
+
+		<div class="modal-body">
+			<form ng-submit="agregarPromocionPuntaje(promopuntaje,diaspromo)">
+				<div class="row">
+					<div class="col-md-4">
+						<label class="inline">
+							<div class="space-4"></div>
+							<span class="lbl">Fechas</span>
+						</label>
+					</div>
+					<div class="col-md-4">
+						<p>Fecha inicio</p>
+						<datepicker date-format="dd/MM/yyyy" datepicker-mobile="true">
+						<input type="text" name="fecha_inicio" autocomplete="off"
+							class="form-control" ng-model="promopuntaje.fecha_inicio" required>
+						</datepicker>
+					</div>
+					<div class="col-md-4">
+						<p>fecha fin</p>
+						<datepicker date-format="dd/MM/yyyy" datepicker-mobile="true">
+						<input type="text" name="fecha_fin"autocomplete="off"
+							class="form-control" ng-model="promopuntaje.fecha_fin" required>
+						</datepicker>
+					</div>
+				</div>
+				<div class="space-4"></div>
+				<div class="row" ng-if="!promopuntaje.edit">
+					<div class="col-md-4">
+						<label class="inline">
+							<span class="lbl">Dias</span>
+						</label>
+					</div>
+
+					<div class="col-md-8">
+						<select required multiple ng-model-options="{updateOn: 'submit'}" ng-model="prompuntaje.dias"
+							class="form-control" ng-options="dia as dia.nombre for dia in dias track by dia.id">
+							<option value="">Seleccionar</option>
+						</select>
+						<p class="red" ng-if="diaExistente==true">{{mensajedias}}</p>
+						<p class="red" ng-if="diaExistente==true">no se puede crear 2 configuraciones.</p>
+					</div>
+				</div>
+				<div class="row" ng-if="promopuntaje.edit">
+					<div class="col-md-4">
+						<label class="inline">
+							<span class="lbl">Dia</span>
+						</label>
+					</div>
+
+					<div class="col-md-8">
+						<select required ng-model-options="{updateOn: 'submit'}" ng-model="promopuntaje.dia"
+							class="form-control" ng-options="dia as dia.nombre for dia in dias track by dia.id">
+							<option value="">Seleccionar</option>
+						</select>
+						<p class="red" ng-if="diaExistente==true">{{mensajedias}}</p>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-4">
+						<label class="inline">
+							<span class="lbl">tipo Promoción</span>
+						</label>
+					</div>
+					<div class="col-md-8">
+						<label class="checkbox-align">
+							<input class="ace ace-switch ace-switch-5 big-switch" ng-model="promopuntaje.tipo_promocion"
+								type="checkbox">
+							<span class="lbl"
+								data-lbl="HORAS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DÍA"></span>
+						</label>
+					</div>
+				</div>
+				<div class="row" ng-if="promopuntaje.tipo_promocion==true">
+					<div class="col-md-4">
+						<label class="inline">
+							<div class="space-4"></div>
+							<span class="lbl">Horas</span>
+						</label>
+					</div>
+					<div class="col-md-4">
+						<p>inicio</p>
+						<input type="time" name="time" class="form-control" id="horas-extras-hora-inicio" name="nombres"
+							ng-model="promopuntaje.hora_inicio" required>
+					</div>
+					<div class="col-md-4">
+						<p>fin</p>
+						<input type="time" name="time" class="form-control" id="horas-extras-hora-inicio" name="nombres"
+							ng-model="promopuntaje.hora_fin" required>
+					</div>
+				</div>
+				<div class="space-4"></div>
+				<div class="row">
+					<div class="col-md-4">
+						<label class="inline">
+							<span class="lbl">Puntaje</span>
+						</label>
+					</div>
+
+					<div class="col-md-8">
+						<input class="form-control" step="0.001" required min="0"
+							ng-model-options="{updateOn: 'submit'}" type="number" ng-model="promopuntaje.puntaje">
+					</div>
+				</div>
+				<div class="space-4"></div>
+				<div>
+					<button type="submit" class="btn btn-primary btn-sm pull-right">
+						<i class="ace-icon fa fa-times"></i>Agregar
+					</button>
+				</div>
+			</form>
+			<div class="row">
+				<div class="col-md-12">
+					<table class="table table-bordered table-striped table-hover">
+						<thead>
+							<tr>
+								<th>F. inicio</th>
+								<th>F. fin</th>
+								<th>Dia</th>
+								<th>tipo</th>
+								<th>H. inicio</th>
+								<th>H. fin</th>
+								<th>Puntos</th>
+								<th>Habilitar</th>
+								<th>Acciones</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="promopuntaje in promocionesPuntajes">
+								<th>{{promopuntaje.fecha_inicio|date:'dd/MM/yyyy'}}</th>
+								<td>{{promopuntaje.fecha_fin|date:'dd/MM/yyyy'}}</td>
+								<td>{{promopuntaje.dia.nombre}}</td>
+								<td>
+									<p ng-if="promopuntaje.tipo_promocion">horas</p>
+									<p ng-if="!promopuntaje.tipo_promocion">dia completo</p>
+
+								</td>
+								<td>{{promopuntaje.hora_inicio|date:'HH:mm'}}</td>
+								<td>{{promopuntaje.hora_fin|date:'HH:mm'}}</td>
+								<td>{{promopuntaje.puntaje}}</td>
+								<td>
+									<label>
+										<input name="switch-field-1" class="ace ace-switch ace-switch-4" type="checkbox"
+											ng-model="promopuntaje.habilitado" />
+										<span class="lbl check-descuento"></span>
+									</label>
+								</td>
+								<td>
+									<a class="green" href="javascript:void(0)" e-disabled="!aplicacion.puede_modificar"
+										ng-click="modificarPromocionPuntaje(promopuntaje)">
+										<i class="ace-icon fa fa-pencil bigger-130"></i>
+									</a>
+							</tr>
+						</tbody>
+
+					</table>
+				</div>
+
+			</div>
+		</div>
+
+		<div class="modal-footer">
+			<button type="button" class="btn btn-success btn-sm pull-right"
+				ng-click="guardarConfiguracionPromocionPuntaje()">
+				<i class="ace-icon fa fa-"></i>Guardar
+			</button>
+			<button type="button" class="btn btn-danger btn-sm pull-left" ng-click="cerrarModalPromocionesPuntajes()">
+				<i class="ace-icon fa fa-times"></i>Cancelar
+			</button>
+		</div>
+
+	</div>
+</div>
+<!-- fin promocion -->
+<div id="dialog-conceptos" class="modal" ng-include src="'/templates/gral/concepto-edicion.html'"></div>

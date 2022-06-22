@@ -1,0 +1,1 @@
+alter table agil_medico_paciente_consulta add id_ficha_medica int(11);

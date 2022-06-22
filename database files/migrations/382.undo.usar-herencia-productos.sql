@@ -1,0 +1,1 @@
+ALTER TABLE agil_producto drop usar_herencia;

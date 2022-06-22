@@ -1,0 +1,2 @@
+ALTER TABLE agil_mantenimiento_orden_trabajo_mano_obra MODIFY COLUMN trabajo_realizado varchar(2184);
+ALTER TABLE agil_mantenimiento_orden_trabajo_mano_obra MODIFY COLUMN requerimiento_trabajo varchar(2184);

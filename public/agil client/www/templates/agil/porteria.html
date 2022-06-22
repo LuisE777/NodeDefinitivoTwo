@@ -1,0 +1,364 @@
+<div id="rrhh">
+    <div class="main-content-inner">
+        <div class="page-content">
+            <div>
+                <div>
+                    <!-- <div class="pull-right">
+                        <h3 class="bg-info text-dark digital-clock digital-clock-style">00:00:00</h3>
+                        <h3 class="bg-info text-dark date-clock">{{date | date:'dd-MM-yyyy'}}</h3>
+                    </div> -->
+                    
+                    <div class="widget-toolbar no-border invoice-info">
+                        <span class="red digital-clock green bolder">00:00:00</span>
+                        <br>
+                        <span class="blue bolder">{{date | date:'dd-MM-yyyy'}}</span>
+                    </div>
+                    <div class="widget-toolbar hidden-480">
+                        <a href="#">
+                            <i class="ace-icon fa fa-clock-o fa-3x"></i>
+                        </a>
+                    </div>
+                    <div class="row">
+                        <!--  <div class="col-md-6"> -->
+                        <h3 class="header smaller lighter blue">PORTERIA</h3>
+                        <!-- </div> -->
+                        
+                    </div>
+
+
+                </div>
+                <!-- <div>
+                    <form ng-submit="ListaDeAusenciasPaginada(filtro)">
+                        <label for="">Filtros  <a href="javascript:void(0)" uib-tooltip="{{mostrarFiltro?'Ocultar Filtros':'Mostras Filtros'}}" ng-click="mostrarFiltro=mostrarFiltro?false:true"><i class="red" ng-class="mostrarFiltro ? 'fa fa-angle-double-up' : 'fa fa-angle-double-down'" ></i></a></label>
+                        <div class="row" ng-show="mostrarFiltro">
+                          
+                            <div class="form-group col-md-3">
+                                <label for="fecha">Fecha:</label>
+                                <input  name="fecha" autocomplete="off" ng-update-hidden class="form-control date-picker" type="text" data-date-format="dd/mm/yyyy" id="fecha" ng-model="filtro.fechaBusqueda">
+                            </div>
+                            <div class="form-group col-md-3">
+                                <div> &nbsp&nbsp</div>
+                                <button class="btn btn-primary" type="submit"><i class="fa fa-search"></i>Buscar</button>
+                            </div>
+                        </div>
+                    </form>
+                </div> -->
+                <div class="tabbable" id="tab-porteria">
+			
+                    <ul class="nav nav-tabs" id="myTabPorteria">
+                        <li class="active" ng-click="ListaDeAusenciasPaginada()">
+                            <a data-toggle="tab" href="javascript:void(0)" data-target="#tab-permisos" aria-expanded="true">
+                                <i class="blue ace-icon fa fa-check-square-o bigger-170"></i>
+                                Empleados Autorizados
+                            </a>
+                        </li>
+                
+                        <li class="" ng-click="ListaSolicitudesAusenciasPaginada()">
+                            <a data-toggle="tab" href="javascript:void(0)" data-target="#tab-solicitudes" aria-expanded="false">
+                                <i class="blue ace-icon fa fa-list bigger-170"></i>
+                                Solicitados
+                            </a>
+                        </li>
+                    </ul>
+                
+                    <div class="tab-content">
+                        <div id="tab-permisos" class="tab-pane fade active in">
+                            <div class="space-4"></div>
+                            <div class="row">
+                                <div class="col-xs-6 col-sm-6 col-md-6">
+                                    <div class="col-sm-2">
+                                        <label>
+                                        Mostrar 
+                                        </label> 
+                                    </div>
+                                    <div class="col-xs-12 col-sm-4 col-md-2 col-lg-2" style="padding: 0px 0px; border: 1px solid #6fb3e0;
+                                    border-radius: 4px!important;">
+                                        <select ng-model="paginator.itemsPerPage" ng-change="paginator.getFirstPage()" name="tabla-proveedores_length" aria-controls="tabla-proveedores" class="form-control input-sm">
+                                            <option value="0">Todos</option>
+                                            <option value="10">10</option>
+                                            <option value="25">25</option>
+                                            <option value="50">50</option>
+                                            <option value="100">100</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-7"><label for="">Elementos</label></div>
+                                    <div class="col-sm-1">
+                                        <a href="javascript:void(0)" class="blue" ng-click="ListaDeAusenciasPaginada()">
+                                            <i class="ace-icon fa fa-refresh icon-animated-bell align-top bigger-200"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="col-xs-6 col-sm-6 col-md-6" align="right">
+                                    <div class="col-sm-5">
+                                  
+                                    </div>
+                                    <div class="col-sm-3">
+                                      <label style="margin-top: 5px;">Buscar:</label> 
+                                    </div>
+                                    <div class="nav-search col-sm-4" id="nav-search">
+                                        <span class="input-icon">
+                                            <input type="text" placeholder="" class="nav-search-input" id="nav-search-input" autocomplete="off" ng-model="textSearch" ng-model-options='{ debounce: 600 }' ng-change="paginator.getSearch(textSearch,paginator.filter,$event)">
+                                            <i class="ace-icon fa fa-search nav-search-icon"></i>
+                                        </span>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                            <div>
+                                <div class="profile-users clearfix">
+                                    <div class="itemdiv memberdiv cardImg empleado-autorizado" ng-repeat="ausencia in ausencias" ng-class="(ausencia.estado.nombre_corto==='SAL' && !ausencia.sin_retorno) ? 'empleado-salida' : ''">
+                                        <div class="inline pos-rel box">
+                                            <div class="user">
+                                                <a href="javascript:void(0)">
+                                                <img ng-src="{{ausencia.ficha.empleado.persona.imagen | imagenEmpleado}}" onerror="this.src='img/icon-user-default.png'" height="60" width="40">
+                                                </a>
+                                            </div>
+                                            <div class="body">
+                                                <div class="name">
+                                                    <p>
+                                                        <span class="user-status status-online"></span>
+                                                        <b>Nombre:</b>{{ausencia.ficha.empleado.persona.nombre_completo}}</p>
+                                                    <p class="text-info">
+                                                        <span class="ace-icon fa fa-clock-o"></span>
+                                                        <b>Salida:</b>{{ausencia.fecha_inicio|date:'HH:mm'}}</p>
+                                                    <p class="text-info">
+                                                        <span class="ace-icon fa fa-clock-o"></span>
+                                                        <b>Retorno:</b>{{ausencia.fecha_fin|date:'HH:mm'}}</p>
+                                                </div>
+                                                <div>
+                                                    <p class="text-info">Autorizador: {{ausencia.autorizador.persona.nombre_completo}}</p>
+                                                </div>
+                                            </div>
+                                            <div class="popover right">
+                                                <div class="arrow"></div>
+                                                <div class="popover-content" ng-show="ausencia.estado.nombre_corto==='AUT' && !ausencia.sin_salida && !ausencia.sin_retorno">
+                                                    <div class="bolder">Registrar Salida</div>
+            
+                                                    <div class="time">
+                                                        <i class="ace-icon fa fa-clock-o middle bigger-120 orange"></i>
+                                                        <span class="green">Esta Seguro de Registrsar la salida de
+                                                            {{ausencia.ficha.empleado.persona.nombre_completo}} ?</span>
+                                                    </div>
+                                                    <div>
+                                                        Hora Actual:<span class="digital-clock">00:00:00</span>
+                                                    </div>
+                                                    <div class="hr dotted hr-8"></div>
+            
+                                                    <div class="tools action-buttons">
+                                                        <a href="javascript:void(0)" ng-click="registrarSalidaSolicitud(ausencia)">
+                                                            Guardar<i class="ace-icon fa fa-save blue bigger-150"></i>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                                <div class="popover-content" ng-show="ausencia.estado.nombre_corto==='AUT' && !ausencia.sin_salida && ausencia.sin_retorno">
+                                                    <div class="bolder">Registrar Salida</div>
+            
+                                                    <div class="time">
+                                                        <i class="ace-icon fa fa-clock-o middle bigger-120 orange"></i>
+                                                        <span class="green">Esta Seguro de Registrar la salida de
+                                                            {{ausencia.ficha.empleado.persona.nombre_completo}} ?</span>
+                                                    </div>
+                                                    <div>
+                                                        Hora Actual:<span class="digital-clock">00:00:00</span>
+                                                    </div>
+                                                    <div class="hr dotted hr-8"></div>
+            
+                                                    <div class="tools action-buttons">
+                                                        <a href="javascript:void(0)" ng-click="registrarSalidaSolicitud(ausencia)">
+                                                            Guardar<i class="ace-icon fa fa-save blue bigger-150"></i>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                                <div class="popover-content" ng-show="ausencia.estado.nombre_corto==='SAL'">
+                                                    <div class="bolder">Registrar Retorno</div>
+            
+                                                    <div class="time">
+                                                        <i class="ace-icon fa fa-clock-o middle bigger-120 orange"></i>
+                                                        <span class="green">Esta Seguro de Registrar el Retorno de
+                                                            {{ausencia.ficha.empleado.persona.nombre_completo}} ?</span>
+                                                    </div>
+                                                    <div>
+                                                        Hora Actual:<span class="digital-clock">00:00:00</span>
+                                                    </div>
+                                                    <div class="hr dotted hr-8"></div>
+            
+                                                    <div class="tools action-buttons">
+                                                        <a href="javascript:void(0)" ng-click="registrarRetornoSolicitud(ausencia)">
+                                                            Guardar <i class="ace-icon fa fa-save blue bigger-150"></i>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                                <div class="popover-content" ng-show="ausencia.estado.nombre_corto==='SAL' && !ausencia.sin_salida && ausencia.sin_retorno">
+                                                    <div class="bolder">Registrar Retorno</div>
+            
+                                                    <div class="time">
+                                                        <i class="ace-icon fa fa-clock-o middle bigger-120 orange"></i>
+                                                        <span class="green">Esta Seguro de Registrar el Retorno de
+                                                            {{ausencia.ficha.empleado.persona.nombre_completo}} ?</span>
+                                                    </div>
+                                                    <div>
+                                                        Hora Actual:<span class="digital-clock">00:00:00</span>
+                                                    </div>
+                                                    <div class="hr dotted hr-8"></div>
+            
+                                                    <div class="tools action-buttons">
+                                                        <a href="javascript:void(0)" ng-click="registrarRetornoSolicitud(ausencia)">
+                                                            Guardar <i class="ace-icon fa fa-save blue bigger-150"></i>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                                <div class="popover-content" ng-show="ausencia.estado.nombre_corto==='SAL' && ausencia.sin_salida && ausencia.sin_retorno">
+                                                    <div class="bolder">Registrar Retorno</div>
+            
+                                                    <div class="time">
+                                                        <i class="ace-icon fa fa-clock-o middle bigger-120 orange"></i>
+                                                        <span class="green">Esta Seguro de Registrar el Retorno de
+                                                            {{ausencia.ficha.empleado.persona.nombre_completo}} ?</span>
+                                                    </div>
+                                                    <div>
+                                                        Hora Actual:<span class="digital-clock">00:00:00</span>
+                                                    </div>
+                                                    <div class="hr dotted hr-8"></div>
+            
+                                                    <div class="tools action-buttons">
+                                                        <a href="javascript:void(0)" ng-click="registrarRetornoSolicitud(ausencia)">
+                                                            Guardar <i class="ace-icon fa fa-save blue bigger-150"></i>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row" ng-include src="'/templates/gral/paginator.html'">
+                            </div>
+                        </div>
+                
+                        <div id="tab-solicitudes" class="tab-pane" >
+                            <div class="row">
+                                <div class="col-xs-6 col-sm-6 col-md-6">
+                                    <!-- <div class="col-sm-2">
+                                        <label>
+                                        Mostrar 
+                                        </label> 
+                                    </div>
+                                    <div class="col-xs-12 col-sm-4 col-md-2 col-lg-2" style="padding: 0px 0px;">
+                                        <select ng-model="paginatorSolicitud.itemsPerPage" ng-change="paginatorSolicitud.getFirstPage()" name="tabla-proveedores_length" aria-controls="tabla-proveedores" class="form-control input-sm">
+                                            <option value="0">Todos</option>
+                                            <option ng-selected="true" value="10">10</option>
+                                            <option value="25">25</option>
+                                            <option value="50">50</option>
+                                            <option value="100">100</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-2"><label for="">Elementos</label></div> -->
+                                </div>
+                                <div class="col-xs-6 col-sm-6 col-md-6" align="right">
+                                    <div class="col-sm-5">
+                                  
+                                    </div>
+                                    <div class="col-sm-3">
+                                      <label style="margin-top: 5px;">Buscar:</label> 
+                                    </div>
+                                    <div class="nav-search col-sm-4" id="nav-search">
+                                        <span class="input-icon">
+                                            <input type="text" placeholder="" class="nav-search-input" id="nav-search-input" autocomplete="off" ng-model="textSearch" ng-model-options='{ debounce: 600 }' ng-change="paginatorSolicitud.getSearch(textSearch,paginatorSolicitud.filter,$event)">
+                                            <i class="ace-icon fa fa-search nav-search-icon"></i>
+                                        </span>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="profile-feed row">
+                                
+                                <div class="col-sm-6">
+                                    <div class="profile-activity clearfix" ng-repeat="solicitud in ausenciasSolicitudes" ng-if="$index < (paginatorSolicitud.itemsPerPage / 2)">
+                                        <div>
+                                            <img class="pull-left" alt="Alex Doe's avatar" ng-src="{{solicitud.ficha.empleado.persona.imagen | imagenEmpleado}}" onerror="this.src='img/icon-user-default.png'">
+                                            <a class="user" href="javascript:void(0)"> {{solicitud.ficha.empleado.persona.nombre_completo}} </a>
+                                            
+                                            <span class="label label-success arrowed-in-right arrowed" ng-if="solicitud.estado.nombre_corto==='SOL'">Solicitado</span>
+                                            <span class="label label-danger arrowed-in-right arrowed" ng-if="solicitud.estado.nombre_corto==='DES'">Rechazado</span>
+                                            <div class="time">
+                                                <i class="ace-icon fa fa-clock-o bigger-110"></i>
+                                                {{solicitud.fecha_inicio|date:'dd/MM/yyyy HH:mm'}} - {{solicitud.fecha_fin|date:'HH:mm'}}
+                                            </div>
+                                        </div>
+                                        <!-- <div class="tools action-buttons">
+                                            <a href="#" class="blue">
+                                                <i class="ace-icon fa fa-pencil bigger-125"></i>
+                                            </a>
+
+                                            <a href="#" class="red">
+                                                <i class="ace-icon fa fa-times bigger-125"></i>
+                                            </a>
+                                        </div> -->
+                                    </div>
+                                </div><!-- /.col -->
+
+                                <div class="col-sm-6">
+                                    <div class="profile-activity clearfix" ng-repeat="solicitud in ausenciasSolicitudes" ng-if="$index >= (paginatorSolicitud.itemsPerPage / 2)">
+                                        <div>
+                                            <img class="pull-left" alt="Alex Doe's avatar" ng-src="{{solicitud.ficha.empleado.persona.imagen | imagenEmpleado}}" onerror="this.src='img/icon-user-default.png'">
+                                            <a class="user" href="javascript:void(0)"> {{solicitud.ficha.empleado.persona.nombre_completo}} </a>
+                                            
+                                            <span class="label label-success arrowed-in-right arrowed" ng-if="solicitud.estado.nombre_corto==='SOL'">Solicitado</span>
+                                            <span class="label label-danger arrowed-in-right arrowed" ng-if="solicitud.estado.nombre_corto==='DES'">Rechazado</span>
+                                            <div class="time">
+                                                <i class="ace-icon fa fa-clock-o bigger-110"></i>
+                                                {{solicitud.fecha_inicio|date:'dd/MM/yyyy HH:mm'}}
+                                            </div>
+                                        </div>
+
+                                        <!-- <div class="tools action-buttons">
+                                            <a href="#" class="blue">
+                                                <i class="ace-icon fa fa-pencil bigger-125"></i>
+                                            </a>
+
+                                            <a href="#" class="red">
+                                                <i class="ace-icon fa fa-times bigger-125"></i>
+                                            </a>
+                                        </div> -->
+                                    </div>
+                                </div><!-- /.col -->
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div>
+                                      Mostrando página {{paginatorSolicitud.currentPage}} de {{paginatorSolicitud.pages.length}}
+                                    </div>
+                                  </div>
+                                  <div class="col-sm-6" align="right">
+                                    <ul class="pagination">
+                                      <li class="paginate_button">
+                                        <a href="javascript:void(0)" ng-click="paginatorSolicitud.getFirstPage()">Primero</a>
+                                      </li>
+                                      <li class="paginate_button">
+                                        <a href="javascript:void(0)" e-disabled="paginatorSolicitud.currentPage==1" ng-click="paginatorSolicitud.getPreviousPage()"><<</a>
+                                      </li>
+                                      <li class="paginate_button" ng-class="{active:paginatorSolicitud.currentPage==page}" ng-repeat="page in paginatorSolicitud.pages" ng-if="abs(paginatorSolicitud.currentPage-page)<4">
+                                        <a e-disabled="paginatorSolicitud.currentPage==page" href="javascript:void(0)" ng-click="paginatorSolicitud.getPage(page)">{{page}}</a>
+                                      </li>
+                                      <li class="paginate_button">
+                                        <a href="javascript:void(0)" e-disabled="paginatorSolicitud.currentPage==paginatorSolicitud.pages.length" ng-click="paginatorSolicitud.getNextPage()">>></a>
+                                      </lidiv>
+                                      <li class="paginate_button">
+                                        <a href="javascript:void(0)" ng-click="paginatorSolicitud.getLastPage()">Ultimo</a>
+                                      </li>
+                                    </ul>
+                                  </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                
+            </div>
+        </div>
+    </div>

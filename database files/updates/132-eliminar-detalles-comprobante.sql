@@ -1,0 +1,9 @@
+
+DELETE inv_compra, agil_asiento_contabilidad
+FROM inv_compra
+INNER JOIN agil_asiento_contabilidad ON inv_compra.asiento_contabilidad = agil_asiento_contabilidad.id
+WHERE agil_asiento_contabilidad.comprobante is null;
+
+DELETE agil_asiento_contabilidad
+FROM agil_asiento_contabilidad
+WHERE agil_asiento_contabilidad.comprobante is null;

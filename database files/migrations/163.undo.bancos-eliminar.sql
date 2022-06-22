@@ -1,0 +1,1 @@
+ALTER TABLE agil_banco drop eliminar;

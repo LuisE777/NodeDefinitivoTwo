@@ -1,0 +1,2067 @@
+<div>
+    <div class="row">
+        <div class="col-xs-12">
+            <!-- PAGE CONTENT BEGINS -->
+            <h2 class="text-primary">PLANILLAS DE AGUINALDOS</h2>
+            <button class="btn-woBox button-glow" ng-click="abrirDialogNuevaPlanillaAguinaldos()">
+                <i class="ace-icon fa fa-plus align-top bigger-125"></i>
+                Nueva Planilla
+            </button>
+            
+            <button class="btn btn-info pull-right" ng-click="abrirDialogParametros()">
+                <i class="ace-icon fa fa-cogs align-top bigger-125"></i>
+                Parametros
+            </button>
+            <br>
+            <br>
+            <form name="formularioFiltroPlanillas">
+                <fieldset>
+                    <legend>Filtro Planilla de aguinaldos</legend>
+                    <table class="table table-striped table-bordered table-hover table-block" align="center">
+                        <tbody>
+                            <tr>
+                                <td class="no-border-right"></td>
+                                <td>
+                                    <label>Año</label>&nbsp;
+                                </td>
+                                <td colspan="3">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="no-border-right text-right">PERIODO</td>
+                                <td>
+                                    <select required id="gestion" name="gestion"
+                                        ng-options="gestion.nombre_corto as gestion.nombre for gestion in gestiones | orderBy:'-nombre' track by gestion.id"
+                                        ng-model="pl.gestion">
+                                        <option value="" ng-show="false"></option>
+                                    </select>
+                                </td>
+                                <td colspan="3">
+                                    <button type="button" ng-click="filtrarListaPlanillaSueldos(pl)"
+                                        ng-disabled="formularioFiltroPlanillas.$invalid" class="btn btn-primary">
+                                        <i class="ace-icon fa fa-search  align-top bigger-125"></i>
+                                        Filtrar
+                                    </button>
+                                    <button class="btn btn-danger btn-md">
+                                        <i class="ace-icon fa fa-print align-top bigger-125"></i>
+                                        PDF
+                                    </button>
+                                    <button class="btn btn-success btn-md">
+                                        <i class="ace-icon fa fa-print bigger-125"></i>
+                                        Excel
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </fieldset>
+            </form>
+            <div class="table-header">
+                <a class="white" href="#" data-toggle="modal" data-target="#dialog-editar-historico">
+                    <i class="ace-icon fa fa-h-square bigger-130"></i>
+                </a> Lista de Planillas
+            </div>
+            <!-- div.table-responsive -->
+            <div class="container-table-p">
+                <table id="" class="table table-striped table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th width="2%">Nro.</th>
+                            <th>Año</th>
+                            <th>Promedio Sueldo Básico:</th>
+                            <th>Promedio Horas Extras:</th>
+                            <th>Promedio Recargo Nocturno</th>
+                            <th>Promedio Bono Antiguedad</th>
+                            <th>Promedio Bono Frontera</th>
+                            <th>Promedio Otros Bonos</th>
+                            <th>Promedio Total Ganado</th>
+                            <th class="">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="p in pl.planillas">
+                            <td>{{$index + 1}}</td>
+                            <td>{{p.anio}}</td>
+                            <td>{{p.importe_sueldo_basico}}</td>
+                            <td>{{p.importe_horas_extras}}</td>
+                            <td>{{p.importe_recargo_nocturno}}</td>
+                            <td>{{p.importe_bono_antiguedad}}</td>
+                            <td>{{p.importe_bono_frontera}}</td>
+                            <td>{{p.importe_otros_bonos}}</td>
+                            <td>{{p.importe_total_ganado}}</td>
+                            <td class="">
+                                <div class=" hidden-sm hidden-xs action-buttons">
+                                    <a class="blue" href="javascript:void(0)" ng-click="verPlanilla(p)">
+                                        <i class="ace-icon fa fa-search-plus bigger-130"></i>
+                                    </a>
+
+                                    <a href="javascript:void(0)" class="blue" ng-click="generarReporteExcelPlanillaSueldosOVTAguinaldos(p)">OVT<i class="ace-icon glyphicon glyphicon-print "></i></a>
+                                    <button class="btn btn-xs btn-info" ng-click="abrirDialogImpresion(p)"><i class="ace-icon glyphicon glyphicon-print "></i></button>
+                                    <!-- <a class="green" href="javascript:void(0)" ng-click="editarPlanillaSueldo(p)">
+                                        <i class="ace-icon fa fa-pencil-square-o bigger-130"></i>
+                                    </a> -->
+                                    <!-- <button class="btn btn-xs btn-info" ng-click="abrirDialogImpresion(p)"><i
+                                            class="ace-icon glyphicon glyphicon-print "></i></button>
+
+                                    <a class="btn-xs" popover-trigger="outsideClick : outsideClick"
+                                        uib-popover-template="PopoverReportes_OVT_AFP.templateUrl"
+                                        popover-placement="left" class="btn button-config btn-primary" type="button"
+                                        id="id-btn-PopoverReportes_OVT_AFP">
+                                        <i class="ace-icon glyphicon glyphicon-list"></i>
+                                    </a> -->
+                                   
+                                    <script type="text/ng-template" id="PopoverReportes_OVT_AFP.html">
+                                        <div class='form-group' style="width: 300; height: auto;">
+                                            <div class="form-control">
+                                                <a href="javascript:void(0)" class="blue" ng-click="generarReporteExcelPlanillaSueldosOVT(p)">OVT</a>
+                                            </div>
+                                            <div class="form-control">
+                                                <a href="javascript:void(0)" class="blue" ng-click="generarReporteExcelPlanillaSueldosOVTAguinaldos(p)">OVT AGUINALDOS</a>
+                                            </div>
+                                            <div class="form-control">
+                                                <a href="javascript:void(0)" class="blue" ng-click="generarReporteExcelPlanillaSueldosAFPFUTURO(p)">AFP FUTURO</a>
+                                            </div>
+                                            <div class="form-control">
+                                                 <a href="javascript:void(0)" class="blue" ng-click="generarReporteExcelPlanillaSueldosAFPPREVISION(p)">AFP PREVISIÓN</a>
+                                             </div><div class="form-control">
+                                                <a href="javascript:void(0)" class="blue" ng-click="generarReporteExcelSiatRcIva(p)">SIAT RC-IVA</a>
+                                            </div>
+                                        </div>
+                                       </script>
+                                </div>
+                            </td>
+
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+
+    <!-- Modal planilla sueldos ================================00-->
+    <div class="modal" id="dialog-nueva-planilla-aguinaldos">
+
+        <div class="modal-header ficha">
+            <h4 class="modal-title" id="myModalLabel"> Planilla de Aguinaldos</h4>
+        </div>
+
+        <div class="modal-body">
+            <div class="">
+                <form name="filtrosueldos" class="form-horizontal" novalidate ng-submit="guardarPlanilla(planilla)">
+                    <div class="form-group">
+                        <div class="col-md-2">
+                            <label>Año</label>
+                            <select required class="form-control" id="gestion" name="gestion"
+                                ng-options="gestion.nombre_corto as gestion.nombre for gestion in gestiones | orderBy:'-nombre' track by gestion.id"
+                                ng-model="planilla.gestion">
+                                <option value="" ng-show="false"></option>
+                            </select>
+                        </div>
+                        <div class="col-sm-8 margin-buttons-filter">
+                            <button type="button" ng-click="filtrarSueldos(planilla)"
+                                ng-disabled="!planilla.gestion" class="btn btn-primary">
+                                <i class="ace-icon fa fa-search  align-top bigger-125"></i>
+                                FILTRAR
+                            </button>
+                            <button ng-disabled="!planilla.RecursosHumanosEmpleados" type="submit"
+                                class="btn btn-success">
+                                <i class=""></i>
+                                Guardar
+                            </button>
+
+                            <button ng-disabled="!planilla.RecursosHumanosEmpleados" type="button"
+                                class="btn btn-danger" ng-click="imprimirPlanillaAguinaldosPdf(planilla)">
+                                <i class="fa fa-file-pdf-o align-top bigger-125"></i>
+                                Pre Impresión Pdf
+                            </button>
+                            <button ng-disabled="!planilla.RecursosHumanosEmpleados" type="button"
+                                class="btn btn-success" ng-click="imprimirPlanillaAguinaldosXlsx(planilla)">
+                                <i class="fa fa-file-excel-o align-top bigger-125"></i>
+                                Pre Impresión Excel
+                            </button>
+                            <button type="button" class="btn btn-danger pull-right"
+                                ng-click="cerrarDialogNuevaPlanillaAguinaldos()">
+                                <i class="glyphicon glyphicon-remove align-top bigger-125" aria-hidden="true"></i>
+                                Salir
+                            </button>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+
+
+            <div class="table-header">
+
+                <div class="row">
+                    <div class="col-sm-7">
+                        Planilla de Aguinaldos
+                    </div>
+                    <div class="col-sm-2">
+                        <label for="" class="pull-right">Buscar: </label>
+                    </div>
+                    <div class="col-sm-3">
+                        <input type="text" class="input-search" ng-model="buscarPlanilla">
+                    </div>
+                </div>
+
+            </div>
+            <!-- div.table-responsive -->
+            <div class="container-table-planillas" id="scrollp">
+                <div id="test" class="table-content2">
+                    <table class="table table-sueldos1">
+                        <thead>
+                            <tr>
+                                <th class="td-sueldos-fix1 table-th-static">Nro.</th>
+                                <th class=" td-sueldos-fix1 table-th-static">Imp.</th>
+                                <th class="td-sueldos-fix2 table-th-static">
+                                    Empleado
+                                    <a href="javascript:void(0)" class="blue"
+                                        ng-click="ordenarPlanilla(ordenPlanillas)">
+                                        <i class="fa fa-sort-alpha-asc bigger-200" aria-hidden="true"
+                                            ng-if="ordenPlanillas"></i>
+                                        <i class="fa fa-sort-alpha-desc bigger-200" aria-hidden="true"
+                                            ng-if="!ordenPlanillas"></i>
+                                    </a>
+                                </th>
+                                <th class="td-sueldos-fix3 table-th-static">Fecha Ingreso:</th>
+                                <th class="">Promedio Básico:</th>
+                                <th class="">Promedio Horas Extras:</th>
+                                <th class="">Promedio Recargo Nocturno</th>
+                                <th class="">Promedio Bono Antiguedad</th>
+                                <th class="">Promedio Bono Frontera</th>
+                                <th class="">Promedio Otros Bonos</th>
+                                <th class="">Promedio Total Ganado</th>
+                                <th class="">Días Trabajados</th>
+                                <th class="">Líquido Pagable</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr
+                                ng-repeat="empleado in planilla.RecursosHumanosEmpleados | filter:{empleado: {persona: {nombre_completo: buscarPlanilla }}}">
+                                <td class="td-sueldos-fix1">{{$index+1}}</td>
+                                <td class="td-sueldos-fix1" "="">
+                                    <div class=" btn btn-xs btn-inverse" ng-click="imprimirBoletaAguinaldoIndividual(planilla.gestion, empleado, false)"><span class="glyphicon glyphicon-print glyphicon-sm"></span></div>
+                                </td>
+                                <td class="td-sueldos-fix2">
+                                    {{empleado.empleado.persona.nombre_completo}}
+                                    <a popover-placement="right"
+                                        uib-popover-template="dynamicPopoverEmpleado.templateUrl"
+                                        popover-trigger="outsideClick: outsideClick" popover-title="Datos"
+                                        class="pull-right blue" popover-append-to-body="true"
+                                        popover-class="xlpopover title-popover-empleado" class="blue">
+                                        <span class="image-empleado">
+                                            <span class="fa fa-user "></span>
+                                        </span>
+                                    </a>
+
+                                    <script type="text/ng-template" id="myPopoverEmpleadoTemplate.html">
+
+                                    <div class="row">
+                                        <div class="searchable-container">
+                                            <div class="items col-xs-12 col-sm-12 col-md-12 col-lg-12 clearfix">
+                                                <div class="info-block block-info clearfix">
+                                                    <div class="square-box pull-left">
+                                                        <span class="glyphicon glyphicon-user glyphicon-lg"></span>
+                                                        <!-- <img class="nav-user-photo" ng-src="{{empleado.imagen}}" alt="Foto" /> -->
+                                                    </div>
+                                                    <h5>{{empleado.empleado.persona.nombre_completo}}</h5>
+                                                    <span>CI: {{empleado.empleado.persona.ci}}</span>
+                                                    <br>
+                                                    <span>Cargo: {{empleado.cargos[0].cargo.nombre}}</span>
+                                                    <br>
+                                                    <span>Campamento: {{empleado.empleado.campo.nombre}}</span>
+                                                    <br>
+                                                    <span>Matrícula: {{empleado.matricula_seguro}}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    </script>
+                                </td>
+                                <td class="td-sueldos-fix3">{{empleado.fecha_inicio | date:'dd/MM/yyyy'}}</td>
+                                <td>{{empleado.promedio_basico}}</td>
+                                <td>{{empleado.prom_horas_extras}}</td>
+                                <td>{{empleado.prom_recargo_nocturno}}</td>
+                                <td>{{empleado.prom_bono_antiguedad}}</td>
+                                <td>{{empleado.prom_bono_frontera}}</td>
+                                <td>{{empleado.prom_otros_bonos}}</td>
+                                <td>{{empleado.prom_total_ganado}}</td>
+                                <td>{{empleado.dias_trabajados}}</td>
+                                <td>{{empleado.liquido_pagable}}</td>
+                                <td class="">
+                                    <a class="blue" href="javascript:void(0)">
+                                        <i class="ace-icon fa fa-search-plus bigger-130"></i>
+                                    </a>
+                                    <!-- <a class="green" href="javascript:void(0)"
+                                        ng-click="abrirDialogEditarPlanillaSueldo(empleado)">
+                                        <i class="ace-icon fa fa-pencil-square-o bigger-130"></i>
+                                    </a>
+                                    <a class="red" href="javascript:void(0)"
+                                        ng-click="abrirDialogEliminarSueldoEmpleado($index, empleado)">
+                                        <i class="ace-icon fa fa-trash-o bigger-130"></i>
+                                    </a> -->
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td>TOTALES</td>
+                                <td></td>
+                                <td>{{planilla.importe_sueldo_basico}}</td>
+                                <td>{{planilla.importe_horas_extras}}</td>
+                                <td>{{planilla.importe_recargo_nocturno}}</td>
+                                <td>{{planilla.importe_bono_antiguedad}}</td>
+                                <td>{{planilla.importe_bono_frontera}}</td>
+                                <td>{{planilla.importe_otros_bonos}}</td>
+                                <td>{{planilla.importe_total_ganado}}</td>
+                                <td>{{planilla.total_dias_trabajados}}</td>
+                                <td>{{planilla.importe_liquido_pagable}}</td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+
+    <div class="modal" id="dialog-ver-planilla-aguinaldos">
+
+        <div class="modal-header ficha">
+            <h4 class="modal-title" id="myModalLabel"> Planilla de Aguinaldos</h4>
+        </div>
+
+        <div class="modal-body">
+            <div class="">
+                <form name="filtrosueldos" class="form-horizontal" novalidate ng-submit="guardarPlanilla(planilla)">
+                    <div class="form-group">
+                        <div class="col-md-2">
+                            <label>Año</label>
+                            <label class="form-control">{{planillaC.anio}}</label>
+                        </div>
+                        <div class="col-sm-8 margin-buttons-filter">
+                            <!-- <button ng-disabled="!planillaC.detalles" type="submit"
+                                class="btn btn-success">
+                                <i class=""></i>
+                                Guardar
+                            </button> -->
+
+                            <button ng-disabled="!planillaC.detalles" type="button"
+                                class="btn btn-danger" ng-click="imprimirPlanillaAguinaldosPdfOficial(planillaC)">
+                                <i class="fa fa-file-pdf-o align-top bigger-125"></i>
+                                Impresión Pdf
+                            </button>
+                            <button ng-disabled="!planillaC.detalles" type="button"
+                                class="btn btn-success" ng-click="imprimirPlanillaAguinaldosXlsxOficial(planillaC.detalles)">
+                                <i class="fa fa-file-excel-o align-top bigger-125"></i>
+                                Impresión Excel
+                            </button>
+                            <button ng-hide="listaAnticipos2.length>0" type="button" class="btn btn-warning"
+                                popover-append-to-body="true" popover-placement="bottom"
+                                uib-popover-template="dynamicPopovertr3.templateUrl"
+                                popover-trigger="outsideClick: outsideClick" popover-title="Bancos">
+                                <span class="ace-icon fa fa-print bigger-125"></span>
+                                Generar TR3
+                            </button>
+                            <script type="text/ng-template" id="myPopoverTr3.html">
+                               <div class="container">
+                                <div class="form-group">
+                                    <a ng-repeat="banco in bancos track by $index" ng-click="abrirModalbanco(banco)"><p>{{banco.nombre}}</p></a>           
+                                </div>
+                            </div>
+                            </script>
+                            <a class="text-info" href="javascript:void(0)" popover-placement="right"
+                                uib-popover-template="dynamicPopoverBancoComprobante.templateUrl"
+                                popover-trigger="outsideClick: outsideClick" popover-title="Bancos"
+                                popover-append-to-body="true">
+                                <i class="ace-icon fa fa-sign-out bigger-200"></i>
+                            </a>
+
+                            <script type="text/ng-template" id="myPopoverBancoComprobante.html">
+                                <div class="form-group">
+                                    <label for="">Registros individuales</label>
+                                    <label class="pos-rel">
+                                        <input name="switch-field-1" class="ace ace-switch ace-switch-4" type="checkbox"
+                                            ng-model="registroIndividual" ng-change="verificarRegistroIndividual()"/>                                        
+                                            <span class="lbl check-descuento"></span>
+                                    </label>
+                                  </div> 
+                                  <hr>  
+                            <div class="form-group">
+                                <a ng-repeat="banco in datosBancos|filter:{cuenta_sueldo:true} track by $index"
+                                ng-click="crearComprobantePorBanco(banco)">
+                                <p>{{banco.nombre}}</p>
+                            </a>
+                            </div>
+                            </script>
+                            <button type="button" class="btn btn-danger pull-right"
+                                ng-click="cerrarVerPlanillaAguinaldos()">
+                                <i class="glyphicon glyphicon-remove align-top bigger-125" aria-hidden="true"></i>
+                                Salir
+                            </button>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+
+
+            <div class="table-header">
+
+                <div class="row">
+                    <div class="col-sm-7">
+                        Planilla de Aguinaldos
+                    </div>
+                    <div class="col-sm-2">
+                        <label for="" class="pull-right">Buscar: </label>
+                    </div>
+                    <div class="col-sm-3">
+                        <input type="text" class="input-search" ng-model="buscarPlanilla">
+                    </div>
+                </div>
+
+            </div>
+            <!-- div.table-responsive -->
+            <div class="container-table-planillas" id="scrollp">
+                <div id="test" class="table-content2">
+                    <table class="table table-sueldos1">
+                        <thead>
+                            <tr>
+                                <th class="td-sueldos-fix1 table-th-static">Nro.</th>
+                                <th class=" td-sueldos-fix1 table-th-static">Imp.</th>
+                                <th class="td-sueldos-fix2 table-th-static">
+                                    Empleado
+                                    <a href="javascript:void(0)" class="blue"
+                                        ng-click="ordenarPlanillaEditar(ordenPlanillas)">
+                                        <i class="fa fa-sort-alpha-asc bigger-200" aria-hidden="true"
+                                            ng-if="ordenPlanillas"></i>
+                                        <i class="fa fa-sort-alpha-desc bigger-200" aria-hidden="true"
+                                            ng-if="!ordenPlanillas"></i>
+                                    </a>
+                                </th>
+                                <th class="td-sueldos-fix3 table-th-static">Fecha Ingreso:</th>
+                                <th class="">Promedio Básico:</th>
+                                <th class="">Promedio Horas Extras:</th>
+                                <th class="">Promedio Recargo Nocturno</th>
+                                <th class="">Promedio Bono Antiguedad</th>
+                                <th class="">Promedio Bono Frontera</th>
+                                <th class="">Promedio Otros Bonos</th>
+                                <th class="">Promedio Total Ganado</th>
+                                <th class="">Días Trabajados</th>
+                                <th class="">Líquido Pagable</th>
+                                <th class="">Contabilizado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr
+                                ng-repeat="empleado in planillaC.detalles | filter:{ DetalleFicha: {empleado: {persona: {nombre_completo: buscarPlanilla }}}}">
+                                <td class="td-sueldos-fix1">{{$index+1}}</td>
+                                <td class="td-sueldos-fix1" "="">
+                                    <div class=" btn btn-xs btn-inverse" ng-click="imprimirBoletaAguinaldoIndividual(planillaC.anio, empleado, true)"><span class="glyphicon glyphicon-print glyphicon-sm"></span></div>
+                                </td>
+                                <td class="td-sueldos-fix2">
+                                    {{empleado.DetalleFicha.empleado.persona.nombre_completo}}
+                                    <a popover-placement="right"
+                                        uib-popover-template="dynamicPopoverEmpleado.templateUrl"
+                                        popover-trigger="outsideClick: outsideClick" popover-title="Datos"
+                                        class="pull-right blue" popover-append-to-body="true"
+                                        popover-class="xlpopover title-popover-empleado" class="blue">
+                                        <span class="image-empleado">
+                                            <span class="fa fa-user "></span>
+                                        </span>
+                                    </a>
+
+                                    <script type="text/ng-template" id="myPopoverEmpleadoTemplate.html">
+
+                                    <div class="row">
+                                        <div class="searchable-container">
+                                            <div class="items col-xs-12 col-sm-12 col-md-12 col-lg-12 clearfix">
+                                                <div class="info-block block-info clearfix">
+                                                    <div class="square-box pull-left">
+                                                        <span class="glyphicon glyphicon-user glyphicon-lg"></span>
+                                                        <!-- <img class="nav-user-photo" ng-src="{{empleado.imagen}}" alt="Foto" /> -->
+                                                    </div>
+                                                    <h5>{{empleado.DetalleFicha.empleado.persona.nombre_completo}}</h5>
+                                                    <span>CI: {{empleado.DetalleFicha.empleado.persona.ci}}</span>
+                                                    <br>
+                                                    <span>Cargo: {{empleado.DetalleFicha.cargos[0].cargo.nombre}}</span>
+                                                    <br>
+                                                    <span>Campamento: {{empleado.DetalleFicha.empleado.campo.nombre}}</span>
+                                                    <br>
+                                                    <span>Matrícula: {{empleado.DetalleFicha.matricula_seguro}}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    </script>
+                                </td>
+                                <td class="td-sueldos-fix3">{{empleado.DetalleFicha.fecha_inicio | date:'dd/MM/yyyy'}}</td>
+                                <td>{{empleado.promedio_basico}}</td>
+                                <td>{{empleado.prom_horas_extras}}</td>
+                                <td>{{empleado.prom_recargo_nocturno}}</td>
+                                <td>{{empleado.prom_bono_antiguedad}}</td>
+                                <td>{{empleado.prom_bono_frontera}}</td>
+                                <td>{{empleado.prom_otros_bonos}}</td>
+                                <td>{{empleado.prom_total_ganado}}</td>
+                                <td>{{empleado.dias_trabajados}}</td>
+                                <td>{{empleado.liquido_pagable}}</td>
+                                <td ng-class="empleado.id_asiento_contabilidad?'text-success':'text-danger'">
+                                    {{empleado.id_asiento_contabilidad?'Procesado':'Pendiente'}}
+                                </td>
+                                <td class="">
+                                    <a class="blue" href="javascript:void(0)">
+                                        <i class="ace-icon fa fa-search-plus bigger-130"></i>
+                                    </a>
+                                    <!-- <a class="green" href="javascript:void(0)"
+                                        ng-click="abrirDialogEditarPlanillaSueldo(empleado)">
+                                        <i class="ace-icon fa fa-pencil-square-o bigger-130"></i>
+                                    </a>
+                                    <a class="red" href="javascript:void(0)"
+                                        ng-click="abrirDialogEliminarSueldoEmpleado($index, empleado)">
+                                        <i class="ace-icon fa fa-trash-o bigger-130"></i>
+                                    </a> -->
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td>TOTALES</td>
+                                <td></td>
+                                <td>{{planillaC.importe_sueldo_basico}}</td>
+                                <td>{{planillaC.importe_horas_extras}}</td>
+                                <td>{{planillaC.importe_recargo_nocturno}}</td>
+                                <td>{{planillaC.importe_bono_antiguedad}}</td>
+                                <td>{{planillaC.importe_bono_frontera}}</td>
+                                <td>{{planillaC.importe_otros_bonos}}</td>
+                                <td>{{planillaC.importe_total_ganado}}</td>
+                                <td>{{planillaC.total_dias_trabajados}}</td>
+                                <td>{{planillaC.importe_liquido_pagable}}</td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+    <!-- =====  fin modal  nueva planilla sueldos ====== -->
+<!-- =====  modal  editar planilla sueldo ====== -->
+<div id="dialog-editar-planilla-sueldo" class="modal">
+    <div class="modal-header ficha">
+        <h4 class="modal-title" id="myModalLabel">{{sueldo.nombre_completo}}</h4>
+        <h5 class="modal-title">{{planilla.mes.split('-')[1]}} {{planilla.gestion}}</h5>
+    </div>
+    <div class="modal-body">
+        <form>
+            <div class="form-group row">
+                <label class="col-sm-3" for="monto">Sueldo Básico</label>
+                <div class="col-sm-3">
+                    <input type="number" class="form-control" ng-model="sueldo.sueldoBasico"
+                        ng-change="calcularTotalEditados()" name="monto" disabled="" placeholder="1000">
+                </div>
+                <label class="col-sm-3" for="observaciones">Bono Frontera</label>
+                <div class="col-sm-3">
+                    <input type="number" class="form-control" ng-model="sueldo.bonoFrontera" name="bonoFrontera"
+                        ng-change="calcularTotalEditados()">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-3" for="interes-pactado">DT</label>
+                <div class="col-sm-3">
+                    <input type="number" class="form-control" ng-model="sueldo.dt" disabled="">
+                </div>
+                <label class="col-sm-3" for="observaciones">Otros Bonos</label>
+                <div class="col-sm-3">
+                    <input type="number" class="form-control" ng-model="sueldo.otrosBonos" name="otrosBonos"
+                        ng-change="calcularTotalEditados()">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-3" for="interes-pactado">Ganado</label>
+                <div class="col-sm-3">
+                    <input type="number" class="form-control" ng-model="sueldo.ganado" disabled="">
+                </div>
+                <label class="col-sm-3" for="observaciones">Total Ganado</label>
+                <div class="col-sm-3">
+                    <input type="number" class="form-control" ng-model="sueldo.totalGanado" name="totalGanado"
+                        disabled="">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-3" for="interes-pactado">Horas extras rol</label>
+                <div class="col-sm-3">
+                    <input type="number" class="form-control" ng-model="sueldo.horasExtrasRol"
+                        ng-change="calcularTotalEditados()">
+                </div>
+                <label class="col-sm-3" for="observaciones">AFP</label>
+                <div class="col-sm-3">
+                    <input type="number" class="form-control" ng-model="sueldo.afp" name="afp" disabled="">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-3" for="interes-pactado">Horas extras</label>
+                <div class="col-sm-3">
+                    <input type="number" class="form-control" ng-model="sueldo.horasExtras" disabled="">
+                </div>
+                <label class="col-sm-3" for="observaciones">RC IVA</label>
+                <div class="col-sm-3">
+                    <input type="number" class="form-control" ng-model="sueldo.rc_iva" name="rciva" disabled="">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-3" for="fecha-inicial">Total Horas</label>
+                <div class="col-sm-3">
+                    <input type="number" class="form-control" ng-model="sueldo.totalHorasExtras" disabled="">
+                </div>
+                <label class="col-sm-3" for="observaciones">Anticipos</label>
+                <div class="col-sm-3">
+                    <input type="number" class="form-control" ng-model="sueldo.anticipos" name="anticipos" disabled="">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-3" for="plazo">Recargo Nocturno</label>
+                <div class="col-sm-3">
+                    <input type="number" class="form-control" ng-model="sueldo.recargoNocturno" name="plazo"
+                        disabled="">
+                </div>
+                <label class="col-sm-3" for="observaciones">Prestamos</label>
+                <div class="col-sm-3">
+                    <input type="number" class="form-control" ng-model="sueldo.prestamos" name="pretsamos" disabled="">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-3" for="observaciones">Bono de Antigüedad</label>
+                <div class="col-sm-3">
+                    <input type="number" class="form-control" ng-model="sueldo.bonoAntiguedad" name="bonoAntiguedad"
+                        disabled="">
+                </div>
+                <label class="col-sm-3" for="observaciones">Total Descuento</label>
+                <div class="col-sm-3">
+                    <input type="text" class="form-control" ng-model="sueldo.totalDescuento" name="totaldescuentos"
+                        disabled="">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-3 col-sm-offset-6" for="observaciones">Líquido pagable</label>
+                <div class="col-sm-3">
+                    <input type="text" class="form-control" ng-model="sueldo.liquidoPagable" name="liquidopagable"
+                        disabled="">
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="row">
+        <div class="modal-footer wizard-actions">
+            <button class="btn btn-primary btn-sm" ng-click="modificarSueldo(sueldo)"><i
+                    class="glyphicon glyphicon-floppy-disk"></i>Guardar
+            </button>
+            <button class="btn btn-danger btn-sm" ng-click="cerrarDialogEditarPlanillaSueldo()"><i
+                    class="ace-icon fa fa-times"></i>Cancelar
+            </button>
+        </div>
+    </div>
+</div>
+<!-- ===== fin modal editar planilla sueldo  ====== -->
+<!-- =====  modal  editar  sueldo ====== -->
+<div id="dialog-editar-sueldo" class="modal">
+    <div class="modal-header ficha">
+        <h4 class="modal-title" id="myModalLabel">{{sueldo.DetalleFicha.empleado.persona.nombre_completo}}</h4>
+    </div>
+    <div class="modal-body">
+        <form>
+            <div class="form-group row">
+                <label class="col-sm-3" for="monto">Sueldo Básico</label>
+                <div class="col-sm-3">
+                    <input type="number" class="form-control" ng-model="sueldo.importe_sueldo_basico"
+                        ng-change="calcularTotalEditadoSueldo()" disabled="" name="monto" placeholder="1000">
+                </div>
+                <label class="col-sm-3" for="observaciones">Bono Frontera</label>
+                <div class="col-sm-3">
+                    <input type="number" class="form-control" ng-model="sueldo.importe_bono_frontera"
+                        name="bonoFrontera" ng-change="calcularTotalEditadoSueldo()">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-3" for="interes-pactado">DT</label>
+                <div class="col-sm-3">
+                    <input type="number" class="form-control" ng-model="sueldo.dt" disabled="">
+                </div>
+                <label class="col-sm-3" for="observaciones">Otros Bonos</label>
+                <div class="col-sm-3">
+                    <input type="number" class="form-control" ng-model="sueldo.importe_otros_bonos" name="otrosBonos"
+                        ng-change="calcularTotalEditadoSueldo()">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-3" for="interes-pactado">Ganado</label>
+                <div class="col-sm-3">
+                    <input type="number" class="form-control" ng-model="sueldo.ganado" disabled="">
+                </div>
+                <label class="col-sm-3" for="observaciones">Total Ganado</label>
+                <div class="col-sm-3">
+                    <input type="number" class="form-control" ng-model="sueldo.total_ganado" name="totalGanado"
+                        disabled="">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-3" for="interes-pactado">Horas extras rol</label>
+                <div class="col-sm-3">
+                    <input type="number" class="form-control" ng-model="sueldo.horas_extras_rol"
+                        ng-change="calcularTotalEditadoSueldo()">
+                </div>
+                <label class="col-sm-3" for="observaciones">AFP</label>
+                <div class="col-sm-3">
+                    <input type="number" class="form-control" ng-model="sueldo.afp" name="afp" disabled="">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-3" for="interes-pactado">Horas extras</label>
+                <div class="col-sm-3">
+                    <input type="number" class="form-control" ng-model="sueldo.horas_extras" disabled="">
+                </div>
+                <label class="col-sm-3" for="observaciones">RC IVA</label>
+                <div class="col-sm-3">
+                    <input type="number" class="form-control" ng-model="sueldo.rc_iva" name="rciva" disabled="">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-3" for="fecha-inicial">Total Horas Extras</label>
+                <div class="col-sm-3">
+                    <input type="number" class="form-control" ng-model="sueldo.importe_horas_extras" disabled="">
+                </div>
+                <label class="col-sm-3" for="observaciones">Anticipos</label>
+                <div class="col-sm-3">
+                    <input type="number" class="form-control" ng-model="sueldo.importe_anticipos" name="anticipos"
+                        disabled="">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-3" for="plazo">Recargo Nocturno</label>
+                <div class="col-sm-3">
+                    <input type="number" class="form-control" ng-model="sueldo.importe_recargo_nocturno" name="plazo"
+                        disabled="">
+                </div>
+                <label class="col-sm-3" for="observaciones">Prestamos</label>
+                <div class="col-sm-3">
+                    <input type="number" class="form-control" ng-model="sueldo.importe_prestamos" name="pretsamos"
+                        disabled="">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-3" for="observaciones">Bono de Antigüedad</label>
+                <div class="col-sm-3">
+                    <input type="number" class="form-control" ng-model="sueldo.importe_bono_antiguedad"
+                        name="bonoAntiguedad" disabled="">
+                </div>
+                <label class="col-sm-3" for="observaciones">Total Descuento</label>
+                <div class="col-sm-3">
+                    <input type="text" class="form-control" ng-model="sueldo.importe_total_descuento"
+                        name="totaldescuentos" disabled="">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-3 col-sm-offset-6" for="observaciones">Líquido pagable</label>
+                <div class="col-sm-3">
+                    <input type="text" class="form-control" ng-model="sueldo.liquido_pagable" name="liquidopagable"
+                        disabled="">
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="row">
+        <div class="modal-footer wizard-actions">
+            <button class="btn btn-primary btn-sm" ng-click="modificarSueldoEditado(sueldo)"><i
+                    class="glyphicon glyphicon-floppy-disk"></i>Guardar
+            </button>
+            <button class="btn btn-danger btn-sm" ng-click="cerrarModalEditarSueldo()"><i
+                    class="ace-icon fa fa-times"></i>Cancelar
+            </button>
+        </div>
+    </div>
+</div>
+<!-- ===== fin modal editar planilla sueldo  ====== -->
+<!-- =====  modal parametros ====== -->
+<div id="dialog-parametros" class="modal wizard-posicion">
+    <div class="modal-content">
+        <form ng-submit="editarParametros(parametros, false)" novalidate>
+            <div id="modal-wizard-container-parametros">
+                <div class="modal-header">
+					<ul class="steps">
+						<li id="cabeza-datos-producto" data-step="1" class="active">
+							<span class="step">1</span>
+							<span class="title">Datos Parametros/AFP</span>
+						</li>
+						<li id="cabeza-datos-precio" data-step="2" ng-click="stepWizard(2)">
+							<span class="step">2</span>
+							<span class="title">Bonos</span>
+						</li>
+						<li id="cabeza-datos-adicionales" data-step="3" ng-click="stepWizard(3)">
+							<span class="step">3</span>
+							<span class="title">Horas Extras</span>
+						</li>
+						<li id="cabeza-tipo-producto" data-step="4" ng-click="stepWizard(4)">
+							<span class="step">4</span>
+							<span class="title">Aguinaldos</span>
+						</li>
+						<li data-step="5">
+							<span class="step">5</span>
+							<span class="title">Finalizar</span>
+						</li>
+					</ul>
+                </div>
+                <div class="modal-body step-content">
+                    <div class="step-pane active" data-step="1">
+                        <div class="row">
+                            <div class="form-group col-sm-3">
+                                <label for="nombres">Salario Mínimo Nacional</label>
+                                <input type="number" class="form-control" ng-model="parametros.salario_minimo">
+                            </div>
+                            <div class="form-group col-sm-3">
+                                <label for="ap-paterno">Decreto Supremo</label>
+                                <input type="text" class="form-control " ng-model="parametros.decreto_supremo">
+                            </div>
+                            <div class="form-group col-sm-3">
+                                <label for="ap-paterno">Salarios para RC-IVA</label>
+                                <input type="number" class="form-control " ng-model="parametros.salario_rciva">
+                            </div>
+                            <div class="form-group col-sm-3">
+                                <label for="nombres">Porcentaje IVA</label>
+                                <input type="number" class="form-control " ng-model="parametros.porcentage_iva">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-sm-3">
+                                <label for="ap-paterno">Seguro de Salud</label>
+                                <input type="text" class="form-control " ng-model="parametros.seguro_salud">
+                            </div>
+                            <div class="form-group col-sm-3">
+                                <label for="ap-paterno">Aporte seguro de Salud</label>
+                                <input type="number" class="form-control " ng-model="parametros.aporte_serguro_salud">
+                            </div>
+                            <div class="form-group col-sm-3">
+                                <label for="nombres">Número patronal</label>
+                                <input type="text" class="form-control " ng-model="parametros.numero_patronal">
+                            </div>
+                            <div class="form-group col-sm-3">
+                                <label for="numero_empleador">Nro. empleador (Ministerio de trabajo)</label>
+                                <input type="text" class="form-control " ng-model="parametros.numero_empleador">
+                            </div>
+                        </div>
+                        <div class="cabezera-ficha">
+                            <h4 class="blue">
+                                AFP LABORAL SIP
+                            </h4>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-sm-3">
+                                <label for="ap-paterno">Pensión Vejez</label>
+                                <input type="number" class="form-control" ng-model="parametros.pension_vejez">
+                            </div>
+                            <div class="form-group col-sm-3">
+                                <label for="ap-paterno">Riesgo Común</label>
+                                <input type="number" class="form-control" ng-model="parametros.riesgo_comun">
+                            </div>
+                            <div class="form-group col-sm-2">
+                                <label for="ap-paterno">Comisión</label>
+                                <input type="number" class="form-control" ng-model="parametros.comision">
+                            </div>
+                            <div class="form-group col-sm-2">
+                                <label for="ap-paterno">Aporte Solidario</label>
+                                <input type="number" class="form-control" ng-model="parametros.aporte_solidario_laboral">
+                            </div>
+                            <div class="form-group col-sm-2">
+                                <label for="ap-paterno">Solo Jubilados</label>
+                                <input type="number" class="form-control" ng-model="parametros.solo_jubilados">
+                            </div>
+                        </div>
+                        <div class="cabezera-ficha">
+                            <h4 class="blue">
+                                AFP PATRONAL
+                            </h4>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-sm-4">
+                                <label for="nombres">Riesgo Profesional</label>
+                                <input type="number" class="form-control" ng-model="parametros.riesgo_profesional">
+                            </div>
+                            <div class="form-group col-sm-4">
+                                <label for="ap-paterno">Aporte Solidario</label>
+                                <input type="number" class="form-control" ng-model="parametros.aporte_solidario_patronal">
+                            </div>
+                            <div class="form-group col-sm-4">
+                                <label for="ap-paterno">Pro vivienda</label>
+                                <input type="number" class="form-control" ng-model="parametros.pro_vivienda_patronal">
+                            </div>
+                        </div>
+                        <div class="cabezera-ficha">
+                            <h4 class="blue">
+                                NACIONAL SOLIDARIO
+                            </h4>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-sm-4">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <label for="document">Rango 1</label>
+                                    </div>
+                                    <div class="col-md-8 col-sm-4 col-day">
+                                        <input type="number" class="form-control"
+                                            ng-model="parametros.rango_primero_inicio_solidario">
+                                    </div>
+                                    <div class="col-md-4 col-sm-4 col-month">
+                                        <input type="number" class="form-control" ng-model="parametros.rango_primero_fin_solidario">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-4">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <label for="document">Rango 2</label>
+                                    </div>
+                                    <div class="col-md-8 col-sm-4 col-day">
+                                        <input type="number" class="form-control"
+                                            ng-model="parametros.rango_segundo_inicio_solidario">
+                                    </div>
+                                    <div class="col-md-4 col-sm-4 col-month">
+                                        <input type="number" class="form-control" ng-model="parametros.rango_segundo_fin_solidario">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-4">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <label for="document">Rango 3</label>
+                                    </div>
+                                    <div class="col-md-8 col-sm-4 col-day">
+                                        <input type="number" class="form-control"
+                                            ng-model="parametros.rango_tercero_inicio_solidario">
+                                    </div>
+                                    <div class="col-md-4 col-sm-4 col-month">
+                                        <input type="number" class="form-control" ng-model="parametros.rango_tercero_fin_solidario">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="step-pane" data-step="2">
+                        <div class="cabezera-ficha">
+                            <h4 class="blue">
+                                BONO DE ANTIGUEDAD
+                            </h4>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-sm-6">
+                                <label for="ap-materno">Salarios Base</label>
+                                <input type="number" class="form-control" ng-model="parametros.salario_base_antiguedad">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-sm-3">
+                                <label for="ap-materno">De 0 a 1 años</label>
+                                <input type="number" class="form-control" ng-model="parametros.antiguedad_cero_uno">
+                            </div>
+                            <div class="form-group col-sm-3">
+                                <label for="ap-materno">De 2 a 4 años</label>
+                                <input type="number" class="form-control" ng-model="parametros.antiguedad_dos_cuatro">
+                            </div>
+                            <div class="form-group col-sm-3">
+                                <label for="ap-materno">De 5 a 7 años</label>
+                                <input type="number" class="form-control" ng-model="parametros.antiguedad_cinco_siete">
+                            </div>
+                            <div class="form-group col-sm-3">
+                                <label for="ap-materno">De 8 a 10 años</label>
+                                <input type="number" class="form-control" ng-model="parametros.antiguedad_ocho_diez">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-sm-3">
+                                <label for="ap-materno">De 11 a 14 años</label>
+                                <input type="number" class="form-control" ng-model="parametros.antiguedad_once_catorce">
+                            </div>
+                            <div class="form-group col-sm-3">
+                                <label for="ap-materno">De 15 a 19 años</label>
+                                <input type="number" class="form-control" ng-model="parametros.antiguedad_quice_diecinueve">
+                            </div>
+                            <div class="form-group col-sm-3">
+                                <label for="ap-materno">De 20 a 24 años</label>
+                                <input type="number" class="form-control" ng-model="parametros.antiguedad_veinte_veinticuatro">
+                            </div>
+                            <div class="form-group col-sm-3">
+                                <label for="ap-materno">Más de 25 años</label>
+                                <input type="number" class="form-control" ng-model="parametros.antiguedad_mas_veinticinco">
+                            </div>
+                        </div>
+                        <div class="cabezera-ficha">
+                            <h4 class="blue">
+                                BONO FRONTERA
+                            </h4>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-sm-4">
+                                <label for="nombres">Monto</label>
+                                <input type="number" class="form-control" ng-model="parametros.frontera_monto">
+                            </div>
+                            <div class="form-group col-sm-4">
+                                <label for="ap-paterno">Área</label>
+                                <div id="areas-frontera" isteven-multi-select input-model="cargosFrontera"
+                                    output-model="parametros.frontera_area" button-label="icon nombre"
+                                    item-label="icon nombre maker" tick-property="ticked" translation="localLang">
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-4">
+                                <label for="ap-paterno">Porcentaje</label>
+                                <div>
+                                    <label>
+                                        <input name="" class="ace ace-switch ace-switch-5" type="checkbox"
+                                            ng-model="parametros.frontera_porcentaje">
+                                        <span class="lbl check-espaniol"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+            
+                        <div class="cabezera-ficha">
+                            <h4 class="blue">
+                                BONO CUMPLEAÑERO
+                            </h4>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-sm-4">
+                                <label for="nombres">Monto</label>
+                                <input type="number" class="form-control" ng-model="parametros.hbd_monto">
+                            </div>
+                            <div class="form-group col-sm-4">
+                                <label for="ap-paterno">Área</label>
+                                <div id="areas-hbd" isteven-multi-select input-model="cargosHBD" output-model="parametros.hbd_area"
+                                    button-label="icon nombre" item-label="icon nombre maker" tick-property="ticked_hbd"
+                                    translation="localLang">
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-4">
+                                <label for="ap-paterno">Porcentaje</label>
+                                <div>
+                                    <label>
+                                        <input name="" class="ace ace-switch ace-switch-5" type="checkbox"
+                                            ng-model="parametros.hbd_porcentaje">
+                                        <span class="lbl check-espaniol"></span>
+                                    </label>
+                                </div>
+                            </div>
+            
+                        </div>
+                        <div class="cabezera-ficha">
+                            <h4 class="blue">
+                                PROVISIÓN AGUINALDOS E INDEMNIZACIONES
+                            </h4>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-sm-4">
+                                <label for="nombres">Indemnizaciones</label>
+                                <input type="number" class="form-control" ng-model="parametros.indemnizaciones">
+                            </div>
+                            <div class="form-group col-sm-4">
+                                <label for="nombres">Aguinaldos</label>
+                                <input type="number" class="form-control" ng-model="parametros.aguinaldos">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="step-pane" data-step="3">
+                        <div class="cabezera-ficha">
+                            <h4 class="blue">
+                                HORAS EXTRAS DIA CAMPO
+                            </h4>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-sm-3">
+                                <label for="nombres">Campo</label>
+            
+                                <select required class="form-control" name="centroDeCostos"
+                                    ng-options="centroCosto as centroCosto.nombre for centroCosto in centrosDeCostos | filter:{habilitado:true} track by centroCosto.id"
+                                    ng-model="parametroHoraExtra.campo">
+                                    <option value="">--selecionar--</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-sm-3">
+                                <label for="nombres">Horas</label>
+                                <input type="number" class="form-control" ng-model="parametroHoraExtra.horas">
+                            </div>
+                            <div class="form-group col-sm-3">
+                                <label for="nombres">Mes Inicio</label>
+                                <input type="text" class="form-control date-mes-anio" autocomplete="off" ng-update-hidden
+                                    ng-model="parametroHoraExtra.inicio_mes">
+                            </div>
+                            <div class="col-sm-2">
+                                <br>
+                                <div class="form-group">
+                                    <button type="button" class="btn btn-success"
+                                        ng-disabled="!parametroHoraExtra.campo || !parametroHoraExtra.horas || !parametroHoraExtra.inicio_mes"
+                                        ng-click="agregarHoraExtraCampo(parametroHoraExtra)">
+                                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                                    </button>
+                                </div>
+                            </div>
+            
+                        </div>
+                        <div class="table-responsive">
+                            <div class="table-fixed-header">
+                                <table class="table table-striped table-bordered table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th class="th-fix">
+                                                <label>Campo</label>
+                                            </th>
+                                            <th class="th-fix">
+                                                <label>Horas</label>
+                                            </th>
+                                            <th class="th-fix">
+                                                <label>Mes Inicio</label>
+                                            </th>
+                                            <th class="th-fix">
+                                                <label>Mes Fin</label>
+                                            </th>
+                                            <th class="th-fix">
+                                                <label>Acciones</label>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="campo_hora_extra in parametros.campos_horas_extras">
+                                            <td>
+                                                {{campo_hora_extra.campo.nombre}}
+                                            </td>
+                                            <td>
+                                                {{campo_hora_extra.horas}}
+                                            </td>
+                                            <td>
+                                                {{campo_hora_extra.inicio_mes}}
+                                            </td>
+                                            <td>
+                                                {{campo_hora_extra.fin_mes}}
+                                            </td>
+                                            <td>
+                                                <a class="red" href="javascript:void(0)"
+                                                    ng-click="abrirModalVerificarCuenta(campo_hora_extra)">
+                                                    <i ng-hide="!campo_hora_extra.fin_mes"
+                                                        class="ace-icon fa fa-lock bigger-130"></i>
+                                                    <i ng-hide="campo_hora_extra.fin_mes"
+                                                        class="green ace-icon fa fa-unlock bigger-150"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="step-pane" data-step="4">
+                        <div class="row">
+                            <div class="form-group col-sm-3">
+                                <label for="nombres">Factor de cálculo en dias</label>
+                                <input type="number" class="form-control" ng-model="parametros.factor_calculo_dias">
+                            </div>
+                            <div class="form-group col-sm-3">
+                                <label for="ap-paterno">Resolución Ministerial</label>
+                                <input type="text" class="form-control " ng-model="parametros.resolucion_ministerio">
+                            </div>
+                            <div class="form-group col-sm-3">
+                                <label for="ap-paterno">Dias minimos trabajados</label>
+                                <input type="number" class="form-control " ng-model="parametros.dias_min_trabajos">
+                            </div>
+                            <div class="form-group col-sm-3">
+                                <label for="nombres">Cálculo de dias según metodo</label>
+                              
+                                <select required class="form-control" name="metodoDias"
+                                    ng-options="tipoMetodoDias as tipoMetodoDias.nombre for tipoMetodoDias in tiposMetodosDias | filter:{habilitado:true} track by tipoMetodoDias.id"
+                                    ng-model="parametros.tipoMetodoDias"> 
+                                    <option value="">--seleccionar--</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="cabezera-ficha">
+                            <span class="bigger-130">
+                                <span class="blue bolder">Habilitar calculo de dias trabajados por areas </span>
+                                <small>(Solo para aquellos campos cuya calculo de dias minimos trabajados es distinto)</small>
+                                
+                            </span>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-sm-3">
+                                <label for="nombres">Área</label>
+            
+                                <select required class="form-control" name="centroDeCostos"
+                                    ng-options="centroCosto as centroCosto.nombre for centroCosto in centrosDeCostos | filter:{habilitado:true} track by centroCosto.id"
+                                    ng-model="parametroHoraExtra.campo">
+                                    <option value="">--seleccionar--</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-sm-3">
+                                <label for="nombres">Dias minimos trabajados</label>
+                                <input type="number" class="form-control" ng-model="parametroHoraExtra.horas">
+                            </div>
+                            <div class="col-sm-2">
+                                <br>
+                                <div class="form-group">
+                                    <button type="button" class="btn btn-success"
+                                        ng-disabled="!parametroHoraExtra.campo || !parametroHoraExtra.horas || !parametroHoraExtra.inicio_mes"
+                                        ng-click="agregarHoraExtraCampo(parametroHoraExtra)">
+                                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                                    </button>
+                                </div>
+                            </div>
+            
+                        </div>
+                        <div class="table-responsive">
+                            <div class="table-fixed-header">
+                                <table class="table table-striped table-bordered table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th class="th-fix">
+                                                <label>Área</label>
+                                            </th>
+                                            <th class="th-fix">
+                                                <label>Dias minimos trabajados</label>
+                                            </th>
+                                            <th class="th-fix">
+                                                <label>Acciones</label>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="campo_hora_extra in parametros.areas_aguinaldos">
+                                            <td>
+                                                {{campo_hora_extra.campo.nombre}}
+                                            </td>
+                                            <td>
+                                                {{campo_hora_extra.horas}}
+                                            </td>
+                                            <td>
+                                                <a class="red" href="javascript:void(0)"
+                                                    ng-click="abrirModalVerificarCuenta(campo_hora_extra)">
+                                                    <i ng-hide="!campo_hora_extra.fin_mes"
+                                                        class="ace-icon fa fa-lock bigger-130"></i>
+                                                    <i ng-hide="campo_hora_extra.fin_mes"
+                                                        class="green ace-icon fa fa-unlock bigger-150"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="step-pane" data-step="5">
+                        <div class="center">
+							<h4 class="blue">Step 5</h4>
+						</div>
+                    </div>
+                </div>
+                
+            </div>
+            <div class="modal-footer wizard-actions">
+                <button type="button" class="btn btn-primary btn-sm "
+                    ng-click="editarParametros(parametros, true)">
+                    <i class="ace-icon fa fa-floppy-o bigger-110"></i>&nbsp; Guardar</button>
+
+                <button id="anterior" class="btn btn-sm btn-prev">
+                    <i class="ace-icon fa fa-arrow-left"></i>
+                    Anterior
+                </button>
+
+                <button type="submit" id="siguiente"
+                    class="btn btn-success btn-sm btn-next" data-last="Finish">
+                    Siguiente
+                    <i class="ace-icon fa fa-arrow-right icon-on-right"></i>
+                </button>
+
+                <button type="button" class="btn btn-danger btn-sm pull-left" data-dismiss="modal"
+                    ng-click="cerrarDialogParametros()">
+                    <i class="ace-icon fa fa-times"></i>
+                    Cancelar
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div id="dialog-parametrosrrr" class="modal">
+    <div class="modal-header ficha">
+        <h4 class="modal-title" id="myModalLabel"> Parametros</h4>
+    </div>
+    <form ng-submit="editarParametros(parametros)" novalidate>
+        <div class="modal-body">
+
+            <div class="row">
+                <div class="form-group col-sm-3">
+                    <label for="nombres">Salario Mínimo Nacional</label>
+                    <input type="number" class="form-control" ng-model="parametros.salario_minimo">
+                </div>
+                <div class="form-group col-sm-3">
+                    <label for="ap-paterno">Decreto Supremo</label>
+                    <input type="text" class="form-control " ng-model="parametros.decreto_supremo">
+                </div>
+                <div class="form-group col-sm-3">
+                    <label for="ap-paterno">Salarios para RC-IVA</label>
+                    <input type="number" class="form-control " ng-model="parametros.salario_rciva">
+                </div>
+                <div class="form-group col-sm-3">
+                    <label for="nombres">Porcentaje IVA</label>
+                    <input type="number" class="form-control " ng-model="parametros.porcentage_iva">
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-sm-3">
+                    <label for="ap-paterno">Seguro de Salud</label>
+                    <input type="text" class="form-control " ng-model="parametros.seguro_salud">
+                </div>
+                <div class="form-group col-sm-3">
+                    <label for="ap-paterno">Aporte seguro de Salud</label>
+                    <input type="number" class="form-control " ng-model="parametros.aporte_serguro_salud">
+                </div>
+                <div class="form-group col-sm-3">
+                    <label for="nombres">Número patronal</label>
+                    <input type="text" class="form-control " ng-model="parametros.numero_patronal">
+                </div>
+                <div class="form-group col-sm-3">
+                    <label for="numero_empleador">Nro. empleador (Ministerio de trabajo)</label>
+                    <input type="text" class="form-control " ng-model="parametros.numero_empleador">
+                </div>
+            </div>
+            <div class="cabezera-ficha">
+                <h4 class="blue">
+                    AFP LABORAL SIP
+                </h4>
+            </div>
+            <div class="row">
+                <div class="form-group col-sm-3">
+                    <label for="ap-paterno">Pensión Vejez</label>
+                    <input type="number" class="form-control" ng-model="parametros.pension_vejez">
+                </div>
+                <div class="form-group col-sm-3">
+                    <label for="ap-paterno">Riesgo Común</label>
+                    <input type="number" class="form-control" ng-model="parametros.riesgo_comun">
+                </div>
+                <div class="form-group col-sm-2">
+                    <label for="ap-paterno">Comisión</label>
+                    <input type="number" class="form-control" ng-model="parametros.comision">
+                </div>
+                <div class="form-group col-sm-2">
+                    <label for="ap-paterno">Aporte Solidario</label>
+                    <input type="number" class="form-control" ng-model="parametros.aporte_solidario_laboral">
+                </div>
+                <div class="form-group col-sm-2">
+                    <label for="ap-paterno">Solo Jubilados</label>
+                    <input type="number" class="form-control" ng-model="parametros.solo_jubilados">
+                </div>
+            </div>
+            <div class="cabezera-ficha">
+                <h4 class="blue">
+                    AFP PATRONAL
+                </h4>
+            </div>
+            <div class="row">
+                <div class="form-group col-sm-4">
+                    <label for="nombres">Riesgo Profesional</label>
+                    <input type="number" class="form-control" ng-model="parametros.riesgo_profesional">
+                </div>
+                <div class="form-group col-sm-4">
+                    <label for="ap-paterno">Aporte Solidario</label>
+                    <input type="number" class="form-control" ng-model="parametros.aporte_solidario_patronal">
+                </div>
+                <div class="form-group col-sm-4">
+                    <label for="ap-paterno">Pro vivienda</label>
+                    <input type="number" class="form-control" ng-model="parametros.pro_vivienda_patronal">
+                </div>
+            </div>
+            <div class="cabezera-ficha">
+                <h4 class="blue">
+                    NACIONAL SOLIDARIO
+                </h4>
+            </div>
+            <div class="row">
+                <div class="form-group col-sm-4">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label for="document">Rango 1</label>
+                        </div>
+                        <div class="col-md-8 col-sm-4 col-day">
+                            <input type="number" class="form-control"
+                                ng-model="parametros.rango_primero_inicio_solidario">
+                        </div>
+                        <div class="col-md-4 col-sm-4 col-month">
+                            <input type="number" class="form-control" ng-model="parametros.rango_primero_fin_solidario">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-sm-4">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label for="document">Rango 2</label>
+                        </div>
+                        <div class="col-md-8 col-sm-4 col-day">
+                            <input type="number" class="form-control"
+                                ng-model="parametros.rango_segundo_inicio_solidario">
+                        </div>
+                        <div class="col-md-4 col-sm-4 col-month">
+                            <input type="number" class="form-control" ng-model="parametros.rango_segundo_fin_solidario">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-sm-4">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label for="document">Rango 3</label>
+                        </div>
+                        <div class="col-md-8 col-sm-4 col-day">
+                            <input type="number" class="form-control"
+                                ng-model="parametros.rango_tercero_inicio_solidario">
+                        </div>
+                        <div class="col-md-4 col-sm-4 col-month">
+                            <input type="number" class="form-control" ng-model="parametros.rango_tercero_fin_solidario">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="cabezera-ficha">
+                <h4 class="blue">
+                    BONO DE ANTIGUEDAD
+                </h4>
+            </div>
+            <div class="row">
+                <div class="form-group col-sm-6">
+                    <label for="ap-materno">Salarios Base</label>
+                    <input type="number" class="form-control" ng-model="parametros.salario_base_antiguedad">
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-sm-3">
+                    <label for="ap-materno">De 0 a 1 años</label>
+                    <input type="number" class="form-control" ng-model="parametros.antiguedad_cero_uno">
+                </div>
+                <div class="form-group col-sm-3">
+                    <label for="ap-materno">De 2 a 4 años</label>
+                    <input type="number" class="form-control" ng-model="parametros.antiguedad_dos_cuatro">
+                </div>
+                <div class="form-group col-sm-3">
+                    <label for="ap-materno">De 5 a 7 años</label>
+                    <input type="number" class="form-control" ng-model="parametros.antiguedad_cinco_siete">
+                </div>
+                <div class="form-group col-sm-3">
+                    <label for="ap-materno">De 8 a 10 años</label>
+                    <input type="number" class="form-control" ng-model="parametros.antiguedad_ocho_diez">
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-sm-3">
+                    <label for="ap-materno">De 11 a 14 años</label>
+                    <input type="number" class="form-control" ng-model="parametros.antiguedad_once_catorce">
+                </div>
+                <div class="form-group col-sm-3">
+                    <label for="ap-materno">De 15 a 19 años</label>
+                    <input type="number" class="form-control" ng-model="parametros.antiguedad_quice_diecinueve">
+                </div>
+                <div class="form-group col-sm-3">
+                    <label for="ap-materno">De 20 a 24 años</label>
+                    <input type="number" class="form-control" ng-model="parametros.antiguedad_veinte_veinticuatro">
+                </div>
+                <div class="form-group col-sm-3">
+                    <label for="ap-materno">Más de 25 años</label>
+                    <input type="number" class="form-control" ng-model="parametros.antiguedad_mas_veinticinco">
+                </div>
+            </div>
+            <div class="cabezera-ficha">
+                <h4 class="blue">
+                    BONO FRONTERA
+                </h4>
+            </div>
+            <div class="row">
+                <div class="form-group col-sm-4">
+                    <label for="nombres">Monto</label>
+                    <input type="number" class="form-control" ng-model="parametros.frontera_monto">
+                </div>
+                <div class="form-group col-sm-4">
+                    <label for="ap-paterno">Área</label>
+                    <div id="areas-frontera" isteven-multi-select input-model="cargosFrontera"
+                        output-model="parametros.frontera_area" button-label="icon nombre"
+                        item-label="icon nombre maker" tick-property="ticked" translation="localLang">
+                    </div>
+                </div>
+                <div class="form-group col-sm-4">
+                    <label for="ap-paterno">Porcentaje</label>
+                    <div>
+                        <label>
+                            <input name="" class="ace ace-switch ace-switch-5" type="checkbox"
+                                ng-model="parametros.frontera_porcentaje">
+                            <span class="lbl check-espaniol"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cabezera-ficha">
+                <h4 class="blue">
+                    BONO CUMPLEAÑERO
+                </h4>
+            </div>
+            <div class="row">
+                <div class="form-group col-sm-4">
+                    <label for="nombres">Monto</label>
+                    <input type="number" class="form-control" ng-model="parametros.hbd_monto">
+                </div>
+                <div class="form-group col-sm-4">
+                    <label for="ap-paterno">Área</label>
+                    <div id="areas-hbd" isteven-multi-select input-model="cargosHBD" output-model="parametros.hbd_area"
+                        button-label="icon nombre" item-label="icon nombre maker" tick-property="ticked_hbd"
+                        translation="localLang">
+                    </div>
+                </div>
+                <div class="form-group col-sm-4">
+                    <label for="ap-paterno">Porcentaje</label>
+                    <div>
+                        <label>
+                            <input name="" class="ace ace-switch ace-switch-5" type="checkbox"
+                                ng-model="parametros.hbd_porcentaje">
+                            <span class="lbl check-espaniol"></span>
+                        </label>
+                    </div>
+                </div>
+
+            </div>
+            <div class="cabezera-ficha">
+                <h4 class="blue">
+                    PROVISIÓN AGUINALDOS E INDEMNIZACIONES
+                </h4>
+            </div>
+            <div class="row">
+                <div class="form-group col-sm-4">
+                    <label for="nombres">Indemnizaciones</label>
+                    <input type="number" class="form-control" ng-model="parametros.indemnizaciones">
+                </div>
+                <div class="form-group col-sm-4">
+                    <label for="nombres">Aguinaldos</label>
+                    <input type="number" class="form-control" ng-model="parametros.aguinaldos">
+                </div>
+            </div>
+            <div class="cabezera-ficha">
+                <h4 class="blue">
+                    HORAS EXTRAS DIA CAMPO
+                </h4>
+            </div>
+            <div class="row">
+                <div class="form-group col-sm-3">
+                    <label for="nombres">Campo</label>
+
+                    <select required class="form-control" name="centroDeCostos"
+                        ng-options="centroCosto as centroCosto.nombre for centroCosto in centrosDeCostos | filter:{habilitado:true} track by centroCosto.id"
+                        ng-model="parametroHoraExtra.campo">
+                        <option value="">--selecionar--</option>
+                    </select>
+                </div>
+                <div class="form-group col-sm-3">
+                    <label for="nombres">Horas</label>
+                    <input type="number" class="form-control" ng-model="parametroHoraExtra.horas">
+                </div>
+                <div class="form-group col-sm-3">
+                    <label for="nombres">Mes Inicio</label>
+                    <input type="text" class="form-control date-mes-anio" autocomplete="off" ng-update-hidden
+                        ng-model="parametroHoraExtra.inicio_mes">
+                </div>
+                <div class="col-sm-2">
+                    <br>
+                    <div class="form-group">
+                        <button type="button" class="btn btn-success"
+                            ng-disabled="!parametroHoraExtra.campo || !parametroHoraExtra.horas || !parametroHoraExtra.inicio_mes"
+                            ng-click="agregarHoraExtraCampo(parametroHoraExtra)">
+                            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <table class="table table-striped table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th>
+                                    <label>Campo</label>
+                                </th>
+                                <th>
+                                    <label>Horas</label>
+                                </th>
+                                <th>
+                                    <label>Mes Inicio</label>
+                                </th>
+                                <th>
+                                    <label>Mes Fin</label>
+                                </th>
+                                <th>
+                                    <label>Acciones</label>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="campo_hora_extra in parametros.campos_horas_extras">
+                                <td>
+                                    {{campo_hora_extra.campo.nombre}}
+                                </td>
+                                <td>
+                                    {{campo_hora_extra.horas}}
+                                </td>
+                                <td>
+                                    {{campo_hora_extra.inicio_mes}}
+                                </td>
+                                <td>
+                                    {{campo_hora_extra.fin_mes}}
+                                </td>
+                                <td>
+                                    <a class="red" href="javascript:void(0)"
+                                        ng-click="abrirModalVerificarCuenta(campo_hora_extra)">
+                                        <i ng-hide="!campo_hora_extra.fin_mes"
+                                            class="ace-icon fa fa-lock bigger-130"></i>
+                                        <i ng-hide="campo_hora_extra.fin_mes"
+                                            class="green ace-icon fa fa-unlock bigger-150"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+
+
+        </div><!-- /.row -->
+        <div class="row">
+            <div class="modal-footer wizard-actions">
+                <button class="btn btn-primary btn-sm" type="submit"><i
+                        class="glyphicon glyphicon-floppy-disk"></i>Guardar
+                </button>
+                <button class="btn btn-danger btn-sm" type="button" ng-click="cerrarDialogParametros()"><i
+                        class="ace-icon fa fa-times"></i>Cancelar
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+<!--- ==== fin modal parametros  ================================ -->
+<!-- =========  dialog TR3 ==========  -->
+<div id="dialog-tr3" class="modal">
+    <div class="modal-content">
+        <div ng-if="bancoUnion">
+            <form name="formularioTr3" ng-submit="guardarTr3Empleado(tr3)">
+
+                <div class="modal-header bg-warning" align="center">
+
+                    <h3 class="modal-title">Generación TXT</h3>
+
+                    <h3 class="modal-title">Banco Unión S.A.</h3>
+
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <label class="col-md-5"> Cuenta Bancaria</label>
+                        <div class="col-md-7">
+                            <select required ng-model="tr3.id_cuenta" class="form-control"
+                                ng-options="cuenta.id as cuenta.numero for cuenta in datosBanco.cuentas">
+                                <option value="">--Ninguno--</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label class="col-md-5">fecha Elaboracion</label>
+                        <div class="col-md-7">
+                            <input ng-update-hidden data-date-format="dd/mm/yyyy" class="form-control date-picker"
+                                type="text" ng-model="tr3.fecha_elaboracion" required>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label class="col-md-5">Número de planilla</label>
+                        <div class="col-md-7">
+                            <input class="form-control" type="number" ng-model="tr3.planilla" min="1" max="99" required>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label class="col-md-5"> Dirigido a:</label>
+                        <div class="col-md-7">
+                            <input class="form-control" type="text" ng-model="tr3.dirigido_para" required>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label class="col-md-5">Cargo:</label>
+                        <div class="col-md-7">
+                            <input class="form-control" type="text" ng-model="tr3.cargo" required>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label class="col-md-5">Origen de los fondos</label>
+                        <div class="col-md-7">
+                            <input class="form-control" type="text" ng-model="tr3.origen_fondos" required>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label class="col-md-5">Destino de los fondos</label>
+                        <div class="col-md-7">
+                            <input class="form-control" type="text" ng-model="tr3.destino_fondos" required>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label class="col-md-5">firma 1</label>
+                        <div class="col-md-4">
+                            <input class="form-control" type="text" ng-model="tr3.firma_uno" required>
+                        </div>
+                        <div class="col-md-3">
+                            <input class="form-control" type="text" ng-model="tr3.firma_dos" required>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label class="col-md-5">firma 2</label>
+                        <div class="col-md-4">
+                            <input class="form-control" type="text" ng-model="tr3.firma_tres" required>
+                        </div>
+                        <div class="col-md-3">
+                            <input class="form-control" type="text" ng-model="tr3.firma_cuatro" required>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label class="col-md-5">¿Aumentar ceros?</label>
+                        <div class="col-md-4">
+                            <label class="pos-rel">
+                                <input name="switch-field-1" class="ace ace-switch ace-switch-4" type="checkbox"
+                                    ng-model="tr3.aumentar_ceros"/>
+                                <span class="lbl check-descuento"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" uib-tooltip="HISTORIAL" class="btn btn-danger btn-xs pull-left"
+                        ng-click="abrirDialogHistorialTR3(datosBanco,'BU')">
+                        <span class="glyphicon glyphicon-header" aria-hidden="true"></span>
+                    </button>
+                    <button type="submit" ng-disabled="!aplicacion.puede_crear" class="btn btn-success">Guardar</button>
+                    <button type="button" class="btn btn-danger" ng-click="cerrarDialogTR3()">Cancelar</button>
+                </div>
+            </form>
+        </div>
+        <div ng-if="!bancoUnion">
+            <form name="formularioTr3" ng-submit="guardarTr3Empleado(tr3)">
+                <div class="modal-header bg-success" align="center">
+
+                    <h3 class="modal-title">Generación TR3</h3>
+
+                    <h3 class="modal-title">Banco Mercantil Santa Cruz</h3>
+
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <label class="col-md-5"> Cuenta Bancaria</label>
+                        <div class="col-md-4">
+                            <select required ng-model="tr3.id_cuenta" class="form-control"
+                                ng-options="cuenta.id as cuenta.numero for cuenta in datosBanco.cuentas">
+                                <option value="">--Ninguno--</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <select required ng-model="tr3.id_departamento" class="form-control"
+                                ng-options="departamento.id as departamento.nombre for departamento in departamentosBanco">
+                                <option value="">--Ninguno--</option>
+                            </select>
+
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <label class="col-md-5">fecha de Pago</label>
+                        <div class="col-md-7">
+                            <input ng-update-hidden data-date-format="dd/mm/yyyy" class="form-control date-picker"
+                                type="text" ng-model="tr3.fecha_elaboracion" required ng-change="generarNombrePlanillaTr3()">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label class="col-md-5">Contrato</label>
+                        <div class="col-md-7">
+                            <input class="form-control" type="text" ng-model="tr3.planilla" required
+                            ng-change="generarNombrePlanillaTr3()">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label class="col-md-5"> Descripción</label>
+                        <div class="col-md-7">
+                            <input class="form-control" type="text" ng-model="tr3.nombre_archivo" required>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label class="col-md-5">Número de planilla</label>
+                        <div class="col-md-7">
+                            <input class="form-control" type="number" ng-model="tr3.numero_planilla" required
+                            ng-change="generarNombrePlanillaTr3()">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label class="col-md-5">Nombre de la planilla <span class="text-info">(Archivo)</span></label>
+                        <div class="col-md-7" >
+                            <input class="form-control" type="text" ng-model="tr3.nombre_planilla" required>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label class="col-md-5">Origen de los fondos</label>
+                        <div class="col-md-7">
+                            <input class="form-control" type="text" ng-model="tr3.origen_fondos" required>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label class="col-md-5">Destino de los fondos</label>
+                        <div class="col-md-7">
+                            <input class="form-control" type="text" ng-model="tr3.destino_fondos" required>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label class="col-md-5">firma 1</label>
+                        <div class="col-md-4">
+                            <input class="form-control" type="text" ng-model="tr3.firma_uno" required>
+                        </div>
+                        <div class="col-md-3">
+                            <input class="form-control" type="text" ng-model="tr3.firma_dos" required>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label class="col-md-5">firma 2</label>
+                        <div class="col-md-4">
+                            <input class="form-control" type="text" ng-model="tr3.firma_tres" required>
+                        </div>
+                        <div class="col-md-3">
+                            <input class="form-control" type="text" ng-model="tr3.firma_cuatro" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" uib-tooltip="HISTORIAL" class="btn btn-danger btn-xs pull-left"
+                        ng-click="abrirDialogHistorialTR3(datosBanco,'MSC')">
+                        <span class="glyphicon glyphicon-header" aria-hidden="true"></span>
+                    </button>
+                    <button type="submit" class="btn btn-success">Guardar</button>
+                    <button type="button" class="btn btn-danger" ng-click="cerrarDialogTR3()">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!--- fin modal TR3 ======== -->
+<!--- ==== modal historial TR3 ================================ -->
+<div id="dialog-historial-tr3" class="modal">
+    <div class="modal-content">
+        <div class="modal-header bg-warning" align="center">
+            <h3 class="modal-title">Historial</h3>
+        </div>
+        <div class="modal-body">
+            <div class="table-fixed-header">
+                <table id="tabla-comprobante-revision"
+                    class="table table-responsive-actual table-striped table-bordered table-hover">
+                    <thead fix-head class="table-head-color">
+                        <tr>
+                            <th class="center">
+                                Nº
+                            </th>
+                            <th>
+                                Nombre planilla
+                            </th>
+                            <th>
+                                Numero planilla
+                            </th>
+                            <th>
+                                Origen fondos
+                            </th>
+                            <th>
+                                Destino fondos
+                            </th>
+                            <th>
+                                Acciones
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="tr3 in historialTr3 track by $index">
+
+                            <td data-label="N°" class="center">
+                                {{$index+1}}
+                            </td>
+                            <td data-label="Nombre planilla:">
+                                {{tr3.nombre_planilla}}
+                            </td>
+                            <td data-label="Numero Planilla:">
+                                {{tr3.numero_planilla}}
+                            </td>
+                            <td data-label="Origen Fondos:">
+                                {{tr3.origen_fondos}}
+                            </td>
+                            <td data-label="Destino Fondos:">
+                                {{tr3.destino_fondos}}
+                            </td>
+                            <td data-label="Acciones:">
+                                <a href="javascript:void(0)" type="button" class="red"
+                                    ng-click="imprimirTr3(tr3,tipoBanco)">
+                                    <i class="ace-icon fa fa-print bigger-160"></i>
+                                </a>
+                                <a href="javascript:void(0)" type="button" class="blue"
+                                    ng-click="imprimirCartaTr3(tr3,tipoBanco)">
+                                    <i class="ace-icon fa fa-print bigger-160"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-danger" ng-click="cerrarModalHistorialTr3()">Cancelar</button>
+        </div>
+    </div>
+
+</div>
+<!--- ==== fin modal historial TR3  ================================ -->
+
+
+<!-- =====  modal  dialog-cerrar-horas-Extras ====== -->
+<div id="dialog-cerrar-horas-Extras" class="modal">
+    <div class="modal-header ficha">
+        <h4 class="modal-title" id="myModalLabel">Cerrar Ciclo Horas Extras</h4>
+        <h5 class="modal-title">{{campo_hora_extraPrev.campo.nombre}}</h5>
+    </div>
+    <form ng-submit="guardarHoraExtraCampo(campo_hora_extraPrev)">
+        <div class="modal-body">
+
+            <div class="row">
+                <div class="form-group col-sm-12">
+                    <label for="sexo">Mes Inicio</label>
+                    <input type="text" class="form-control" disabled ng-model="campo_hora_extraPrev.inicio_mes">
+                </div>
+                <div class="form-group col-sm-12">
+                    <label for="">Mes Fin</label>
+                    <input type="text" class="form-control date-mes-anio" autocomplete="off" ng-update-hidden
+                        ng-model="campo_hora_extraPrev.fin_mes" required>
+                </div>
+            </div>
+
+        </div>
+        <div class="modal-footer wizard-actions">
+            <button class="btn btn-primary btn-sm" type="submit">
+                <i class="glyphicon glyphicon-floppy-disk"></i>Guardar
+            </button>
+            <button type="button" class="btn btn-danger btn-sm" ng-click="cerrarDialogParametroHorasExt()">
+                <i class="ace-icon fa fa-times"></i>Cancelar
+            </button>
+
+        </div>
+    </form>
+</div>
+<!--- ==== fin modal dialog-cerrar-horas-Extras ================================ -->
+<!-- =========  dialog dialog-generar-comprobante ==========  -->
+<div id="dialog-generar-comprobante" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h4>Generar Comprobamte</h4>
+            <h5 class="modal-title">({{data.mes.split("-")[1]}} {{data.anio}})</h5>
+        </div>
+        <div class="modal-body">
+            <a href="javascript:void(0)" ng-click="verRedistribucion=!verRedistribucion">
+                <i ng-if="!verRedistribucion" class="fa fa-arrow-circle-o-down bigger-160" aria-hidden="true"></i>
+                <i ng-if="verRedistribucion" class="fa fa-arrow-circle-o-up bigger-160" aria-hidden="true"></i>
+                Redistribución de Campamentos
+            </a>
+            <div class="row" ng-if="verRedistribucion">
+                <div class="col-md-4" ng-repeat="campo in datosPlanillaSueldoCC.arrayCampos | orderBy:'id'">
+                    <div class="row" style="height: 200px;">
+                        <div class="col-md-12 text-info">
+                            <hr>
+                            <h6><b>T.G.:</b>{{campo.importeSumaTotalGanado | number:2}}.&nbsp;
+                                <b>AFP:</b>{{campo.importeTotalAFP| number:2}}.&nbsp;
+                                <b>RC-IVA:</b>{{campo.importeTotalRCIVA| number:2}}.&nbsp;</h6>
+                            <p>
+                            <h6><b>ANT.:</b>{{campo.importeTotalAnticipos| number:2}}.&nbsp;
+                                <b>L.P.:</b>{{campo.importeSumaTotalLiquido| number:2}}.&nbsp;
+                                <b>T. Trabj.:</b>{{campo.trabajadores.length}}.</h6>
+                            </p>
+                        </div>
+                        <div class="col-md-4">
+                            <p><b>{{campo.campo.nombre}}</b></p>
+
+                        </div>
+                        <div class="col-md-8 ps">
+                            <ui-select multiple ng-model="campo.camposReferidos" theme="bootstrap" ng-hide="campo.campoConReferencia"
+                                style="width: 100%;" title="seleccionar para redistribuir" ng-change="verificarCamposReferidos(campo)">
+                                <ui-select-match placeholder="seleccionar para redistribuir..." allow-clear="false">
+                                    <span
+                                        style="color:black">{{$item.nombre}}</span>
+                                        <span class="close" ng-hide="$select.disabled" ng-click="$selectMultiple.removeChoice($index);verificarCamposReferidos(campo)">&nbsp;×</span>
+                                </ui-select-match>
+                                <ui-select-choices
+                                    repeat="centroCosto in datosPlanillaSueldoCC.centrosDeCostos | filter:{nombre:$select.search,habilitado:true}">
+                                    <span>
+                                        {{centroCosto.nombre}}
+                                    </span>
+                                </ui-select-choices>                                
+                            </ui-select>
+                            <span class="text text-info" ng-show="campo.campoConReferencia">El campo cuenta con referencias de otros campos por lo cual no puede realizar referencia.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary btn-sm" type="button" ng-click="crearComprobanteDesdePS()">
+                <i class="glyphicon glyphicon-floppy-disk"></i>Generar
+            </button>
+            <button type="button" class="btn btn-danger btn-sm" ng-click="cerrarDialogGenerarComprobante()">
+                <i class="ace-icon fa fa-times"></i>Cancelar
+            </button>
+        </div>
+    </div>
+</div>
+<!-- ========= fin dialog dialog-generar-comprobante ==========  -->
+
+<!--//// INICIO MODAL IMPRESIONES -->
+    <div id="dialog-impresion-boletas" class="modal">
+        <div class="modal-header ficha">
+            <h4 class="modal-title" id="myModalLabel"> <i class="ace-icon glyphicon glyphicon-print bigger-130"></i>
+                IMPRESIONES </h4>
+            <h5 class="modal-title">(GESTIÓN {{infoGral.anio}})</h5>
+        </div>
+        <div class="modal-body">
+            <div>
+                <div id="tab-impresiones">
+                    <ul class="inbox-tabs nav nav-tabs  tab-size-bigger tab-space-1">
+                        <li>
+                            <a id="boletas-campo" ng-click="" class="blue" href="#tabs-1">
+                                <i class="ace-icon fa fa-list-alt bigger-200"></i>
+                                BOLETAS (CAMPO)
+                            </a>
+                        </li>
+                    </ul>
+
+                    <div id="tabs-1">
+                        <button ng-repeat="campo in camposUnicos"
+                            class="btn btn-app btn-info btn-xs button-print-planilla radius-4" style="font-size: 10px;"
+                            ng-click="imprimirBoletasCampo(infoGral, empleados, campo.id)"><i
+                                class="ace-icon fa fa-file-pdf-o"></i>{{campo.nombre}}</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="modal-footer wizard-actions">
+            <button class="btn btn-danger btn-sm" type="button" ng-click="cerrarDialogImpresion()"><i class="ace-icon fa fa-times"></i>Cerrar</button>
+        </div>
+
+    </div>
+    <!--//// FIN MODAL IMPRESIONES -->
+</div>

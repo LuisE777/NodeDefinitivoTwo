@@ -1,0 +1,1 @@
+update agil_rrhh_empleado_anticipo set matriz_reutilizable = false;

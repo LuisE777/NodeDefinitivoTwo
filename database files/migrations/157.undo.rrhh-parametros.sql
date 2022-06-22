@@ -1,0 +1,1 @@
+ALTER TABLE agil_rrhh_parametros drop pro_vivienda_patronal;

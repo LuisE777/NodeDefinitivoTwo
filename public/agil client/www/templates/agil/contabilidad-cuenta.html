@@ -1,0 +1,2665 @@
+<div class="row">
+    <div class="col-xs-12">
+        <h3 class="header smaller lighter blue">PLAN DE CUENTAS</h3>
+
+        <button id="nuevo" ng-disabled="!aplicacion.puede_crear || configuracionesGeneralesTipoCuentas.length < 4"
+            class="btn-woBox button-glow" ng-click="crearNuevaCuenta()">
+            <i class="ace-icon fa fa-plus align-top bigger-125"></i>
+            Nuevo
+        </button>
+        <div class="fileUpload btn btn-primary btn-success">
+            <span class="fileUpload-button ace-icon fa fa-cloud-upload align-top bigger-125">&nbsp&nbspImportar</span>
+            <input ng-disabled="!aplicacion.puede_crear || configuracionesGeneralesTipoCuentas.length < 4"
+                class="upload" type="file" custom-on-file-change="subirExcelCuentas" />&nbsp&nbsp
+
+        </div>
+
+        <a href="/recursos/EJEMPLO-DATOS-CUENTAS.xlsx" class="btn btn-danger">
+            <i class="ace-icon fa fa-cloud-download align-top bigger-125"></i>
+            Ejemplo Importación
+        </a>
+
+        <a href="javascript:void(0)" class="btn btn-primary" ng-click="generarExcelPlanCuentas()">
+            <i class="ace-icon fa fa-cloud-download align-top bigger-125"></i>
+            Plan de Cuentas
+        </a>
+        <a href="javascript:void(0)" class="btn btn-success" ng-click="librosMayoresGeneral(filtro)">
+            <i class="ace-icon fa fa-download align-top bigger-125"></i>
+            Libros Mayores
+        </a>
+        <a href="javascript:void(0)" class="btn btn-warning" ng-click="abrirMayoresGlobal()">
+            <i class="ace-icon fa fa-download align-top bigger-125"></i>
+            Mayores Global
+        </a>
+        <p ng-if=" configuracionesGeneralesTipoCuentas.length < 4" class="bg-danger" style="color:red">Para poder
+            crear
+            nuevas cuentas o importar primero es nesesario las configuraciones generales de las cuentas</p>
+        <div class="clearfix">
+            <div class="pull-right tableTools-container"></div>
+        </div>
+        <form name="formularioFiltroCuentas" novalidate ng-submit="paginator.getSearch(paginator.search,filtro,null)">
+            
+                <legend>Filtro Cuentas</legend>
+               
+                    <table class="table table-striped table-bordered table-hover">
+                        <tbody>
+                            <tr>
+                                <td>
+
+                                </td>
+                                <td>
+                                    <label>Desde</label>&nbsp
+                                </td>
+                                <td>
+                                    <label>Hasta</label>&nbsp
+                                </td>
+                                <td>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label>PERIODO</label>&nbsp
+                                </td>
+                                <td>
+                                    <div ng-class="{'has-error-date':fechasIncorrectaInic}">
+                                        <datepicker date-format="dd/MM/yyyy" datepicker-mobile="true">
+                                            <input autocomplete="off" class="form-control" type="text" id="fechainicio"
+                                                ng-model="filtro.fechaInicioTexto"
+                                                placeholder="Ingrese la fecha inicial"
+                                                ng-change="validarFechaI(filtro.fechaInicioTexto, filtro.fechaFinTexto)" />
+                                        </datepicker>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div ng-class="{'has-error-date':fechasIncorrectaFin}">
+                                        <datepicker date-format="dd/MM/yyyy" datepicker-mobile="true">
+                                            <input autocomplete="off" class="form-control" type="text"
+                                                id="fechafin"
+                                                ng-model="filtro.fechaFinTexto" placeholder="Ingrese la fecha final"
+                                                ng-change="validarFechaF(filtro.fechaInicioTexto, filtro.fechaFinTexto)" />
+                                        </datepicker>
+                                    </div>
+                                    &nbsp;
+                                </td>
+                                <td>
+                                    <button id="Buscar" type="submit"
+                                        ng-disabled="formularioFiltroCuentas.$invalid || fechasIncorrectaInic || fechasIncorrectaFin"
+                                        class="btn-primary btn btn-app btn-xs">
+                                        <i class="ace-icon fa fa-search align-top bigger-125"></i>
+                                        BUSCAR
+                                    </button>
+                                    <button id="pdf" ng-disabled="!Cuentas" class="btn btn-app btn-danger btn-xs"
+                                        ng-click="imprimirFiltroCajaCartaOficio(Cuentas,filtro)">
+                                        <i class="ace-icon fa fa-print bigger-160"></i>
+                                        PDF
+                                    </button>
+                                    <button id="excel" ng-disabled="!Cuentas" class="btn btn-app btn-success btn-xs"
+                                        ng-click="imprimirFiltroExcelCajaCartaOficio(Cuentas)">
+                                        <i class="ace-icon fa fa-print bigger-160"></i>
+                                        Excel
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    &nbsp
+                                </td>
+                                <td>
+                                    <label>Clasificación</label>&nbsp
+                                </td>
+                                <td>
+                                    <label>Tipo de cuenta</label>&nbsp
+                                </td>
+                                <td>
+                                    <label>Monto</label>&nbsp
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    FILTRO
+                                </td>
+                                <td>
+                                    <select id="filtroClasificacion" name="filtroClasificacion"
+                                        ng-model="filtro.clasificacion"
+                                        ng-options="cuentaClasificacion.id as cuentaClasificacion.nombre for cuentaClasificacion in cuentaClasificaciones">
+                                        <option value="" selected>TODOS</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <select name="filtroTipo_cuenta" id="filtroTipo_cuenta"
+                                        ng-model="filtro.tipo_cuenta"
+                                        ng-options="cuentaTipo.id as cuentaTipo.nombre for cuentaTipo in cuentaTipos">
+                                        <option value="" selected>TODOS</option>
+
+                                    </select>
+                                </td>
+                                <td>
+                                    <input type="number" step="0.01" ng-model="filtro.monto">
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+        </form>
+
+        <div align="right">
+
+            <a class="green" tooltip-placement="left" uib-tooltip="Configuracion Cuentas"
+                ng-click="abrirPopPupConfiguracionCuenta()">
+                <span id="codigo" class="fa fa-key fa-3x"></span>
+            </a>
+            <a tooltip-placement="left" uib-tooltip="Plantilla Ingreso/Egreso" ng-click="abrirPlantillaIngreso()">
+                <span id="codigo" class=" glyphicon glyphicon-cog fa-3x"></span>
+            </a>
+
+        </div>
+        <div class="table-header">
+            <div class="row">
+                <div class="col-sm-12">
+                    <h4 class="col-sm-4 widget-title">Lista de Plan de cuentas</h4>
+                    <div class="col-sm-8 inline pos-rel pull-right">
+                        <!--   <a data-toggle="dropdown" href="javascript:void(0)" class="dropdown-toggle button-columna" aria-expanded="false">
+                                <i class="glyphicon  glyphicon-list-alt"></i>
+                            </a> -->
+                        <div ng-include src="'/templates/gral/fields-viewer.html'"></div>
+
+                        <a href="javascript:void(0)" ng-if="usuario.empresa.usar_integracion" class="pull-right"
+                            ng-click=abrirModalConfiguracionContableComprobante()>
+                            <img src="img/integracion.png" height="30" width="30" alt="">
+                        </a><!--  ng-if="usuario.empresa.usar_integracion" -->
+                    </div>
+                </div>
+                <!-- <div class="col-sm-6"  ng-include src="'/templates/gral/fields-viewer.html'"></div> -->
+            </div>
+        </div>
+
+        <!-- div.table-responsive -->
+
+        <!-- div.dataTables_borderWrap -->
+        <div>
+            <div id="tabla-productos_wrapper" class="dataTables_wrapper form-inline no-footer">
+                <div class="row" ng-include src="'/templates/gral/paginator-header-1.html'">
+                </div>
+                <div style="overflow-x:auto;">
+                    <table id="tabla-contabilidadCuentas" class="table table-striped table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th class="center">N°</th>
+                                <th class="center" ng-if="fieldViewer.getConfiguration().codigo.show">
+                                    <a href="javascript:void(0)"
+                                        ng-click="paginator.sortColumn('codigo',obtenerLista)">Código
+                                        <span id="codigo" class="sort fa fa-sort icon-only"></span>
+                                    </a>
+                                </th>
+                                <th class="center" ng-if="fieldViewer.getConfiguration().nombre.show">
+                                    <a href="javascript:void(0)"
+                                        ng-click="paginator.sortColumn('nombre',obtenerLista)">Nombre
+                                        <span id="nombre" class="sort fa fa-sort icon-only"></span>
+                                    </a>
+                                </th>
+                                <th class="center" ng-if="fieldViewer.getConfiguration().debe.show">
+                                    <a href="javascript:void(0)"
+                                        ng-click="paginator.sortColumn('debe',obtenerLista)">Debe
+                                        <span id="debe" class="sort fa fa-sort icon-only"></span>
+                                    </a>
+                                </th>
+                                <th class="center" ng-if="fieldViewer.getConfiguration().haber.show">
+                                    <a href="javascript:void(0)"
+                                        ng-click="paginator.sortColumn('haber',obtenerLista)">Haber
+                                        <span id="haber" class="sort fa fa-sort icon-only"></span>
+                                    </a>
+                                </th>
+                                <th class="center" ng-if="fieldViewer.getConfiguration().saldo.show">
+                                    <a href="javascript:void(0)"
+                                        ng-click="paginator.sortColumn('saldo',obtenerLista)">Saldo
+                                        <span id="saldo" class="sort fa fa-sort icon-only"></span>
+                                    </a>
+                                </th>
+                                <th class="center" ng-if="fieldViewer.getConfiguration().clasificacion.show">
+                                    <a href="javascript:void(0)"
+                                        ng-click="paginator.sortColumn('clasificacion',obtenerLista)">Clasificación
+                                        <span id="clasificacion" class="sort fa fa-sort icon-only"></span>
+                                    </a>
+                                    <a class="blue tooltip-info" href="javascript:void(0)"
+                                        uib-tooltip="Agregar Clasificación" e-disabled="!aplicacion.puede_modificar"
+                                        ng-click="agregarClasificacionCuenta()">
+                                        <i class="ace-icon fa fa-plus bigger-130"></i>
+                                    </a>
+                                    <a class="green tooltip-info" href="javascript:void(0)"
+                                        uib-tooltip="Editar Clasificaciónes" e-disabled="!aplicacion.puede_modificar"
+                                        ng-click="modificarClasificacionesCuenta()">
+                                        <i class="ace-icon fa fa-pencil bigger-130"></i>
+                                    </a>
+                                </th>
+                                <th class="center" ng-if="fieldViewer.getConfiguration().tipo_cuenta.show">
+                                    <a href="javascript:void(0)"
+                                        ng-click="paginator.sortColumn('tipoCuenta',obtenerLista)">Tipo Cuenta
+                                        <span id="tipoCuenta" class="sort fa fa-sort icon-only"></span>
+                                    </a>
+                                    <a class="blue tooltip-info" href="javascript:void(0)"
+                                        uib-tooltip="Agregar Tipo Cuenta" e-disabled="!aplicacion.puede_crear"
+                                        ng-click="agregarTipoCuenta()">
+                                        <i class="ace-icon fa fa-plus bigger-130"></i>
+                                    </a>
+                                    <a class="green tooltip-info" href="javascript:void(0)"
+                                        uib-tooltip="Editar Tipos Cuentas" e-disabled="!aplicacion.puede_modificar"
+                                        ng-click="agregarTipoCuenta()">
+                                        <i class="ace-icon fa fa-pencil bigger-130"></i>
+                                    </a>
+                                </th>
+                                <th class="center">Bimonetario</th>
+                                <th class="center">Cálculos</th>
+                                <th class="center">Acciones</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr ng-if="!cuenta.eliminado" ng-repeat="cuenta in Cuentas">
+                                <td>
+                                    {{($index+1)+(paginator.itemsPerPage*(paginator.currentPage-1))}}
+                                </td>
+                                <td ng-if="fieldViewer.getConfiguration().codigo.show">
+                                    {{cuenta.codigo}}
+                                </td>
+                                <td ng-if="fieldViewer.getConfiguration().nombre.show">
+                                    {{cuenta.nombre}}
+                                </td>
+                                <td ng-if="fieldViewer.getConfiguration().debe.show">
+                                    {{cuenta.debe | number:2}}
+                                </td>
+                                <td ng-if="fieldViewer.getConfiguration().haber.show">{{cuenta.haber | number:2}}
+                                </td>
+                                <td ng-if="fieldViewer.getConfiguration().saldo.show">{{cuenta.saldo | number:2}}
+                                </td>
+
+                                <td ng-if="fieldViewer.getConfiguration().clasificacion.show">
+                                    {{cuenta.clasificacion.nombre}}
+                                </td>
+                                <td ng-if="fieldViewer.getConfiguration().tipo_cuenta.show">
+                                    {{cuenta.tipoCuenta.nombre}}
+                                </td>
+                                <td>
+                                    <label>
+                                        <input disabled name="switch-field-1" class="ace ace-switch ace-switch-4"
+                                            type="checkbox" ng-model="cuenta.bimonetaria" />
+                                        <span class="lbl check-descuento"></span>
+                                    </label>
+                                </td>
+                                <td>
+                                    <label>
+                                        <input disabled name="switch-field-1" class="ace ace-switch ace-switch-4"
+                                            type="checkbox" ng-model="cuenta.aplicar_calculo" />
+                                        <span class="lbl check-descuento"></span>
+                                    </label>
+                                </td>
+                                <td>
+                                    <div class="hidden-sm hidden-xs action-buttons">
+                                        <a class="orange tooltip-info" tooltip-append-to-body="true" uib-tooltip="Libros Mayores"
+                                            href="javascript:void(0)" ng-click="abrirModalLibrosMayores(cuenta);">
+                                            <i class="ace-icon fa fa-file-text bigger-130"></i>
+                                        </a>
+                                        <a class="green tooltip-info" tooltip-append-to-body="true" uib-tooltip="Editar"
+                                            href="javascript:void(0)" e-disabled="!aplicacion.puede_modificar"
+                                            ng-click="modificarCuenta(cuenta)">
+                                            <i class="ace-icon fa fa-pencil bigger-130"></i>
+                                        </a>
+                                        <a class="blue tooltip-info" tooltip-append-to-body="true" uib-tooltip="Ver" href="javascript:void(0)"
+                                            e-disabled="!aplicacion.puede_ver" ng-click="verCuenta(cuenta)">
+                                            <i class="ace-icon fa fa-search-plus bigger-130"></i>
+                                        </a>
+                                        <a class="red tooltip-info " tooltip-append-to-body="true" uib-tooltip="Eliminar" href="javascript:void(0)"
+                                            e-disabled="!aplicacion.puede_eliminar"
+                                            ng-click="mostrarConfirmacionEliminacion(cuenta)">
+                                            <i class="ace-icon fa fa-trash-o bigger-130"></i>
+                                        </a>
+                                        <a class="blue" href="javascript:void(0)" ng-if="cuenta.tipoCuenta.nombre_corto != 4" e-disabled="!aplicacion.puede_crear" ng-click="crearNuevaCuenta($index)">
+                                            <i class="ace-icon fa fa-plus bigger-130"></i>
+                                        </a>
+                                        <a class="purple" ng-if="cuenta.aplicar_calculo" href="javascript:void(0)"
+                                            e-disabled="!aplicacion.puede_crear" ng-click="crearNuevaCuenta($index)">
+                                            <i class="ace-icon glyphicon glyphicon-th bigger-130"></i>
+                                        </a>
+                                    </div>
+
+                                    <div class="hidden-md hidden-lg">
+                                        <div class="inline pos-rel">
+                                            <button class="btn btn-minier btn-yellow dropdown-toggle"
+                                                data-toggle="dropdown" data-position="auto">
+                                                <i class="ace-icon fa fa-caret-down icon-only bigger-120"></i>
+                                            </button>
+
+                                            <ul
+                                                class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-menu-right dropdown-caret dropdown-close">
+                                                <li>
+                                                    <a href="javascript:void(0)" e-disabled="!aplicacion.puede_ver"
+                                                        ng-click="verCuenta(cuenta)" class="tooltip-info"
+                                                        data-rel="tooltip" title="View">
+                                                        <span class="blue">
+                                                            <i class="ace-icon fa fa-search-plus bigger-120"></i>
+                                                        </span>
+                                                    </a>
+                                                </li>
+
+                                                <li>
+                                                    <a href="javascript:void(0)"
+                                                        e-disabled="!aplicacion.puede_modificar"
+                                                        ng-click="modificarCuenta(cuenta)" class="tooltip-success"
+                                                        data-rel="tooltip" title="Edit">
+                                                        <span class="green">
+                                                            <i class="ace-icon fa fa-pencil-square-o bigger-120"></i>
+                                                        </span>
+                                                    </a>
+                                                </li>
+
+                                                <li>
+                                                    <a href="javascript:void(0)" e-disabled="!aplicacion.puede_eliminar"
+                                                        ng-click="mostrarConfirmacionEliminacion(cuenta)"
+                                                        class="tooltip-error" data-rel="tooltip" title="Delete">
+                                                        <span class="red">
+                                                            <i class="ace-icon fa fa-trash-o bigger-120"></i>
+                                                        </span>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="javascript:void(0)" ng-click="kardexCuenta(cuenta)"
+                                                        class="tooltip-info" data-rel="tooltip" title="View">
+                                                        <span class="orange">
+                                                            <i class="ace-icon fa fa-file-text bigger-120"></i>
+                                                        </span>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td ng-if="fieldViewer.getConfiguration().nombre.show"></td>
+                                <td ng-if="fieldViewer.getConfiguration().codigo.show"></td>
+                                <td ng-if="fieldViewer.getConfiguration().nombre.show">
+                                    <b>Total</b>
+                                </td>
+                                <td ng-if="!fieldViewer.getConfiguration().nombre.show">
+                                    <b>Total</b>
+                                </td>
+                                <td ng-if="fieldViewer.getConfiguration().debe.show">
+                                    <b>{{sumaTotales.debe|number:2}}</b>
+                                </td>
+
+                                <td ng-if="fieldViewer.getConfiguration().haber.show">
+                                    <b>{{sumaTotales.haber|number:2}}</b>
+                                </td>
+                                <td ng-if="fieldViewer.getConfiguration().saldo.show">
+                                    <b>{{sumaTotales.saldo|number:2}}</b>
+                                </td>
+                                <td ng-if="fieldViewer.getConfiguration().clasificacion.show"></td>
+                                <td ng-if="fieldViewer.getConfiguration().tipo_cuenta.show"></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td ng-if="fieldViewer.getConfiguration().nombre.show"></td>
+                                <td ng-if="fieldViewer.getConfiguration().codigo.show"></td>
+                                <td ng-if="fieldViewer.getConfiguration().nombre.show">
+                                    <b>Total General</b>
+                                </td>
+                                <td ng-if="!fieldViewer.getConfiguration().nombre.show">
+                                    <b>Total General</b>
+                                </td>
+                                <td ng-if="fieldViewer.getConfiguration().debe.show">
+                                    <b>{{sumaTotalesGenerales.debe|number:2}}</b>
+                                </td>
+                                <td ng-if="fieldViewer.getConfiguration().haber.show">
+                                    <b>{{sumaTotalesGenerales.haber|number:2}}</b>
+                                </td>
+                                <td ng-if="fieldViewer.getConfiguration().saldo.show">
+                                    <b>{{sumaTotalesGenerales.saldo|number:2}}</b>
+                                </td>
+                                <td ng-if="fieldViewer.getConfiguration().clasificacion.show"></td>
+                                <td ng-if="fieldViewer.getConfiguration().tipo_cuenta.show"></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                <div class="row" ng-include src="'/templates/gral/paginator.html'">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- FIN VISTA DE CUENTAS PRINCIPAL -->
+
+<!-- AGREGAR CLASIFICACION -->
+
+<div id="modal-wizard-agregar-clasificacion-cuenta" class="modal wizard-posicion">
+    <div class="modal-dialog modal-rh-nuevo">
+        <div class="modal-content">
+            <form novalidate ng-submit="guardarClasificacion(formularioClasificacionCuenta.$valid,clasificacion)"
+                id="formularioClasificacionCuenta" name="formularioClasificacionCuenta">
+                <div class="modal-header">
+                    <span class="title">AGREGAR CLASIFICACIÓN DE CUENTA</span>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group row">
+                        <label class="col-sm-3 control-label no-padding-right" for="nombre">Descripción</label>
+                        <div class="col-sm-9">
+                            <input required type="text" id="nombre" ng-model="clasificacion.nombre"
+                                placeholder="Descripción" class="col-xs-10 col-sm-5" />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-3 control-label no-padding-right" for="saldo">Saldo</label>
+
+                        <div class="col-sm-9">
+                            <select id="saldo" name="saldo" ng-model="clasificacion.saldo"
+                                ng-options="clasificacionSaldo as clasificacionSaldo.nombre for clasificacionSaldo in cuentaSaldos track by clasificacionSaldo.id">
+                            </select>
+                        </div>
+
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-3 control-label no-padding-right" for="movimiento">movimiento</label>
+
+                        <div class="col-sm-9">
+                            <select id="movimiento" name="movimiento" ng-model="clasificacion.movimiento"
+                                ng-options="clasificacionMovimiento as clasificacionMovimiento.nombre for clasificacionMovimiento in cuentaMovimientos track by clasificacionMovimiento.id">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-3 control-label no-padding-right">Tipo Clasificacion</label>
+
+                        <div class="col-sm-9">
+                            <select ng-model="clasificacion.tipoClasificacion"
+                                ng-options="clasificacion as clasificacion.nombre for clasificacion in tiposClasificaciones track by clasificacion.id">
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="guardarClasificacion" type="submit" ng-disabled="clasificacion.nombre.length==0"
+                        class="btn btn-primary">
+                        <i class="ace-icon fa fa-floppy-o align-top bigger-125">Guardar</i>
+                    </button>
+
+                    <button type="button" class="btn btn-danger btn-sm pull-left" data-dismiss="modal"
+                        ng-click="cerrarPopPupAgregarClasificacion()">
+                        <i class="ace-icon fa fa-times"></i>
+                        Cancelar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- FINAL AGREGAR CLASIFICACION -->
+<!-- inico plantilla egreso ingreso-->
+
+<div id="modal-wizard-plantilla-ingreso" class="modal">
+    <div class="modal-dialog modal-rh-nuevo">
+        <div class="modal-content">
+            <div class="modal-header bg-success ficha">
+                <h4 class="modal-title" id="myModalLabel">Configuraciones Plantillas</h4>
+            </div>
+            <form name="formularioPlantillaCuenta"
+                ng-submit="guardarPlantillaIngreso(formularioPlantillaCuenta,plantilla)">
+
+                <div class="modal-body">
+                    <select name="conf-planilla" id="config-planilla" class="form-control" ng-model="id_conf_planilla"
+                        ng-options="item.id as item.nombre for item in tipoConfPlanilla.clases">
+                    </select>
+                    <div>
+                        <hr>
+                        <table class="table  table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        <label>Nombre</label>
+                                    </th>
+                                    <th>
+                                        <label>%</label>
+                                    </th>
+                                    <th>
+                                        <label>Cuenta</label>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr
+                                    ng-repeat="planilla in configuracionesPlanillaPlanCuenta|filter:{id_configuracion:id_conf_planilla}">
+                                    <th>
+                                        <label>{{planilla.nombre}}</label>
+                                    </th>
+                                    <th>
+                                        <input class="form-control" required type="number" step="0.001" min="0.001"
+                                            max="100" ng-model="planilla.valor">
+                                    <th>
+
+                                        <input class="form-control" name="asignarCuentaIvaDf" required
+                                            autocomplete="off" ng-keypress="interceptarTecla($event,'cantidad',true)"
+                                            id="asignarCuentaIvaDf" type="text" ng-model="planilla.cuenta"
+                                            placeholder="Busqueda..."
+                                            uib-typeahead="cuenta as (cuenta.codigo+'-'+cuenta.nombre+'-'+cuenta.descripcion+'-'+cuenta.tipoCuenta.nombre) for cuenta in buscarCuentas($viewValue)"
+                                            typeahead-wait-ms="1000"
+                                            typeahead-template-url="templates/autocompletar.html"
+                                            typeahead-show-hint="false" typeahead-min-length="3">
+
+                                        <small class="text-warning" ng-show="!planilla.cuenta.id">
+                                            Asignar cuenta.
+                                        </small>
+                                        <small class="text-success" ng-show="planilla.cuenta.id">
+                                            Cuenta asignada correctamente.
+                                        </small>
+                                    </th>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- 
+                    <div class="row">
+                        <div class="col-xs-12" style="background-color:cornflowerblue">
+                            <div align="center"
+                                ng-click="visible.verPlantillaIngreso=(visible.verPlantillaIngreso)?false:true">
+                                <a>
+                                    <h3 class="text-white"> PLANTILLA DE INGRESOS</h3>
+                                </a>
+                            </div>
+                            <table ng-if="visible.verPlantillaIngreso" class="table  table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            <label>Nombre</label>
+                                        </th>
+                                        <th>
+                                            <label>%</label>
+                                        </th>
+                                        <th>
+                                            <label>Cuenta</label>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <th>
+                                            <label>IVA DF</label>
+                                        </th>
+                                        <th>
+                                            <input class="form-control" required type="number" min="0" max="100"
+                                                ng-model="plantilla.ingreso.ivadf.porcentaje">
+                                        <th>
+
+                                            <input class="form-control" name="asignarCuentaIvaDf" required
+                                                ng-keypress="interceptarTecla($event,'cantidad',true)"
+                                                id="asignarCuentaIvaDf" type="text"
+                                                ng-model="plantilla.ingreso.ivadf.cuenta" placeholder="Busqueda..."
+                                                uib-typeahead="cuenta as (cuenta.codigo+'-'+cuenta.nombre+'-'+cuenta.descripcion+'-'+cuenta.tipoCuenta.nombre) for cuenta in buscarCuentas($viewValue)"
+                                                typeahead-wait-ms="1000"
+                                                typeahead-template-url="templates/autocompletar.html"
+                                                typeahead-show-hint="false" typeahead-min-length="3">
+
+                                            <div ng-show="errorIvadf" class="invalid-message help-block"
+                                                ng-messages="formularioPlantillaCuenta.asignarCuentaIvaDf.$error"
+                                                ng-if="formularioPlantillaCuenta.asignarCuentaIvaDf.$touched || (formularioPlantillaCuenta.$submitted && formularioPlantillaCuenta.asignarCuentaIvaDf.$invalid)">
+                                                <div ng-messages-include="/templates/GRAL/messages.html"></div>
+                                            </div>
+
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <th>
+                                            <label>IT</label>
+                                        </th>
+                                        <th>
+                                            <input class="form-control" required type="number" min="0" max="100"
+                                                ng-model="plantilla.ingreso.it.porcentaje">
+                                        <th>
+
+                                            <input class="form-control" name="asignarCuentaIt" required
+                                                ng-keypress="interceptarTecla($event,'cantidad',true)"
+                                                id="asignarCuentaIt" type="text" ng-model="plantilla.ingreso.it.cuenta"
+                                                placeholder="Busqueda..."
+                                                uib-typeahead="cuenta as (cuenta.codigo+'-'+cuenta.nombre+'-'+cuenta.descripcion+'-'+cuenta.tipoCuenta.nombre) for cuenta in buscarCuentas($viewValue)"
+                                                typeahead-wait-ms="1000"
+                                                typeahead-template-url="templates/autocompletar.html"
+                                                typeahead-show-hint="false" typeahead-min-length="3">
+
+                                            <div ng-show="errorIT" class="invalid-message help-block"
+                                                ng-messages="formularioPlantillaCuenta.asignarCuentaIt.$error"
+                                                ng-if="formularioPlantillaCuenta.asignarCuentaIt.$touched || (formularioPlantillaCuenta.$submitted && formularioPlantillaCuenta.asignarCuentaIt.$invalid)">
+                                                <div ng-messages-include="/templates/GRAL/messages.html"></div>
+                                            </div>
+
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <th>
+                                            <label>IT POR PAGAR</label>
+                                        </th>
+                                        <th>
+                                            <input class="form-control" required type="number" min="0" max="100"
+                                                ng-model="plantilla.ingreso.itPorPagar.porcentaje">
+                                        <th>
+
+                                            <input class="form-control" name="asignarCuentaItPorPagar" required
+                                                ng-keypress="interceptarTecla($event,'cantidad',true)" id="cuenta"
+                                                type="text" ng-model="plantilla.ingreso.itPorPagar.cuenta"
+                                                placeholder="Busqueda..."
+                                                uib-typeahead="cuenta as (cuenta.codigo+'-'+cuenta.nombre+'-'+cuenta.descripcion+'-'+cuenta.tipoCuenta.nombre) for cuenta in buscarCuentas($viewValue)"
+                                                typeahead-wait-ms="1000"
+                                                typeahead-template-url="templates/autocompletar.html"
+                                                typeahead-show-hint="false" typeahead-min-length="3">
+
+                                            <div ng-show="errorItPorPagar" class="invalid-message help-block"
+                                                ng-messages="formularioPlantillaCuenta.asignarCuentaItPorPagar.$error"
+                                                ng-if="formularioPlantillaCuenta.asignarCuentaItPorPagar.$touched || (formularioPlantillaCuenta.$submitted && formularioPlantillaCuenta.asignarCuentaItPorPagar.$invalid)">
+                                                <div ng-messages-include="/templates/GRAL/messages.html"></div>
+                                            </div>
+
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <th>
+                                            <label>CAJA/BANCOS</label>
+                                        </th>
+                                        <th>
+                                            <input class="form-control" required type="number" min="0" max="100"
+                                                ng-model="plantilla.ingreso.cajaBanco.porcentaje">
+                                        </th>
+                                        <th>
+
+                                            <input class="form-control" name="asignarCuentaIngresoCaja" required
+                                                ng-keypress="interceptarTecla($event,'cantidad',true)"
+                                                id="asignarCuentaIngresoCaja" type="text"
+                                                ng-model="plantilla.ingreso.cajaBanco.cuenta" placeholder="Busqueda..."
+                                                uib-typeahead="cuenta as (cuenta.codigo+'-'+cuenta.nombre+'-'+cuenta.descripcion+'-'+cuenta.tipoCuenta.nombre) for cuenta in buscarCuentas($viewValue)"
+                                                typeahead-wait-ms="1000"
+                                                typeahead-template-url="templates/autocompletar.html"
+                                                typeahead-show-hint="false" typeahead-min-length="3">
+
+                                            <div ng-show="errorIngresoCaja" class="invalid-message help-block"
+                                                ng-messages="formularioPlantillaCuenta.asignarCuentaIngresoCaja.$error"
+                                                ng-if="formularioPlantillaCuenta.asignarCuentaIngresoCaja.$touched || (formularioPlantillaCuenta.$submitted && formularioPlantillaCuenta.asignarCuentaIngresoCaja.$invalid)">
+                                                <div ng-messages-include="/templates/GRAL/messages.html"></div>
+                                            </div>
+
+                                        </th>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div>
+                            </div>
+                        </div>
+
+                        <div class="col-xs-12" style="background-color:red">
+                            <div align="center"
+                                ng-click="visible.verPlantillaEgreso=(visible.verPlantillaEgreso)?false:true">
+                                <a>
+                                    <h3 class="text-white"> PLANTILLA DE EGRESOS</h3>
+                                </a>
+                            </div>
+                            <table ng-if="visible.verPlantillaEgreso" class="table  table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            <label>Nombre</label>
+                                        </th>
+                                        <th>
+                                            <label>%</label>
+                                        </th>
+                                        <th>
+                                            <label>Cuenta</label>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <th>
+                                            <label>IVA CF</label>
+                                        </th>
+                                        <th>
+                                            <input class="form-control" required type="number" min="0" max="100"
+                                                ng-model="plantilla.egreso.ivacf.porcentaje">
+                                        </th>
+                                        <th>
+                                            <input class="form-control" required name="asignarCuentaIvaCf"
+                                                ng-keypress="interceptarTecla($event,'cantidad',true)"
+                                                id="asignarCuentaIvaCf" type="text"
+                                                ng-model="plantilla.egreso.ivacf.cuenta" placeholder="Busqueda..."
+                                                uib-typeahead="cuenta as (cuenta.codigo+'-'+cuenta.nombre+'-'+cuenta.descripcion+'-'+cuenta.tipoCuenta.nombre) for cuenta in buscarCuentas($viewValue)"
+                                                typeahead-wait-ms="1000"
+                                                typeahead-template-url="templates/autocompletar.html"
+                                                typeahead-show-hint="false" typeahead-min-length="3">
+                                            <div ng-show="errorIvacf" class="invalid-message help-block"
+                                                ng-messages="formularioPlantillaCuenta.asignarCuentaIvaCf.$error"
+                                                ng-if="formularioPlantillaCuenta.asignarCuentaIvaCf.$touched || (formularioPlantillaCuenta.$submitted && formularioPlantillaCuenta.asignarCuentaIvaCf.$invalid)">
+                                                <div ng-messages-include="/templates/GRAL/messages.html"></div>
+                                            </div>
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <th>
+                                            <label>CAJA/BANCOS</label>
+                                        </th>
+                                        <th>
+                                            <input class="form-control" required type="number" min="0" max="100"
+                                                ng-model="plantilla.egreso.cajaBanco.porcentaje">
+                                        </th>
+                                        <th>
+                                            <div>
+                                                <input class="form-control" required name="asignarCuentaEgresoCaja"
+                                                    ng-keypress="interceptarTecla($event,'cantidad',true)"
+                                                    id="asignarCuentaEgresoCaja" type="text"
+                                                    ng-model="plantilla.egreso.cajaBanco.cuenta"
+                                                    placeholder="Busqueda..."
+                                                    uib-typeahead="cuenta as (cuenta.codigo+'-'+cuenta.nombre+'-'+cuenta.descripcion+'-'+cuenta.tipoCuenta.nombre) for cuenta in buscarCuentas($viewValue)"
+                                                    typeahead-wait-ms="1000"
+                                                    typeahead-template-url="templates/autocompletar.html"
+                                                    typeahead-show-hint="false" typeahead-min-length="3">
+                                            </div>
+
+                                            <div ng-show="errorEgresoCaja" class="invalid-message help-block"
+                                                ng-messages="formularioPlantillaCuenta.asignarCuentaEgresoCaja.$error"
+                                                ng-if="formularioPlantillaCuenta.asignarCuentaEgresoCaja.$touched || (formularioPlantillaCuenta.$submitted && formularioPlantillaCuenta.asignarCuentaEgresoCaja.$invalid)">
+                                                <div ng-messages-include="/templates/GRAL/messages.html"></div>
+                                            </div>
+                                        </th>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-xs-12" style="background-color:teal" ng-if="usuario.empresa.usar_funciones_erp">
+                            <div align="center"
+                                ng-click="visible.verPlantillarRetencionBien=(visible.verPlantillarRetencionBien)?false:true">
+                                <a>
+                                    <h3 class="text-white">PLANTILLA DE RETENCION DE BIENES (ALMACEN)</h3>
+                                </a>
+                            </div>
+                            <table ng-if="visible.verPlantillarRetencionBien" class="table  table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            <label>Nombre</label>
+                                        </th>
+                                        <th>
+                                            <label>%</label>
+                                        </th>
+                                        <th>
+                                            <label>Cuenta</label>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <th>
+                                            <label>Cuenta de almacen</label>
+                                        </th>
+                                        <th>
+                                            <input class="form-control" required type="number" min="0" max="100"
+                                                ng-model="plantilla.retencionBienes.almacen.porcentaje">
+                                        </th>
+                                        <th>
+                                            <input class="form-control" required name="asignarAlmacenBienes"
+                                                ng-keypress="interceptarTecla($event,'cantidad',true)"
+                                                id="asignarAlmacenBienes" type="text"
+                                                ng-model="plantilla.retencionBienes.almacen.cuenta"
+                                                placeholder="Busqueda..."
+                                                uib-typeahead="cuenta as (cuenta.codigo+'-'+cuenta.nombre+'-'+cuenta.descripcion+'-'+cuenta.tipoCuenta.nombre) for cuenta in buscarCuentas($viewValue)"
+                                                typeahead-wait-ms="1000"
+                                                typeahead-template-url="templates/autocompletar.html"
+                                                typeahead-show-hint="false" typeahead-min-length="3">
+                                            <div ng-show="errorEgresoBienAlmacen" class="invalid-message help-block"
+                                                ng-messages="formularioPlantillaCuenta.asignarAlmacenBienes.$error"
+                                                ng-if="formularioPlantillaCuenta.asignarAlmacenBienes.$touched || (formularioPlantillaCuenta.$submitted && formularioPlantillaCuenta.asignarAlmacenBienes.$invalid)">
+                                                <div ng-messages-include="/templates/GRAL/messages.html"></div>
+                                            </div>
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <th>
+                                            <label>IUE</label>
+                                        </th>
+                                        <th>
+                                            <input class="form-control" required type="number" min="0" max="100"
+                                                ng-model="plantilla.retencionBienes.iue.porcentaje">
+                                        </th>
+                                        <th>
+                                            <input class="form-control" required name="asignarIueBienes"
+                                                ng-keypress="interceptarTecla($event,'cantidad',true)"
+                                                id="asignarIueBienes" type="text"
+                                                ng-model="plantilla.retencionBienes.iue.cuenta"
+                                                placeholder="Busqueda..."
+                                                uib-typeahead="cuenta as (cuenta.codigo+'-'+cuenta.nombre+'-'+cuenta.descripcion+'-'+cuenta.tipoCuenta.nombre) for cuenta in buscarCuentas($viewValue)"
+                                                typeahead-wait-ms="1000"
+                                                typeahead-template-url="templates/autocompletar.html"
+                                                typeahead-show-hint="false" typeahead-min-length="3">
+                                            <div ng-show="errorEgresoBienIue" class="invalid-message help-block"
+                                                ng-messages="formularioPlantillaCuenta.asignarIueBienes.$error"
+                                                ng-if="formularioPlantillaCuenta.asignarIueBienes.$touched || (formularioPlantillaCuenta.$submitted && formularioPlantillaCuenta.asignarIueBienes.$invalid)">
+                                                <div ng-messages-include="/templates/GRAL/messages.html"></div>
+                                            </div>
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <th>
+                                            <label>IT</label>
+                                        </th>
+                                        <th>
+                                            <input class="form-control" required type="number" min="0" max="100"
+                                                ng-model="plantilla.retencionBienes.it.porcentaje">
+                                        </th>
+                                        <th>
+                                            <div>
+                                                <input class="form-control" required name="asignarItBienes"
+                                                    ng-keypress="interceptarTecla($event,'cantidad',true)"
+                                                    id="asignarItBienes" type="text"
+                                                    ng-model="plantilla.retencionBienes.it.cuenta"
+                                                    placeholder="Busqueda..."
+                                                    uib-typeahead="cuenta as (cuenta.codigo+'-'+cuenta.nombre+'-'+cuenta.descripcion+'-'+cuenta.tipoCuenta.nombre) for cuenta in buscarCuentas($viewValue)"
+                                                    typeahead-wait-ms="1000"
+                                                    typeahead-template-url="templates/autocompletar.html"
+                                                    typeahead-show-hint="false" typeahead-min-length="3">
+                                            </div>
+
+                                            <div ng-show="errorEgresoBienIt" class="invalid-message help-block"
+                                                ng-messages="formularioPlantillaCuenta.asignarItBienes.$error"
+                                                ng-if="formularioPlantillaCuenta.asignarItBienes.$touched || (formularioPlantillaCuenta.$submitted && formularioPlantillaCuenta.asignarItBienes.$invalid)">
+                                                <div ng-messages-include="/templates/GRAL/messages.html"></div>
+                                            </div>
+                                        </th>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-xs-12" style="background-color:salmon"
+                            ng-if="usuario.empresa.usar_funciones_erp">
+                            <div align="center"
+                                ng-click="visible.verPlantillarRetencionBienGasto=(visible.verPlantillarRetencionBienGasto)?false:true">
+                                <a>
+                                    <h3 class="text-white">PLANTILLA DE RETENCION DE BIENES (GASTO)</h3>
+                                </a>
+                            </div>
+                            <table ng-if="visible.verPlantillarRetencionBienGasto" class="table  table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            <label>Nombre</label>
+                                        </th>
+                                        <th>
+                                            <label>%</label>
+                                        </th>
+                                        <th>
+                                            <label>Cuenta</label>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <th>
+                                            <label>Cuenta de Gasto</label>
+                                        </th>
+                                        <th>
+                                            <input class="form-control" required type="number" min="0" max="100"
+                                                ng-model="plantilla.retencionBienesGasto.gasto.porcentaje">
+                                        </th>
+                                        <th>
+                                            <input class="form-control" required name="asignarGastoBienes"
+                                                ng-keypress="interceptarTecla($event,'cantidad',true)"
+                                                id="asignarGastoBienes" type="text"
+                                                ng-model="plantilla.retencionBienesGasto.gasto.cuenta"
+                                                placeholder="Busqueda..."
+                                                uib-typeahead="cuenta as (cuenta.codigo+'-'+cuenta.nombre+'-'+cuenta.descripcion+'-'+cuenta.tipoCuenta.nombre) for cuenta in buscarCuentas($viewValue)"
+                                                typeahead-wait-ms="1000"
+                                                typeahead-template-url="templates/autocompletar.html"
+                                                typeahead-show-hint="false" typeahead-min-length="3">
+                                            <div ng-show="errorEgresoBienGasto" class="invalid-message help-block"
+                                                ng-messages="formularioPlantillaCuenta.asignarGastoBienes.$error"
+                                                ng-if="formularioPlantillaCuenta.asignarGastoBienes.$touched || (formularioPlantillaCuenta.$submitted && formularioPlantillaCuenta.asignarGastoBienes.$invalid)">
+                                                <div ng-messages-include="/templates/GRAL/messages.html"></div>
+                                            </div>
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <th>
+                                            <label>IUE</label>
+                                        </th>
+                                        <th>
+                                            <input class="form-control" required type="number" min="0" max="100"
+                                                ng-model="plantilla.retencionBienesGasto.iue.porcentaje">
+                                        </th>
+                                        <th>
+                                            <input class="form-control" required name="asignarGastoIueBienes"
+                                                ng-keypress="interceptarTecla($event,'cantidad',true)"
+                                                id="asignarGastoIueBienes" type="text"
+                                                ng-model="plantilla.retencionBienesGasto.iue.cuenta"
+                                                placeholder="Busqueda..."
+                                                uib-typeahead="cuenta as (cuenta.codigo+'-'+cuenta.nombre+'-'+cuenta.descripcion+'-'+cuenta.tipoCuenta.nombre) for cuenta in buscarCuentas($viewValue)"
+                                                typeahead-wait-ms="1000"
+                                                typeahead-template-url="templates/autocompletar.html"
+                                                typeahead-show-hint="false" typeahead-min-length="3">
+                                            <div ng-show="errorEgresoBienGastoIue" class="invalid-message help-block"
+                                                ng-messages="formularioPlantillaCuenta.asignarGastoIueBienes.$error"
+                                                ng-if="formularioPlantillaCuenta.asignarGastoIueBienes.$touched || (formularioPlantillaCuenta.$submitted && formularioPlantillaCuenta.asignarGastoIueBienes.$invalid)">
+                                                <div ng-messages-include="/templates/GRAL/messages.html"></div>
+                                            </div>
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <th>
+                                            <label>IT</label>
+                                        </th>
+                                        <th>
+                                            <input class="form-control" required type="number" min="0" max="100"
+                                                ng-model="plantilla.retencionBienesGasto.it.porcentaje">
+                                        </th>
+                                        <th>
+                                            <div>
+                                                <input class="form-control" required name="asignarGastoItBienes"
+                                                    ng-keypress="interceptarTecla($event,'cantidad',true)"
+                                                    id="asignarGastoItBienes" type="text"
+                                                    ng-model="plantilla.retencionBienesGasto.it.cuenta"
+                                                    placeholder="Busqueda..."
+                                                    uib-typeahead="cuenta as (cuenta.codigo+'-'+cuenta.nombre+'-'+cuenta.descripcion+'-'+cuenta.tipoCuenta.nombre) for cuenta in buscarCuentas($viewValue)"
+                                                    typeahead-wait-ms="1000"
+                                                    typeahead-template-url="templates/autocompletar.html"
+                                                    typeahead-show-hint="false" typeahead-min-length="3">
+                                            </div>
+
+                                            <div ng-show="errorEgresoBienGastoIt" class="invalid-message help-block"
+                                                ng-messages="formularioPlantillaCuenta.asignarGastoItBienes.$error"
+                                                ng-if="formularioPlantillaCuenta.asignarGastoItBienes.$touched || (formularioPlantillaCuenta.$submitted && formularioPlantillaCuenta.asignarGastoItBienes.$invalid)">
+                                                <div ng-messages-include="/templates/GRAL/messages.html"></div>
+                                            </div>
+                                        </th>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-xs-12" style="background-color:springgreen"
+                            ng-if="usuario.empresa.usar_funciones_erp">
+                            <div align="center"
+                                ng-click="visible.verPlantillarRetencionServicio=(visible.verPlantillarRetencionServicio)?false:true">
+                                <a>
+                                    <h3 class="text-white">PLANTILLA DE RETENCION DE SERVICIOS</h3>
+                                </a>
+                            </div>
+                            <table ng-if="visible.verPlantillarRetencionServicio" class="table  table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            <label>Nombre</label>
+                                        </th>
+                                        <th>
+                                            <label>%</label>
+                                        </th>
+                                        <th>
+                                            <label>Cuenta</label>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <th>
+                                            <label>Cuenta de Servicio</label>
+                                        </th>
+                                        <th>
+                                            <input class="form-control" required type="number" min="0" max="100"
+                                                ng-model="plantilla.retencionServicios.servicio.porcentaje">
+                                        </th>
+                                        <th>
+                                            <input class="form-control" required name="asignarServicio"
+                                                ng-keypress="interceptarTecla($event,'cantidad',true)"
+                                                id="asignarServicio" type="text"
+                                                ng-model="plantilla.retencionServicios.servicio.cuenta"
+                                                placeholder="Busqueda..."
+                                                uib-typeahead="cuenta as (cuenta.codigo+'-'+cuenta.nombre+'-'+cuenta.descripcion+'-'+cuenta.tipoCuenta.nombre) for cuenta in buscarCuentas($viewValue)"
+                                                typeahead-wait-ms="1000"
+                                                typeahead-template-url="templates/autocompletar.html"
+                                                typeahead-show-hint="false" typeahead-min-length="3">
+                                            <div ng-show="errorServicio" class="invalid-message help-block"
+                                                ng-messages="formularioPlantillaCuenta.asignarServicio.$error"
+                                                ng-if="formularioPlantillaCuenta.asignarServicio.$touched || (formularioPlantillaCuenta.$submitted && formularioPlantillaCuenta.asignarServicio.$invalid)">
+                                                <div ng-messages-include="/templates/GRAL/messages.html"></div>
+                                            </div>
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <th>
+                                            <label>IUE</label>
+                                        </th>
+                                        <th>
+                                            <input class="form-control" required type="number" min="0" max="100"
+                                                ng-model="plantilla.retencionServicios.iue.porcentaje">
+                                        </th>
+                                        <th>
+                                            <input class="form-control" required name="asignarServicioIue"
+                                                ng-keypress="interceptarTecla($event,'cantidad',true)"
+                                                id="asignarServicioIue" type="text"
+                                                ng-model="plantilla.retencionServicios.iue.cuenta"
+                                                placeholder="Busqueda..."
+                                                uib-typeahead="cuenta as (cuenta.codigo+'-'+cuenta.nombre+'-'+cuenta.descripcion+'-'+cuenta.tipoCuenta.nombre) for cuenta in buscarCuentas($viewValue)"
+                                                typeahead-wait-ms="1000"
+                                                typeahead-template-url="templates/autocompletar.html"
+                                                typeahead-show-hint="false" typeahead-min-length="3">
+                                            <div ng-show="errorServicioIue" class="invalid-message help-block"
+                                                ng-messages="formularioPlantillaCuenta.asignarServicioIue.$error"
+                                                ng-if="formularioPlantillaCuenta.asignarServicioIue.$touched || (formularioPlantillaCuenta.$submitted && formularioPlantillaCuenta.asignarServicioIue.$invalid)">
+                                                <div ng-messages-include="/templates/GRAL/messages.html"></div>
+                                            </div>
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <th>
+                                            <label>IT</label>
+                                        </th>
+                                        <th>
+                                            <input class="form-control" required type="number" min="0" max="100"
+                                                ng-model="plantilla.retencionServicios.it.porcentaje">
+                                        </th>
+                                        <th>
+                                            <div>
+                                                <input class="form-control" required name="asignarServicioIt"
+                                                    ng-keypress="interceptarTecla($event,'cantidad',true)"
+                                                    id="asignarServicioIt" type="text"
+                                                    ng-model="plantilla.retencionServicios.it.cuenta"
+                                                    placeholder="Busqueda..."
+                                                    uib-typeahead="cuenta as (cuenta.codigo+'-'+cuenta.nombre+'-'+cuenta.descripcion+'-'+cuenta.tipoCuenta.nombre) for cuenta in buscarCuentas($viewValue)"
+                                                    typeahead-wait-ms="1000"
+                                                    typeahead-template-url="templates/autocompletar.html"
+                                                    typeahead-show-hint="false" typeahead-min-length="3">
+                                            </div>
+
+                                            <div ng-show="errorServicioIt" class="invalid-message help-block"
+                                                ng-messages="formularioPlantillaCuenta.asignarServicioIt.$error"
+                                                ng-if="formularioPlantillaCuenta.asignarServicioIt.$touched || (formularioPlantillaCuenta.$submitted && formularioPlantillaCuenta.asignarServicioIt.$invalid)">
+                                                <div ng-messages-include="/templates/GRAL/messages.html"></div>
+                                            </div>
+                                        </th>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div> -->
+                </div>
+
+                <div class="modal-footer">
+
+                    <button type="submit" id="siguiente1" class="btn btn-success btn-sm btn-next" data-last="Finish">
+                        Guardar
+                        <i class="ace-icon fa fa-arrow-right icon-on-right"></i>
+                    </button>
+
+                    <button type="button" class="btn btn-danger btn-sm pull-left" data-dismiss="modal"
+                        ng-click="cerrarPlantillaIngreso()">
+                        <i class="ace-icon fa fa-times"></i>
+                        Cancelar </button>
+
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- fin plantilla egreso ingreso-->
+<!-- VER CLASIFICACION -->
+<!-- <div id="modal-wizard-ver-clasificacion" class="modal wizard-posicion">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form novalidate ng-submit="guardarClasificacion(formularioClasificacionCuentaVer.$valid,clasificacion)" id="formularioClasificacionCuentaVer"
+                 name="formularioClasificacionCuentaVer">
+                    <div id="modal-wizard-container-agregar-clasificacion">
+                        <div class="modal-header">
+                            <span ng-if='!clasificacion.id' class="title">AGREGAR CLASIFICACIÓN DE CUENTA</span>
+                        </div>
+                        <div class="modal-body step-content">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label no-padding-right" for="nombre">Descripción</label>
+                                <div class="col-sm-9">
+                                    <input disabled type="text" id="nombre" ng-model="clasificacion.nombre" placeholder="Descripción" class="col-xs-10 col-sm-5"
+                                    />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label no-padding-right" for="saldo">Saldo</label>
+    
+                                <div class="col-sm-9">
+                                    <select disabled id="saldo" name="saldo" ng-model="clasificacion.saldo" ng-options="clasificacionSaldo as clasificacionSaldo.nombre for clasificacionSaldo in cuentaSaldos track by clasificacionSaldo.id">
+                                           </select>
+                                </div>
+    
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label no-padding-right" for="movimiento">movimiento</label>
+    
+                                <div class="col-sm-9">
+                                    <select disabled id="movimiento" name="movimiento" ng-model="clasificacion.movimiento" ng-options="clasificacionMovimiento as clasificacionMovimiento.nombre for clasificacionMovimiento in cuentaMovimientos track by clasificacionMovimiento.id">
+                                               </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer wizard-actions">
+    
+                        <button type="button" class="btn btn-danger btn-sm pull-left" data-dismiss="modal" ng-click="cerrarPopPupVerClasificacion()">
+                            <i class="ace-icon fa fa-times"></i>
+                            Salir
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div> -->
+<!-- FIN VER CLASIFICACION -->
+
+<!-- EDICION, CREACION DE CUENTA -->
+<div id="modal-wizard-cuenta-edicion" class="modal wizard-posicion">
+    <div class="modal-content">
+        <form ng-submit="guardarCuenta(formularioCuenta.$valid,cuenta)" id="formularioCuenta" name="formularioCuenta"
+            novalidate>
+            <div id="modal-wizard-container-cuenta-edicion">
+                <div class="modal-header steps-container">
+                    <ul class="steps">
+                        <li data-step="1" class="active">
+                            <span class="step">1</span>
+                            <span class="title">Datos de la Cuenta</span>
+                        </li>
+                        <li data-step="2">
+                            <span class="step">2</span>
+                            <span class="title">Configuraciones</span>
+                        </li>
+                        <li data-step="3">
+                            <span class="step">3</span>
+                            <span class="title">Otras Configuraciones</span>
+                        </li>
+                        <li data-step="4">
+                            <span class="step">4</span>
+                            <span class="title">cálculos</span>
+                        </li>
+                        <li data-step="5">
+                            <span class="step">5</span>
+                            <span class="title">Finalizar</span>
+                        </li>
+                    </ul>
+                </div>
+                <!-- inicio paso 1 -->
+                <div class="modal-body step-content">
+                    <div class="step-pane active" data-step="1">
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label no-padding-right" for="codigo">Código<span hidden ng-if="!cuenta.id"></span></label>
+                            <div class="col-sm-6">
+                                <input required type="text" id="codigo_cuenta" ng-model="cuenta.codigo"
+                                    placeholder="Código de cuenta" class="form-control input-sm"
+                                    ng-change="validarCodigoCuenta(cuenta.codigo)" />
+                                <p ng-class="{'text-red':data.type,'text-green':!data.type}"> {{data.message}}</p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label no-padding-right" for="nombre">Nombre</label>
+                            <div class="col-sm-6">
+                                <input type="text" id="Nombre" ng-model="cuenta.nombre" placeholder="Nombre de la cuenta"
+                                    class="form-control input-sm" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label no-padding-right" for="descripcion">Descripción</label>
+
+                            <div class="col-sm-6">
+                                <!-- <input ng-if="!cuenta.id" required type="text" id="descripcion" ng-model="cuenta.descripcion" placeholder="Descripción" class="col-xs-10 col-sm-8"
+                                        /> -->
+                                <input type="text" id="descripcion" ng-model="cuenta.descripcion"
+                                    placeholder="Descripción de la cuenta" class="form-control input-sm" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label no-padding-right"
+                                for="clasificacion">Clasificación</label>
+
+                            <div class="col-sm-6">
+                                <select required id="clasificacionC" name="clasificacion"
+                                    ng-model="cuenta.clasificacion" ng-change="validarCuenta(true)"
+                                    ng-options="clasificacionCuenta as clasificacionCuenta.nombre for clasificacionCuenta in cuentaClasificaciones track by clasificacionCuenta.id"
+                                    class="form-control input-sm">
+                                </select>
+                            </div>
+                            <div class="col-sm-2">
+                                <a class="blue" href="javascript:void(0)" e-disabled="!aplicacion.puede_modificar"
+                                    ng-click="agregarClasificacionCuenta()">
+                                    <i class="ace-icon fa fa-plus bigger-130"></i>
+                                </a>
+                                <a class="green" href="javascript:void(0)" e-disabled="!aplicacion.puede_modificar"
+                                    ng-click="modificarClasificacionesCuenta()">
+                                    <i class="ace-icon fa fa-pencil bigger-130"></i>
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="space-4"></div>
+
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label no-padding-right" for="tipoCuenta">Tipo cta.</label>
+
+                            <div class="col-sm-6">
+                                <select required name="tipoCuenta" id="tipoCuentaC" ng-model="cuenta.tipoCuenta" ng-change="validarCuenta(false)"
+                                    ng-options="cuentaTipo as cuentaTipo.nombre for cuentaTipo in cuentaTipos track by cuentaTipo.id"
+                                    class="form-control input-sm">
+                                </select>
+                            </div>
+                            <div class="col-sm-2">
+                                <a class="blue" href="javascript:void(0)" ng-disabled="!aplicacion.puede_modificar"
+                                    ng-click="agregarTipoCuenta()">
+                                    <i class="ace-icon fa fa-plus bigger-130"></i>
+                                </a>
+                                <a class="green" href="javascript:void(0)" ng-disabled="!aplicacion.puede_modificar"
+                                    ng-click="agregarTipoCuenta()">
+                                    <i class="ace-icon fa fa-pencil bigger-130"></i>
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="form-group" ng-if="cuenta.tipoCuenta.nombre_corto != 1">
+                            <label class="col-sm-4 control-label no-padding-right" for="tipoCuenta">Cuenta Padre</label>
+                            <div class="col-sm-6">
+                                <input ng-disabled="modoVista" class="form-control input-sm" autocomplete="off"  data-validate="validate(required)" required type="text" ng-model="cuenta.cuentaPadre" typeahead-editable="false" placeholder="Cuenta padre" uib-typeahead="cuenta as cuenta.nombre for cuenta in listarCuentasContabilidad($viewValue, cuenta, false)" typeahead-wait-ms="1200" typeahead-template-url="templates/autocompletar.html" typeahead-show-hint="false" typeahead-min-length="2" typeahead-on-select="establecerVehiculo($item, false, $model, $label, $event)">
+                            </div>
+                        </div>
+                    </div>
+                    <!-- fin de paso 1 -->
+                    <!-- inicio paso 2 -->
+                    <div class="step-pane" data-step="2">
+                        <div class="row" style="border-bottom: 0.5px solid rgb(202, 201, 201);">
+                            <div class="col-md-6">
+                                <h6 class="text-primary">1. Saldos</h6>
+                                <label class="col-md-3 control-label no-padding-right" for="debe">Debe</label>
+
+                                <div class="col-md-9 ">
+                                    <input type="number" step="0.01" id="debeC" ng-model="cuenta.debe"
+                                        placeholder="Debe" class="form-control" />
+                                </div>
+
+                                <label class="col-md-3 control-label" style="padding-top: 8px;" placeholder="Haber"
+                                    for="haber">Haber</label>
+
+                                <div class="col-md-9 padding-2" style="padding-top: 8px;">
+                                    <input type="number" step="0.01" id="haberC" ng-model="cuenta.haber"
+                                        placeholder="Haber" class="form-control" />
+                                </div>
+                                <label class="col-md-3 control-label" style="padding-top: 8px;" placeholder="Saldo"
+                                    for="saldo">Saldo</label>
+
+                                <div class="col-md-9" style="padding-top: 8px;">
+                                    <input type="number" step="0.01" id="saldoC" ng-model="cuenta.saldo"
+                                        placeholder="Saldo" class="form-control" />
+                                </div>
+                            </div>
+
+
+
+
+                            <div class="col-md-6">
+                                <h6 class="text-primary">2. Vinculaciones y Asociaciones</h6>
+
+                                <div class="col-md-12 col-lg-12 col-sm-12">
+                                    <label class="control-label no-padding-right" for="vincularCuenta">Vincular
+                                        Cuenta : </label>
+                                </div>
+                                <div class="col-md-12 col-lg-12 col-sm-12 text-center">
+                                    <label>Cliente
+                                        <input id="calculo" name="switch-field-1"
+                                            class="ace ace-switch form-control ace-switch-4" type="checkbox"
+                                            ng-model="cuenta.vincular_cuenta" value="0" />
+                                        <span id="check_vincular_cuenta" class="lbl check-descuento"></span>
+                                        Provedor</label>
+                                </div>
+
+
+                                <div ng-if="!cuenta.vincular_cuenta">
+                                    <label class="col-lg-4 col-md-5 col-sm-12 col-xs-12 control-label no-padding-right"
+                                        for="presupuestaria">Razón social cliente :</label>
+                                    <div class="col-lg-8 col-md-7 col-sm-12 col-xs-12 no-padding-right inline">
+                                        <input class="form-control"
+                                            ng-keypress="interceptarTecla($event,'id_producto',true)" autocomplete="off"
+                                            data-validate="validate(required)" id="razon_socialC" name="razon_social"
+                                            type="text" ng-model="cuenta.cuentaC.cliente"
+                                            placeholder="Ingrese la Razon Social"
+                                            uib-typeahead="cliente as cliente.razon_social for cliente in buscarCliente($viewValue)"
+                                            typeahead-wait-ms="2000"
+                                            typeahead-template-url="templates/autocompletar.html"
+                                            typeahead-show-hint="false" typeahead-min-length="0"
+                                            typeahead-on-select="establecerCliente($item, $model, $label, $event)">
+                                        <span class="red">(*)</span>
+                                        <span class="invalid-message"
+                                            ng-show="formularioVenta.razon_social.$dirty && formularioVenta.razon_social.$invalid">
+                                            Dato requerido.
+                                        </span>
+
+                                    </div>
+
+                                </div>
+
+                                <div ng-if="cuenta.vincular_cuenta">
+                                    <label class="col-md-5 col-sm-12 no-padding-right" style="padding-top: 4px;">tipo
+                                        cuenta:</label>
+                                    <div class="col-md-7 col-sm-12" style="padding-top: 4px; padding-bottom: 6px;">
+                                        <select id="tipo_cuentap" name="tipo_cuentap" class="form-control"
+                                            ng-options="tipoCuenta as tipoCuenta.nombre for tipoCuenta in tiposCuentaProveedor track by tipoCuenta.id"
+                                            ng-model="cuenta.cuentaP.tipo">
+                                            <option value="">--ninguno--</option>
+                                        </select>
+
+                                    </div>
+                                    <div class="col-md-5 col-sm-12 col-xs-12 ">
+                                        <label class="control-label no-padding-right" for="presupuestaria">Razón
+                                            social proveedor :</label>
+                                    </div>
+
+                                    <div class="col-md-7 col-sm-12 no-padding-right">
+                                        <input id="razon_social" class="form-control"
+                                            ng-keypress="interceptarTecla($event,'factura',true)"
+                                            data-validate="validate(required)" type="text"
+                                            ng-model="cuenta.cuentaP.proveedor" placeholder="Ingrese la Razon Social"
+                                            uib-typeahead="proveedor as proveedor.razon_social for proveedor in buscarProveedor($viewValue)"
+                                            typeahead-wait-ms="2000"
+                                            typeahead-template-url="templates/autocompletar.html"
+                                            typeahead-show-hint="false" typeahead-min-length="0"
+                                            typeahead-on-select="establecerProveedor($item, $model, $label, $event)">
+                                        <span class="red">(*)</span>
+
+                                    </div>
+
+                                </div>
+
+                                <label class="col-md-12 col-sm-12 no-padding-right" style="padding-top: 4px;">Usar
+                                    Cuenta Auxiliar:</label>
+                                <div class="col-md-12 col-sm-12" style="padding-top: 4px; padding-bottom: 6px;">
+                                    <select id="cuentaaux" name="cuentaaux" class="form-control"
+                                        ng-options="tipoAuxiliar as tipoAuxiliar.nombre for tipoAuxiliar in tiposCuentasAuxiliares track by tipoAuxiliar.id"
+                                        ng-model="cuenta.tipoAuxiliar">
+                                        <option value="">--ninguno--</option>
+                                    </select>
+
+                                </div>
+
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h6 class="text-primary">3. Configuraciones de impresión de las cuentas del CF y
+                                    DF</h6>
+                                <div class=" form-group">
+
+                                    <div class="col-md-9 col-sm-9">
+                                        <label class="control-label">Cuenta especifica</label>
+                                    </div>
+                                    <div class="col-md-3 col-sm-3">
+                                        <label>
+                                            <input id="cuenta-especifica"
+                                                ng-change="optenerCfDf(cuenta.tipo_especifica,cuenta.especifica)"
+                                                name="switch-field-1" class="ace ace-switch ace-switch-4"
+                                                type="checkbox" ng-model="cuenta.especifica" value="0" />
+                                            <span id=check_cuenta-especifica class="lbl check-descuento"
+                                                class="col-xs-10 col-sm-8"></span>
+                                        </label>
+                                    </div>
+
+
+                                    <div class="col-md-9 col-sm-9">
+                                        <label class="control-label"><small>(solo para CF y DF)</small></label>
+                                    </div>
+                                    <div class="col-md-3 col-sm-3">
+                                        <label>
+                                            <input ng-disabled="!cuenta.especifica" id="cuenta-no-especifica"
+                                                name="switch-field-1" class="ace ace-switch ace-switch-4"
+                                                type="checkbox" ng-model="cuenta.tipo_especifica"
+                                                ng-change="optenerCfDf(cuenta.tipo_especifica,cuenta.especifica)"
+                                                value="0" />
+                                            <span id=check_cuenta-especifica class="lbl check-cuenta-especifica"
+                                                class="col-xs-10 col-sm-8"></span>
+                                        </label>
+                                    </div>
+
+
+                                    <div class=" col-md-3 col-sm-3" style="padding-top: 4px;">
+                                        <label class="control-label no-padding-right">Texto</label>
+                                    </div>
+                                    <div class="col-md-3 col-sm-3" style="padding-top: 4px;">
+                                        <input ng-disabled="!cuenta.especifica" type="text" class="form-control"
+                                            ng-model="cuenta.especifica_texto1.nombre_corto">
+                                    </div>
+                                    <div class="col-md-3 col-sm-3" style="padding-top: 4px;">
+                                        <input ng-disabled="!cuenta.especifica" type="text" class="form-control"
+                                            ng-model="cuenta.especifica_texto2.nombre_corto">
+                                    </div>
+                                    <div class="col-md-3 col-sm-3" style="padding-top: 4px;">
+                                        <input ng-disabled="!cuenta.especifica" type="text" class="form-control"
+                                            ng-model="cuenta.especifica_texto3.nombre_corto">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <h6 class="text-primary">4. Configuración de presupuestos y Otras
+                                    configuraciones</h6>
+                                <div class="col-md-12 col-sm-5">
+                                    <label class="control-label" for="presupuestaria">P. Presupuestaria</label>
+                                </div>
+                                <div class="col-md-10 col-sm-6">
+                                    <select id="presupuestaria" name="presupuestaria" class="form-control"></select>
+                                </div>
+                                <div class="col-md-2 col-sm-1">
+                                    <a class="blue" href="javascript:void(0)" e-disabled="!aplicacion.puede_modificar">
+                                        <i class="ace-icon fa fa-plus bigger-130"></i>
+                                    </a>
+                                    <a class="green" href="javascript:void(0)" e-disabled="!aplicacion.puede_modificar">
+                                        <i class="ace-icon fa fa-pencil bigger-130"></i>
+                                    </a>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <!-- fin paso 2 -->
+                    <!-- inicio paso 3 -->
+                    <div class="step-pane" data-step="3">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="col-md-6">
+                                    <div class="col-md-9">
+                                        <i class="fa fa-exclamation-circle blue" data-rel="tooltip"
+                                            tooltip-placement="top" tooltip-append-to-body="true"
+                                            uib-tooltip="Defina si es activo fijo, si corresponde asigne cuenta de depreciación."></i>
+                                        <label class="control-label">¿Activo Fijo?</label>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <input id="activo_fijo" name="switch-field-1"
+                                            class="ace ace-switch ace-switch-4" type="checkbox"
+                                            ng-model="cuenta.cuenta_activo" value="0" />
+                                        <span id=check_activo_fijo class="lbl check-descuento"
+                                            class="form-control"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6" ng-show="!!cuenta.cuenta_activo">
+                                    <input class="form-control" name="asignarCuentaDepreciacion" autocomplete="off"
+                                        ng-keypress="interceptarTecla($event,'cantidad',true)"
+                                        id="asignarCuentaDepreciacion" type="text"
+                                        ng-model="cuenta.id_cuenta_depreciacion" placeholder="Código cuenta"
+                                        uib-typeahead="cuenta as (cuenta.codigo+'-'+cuenta.nombre) for cuenta in buscarCuentas($viewValue)"
+                                        typeahead-wait-ms="1000" typeahead-template-url="templates/autocompletar.html"
+                                        typeahead-min-length="3" aria-autocomplete="list">
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="col-md-6">
+                                    <div class="col-md-9">
+                                        <i class="fa fa-exclamation-circle blue" data-rel="tooltip"
+                                            tooltip-placement="top" tooltip-append-to-body="true"
+                                            uib-tooltip="Define como cuenta de patrimonio para los EEFFs"></i> <label
+                                            class="control-label" for="patrimonial">¿Es cuenta patrimonial?</label>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <input id="patrimonial" name="switch-field-1"
+                                            class="ace ace-switch ace-switch-4" type="checkbox"
+                                            ng-model="cuenta.patrimonial" value="0" />
+                                        <span id=check_patrimonial class="lbl check-descuento"
+                                            class="control-label"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="col-md-6">
+                                    <div class="col-md-9">
+                                        <i class="fa fa-exclamation-circle blue" data-rel="tooltip"
+                                            tooltip-placement="top" tooltip-append-to-body="true"
+                                            uib-tooltip="Ejecuta cálculos en 2 monedas"></i> <label
+                                            class="control-label" for="bimonetaria">¿Bimonetaria?</label>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <input id="bimonetaria" name="switch-field-1"
+                                            class="ace ace-switch ace-switch-4" type="checkbox"
+                                            ng-model="cuenta.bimonetaria" value="0" />
+                                        <span id=check_bimonetaria class="lbl check-descuento"
+                                            class="control-label"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="col-md-6">
+                                    <div class="col-md-9">
+                                        <i class="fa fa-exclamation-circle blue" data-rel="tooltip"
+                                            tooltip-placement="top" tooltip-append-to-body="true"
+                                            uib-tooltip="Cuenta que establece el resultado de la gestión"></i> <label
+                                            class="Wcontrol-label" for="acumulados">¿Resultados?</label>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <input id="acumulados" name="acumulados" class="ace ace-switch ace-switch-4"
+                                            type="checkbox" ng-model="cuenta.estado_resultado" value="0" />
+                                        <span id=check_acumulados class="lbl check-descuento"
+                                            class="control-label"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="col-md-6">
+                                    <div class="col-md-9">
+                                        <i class="fa fa-exclamation-circle blue" data-rel="tooltip"
+                                            tooltip-placement="top" tooltip-append-to-body="true"
+                                            uib-tooltip="Sólo para cuentas con actualización de las UFV´s según NC 3 y 6"></i>
+                                        <label class="Wcontrol-label" for="monetaria">¿Cuenta no monetaria?</label>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <input id="monetaria" name="monetaria" class="ace ace-switch ace-switch-4"
+                                            type="checkbox" ng-model="cuenta.no_monetaria" value="0" />
+                                        <span id=check_monetaria class="lbl check-descuento"
+                                            class="control-label"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="col-md-6">
+                                    <div class="col-md-9">
+                                        <i class="fa fa-exclamation-circle blue" data-rel="tooltip"
+                                            tooltip-placement="top" tooltip-append-to-body="true"
+                                            uib-tooltip="Habilita la cuenta que configura los resultados acumulados"></i>
+                                        <label class="control-label no-padding-right">¿Resultado Acumulado?</label>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <input name="switch-field-1" class="ace ace-switch ace-switch-4" type="checkbox"
+                                            ng-model="cuenta.resultado_acumulado" value="0" />
+                                        <span class="lbl check-descuento" class="control-label"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="col-md-6">
+                                    <div class="col-md-9">
+                                        <i class="fa fa-exclamation-circle blue" data-rel="tooltip"
+                                            tooltip-placement="top" tooltip-append-to-body="true"
+                                            uib-tooltip="Habilita el llenado de LC desde el comprobante contable referida a la cuenta configurada"></i>
+                                        <label class="Wcontrol-label" for="libro-compra">¿Libro de compras?</label>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <input id="libro-compra" name="libro-compra" class="ace ace-switch ace-switch-4"
+                                            type="checkbox" ng-model="cuenta.libro_de_compra" value="0" />
+                                        <span id=check-libro-compra class="lbl check-descuento"
+                                            class="control-label"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6" ng-if="cuenta.libro_de_compra">
+                                    <div>
+                                        <select data-validate="validate(required)" required id="sucursal"
+                                            name="sucursal" class="form-control"
+                                            ng-options="sucursal.id as sucursal.nombre for sucursal in sucursales"
+                                            ng-model="sucursalLc" ng-change="obtenerAlmacenes(sucursalLc)">
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <select data-validate="validate(required)" required id="almacen"
+                                            class="form-control" name="almacen" ng-model="cuenta.id_almacen_lc"
+                                            ng-options="almacen.id as almacen.nombre for almacen in almacenes"
+                                            data-placeholder="Click para escoger"></select>
+                                    </div>
+                                    <div>
+                                        <input type="text" class="form-control" ng-model="cuenta.cuenta_vinculada_lc"
+                                            ng-change="buscarCuentaVinculanteLc(cuenta.cuenta_vinculada_lc)">
+                                        <span ng-if="cuentaVinculante_lc.id" class="text-success">Cuenta
+                                            vinculante: {{cuentaVinculante_lc.nombre}}.</span>
+                                        <span ng-if="!cuentaVinculante_lc.id" class="text-warning">Cuenta
+                                            vinculante no aderida.</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row" ng-if="cuenta.tipoCuenta.nombre_corto=='4'">
+                                <div class="col-md-6">
+                                    <div class="col-md-9">
+                                        <i class="fa fa-exclamation-circle blue" data-rel="tooltip"
+                                            tooltip-placement="top" tooltip-append-to-body="true"
+                                            uib-tooltip="Configuración nesesaria para generar comprobantes desde almacen por grupos."></i>
+                                        <label class="Wcontrol-label" for="libro-compra">¿Vincular a grupo de
+                                            item?</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div>
+                                        <ui-select multiple ng-model="cuenta.grupos" theme="select2"
+                                            style="width: 160px;" title="Seleccionar grupos">
+                                            <ui-select-match placeholder="seleccionar auxiliares..."><span
+                                                    style="color:black">{{$item.nombre}}</span>
+                                            </ui-select-match>
+                                            <ui-select-choices
+                                                repeat="clase in gruposProducto | filter:{nombre:$select.search} | orderBy:'nombre'">
+
+                                                <span>
+                                                    {{clase.nombre}}
+                                                </span>
+                                            </ui-select-choices>
+                                        </ui-select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row" ng-if="cuenta.tipoCuenta.nombre_corto=='4'">
+                                <div class="col-md-6">
+                                    <div class="col-md-9">
+                                        <i class="fa fa-exclamation-circle blue" data-rel="tooltip"
+                                            tooltip-placement="top" tooltip-append-to-body="true"
+                                            uib-tooltip="Configuración nesesaria para generar comprobantes desde almacen por grupos."></i>
+                                        <label class="Wcontrol-label" for="libro-compra">¿Vincular a centro de
+                                            costo?</label>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-check">
+                                        <label> {{selectAllCampos?'quitar seleccion':'Selecionar Todos'}}
+                                            <input type="checkbox" class="ace" name="selectAllCampos"
+                                                id="selectAllCampos" ng-model="selectAllCampos"
+                                                ng-change="seleccionarCampos(selectAllCampos)" />
+                                            <span class="lbl"></span>
+                                        </label>
+                                        </label>
+                                    </div>
+                                    <div>
+                                        <ui-select multiple ng-model="cuenta.campos" theme="select2"
+                                            style="width: 160px;" title="Seleccionar grupos">
+                                            <ui-select-match placeholder="seleccionar auxiliares..."><span
+                                                    style="color:black">{{$item.nombre}}</span>
+                                            </ui-select-match>
+                                            <ui-select-choices
+                                                repeat="clase in camposEmpresa | filter:{nombre:$select.search} | orderBy:'nombre'">
+
+                                                <span>
+                                                    {{clase.nombre}}
+                                                </span>
+                                            </ui-select-choices>
+                                        </ui-select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row" ng-if="cuenta.tipoCuenta.nombre_corto=='4'">
+                                <div class="col-md-6">
+                                    <i class="fa fa-exclamation-circle blue" data-rel="tooltip" tooltip-placement="top"
+                                        tooltip-append-to-body="true" uib-tooltip="Permite asignar la cuenta en la integración de
+                                        acuerdo al tipo de personal, en los casos que la integración se vincule con RRHH, como
+                                        por ejemplo en EPPs."></i>
+                                    <label class="Wcontrol-label" for="libro-compra">¿tipo de personal?</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="input-group">
+                                        <select class="form-control" style="width:150px"
+                                            ng-options="tipoPersonal as tipoPersonal.nombre for tipoPersonal in tiposPersonales.clases | filter:{habilitado:true} track by tipoPersonal.id"
+                                            ng-model="cuenta.tipoPersonal">
+                                            <option value="">--todos--</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- fin paso 3 -->
+                    <!-- inicio paso 4 -->
+                    <div class="step-pane" data-step="4">
+                        <div class="form-group">
+                            <label class="control-label col-xs-6 no-padding-right" for="aplicar_calculo">Aplicar
+                                cálculo a la cuenta</label>
+                            <div class="col-xs-6">
+                                <label>
+                                    <input id="calculoc" name="switch-field-1" class="ace ace-switch ace-switch-4"
+                                        type="checkbox" ng-model="cuenta.aplicar_calculo" value="0" />
+                                    <span id="check_calculo" class="lbl check-descuento"
+                                        class="col-xs-10 col-sm-8"></span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group" ng-if="cuenta.aplicar_calculo">
+                            <label class="col-sm-3 control-label no-padding-right" for="claseCalculo">Operación</label>
+
+                            <div class="col-sm-9">
+                                <select id="claseCalculo" name="claseCalculo" ng-model="cuenta.claseCalculo"
+                                    ng-options="operacionCuenta as operacionCuenta.nombre for operacionCuenta in operacionesCalculo track by operacionCuenta.id"
+                                    class="col-xs-10 col-sm-8">
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group" ng-if="cuenta.aplicar_calculo">
+                            <label class="col-sm-3 control-label no-padding-right" for="monto">Monto</label>
+
+                            <div class="col-sm-9">
+                                <input required type="number" step="0.01" id="montoC" ng-model="cuenta.monto"
+                                    placeholder="Monto" class="col-xs-10 col-sm-8" />
+                            </div>
+                        </div>
+
+                    </div>
+                    <!-- fin paso 4 -->
+                    <!-- FIN -->
+                    <div class="step-pane" data-step="5">
+                        <label>Final</label>
+                    </div>
+                </div>
+            </div>
+            <!-- botones -->
+            <div class="modal-footer wizard-actions">
+                <button id="anteriorCuenta" class="btn btn-sm btn-prev">
+                    <i class="ace-icon fa fa-arrow-left"></i>
+                    Anterior
+                </button>
+
+                <button type="submit" ng-disabled="data.message=='¡el codigo ya Exsiste!'" id="siguienteCuenta"
+                    class="btn btn-success btn-sm btn-next" data-last="Finish">
+                    Siguiente
+                    <i class="ace-icon fa fa-arrow-right icon-on-right"></i>
+                </button>
+
+                <button type="button" class="btn btn-danger btn-sm pull-left" data-dismiss="modal"
+                    ng-click="cerrarPopPupEdicion()">
+                    <i class="ace-icon fa fa-times"></i>
+                    Cancelar
+                </button>
+            </div>
+        </form>
+    </div>
+
+</div>
+
+<div id="modal-wizard-concepto-edicion" class="modal wizard-posicion">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form name="formtipocuenta" ng-submit="guardarTipoCuenta(formtipocuenta.$valid,tipo)">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right" for="clase_nombre">Nombre
+                        Clase</label>
+
+                    <div class="col-sm-9">
+                        <input ng-disabled="usuarioSesion.id_empresa" type="text" id="clase_nombre"
+                            ng-model="clase.nombre" placeholder="Nombre de clase" class="col-xs-10 col-sm-5" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right" for="clase_nombre_corto">Nombre Corto
+                        Clase</label>
+
+                    <div class="col-sm-9">
+                        <input type="text" id="clase_nombre_corto" ng-model="clase.nombre_corto"
+                            placeholder="Nombre de clase" class="col-xs-10 col-sm-5" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-9">
+                        <button type="button" class="btn btn-primary" ng-click="adicionarTipoCuenta(clase)">
+                            <i class="ace-icon fa fa-plus align-top bigger-125"></i>
+                        </button>
+                    </div>
+                </div>
+                <table id="tabla-permisos" class="table table-striped table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th>Nombre Clase</th>
+                            <th>Nombre Corto</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr ng-repeat="clase in tipo.clases track by $index" ng-if="!clase.eliminado">
+
+                            <td>
+                                {{clase.nombre}}
+                            </td>
+                            <td>{{clase.nombre_corto}}</td>
+                            <td>
+                                <div class="hidden-sm hidden-xs action-buttons">
+                                    <a class="green" href="javascript:void(0)" ng-click="modificarTipoCuenta(clase)">
+                                        <i class="ace-icon fa fa-pencil bigger-130"></i>
+                                    </a>
+
+                                    <a class="red" href="javascript:void(0)" ng-click="removerTipoCuenta(clase)">
+                                        <i class="ace-icon fa fa-trash-o bigger-130"></i>
+                                    </a>
+                                </div>
+
+                                <div class="hidden-md hidden-lg">
+                                    <div class="inline pos-rel">
+                                        <button class="btn btn-minier btn-yellow dropdown-toggle" data-toggle="dropdown"
+                                            data-position="auto">
+                                            <i class="ace-icon fa fa-caret-down icon-only bigger-120"></i>
+                                        </button>
+
+                                        <ul
+                                            class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-menu-right dropdown-caret dropdown-close">
+                                            <li>
+                                                <a href="javascript:void(0)" ng-click="modificarTipoCuenta(clase)"
+                                                    class="tooltip-success" data-rel="tooltip" title="Edit">
+                                                    <span class="green">
+                                                        <i class="ace-icon fa fa-pencil-square-o bigger-120"></i>
+                                                    </span>
+                                                </a>
+                                            </li>
+
+                                            <li>
+                                                <a href="javascript:void(0)" ng-click="removerTipoCuenta(clase)"
+                                                    class="tooltip-error" data-rel="tooltip" title="Delete">
+                                                    <span class="red">
+                                                        <i class="ace-icon fa fa-trash-o bigger-120"></i>
+                                                    </span>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="modal-footer wizard-actions">
+                    <button type="submit" id="siguienteTipoCuenta" class="btn btn-success btn-sm btn-next"
+                        data-last="Finish">
+                        Guardar
+                        <i class="ace-icon fa fa-arrow-right icon-on-right"></i>
+                    </button>
+
+                    <button type="button" class="btn btn-danger btn-sm pull-left" data-dismiss="modal"
+                        ng-click="cerrarPopPupTipoCuenta()">
+                        <i class="ace-icon fa fa-times"></i>
+                        Cancelar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- FIN EDICION CREACION CUENTA -->
+
+<!-- VER CUENTA -->
+<div id="modal-wizard-cuenta-ver" class="modal wizard-posicion">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form ng-submit="" id="formularioCuentaVer" name="formularioCuentaVer" novalidate>
+                <div id="modal-wizard-container-cuenta-ver">
+                    <div class="modal-header steps-container">
+                        <ul class="steps">
+                            <li data-step="1" class="active">
+                                <span class="step">1</span>
+                                <span class="title">Datos de la Cuenta</span>
+                            </li>
+                            <li data-step="2">
+                                <span class="step">2</span>
+                                <span class="title">Configuraciones</span>
+                            </li>
+                            <li data-step="3">
+                                <span class="step">3</span>
+                                <span class="title">cálculos</span>
+                            </li>
+                            <li data-step="4">
+                                <span class="step">4</span>
+                                <span class="title">Finalizar</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <!-- inicio paso 1 -->
+                    <div class="modal-body step-content">
+                        <div class="step-pane active" data-step="1">
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label no-padding-right" for="codigo">Código
+                                    <span hidden ng-if="!cuenta.id">(Último Generado:
+                                        <b>{{ultimo_codigo}}</b>)</span>
+                                </label>
+
+                                <div class="col-sm-6">
+                                    <input ng-disabled="cuenta.id" type="text" id="Vercodigo" ng-model="cuenta.codigo"
+                                        placeholder="Código" class="col-xs-10 col-sm-8" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label no-padding-right" for="nombre">Nombre</label>
+
+                                <div class="col-sm-6">
+                                    <!-- <input ng-if="!cuenta.id" required type="text" id="Vernombre" ng-model="cuenta.nombre" placeholder="Nombre" class="col-xs-10 col-sm-8"
+                                        /> -->
+                                    <input ng-disabled="cuenta.id" type="text" id="VerNombre" ng-model="cuenta.nombre"
+                                        placeholder="{{cuenta.nombre}}" class="col-xs-10 col-sm-8" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label no-padding-right"
+                                    for="descripcion">Descripción</label>
+
+                                <div class="col-sm-6">
+                                    <!-- <input ng-if="!cuenta.id" required type="text" id="Verdescripcion" ng-model="cuenta.descripcion" placeholder="Descripción" class="col-xs-10 col-sm-8"
+                                        /> -->
+                                    <input ng-disabled="cuenta.id" type="text" id="Verdescripcion"
+                                        ng-model="cuenta.descripcion" placeholder="{{cuenta.descripcion}}"
+                                        class="col-xs-10 col-sm-8" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label no-padding-right"
+                                    for="clasificacion">Clasificación</label>
+
+                                <div class="col-sm-6">
+                                    <select ng-disabled="cuenta.id" id="Verclasificacion" name="clasificacion"
+                                        ng-model="cuenta.clasificacion"
+                                        ng-options="clasificacionCuenta as clasificacionCuenta.nombre for clasificacionCuenta in cuentaClasificaciones track by clasificacionCuenta.id"
+                                        class="col-xs-10 col-sm-8">
+                                    </select>
+                                </div>
+                                <a hidden class="green" href="javascript:void(0)"
+                                    e-disabled="!aplicacion.puede_modificar" ng-click="agregarClasificacionCuenta()">
+                                    <i class="ace-icon fa fa-pencil bigger-130"></i>
+                                </a>
+                            </div>
+
+                            <div class="space-4"></div>
+
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label no-padding-right" for="tipoCuenta">Tipo
+                                    cta.</label>
+
+                                <div class="col-sm-6">
+                                    <select ng-disabled="cuenta.id" name="tipoCuenta" id="VertipoCuenta"
+                                        ng-model="cuenta.tipoCuenta"
+                                        ng-options="cuentaTipo as cuentaTipo.nombre for cuentaTipo in cuentaTipos track by cuentaTipo.id"
+                                        class="col-xs-10 col-sm-8">
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- fin de paso 1 -->
+                        <!-- inicio paso 2 -->
+                        <div class="step-pane" data-step="2">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label no-padding-right" for="debe">Debe</label>
+
+                                <div class="col-sm-9">
+                                    <input ng-disabled="cuenta.id" type="number" id="Verdebe" ng-model="cuenta.debe"
+                                        placeholder="{{cuenta.debe}}" class="col-xs-10 col-sm-8" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label no-padding-right" for="haber">Haber</label>
+
+                                <div class="col-sm-9">
+                                    <input ng-disabled="cuenta.id" type="number" step="0.01" id="Verhaber"
+                                        ng-model="cuenta.haber" placeholder="{{cuenta.haber}}"
+                                        class="col-xs-10 col-sm-8" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label no-padding-right" for="saldo">Saldo</label>
+
+                                <div class="col-sm-9">
+                                    <input ng-disabled="cuenta.id" type="number" step="0.01" id="Versaldo"
+                                        ng-model="cuenta.saldo" placeholder="{{cuenta.saldo}}"
+                                        class="col-xs-10 col-sm-8" />
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label col-xs-6 no-padding-right"
+                                    for="bimonetaria">¿Bimonetaria?</label>
+                                <div class="col-xs-6">
+                                    <label>
+                                        <input ng-disabled="cuenta.id" id="Verbimonetaria" name="switch-field-1"
+                                            class="ace ace-switch ace-switch-4" type="checkbox"
+                                            ng-model="cuenta.bimonetaria" value="0" />
+                                        <span class="lbl check-bimonetaria" class="col-xs-10 col-sm-8"></span>
+                                    </label>
+                                </div>
+                            </div>
+
+                        </div>
+                        <!-- fin paso 2 -->
+
+                        <!-- inicio paso 3 -->
+                        <div class="step-pane" data-step="3">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label no-padding-right"
+                                    for="claseCalculo">Operación</label>
+
+                                <div class="col-sm-9">
+                                    <select ng-disabled="cuenta.id" id="VerclaseCalculo" name="claseCalculo"
+                                        ng-model="cuenta.claseCalculo"
+                                        ng-options="operacionCuenta as operacionCuenta.nombre for operacionCuenta in operacionesCalculo track by operacionCuenta.id"
+                                        class="col-xs-10 col-sm-8">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label no-padding-right" for="monto">Monto</label>
+
+                                <div class="col-sm-9">
+                                    <input ng-disabled="cuenta.id" type="number" step="0.01" id="Vermonto"
+                                        ng-model="cuenta.monto" placeholder="Monto" class="col-xs-10 col-sm-8" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label no-padding-right" for="claseCuenta">Clase
+                                    Cuenta</label>
+
+                                <div class="col-sm-9">
+                                    <select ng-disabled="cuenta.id" id="VerclaseCuenta" name="claseCuenta"
+                                        ng-model="cuenta.claseCuenta"
+                                        ng-options="clasificacionCuenta as clasificacionCuenta.nombre for clasificacionCuenta in cuentaClasificaciones track by clasificacionCuenta.id"
+                                        class="col-xs-10 col-sm-8">
+                                    </select>
+
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label no-padding-right" for="vincularCuenta">vincular
+                                    Cuenta</label>
+
+                                <div class="col-sm-9">
+                                    <select ng-disabled="cuenta.id" name="vincularCuenta" id="VervincularCuenta"
+                                        ng-model="cuenta.vincularCuenta"
+                                        ng-options="cuentaTipo as cuentaTipo.nombre for cuentaTipo in cuentaTipos track by cuentaTipo.id"
+                                        class="col-xs-10 col-sm-8">
+                                    </select>
+
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-xs-6 no-padding-right" for="aplicar_calculo">Aplicar
+                                    cálculo a la cuenta</label>
+                                <div class="col-xs-6">
+                                    <label>
+                                        <input ng-disabled="cuenta.id" id="Vercalculo" name="switch-field-1"
+                                            class="ace ace-switch ace-switch-4" type="checkbox"
+                                            ng-model="cuenta.aplicar_calculo" value="0" />
+                                        <span class="lbl check-calculo" class="col-xs-10 col-sm-8"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- fin paso 3 -->
+                        <!-- FIN -->
+                        <div class="step-pane" data-step="4">
+                            <div class="center">
+                                <h4 class="blue">Step 4</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- botones -->
+                <div class="modal-footer wizard-actions">
+                    <button class="btn btn-sm btn-prev">
+                        <i class="ace-icon fa fa-arrow-left"></i>
+                        Anterior
+                    </button>
+
+                    <button type="" id="siguienteVer" class="btn btn-success btn-sm btn-next" data-last="Finish">
+                        Siguiente
+                        <i class="ace-icon fa fa-arrow-right icon-on-right"></i>
+                    </button>
+
+                    <button type="button" class="btn btn-danger btn-sm pull-left" data-dismiss="modal"
+                        ng-click="cerrarPopPupCuentaVer()">
+                        <i class="ace-icon fa fa-times"></i>
+                        Cancelar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- FIN VER CUENTA -->
+
+<!-- ACCIONES PARA CLASIFICACIONES -->
+<div id="modal-wizard-acciones-Clasificaciones" class="modal wizard-posicion">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="row">
+                <table class="table table-striped table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th>
+                                <label>Descripción</label>
+                            </th>
+                            <th>
+                                <label>Acciones</label>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="col-md-2" ng-repeat="clasificacion in cuentaClasificaciones">
+                                {{clasificacion.nombre}}
+                            </td>
+                            <td>
+                                <a class="blue" href="javascript:void(0)" e-disabled="!aplicacion.puede_ver"
+                                    ng-click="verClasificacion(clasificacion)">
+                                    <i class="ace-icon fa fa-search-plus bigger-130"></i>
+                                </a>
+                                <a class="green" href="javascript:void(0)" e-disabled="!aplicacion.puede_modificar"
+                                    ng-click="modificarClasificacion(clasificacion)">
+                                    <i class="ace-icon fa fa-pencil bigger-130"></i>
+                                </a>
+
+                                <a class="red" href="javascript:void(0)" e-disabled="!aplicacion.puede_eliminar"
+                                    ng-click="mostrarConfirmacionEliminacion(clasificacion)">
+                                    <i class="ace-icon fa fa-trash-o bigger-130"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modal-wizard-clasificacion-edicion" class="modal wizard-posicion">
+    <div class="modal-dialog modal-rh-nuevo">
+        <div class="modal-content">
+            <div class="modal-header">Clasificaciones</div>
+            <form name="formclasificacioncuenta"
+                ng-submit="guardarClasificacionCuenta(formclasificacioncuenta.$valid,cuentaClasificaciones)">
+                <div class="modal-body">
+                    <div class="form-group row">
+                        <label class="col-sm-3 control-label no-padding-right" for="clasificacion_nombre">Nombre
+                        </label>
+
+                        <div class="col-sm-9">
+                            <input type="text" id="clasificacion_nombre" ng-model="clasificacionEdicion.nombre"
+                                placeholder="Nombre de la clasificacion" class="col-xs-12 col-sm-12" />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-3 control-label no-padding-right" for="saldo">Saldo</label>
+
+                        <div class="col-sm-9">
+                            <select id="clasificacion_saldo" name="clasificacion_saldo"
+                                ng-model="clasificacionEdicion.saldo"
+                                ng-options="clasificacionSaldo as clasificacionSaldo.nombre for clasificacionSaldo in cuentaSaldos track by clasificacionSaldo.id">
+                            </select>
+                        </div>
+
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-3 control-label no-padding-right" for="movimiento">movimiento</label>
+
+                        <div class="col-sm-9">
+                            <select id="clasificacion_movimiento" name="clasificacion_movimiento"
+                                ng-model="clasificacionEdicion.movimiento"
+                                ng-options="clasificacionMovimiento as clasificacionMovimiento.nombre for clasificacionMovimiento in cuentaMovimientos track by clasificacionMovimiento.id">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-3 control-label no-padding-right">Tipo Clasificacion</label>
+
+                        <div class="col-sm-9">
+                            <select ng-model="clasificacionEdicion.tipoClasificacion"
+                                ng-options="clasificacion as clasificacion.nombre for clasificacion in tiposClasificaciones track by clasificacion.id">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-9">
+                            <button type="button" class="btn btn-primary"
+                                ng-click="adicionarClasificacionCuenta(clasificacionEdicion)">
+                                <i class="ace-icon fa fa-plus align-top bigger-125"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <table id="tabla-permisos" class="table table-striped table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Saldo</th>
+                                <th>Movimiento</th>
+                                <th>Centro de Costo</th>
+                                <th>Tipo</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr ng-repeat="clasificacion in cuentaClasificaciones track by $index"
+                                ng-if="!clasificacion.eliminado">
+
+                                <td>
+                                    {{clasificacion.nombre}}
+                                </td>
+                                <td>{{clasificacion.saldo.nombre}}</td>
+                                <td>{{clasificacion.movimiento.nombre}}</td>
+                                <td><label>
+                                        <input name="switch-field-1" class="ace ace-switch ace-switch-4" type="checkbox"
+                                            ng-model="clasificacion.usar_centro_costo" value="0" />
+                                        <span class="lbl check-descuento" class="col-xs-10 col-sm-8"></span>
+                                    </label></td>
+                                <td>{{clasificacion.tipoClasificacion.nombre}}</td>
+                                <td>
+                                    <div class="hidden-sm hidden-xs action-buttons">
+                                        <a class="green" href="javascript:void(0)"
+                                            ng-click="modificarClasificacionEdicionCuenta(clasificacion)">
+                                            <i class="ace-icon fa fa-pencil bigger-130"></i>
+                                        </a>
+
+                                        <a class="red" href="javascript:void(0)"
+                                            ng-click="removerClasificacionCuenta(clasificacion)">
+                                            <i class="ace-icon fa fa-trash-o bigger-130"></i>
+                                        </a>
+                                    </div>
+
+                                    <div class="hidden-md hidden-lg">
+                                        <div class="inline pos-rel">
+                                            <button class="btn btn-minier btn-yellow dropdown-toggle"
+                                                data-toggle="dropdown" data-position="auto">
+                                                <i class="ace-icon fa fa-caret-down icon-only bigger-120"></i>
+                                            </button>
+
+                                            <ul
+                                                class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-menu-right dropdown-caret dropdown-close">
+                                                <li>
+                                                    <a href="javascript:void(0)" ng-click="modificarTipoCuenta(clase)"
+                                                        class="tooltip-success" data-rel="tooltip" title="Edit">
+                                                        <span class="green">
+                                                            <i class="ace-icon fa fa-pencil-square-o bigger-120"></i>
+                                                        </span>
+                                                    </a>
+                                                </li>
+
+                                                <li>
+                                                    <a href="javascript:void(0)" ng-click="removerTipoCuenta(clase)"
+                                                        class="tooltip-error" data-rel="tooltip" title="Delete">
+                                                        <span class="red">
+                                                            <i class="ace-icon fa fa-trash-o bigger-120"></i>
+                                                        </span>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" id="siguiente" class="btn btn-success btn-sm btn-next" data-last="Finish">
+                        Guardar
+                        <i class="ace-icon fa fa-arrow-right icon-on-right"></i>
+                    </button>
+
+                    <button type="button" class="btn btn-danger btn-sm pull-left" data-dismiss="modal"
+                        ng-click="cerrarPopPupCalsificacionEdicionCuenta()">
+                        <i class="ace-icon fa fa-times"></i>
+                        Cancelar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- FIN ACCIONES CLASIFICACIONES -->
+
+<!-- ELIMINAR CUENTA -->
+<div id="dialog-eliminar-cuenta" title="¿Eliminación de cuenta?" class="modal">
+    <p>
+        <span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>¿Esta seguro de
+        eliminar la
+        cuenta seleccionada? {{cuenta.detalle}}
+    </p>
+
+    <button type="button" class="btn btn-danger" ng-click="eliminarCuenta(cuenta)">Si</button>
+    <button type="button" class="btn btn-success" ng-click="cerrarPopPupConfirmacionEliminacion()">No</button>
+</div>
+
+<div id="modal-wizard-configuracion-cuentas" class="modal">
+    <div class="modal-dialog modal-rh-nuevo">
+        <div class="modal-content">
+            <div class="modal-header bg-success ficha">
+                <h4 class="modal-title" id="myModalLabel">Configuraciones Generales Cuentas</h4>
+            </div>
+            <form novalidate ng-submit="guardarConfiguracionTiposCuentas()">
+
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <p>Tipo Cuenta</p>
+                            <select ng-model="configuracionTipoCuenta.tipoCuenta"
+                                ng-options="cuentaTipo as cuentaTipo.nombre for cuentaTipo in cuentaTipos track by cuentaTipo.id">
+
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <p> Digitos</p>
+                            <input type="number" ng-model="configuracionTipoCuenta.digitos" class="form-control">
+                        </div>
+                        <div class="col-md-4">
+                            <p>&nbsp</p>
+                            <button class="btn-primary btn" type="button"
+                                ng-click="agregarCofiguracionTipoCuenta(configuracionTipoCuenta)">Agregar</button>
+                            <a popover-placement="left" popover-class="xlpopover" popover-append-to-body="true"
+                                uib-popover-template="dynamicPopoverCargos.templateUrl" popover-trigger="mouseenter"
+                                popover-title="Ejemplos" class="blue">
+                                <i class="fa fa-list-ol bigger-200 orange" aria-hidden="true"></i>
+                            </a>
+                            <script type="text/ng-template" id="myPopoverTemplate.html">
+                                            <div class="form-group">                                              
+                                                    <img height="200" width="600" src="img/ejemploPlanCuenta.png">
+                                            </div>                                           
+                                        </script>
+                        </div>
+                    </div>
+                    <div>
+                        <table class="table table-bordered table-hover table-striped">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        Usar en Comprobante
+                                    </th>
+                                    <th>
+                                        Tipo Cuenta
+                                    </th>
+                                    <th>
+                                        Digitos
+                                    </th>
+                                    <th>
+                                        Acciones
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="config in configuracionesGeneralesTipoCuentas">
+                                    <td>
+                                        <div class="checkbox">
+                                            <label class="block">
+                                                <input name="form-field-checkbox" type="checkbox"
+                                                    ng-model="config.usar_en_comprobante" class="ace input-lg"
+                                                    ng-change="actualizarConfiguracionGeneralTCuenta($index,configuracionesGeneralesTipoCuentas)">
+                                                <span class="lbl bigger-120"></span>
+                                            </label>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        {{config.tipoCuenta.nombre}}
+                                    </td>
+                                    <td>
+                                        {{config.digitos}}
+                                    </td>
+                                    <td>
+                                        <a class="green tooltip-info" href="javascript:void(0)" uib-tooltip="Editar"
+                                            e-disabled="!aplicacion.puede_modificar"
+                                            ng-click="modificarConfiguracionTipoCuenta(config)">
+                                            <i class="ace-icon fa fa-pencil bigger-130"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+
+                    <button type="submit" class="btn btn-success btn-sm btn-next" data-last="Finish">
+                        Guardar
+                        <i class="ace-icon fa fa-arrow-right icon-on-right"></i>
+                    </button>
+
+                    <button type="button" class="btn btn-danger btn-sm pull-left" data-dismiss="modal"
+                        ng-click="cerrarPopPupConfiguracionCuenta()">
+                        <i class="ace-icon fa fa-times"></i>
+                        Cancelar </button>
+
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- inicio configuracion contable comprobantes -->
+<div class="modal" id="dialog-configuracion-contable-comprobante">
+    <div class="modal-content">
+        <form name="formularioAsignarCuenta" ng-submit="agregarConfiguracionIntegracion()">
+            <div class="modal-header">
+                <p>
+                <h3 class="text-header">Configuracion Contable</h3>
+                </p>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-4 col-sm-12">
+                        <div class="form-group">
+                            <label>Integracion </label>
+                            <select required
+                                ng-options="integracion as integracion.moduloIntegracion.nombre for integracion in listaIntegracionEmpresa track by integracion.id"
+                                ng-model="configuracionContable.integracion" class="form-control">
+                                <option value="">Seleccionar</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-sm-12">
+                        <div class="form-group">
+                            <label>Sucursal </label>
+                            <select required
+                                ng-options="sucursal as sucursal.nombre for sucursal in sucursales track by sucursal.id"
+                                ng-model="configuracionContable.sucursal" class="form-control">
+                                <option value="">Seleccionar</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-sm-12">
+                        <div class="form-group">
+                            <label for="id-tipo-comprobante">TIPO COMPROBANTE:</label>
+                            <select ng-model='configuracionContable.tipoComprobante' id="id-tipo-comprobante"
+                                name="id-tipo-comprobante" data-placeholder="Click para escoger" class="form-control"
+                                ng-options="tipoComprobante as tipoComprobante.nombre for tipoComprobante in tiposComprobantes track by tipoComprobante.id">
+
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 col-sm-12">
+                        <div class="form-group">
+                            <label>Glosa General Predefinida </label>
+                            <textarea cols="1" rows="3" class="form-control"
+                                ng-model="configuracionContable.glosa_general" required></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 col-sm-12">
+                        <div class="form-group">
+                            <label>Usar Auxiliares </label>
+                            <label>
+                                <input class="ace ace-switch ace-switch-4" type="checkbox"
+                                    ng-model="configuracionContable.usar_auxiliar" />
+                                <span class="lbl check-descuento"></span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-sm-12"
+                        ng-if="configuracionContable.integracion && configuracionContable.integracion.moduloIntegracion.nombre!=diccionario.INTEGRACION_PROF_FACT">
+                        <div class="form-group" ng-if="configuracionContable.usar_auxiliar">
+                            <!-- <select class="form-control select-sistema" id="form-field-select-2" multiple="multiple"
+                                size="3" ng-model='configuracionContable.movimientosAuxiliares'
+                                ng-options="Tipo as Tipo.nombre for Tipo in tiposMovimientos.clases">
+
+                            </select> -->
+                            <div class="input-group">
+                                <ui-select multiple ng-model="configuracionContable.movimientosAuxiliares"
+                                    theme="select2" style="width: 160px;" title="Seleccionar auxiliares">
+                                    <ui-select-match placeholder="seleccionar auxiliares..."><span
+                                            style="color:black">{{$item.nombre}}</span>
+                                    </ui-select-match>
+                                    <ui-select-choices
+                                        repeat="clase in tiposMovimientos.clases | filter:{nombre:$select.search} | orderBy:'nombre'">
+
+                                        <span>
+                                            {{clase.nombre}}
+                                        </span>
+                                    </ui-select-choices>
+                                </ui-select>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 col-sm-12">
+                        <div class="form-group">
+                            <label>Usar Centros de Costo </label>
+                            <label>
+                                <input class="ace ace-switch ace-switch-4" type="checkbox"
+                                    ng-model="configuracionContable.usar_centro_costo" />
+                                <span class="lbl check-descuento"></span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-sm-12"
+                        ng-if="configuracionContable.integracion && configuracionContable.integracion.moduloIntegracion.nombre != diccionario.INTEGRACION_PROF_FACT">
+                        <div class="form-group" ng-if="configuracionContable.usar_centro_costo">
+
+                            <div class="input-group">
+                                <ui-select multiple ng-model="configuracionContable.movimientosCentrosCosto"
+                                    theme="select2" style="width: 160px;" title="Seleccionar auxiliares">
+                                    <ui-select-match placeholder="seleccionar auxiliares..."><span
+                                            style="color:black">{{$item.nombre}}</span>
+                                    </ui-select-match>
+                                    <ui-select-choices
+                                        repeat="clase in tiposMovimientos.clases | filter:{nombre:$select.search} | orderBy:'nombre'">
+
+                                        <span>
+                                            {{clase.nombre}}
+                                        </span>
+                                    </ui-select-choices>
+                                </ui-select>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3 col-sm-12">
+                        <div class="form-group">
+                            <label>Contra cuenta al Debe </label>
+                            <input enter autocomplete="off" typeahead-append-to-body="true" class="form-control"
+                                ng-keypress="interceptarTecla($event,'cantidad',true)" required type="text"
+                                ng-model="configuracionContable.contraCuentaDebe" placeholder="Busqueda..."
+                                uib-typeahead="cuenta as (cuenta.codigo+'-'+cuenta.nombre) for cuenta in buscarCuentasIntegracion($viewValue)"
+                                typeahead-wait-ms="1000" typeahead-template-url="templates/autocompletar.html"
+                                typeahead-show-hint="false" typeahead-min-length="1"
+                                typeahead-on-select="establecerCuentaContraDebe($item, $model, $label, $event)"
+                                ng-change="establecerCuentaContraDebe(configuracionContable.contraCuentaHaber)">
+                            <p class="text-danger" ng-if=" validarCuentaContraDebe">La cuenta no es valida</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <label>Glosa individual al Debe </label>
+                        <textarea cols="1" rows="3" class="form-control"
+                            ng-model="configuracionContable.glosa_debe"></textarea>
+                    </div>
+                    <div class="col-md-3 col-sm-12">
+                        <div class="form-group">
+                            <label>Contra cuenta al Haber </label>
+                            <input enter autocomplete="off" typeahead-append-to-body="true" class="form-control"
+                                ng-keypress="interceptarTecla($event,'cantidad',true)" required type="text"
+                                ng-model="configuracionContable.contraCuentaHaber" placeholder="Busqueda..."
+                                uib-typeahead="cuenta as (cuenta.codigo+'-'+cuenta.nombre) for cuenta in buscarCuentasIntegracion($viewValue)"
+                                typeahead-wait-ms="1000" typeahead-template-url="templates/autocompletar.html"
+                                typeahead-show-hint="false" typeahead-min-length="1"
+                                typeahead-on-select="establecerCuentaContraHaber($item, $model, $label, $event)"
+                                ng-change="establecerCuentaContraHaber(configuracionContable.contraCuentaHaber)">
+                            <p class="text-danger" ng-if=" validarCuentaContraHaber">La cuenta no es valida</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <label>Glosa individual al Haber </label>
+                        <textarea cols="1" rows="3" class="form-control"
+                            ng-model="configuracionContable.glosa_haber"></textarea>
+                    </div>
+                </div>
+                <hr>
+                <div>
+                    <button ng-if="!configuracionContable.edit" type="submit"
+                        class="btn btn-primary pull-right">Agregar</button>
+                    <button ng-if="configuracionContable.edit" type="submit"
+                        class="btn btn-primary pull-right">Modificar</button>
+                </div>
+                <div>
+                    <table class="table table-border table-striped">
+                        <thead>
+                            <tr>
+                                <th>Nº</th>
+                                <th>Sucursal</th>
+                                <th>Integracion</th>
+                                <th>tipo Comprobante</th>
+                                <th>Glosa General</th>
+                                <th>Aux</th>
+                                <th>Centro.C</th>
+                                <th>Cuenta Debe</th>
+                                <th>G.I. Debe</th>
+                                <th>Cuenta Haber</th>
+                                <th>G.I. Haber</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="conf in listaConfiguracionesContables track by $index">
+                                <td>{{$index}}</td>
+                                <td>{{conf.sucursal.nombre}}</td>
+                                <td>{{conf.integracion.moduloIntegracion.nombre}}</td>
+                                <td>{{conf.tipoComprobante.nombre}}</td>
+                                <td>{{conf.glosa_general}}</td>
+                                <td>
+                                    <a popover-placement="right"
+                                        uib-popover-template="dynamicPopoverMovAuxiliares.templateUrl"
+                                        popover-trigger="outsideClick: outsideClick" popover-title="movimientos AUX"
+                                        class="blue">
+                                        <i class="fa fa-list-ol bigger-200 orange" aria-hidden="true"></i>
+                                    </a>
+                                    <script type="text/ng-template" id="myPopoverMovAuxiliares.html">
+                                                <div class="form-group">
+                                                <p ng-repeat="mov in conf.movimientosAuxiliares">{{$index+1}}.-{{mov.nombre}}</p>
+                                                </div>
+                                            </script>
+                                </td>
+                                <td>
+                                    <a popover-placement="right"
+                                        uib-popover-template="dynamicPopoverMovCentrosCostos.templateUrl"
+                                        popover-trigger="outsideClick: outsideClick" popover-title="movimientos CC"
+                                        class="blue">
+                                        <i class="fa fa-list-ol bigger-200 orange" aria-hidden="true"></i>
+                                    </a>
+                                    <script type="text/ng-template" id="myPopoverTemplateMovCentrosCostos.html">
+                                                <div class="form-group">
+                                                        <p ng-repeat="mov in conf.movimientosCentrosCosto">{{$index+1}}.-{{mov.nombre}}</p>
+                                                </div>
+                                            </script>
+                                </td>
+                                <td>{{conf.contraCuentaDebe.nombre}}</td>
+                                <td>{{conf.glosa_debe}}</td>
+                                <td>{{conf.contraCuentaHaber.nombre}}</td>
+                                <td>{{conf.glosa_haber}}</td>
+                                <td>
+                                    <a ng-click="editarIntegracionContable(conf)">
+                                        <span class="glyphicon glyphicon-pencil bigger-160" aria-hidden="true"></span>
+                                    </a>
+                                    <a class="red" ng-click="eliminarIntegracionContable(conf)">
+                                        <span class="glyphicon glyphicon-trash bigger-160" aria-hidden="true"></span>
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </form>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-success pull-right"
+                ng-click="guardarConfiguracionesContablesComprobantes()">Guardar</button>
+            <button type="button" class="btn btn-danger pull-left"
+                ng-click="cerrarModalConfiguracionContableComprobante()">Cancelar</button>
+
+        </div>
+    </div>
+</div>

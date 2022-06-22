@@ -1,0 +1,2 @@
+ALTER TABLE agil_rrhh_empleado_ficha drop horas_extra_dia_campo;
+ALTER TABLE agil_rrhh_empleado_ficha drop horas_campo;

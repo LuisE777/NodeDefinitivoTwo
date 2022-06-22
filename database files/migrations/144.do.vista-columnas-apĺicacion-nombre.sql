@@ -1,0 +1,1 @@
+ALTER TABLE sys_vista_columnas_aplicacion add nombre varchar(255);

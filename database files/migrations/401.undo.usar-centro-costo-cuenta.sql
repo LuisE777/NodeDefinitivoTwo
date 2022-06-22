@@ -1,0 +1,1 @@
+alter table agil_contabilidad_clasificacion_cuenta drop usar_centro_costo;

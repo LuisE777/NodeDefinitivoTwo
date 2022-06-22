@@ -1,0 +1,969 @@
+<div class="row">
+	
+	<div class="col-sm-12">
+		<h3 class="header smaller lighter blue">ESTADO DE CUENTAS CLIENTES</h3>
+		<div class="clearfix">
+			<div class="pull-right tableTools-container"></div>
+		</div>
+		<div class="tabbable" id="tab-reporte-estado-cliente">
+			
+			<ul class="nav nav-tabs" id="myTab">
+				<li class="active">
+					<a data-toggle="tab" href="javascript:void(0)" data-target="#tab-ventas" aria-expanded="true">
+						<i class="blue ace-icon fa fa-newspaper-o bigger-170"></i>
+						Ventas
+					</a>
+				</li>
+
+				<li class="" ng-if="usuario.empresa.usar_mantenimiento || usuario.empresa.usar_mantenimiento_externo_propio" ng-click="obtenerClientesMantenimiento()">
+					<a data-toggle="tab" href="javascript:void(0)" data-target="#tab-mantenimiento" aria-expanded="false">
+						<i class="blue ace-icon fa fa-truck bigger-170"></i>
+						Mantenimiento
+					</a>
+				</li>
+				<li class="" ng-click="obtenerProformas(0)">
+					<a data-toggle="tab" href="javascript:void(0)" data-target="#tab-proforma" aria-expanded="false">
+						<i class="blue menu-icon fa icon-agil-proformas bigger-150"></i> 
+						Proforma
+					</a>
+				</li>
+			</ul>
+
+			<div class="tab-content">
+				<div id="tab-ventas" class="tab-pane fade active in">
+					<form name="formularioFiltroEstadoCuentasClientes" novalidate ng-submit="paginator.getSearch(paginator.search,filtro,null)">
+						<fieldset>
+							<table class="table table-striped table-bordered table-hover">
+								<tbody>
+									<tr>
+										<td>
+											<label>Cuentas Liquidadas
+												<input name="switch-field-1" class="ace ace-switch ace-switch-4 ng-valid ng-dirty ng-valid-parse ng-touched ng-empty"
+													type="checkbox" ng-model="filtro.cuentas_liquidadas">
+												<span class="lbl check-descuento"></span>
+											</label>
+										</td>
+										<td>
+											<button id="Buscar" type="submit" ng-disabled="formularioFiltroCuentas.$invalid" class="btn-primary btn btn-app btn-xs">
+												<i class="ace-icon fa fa-search align-top bigger-125"></i>
+												Buscar
+											</button>
+											<button type="button" id="pdf" ng-disabled="paginator.selectedItems.length==0" class="btn btn-app btn-success btn-xs"
+												ng-click="generarExcelEstadoCuentasClientesSeleccionados(paginator.selectedItems)">
+												<i class="ace-icon fa fa-print bigger-160"></i>
+												Excel
+											</button>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</fieldset>
+					</form>
+					<div class="table-header">
+						Lista de Clientes
+					</div>
+			
+					<!-- div.table-responsive -->
+			
+					<!-- div.dataTables_borderWrap -->
+					<div>
+						<div id="tabla-clientes_wrapper" class="dataTables_wrapper form-inline no-footer">
+							<div class="row" ng-include src="'/templates/gral/paginator-header-1.html'">
+							</div>
+							<div style="overflow-x:auto;">
+								<table id="tabla-clientes" class="table table-striped table-bordered table-hover">
+									<thead>
+										<tr>
+											<th class="center">
+												<label class="pos-rel">
+													<input type="checkbox" class="ace" ng-model="paginator.allItemsSelected" ng-change="paginator.selectAllItems(clientes)" />
+													<span class="lbl"></span>
+												</label>
+											</th>
+											<th>N°</th>
+											<th>Código</th>
+											<th>Razón Social</th>
+											<th>Nit</th>
+											<th>
+												<i class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>
+												Dirección
+											</th>
+											<th>Telefono 1</th>
+											<th>Rubro</th>
+											<th>Categoria</th>
+											<th>Ubicación Geográfica</th>
+											<th>Fecha Importante 1</th>
+											<th>Fecha Importante 2</th>
+											<th>Acciones</th>
+										</tr>
+									</thead>
+			
+									<tbody>
+										<tr ng-repeat="cliente in clientes">
+											<td class="center">
+												<label class="pos-rel">
+													<input type="checkbox" class="ace" ng-model="cliente.selected" ng-checked="paginator.checkItem(cliente)"
+														ng-change="paginator.addItemToSelected(cliente)" />
+													<span class="lbl"></span>
+												</label>
+											</td>
+											<td>
+												{{($index+1)+(paginator.itemsPerPage*(paginator.currentPage-1))}}
+											</td>
+											<td>
+												{{cliente.codigo}}
+											</td>
+											<td>
+												{{cliente.razon_social}}
+											</td>
+											<td>{{cliente.nit}}</td>
+											<td>{{cliente.direccion}}</td>
+			
+											<td>
+												{{cliente.telefono1}}
+											</td>
+											<td>
+												{{cliente.rubro}}
+											</td>
+											<td>
+												{{cliente.categoria}}
+											</td>
+											<td>
+												{{cliente.ubicacion_geografica}}
+											</td>
+											<td>
+												{{cliente.fecha1 | date:"dd/MM"}}
+											</td>
+											<td>
+												{{cliente.fecha2 | date:"dd/MM"}}
+											</td>
+											<td>
+												<a class="red" href="javascript:void(0)" ng-click="generarPdfEstadoCuentasCliente(cliente,0)">
+													<i class="ace-icon fa fa-file-pdf-o bigger-130"></i>
+												</a>
+												<a class="green" href="javascript:void(0)" ng-click="generarExcelEstadoCuentasCliente(cliente,0)">
+													<i class="ace-icon fa fa-file-excel-o bigger-130 "></i>
+												</a>
+												<a class="blue" href="javascript:void(0)" ng-click="abrirEstadoCuentaCliente(cliente)">
+													<i class="ace-icon fa fa-filter bigger-130 "></i>
+												</a>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+								<div class="row" ng-include src="'/templates/gral/paginator.html'">
+								</div>
+							</div>
+						</div>
+						<div id="tabla-estado-cuenta" style="overflow-x: hidden" class="modal">
+							<div class="modal-content">
+								<div class="modal-header">
+									<div class="row">
+										<div class="col-xs-12 col-sm-12" align="center">
+											<h3>Estado de Cuenta</h3>
+										</div>
+										<div class="col-xs-12" align="center">
+											<h4>{{clienteVentas.razon_social}}</h4>
+										</div>
+									</div>
+								</div>
+								<div class="modal-body">
+									<ul class="nav nav-tabs padding-12 tab-color-blue background-blue" id="myTab4">
+										<li class="active">
+											<a data-toggle="tab" data-target="#deudas-cliente" aria-expanded="true">Deudas</a>
+										</li>
+			
+										<li class="" ng-if="usuario.empresa.usar_pago_anticipado">
+											<a data-toggle="tab" data-target="#anticipos-cliente" aria-expanded="false">Anticipos</a>
+										</li>
+										<!-- <li class="">
+									<a data-toggle="tab" data-target="#dropdown14" aria-expanded="false">More</a>
+								</li> -->
+									</ul>
+			
+									<div class="tab-content">
+										<div id="deudas-cliente" class="tab-pane active">
+											<div align="right">
+												<a class="blue" href="javascript:void(0)" ng-click="click(clienteVentas.ventas)">
+													<i class="ace-icon fa fa-plus-circle bigger-200"></i>
+												</a>
+											</div>
+											<table class="table table-striped table-bordered table-hover">
+												<thead>
+													<tr>
+														<th>Fecha</th>
+														<th>No. Recibo</th>
+														<th>descripcion</th>
+														<th>Saldo</th>
+														<th>Total</th>
+														<th>Acciones</th>
+													</tr>
+												</thead>
+												<tbody>
+													<tr ng-repeat="venta in clienteVentas.ventas">
+														<td>{{venta.fecha | date:"dd/MM/yyyy"}}</td>
+														<td>{{venta.id_movimiento}} <span ng-if="venta.tipoPago.nombre == diccionario.TIPO_PAGO_CREDITO">({{venta.fecha_vencimiento
+																| date:"dd/MM/yyyy"}})<span></td>
+														<td ng-if="venta.movimiento.clase.nombre_corto != diccionario.EGRE_FACTURACION">PROFORMA Nro.
+															{{venta.factura}}({{venta.total}})</td>
+														<td ng-if="venta.movimiento.clase.nombre_corto == diccionario.EGRE_FACTURACION">Factura Nro.
+															{{venta.factura}} (Bs. {{venta.total|number:2}})</td>
+			
+														<td>{{venta.saldo|number:2}}</td>
+														<td>{{venta.totalgeneral|number:2}}</td>
+														<td>
+															<div class="hidden-sm hidden-xs action-buttons">
+																<a ng-if="usuario.empresa.usar_pago_anticipado" class="green col-sm-3"  href="javascript:void(0)" ng-click="abrirPagoDeudaCliente(venta)">
+																		<i class="ace-icon fa fa-money bigger-130"></i>
+																</a>
+																<a type="button" class="verDetallePago" id="input" ng-if="venta.pagosVenta.length!=0" href="javascript:void(0)"
+																	ng-click="verDetallePagos(venta)">
+																	<i class="ace-icon fa fa-plus bigger-130"></i>
+																</a>
+			
+																<table id="{{venta.id_movimiento}}" style="display:none;" class="table table-striped table-bordered table-hover">
+																	<thead>
+																		<tr>
+																			<th>Fecha</th>
+																			<th>Recibo</th>
+																			<th>Descripción</th>
+																			<th>Pago</th>
+																			<th>Saldo</th>
+																			<th>Acciones</th>
+																		</tr>
+																	</thead>
+																	<tbody>
+																		<tr ng-repeat="pagosVenta in venta.pagosVenta">
+																			<td>{{pagosVenta.createdAt | date:"dd/MM/yyyy" }}</td>
+																			<td>{{pagosVenta.numero_documento}}</td>
+																			<td>Pago a cuenta Saldo anterior {{pagosVenta.saldo_anterior|number:2}} <p ng-if="pagosVenta.anticipos">(Compensación)</p></td>
+																			<td>{{pagosVenta.monto_pagado|number:2}}</td>
+																			<td>{{pagosVenta.total|number:2}}</td>
+																			<td>
+																				<a class="blue col-sm-3" href="javascript:void(0)" ng-click="imprimirRecibo(pagosVenta,venta)">
+																					<i class="ace-icon fa fa-print align-top bigger-125"></i>
+																				</a>
+																			</td>
+																		</tr>
+																		<tr>
+																			<th></th>
+																			<th></th>
+																			<th>Total Pagos</th>
+																			<th>{{venta.totalPago|number:2}}</th>
+																			<th></th>
+																			<th></th>
+																		</tr>
+																	</tbody>
+																</table>
+															</div>
+														</td>
+													</tr>
+													<tr>
+														<th></th>
+														<th></th>
+														<th>Total General</th>
+														<th>{{totalgeneral|number:2}}</th>
+														<th></th>
+														<th></th>
+													</tr>
+												</tbody>
+											</table>
+										</div>
+			
+										<div id="anticipos-cliente" class="tab-pane">
+											<table class="table table-striped table-bordered table-hover">
+												<thead>
+													<tr>
+														<th>Fecha</th>
+														<th>No. Recibo</th>
+														<th>descripcion</th>
+														<td>Monto</td>
+														<th>Saldo</th>
+													</tr>
+												</thead>
+												<tbody>
+													<tr ng-repeat="anticipo in clienteVentas.anticipos">
+														<td>{{anticipo.fecha | date:"dd/MM/yyyy"}}</td>
+														<td>{{anticipo.numero_correlativo_anticipo}}</td>
+														<td>Anticipo</td>
+														<td>{{anticipo.monto_anticipo|number:2}}</td>
+														<td>{{anticipo.saldo|number:2}}</td>
+													</tr>
+													<tr>
+														<th></th>
+														<th></th>
+														<th></th>
+														<th>Total General</th>
+														<th>{{totalAnticipos|number:2}}</th>
+													</tr>
+												</tbody>
+											</table>
+										</div>
+										<!-- <div id="dropdown14" class="tab-pane">
+									<p>Etsy mixtape wayfarers, ethical wes anderson tofu before they sold out mcsweeney's organic lomo retro fanny pack lo-fi farm-to-table readymade.</p>
+								</div> -->
+									</div>
+								</div>
+								<div class="modal-footer">
+									<button class="btn btn-danger pull-right" ng-click="cerrarEstadoCuentaCliente()">Cancelar </button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div id="tab-mantenimiento" class="tab-pane" >
+					<form name="formularioFiltroEstadoCuentasClientes" novalidate ng-submit="paginatorM.getSearch(paginatorM.search,filtro,null)">
+						<fieldset>
+							<table class="table table-striped table-bordered table-hover">
+								<tbody>
+									<tr>
+										<td>
+											<label>Cuentas Liquidadas
+												<input name="switch-field-1" class="ace ace-switch ace-switch-4 ng-valid ng-dirty ng-valid-parse ng-touched ng-empty"
+													type="checkbox" ng-model="filtro.cuentas_liquidadas" ng-change="paginatorM.getSearch(paginatorM.search,filtro,null)">
+												<span class="lbl check-descuento"></span>
+											</label>
+										</td>
+										<td>
+											<button id="Buscar" type="submit" ng-disabled="formularioFiltroCuentas.$invalid" class="btn-primary btn btn-app btn-xs">
+												<i class="ace-icon fa fa-search align-top bigger-125"></i>
+												Buscar
+											</button>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</fieldset>
+					</form>
+					<div class="table-header">
+						Lista de Clientes
+					</div>
+					<div>
+						<div id="tabla-clientes_wrapper" class="dataTables_wrapper form-inline no-footer">
+							<div class="row">
+								<div class="col-sm-6">
+									<div>
+										<label>
+											Mostrar <select ng-model="paginatorM.itemsPerPage" ng-change="paginatorM.getFirstPage()"
+												name="tabla-proveedores_length" aria-controls="tabla-proveedores"
+												class="form-control input-sm">
+												<option value="0">Todos</option>
+												<option ng-selected="true" value="10">10</option>
+												<option value="25">25</option>
+												<option value="50">50</option>
+												<option value="100">100</option>
+											</select> Elementos</label>
+									</div>
+								</div>
+								<div class="col-sm-6" align="right">
+									<div>
+										<label>Buscar:
+											<input class="form-control input-sm" autofocus type="search" ng-model="textSearch"
+												ng-model-options='{ debounce: 600 }'
+												ng-change="paginatorM.getSearch(textSearch,paginatorM.filter,$event)">
+										</label>
+									</div>
+								</div>
+							</div>
+							<div style="overflow-x:auto;">
+								<table id="tabla-clientes" class="table table-striped table-bordered table-hover">
+									<thead>
+										<tr>
+											<th class="center">
+												<label class="pos-rel">
+													<input type="checkbox" class="ace" ng-model="paginator.allItemsSelected" ng-change="paginator.selectAllItems(clientes)" />
+													<span class="lbl"></span>
+												</label>
+											</th>
+											<th>N°</th>
+											<th>Código</th>
+											<th>Razón Social</th>
+											<th>Nit</th>
+											<th>
+												<i class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>
+												Dirección
+											</th>
+											<th>Telefono 1</th>
+											<th>Rubro</th>
+											<th>Categoria</th>
+											<th>Ubicación Geográfica</th>
+											<th>Fecha Importante 1</th>
+											<th>Fecha Importante 2</th>
+											<th>Acciones</th>
+										</tr>
+									</thead>
+			
+									<tbody>
+										<tr ng-repeat="cliente in clientesM">
+											<td class="center">
+												<label class="pos-rel">
+													<input type="checkbox" class="ace" ng-model="cliente.selected" ng-checked="paginator.checkItem(cliente)"
+														ng-change="paginator.addItemToSelected(cliente)" />
+													<span class="lbl"></span>
+												</label>
+											</td>
+											<td>
+												{{($index+1)+(paginator.itemsPerPage*(paginator.currentPage-1))}}
+											</td>
+											<td>
+												{{cliente.codigo}}
+											</td>
+											<td>
+												{{cliente.razon_social}}
+											</td>
+											<td>{{cliente.nit}}</td>
+											<td>{{cliente.direccion}}</td>
+			
+											<td>
+												{{cliente.telefono1}}
+											</td>
+											<td>
+												{{cliente.rubro}}
+											</td>
+											<td>
+												{{cliente.categoria}}
+											</td>
+											<td>
+												{{cliente.ubicacion_geografica}}
+											</td>
+											<td>
+												{{cliente.fecha1 | date:"dd/MM"}}
+											</td>
+											<td>
+												{{cliente.fecha2 | date:"dd/MM"}}
+											</td>
+											<td>
+												<a class="red" href="javascript:void(0)" ng-click="generarPdfEstadoCuentasClienteMantenimiento(cliente,0,filtro.cuentas_liquidadas)">
+													<i class="ace-icon fa fa-file-pdf-o bigger-130"></i>
+												</a>
+												<a class="green" href="javascript:void(0)" ng-click="generarExcelEstadoCuentasClienteMantenimiento(cliente,0,filtro.cuentas_liquidadas)">
+													<i class="ace-icon fa fa-file-excel-o bigger-130 "></i>
+												</a>
+												<a class="blue" href="javascript:void(0)" ng-click="abrirEstadoCuentaClienteMantenimiento(cliente, filtro.cuentas_liquidadas)">
+													<i class="ace-icon fa fa-filter bigger-130 "></i>
+												</a>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+								<div class="row">
+									<div class="col-sm-6">
+										<div>
+											Mostrando página {{paginatorM.currentPage}} de {{paginatorM.pages.length}}
+										</div>
+									</div>
+									<div class="col-sm-6" align="right">
+										<ul class="pagination">
+											<li class="paginate_button">
+												<a href="javascript:void(0)" ng-click="paginatorM.getFirstPage()">Primero</a>
+											</li>
+											<li class="paginate_button">
+												<a href="javascript:void(0)" e-disabled="paginatorM.currentPage==1"
+													ng-click="paginatorM.getPreviousPage()">
+													<<</a> 
+											</li> 
+											<li class="paginate_button"
+												ng-class="{active:paginatorM.currentPage==page}"
+												ng-repeat="page in paginatorM.pages"
+												ng-if="abs(paginatorM.currentPage-page)<4">
+												<a e-disabled="paginatorM.currentPage==page" href="javascript:void(0)"
+													ng-click="paginatorM.getPage(page)">{{page}}</a>
+											</li>
+											<li class="paginate_button">
+												<a href="javascript:void(0)"
+													e-disabled="paginatorM.currentPage==paginatorM.pages.length"
+													ng-click="paginatorM.getNextPage()">>></a>
+												</lidiv>
+											<li class="paginate_button">
+												<a href="javascript:void(0)" ng-click="paginatorM.getLastPage()">Ultimo</a>
+											</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div id="tabla-estado-cuenta-mantenimiento" style="overflow-x: hidden" class="modal">
+							<div class="modal-content">
+								<div class="modal-header">
+									<div class="row">
+										<div class="col-xs-12 col-sm-12" align="center">
+											<h3>Estado de Cuenta</h3>
+										</div>
+										<div class="col-xs-12" align="center">
+											<h4>{{clienteMantenimientos.razon_social}}</h4>
+										</div>
+									</div>
+								</div>
+								<div class="modal-body">
+									<ul class="nav nav-tabs padding-12 tab-color-blue background-blue" id="myTab4">
+										<li class="active">
+											<a data-toggle="tab" data-target="#deudas-cliente-m" aria-expanded="true">Deudas</a>
+										</li>
+									</ul>
+			
+									<div class="tab-content">
+										<div id="deudas-cliente-m" class="tab-pane active">
+											<div align="right">
+												<a class="blue" href="javascript:void(0)" ng-click="clickM(clienteMantenimientos.mantenimiento_ot)">
+													<i class="ace-icon fa fa-plus-circle bigger-200"></i>
+												</a>
+											</div>
+											<table class="table table-striped table-bordered table-hover">
+												<thead>
+													<tr>
+														<th>Fecha</th>
+														<th>No. OT</th>
+														<th>Saldo</th>
+														<th>Total</th>
+														<th>Acciones</th>
+													</tr>
+												</thead>
+												<tbody>
+													<tr ng-repeat="venta in clienteMantenimientos.mantenimiento_ot">
+														<td>{{venta.fecha_hora_aviso | date:"dd/MM/yyyy"}}</td>
+														<td>{{venta.correlativo_ot}}</td>
+														<td>{{venta.saldo|number:2}}</td>
+														<td>{{venta.totalgeneral|number:2}}</td>
+														<td>
+															<div class="hidden-sm hidden-xs action-buttons">
+																<a class="green col-sm-3"  href="javascript:void(0)" ng-click="abrirPopupPagoCreditosMantenimiento(venta)">
+																		<i class="ace-icon fa fa-money bigger-130"></i>
+																</a>
+																<a type="button" class="verDetallePagoM" id="input" ng-if="venta.pagosOT.length!=0" href="javascript:void(0)"
+																	ng-click="verDetallePagosMantenimiento(venta)">
+																	<i class="ace-icon fa fa-plus bigger-130"></i>
+																</a>
+			
+																<table id="{{venta.id}}" style="display:none;" class="table table-striped table-bordered table-hover">
+																	<thead>
+																		<tr>
+																			<th>Fecha</th>
+																			<th>Recibo</th>
+																			<th>Descripción</th>
+																			<th>Pago</th>
+																			<th>Saldo</th>
+																			<th>Acciones</th>
+																		</tr>
+																	</thead>
+																	<tbody>
+																		<tr ng-repeat="pagosVenta in venta.pagosOT">
+																			<td>{{pagosVenta.createdAt | date:"dd/MM/yyyy" }}</td>
+																			<td>{{pagosVenta.numero_documento}}</td>
+																			<td ng-if="pagosVenta.anticipo">Anticipo a cuenta </td>
+																			<td ng-if="!pagosVenta.anticipo">Pago a cuenta Saldo anterior {{pagosVenta.saldo_anterior|number:2}} <p ng-if="pagosVenta.anticipos">(Compensación)</p></td>
+																			<td>{{pagosVenta.monto_pagado|number:2}}</td>
+																			<td>{{pagosVenta.total|number:2}}</td>
+																			<td>
+																				<a class="blue col-sm-3" href="javascript:void(0)" ng-click="imprimirReciboMantenimiento(pagosVenta,venta)">
+																					<i class="ace-icon fa fa-print align-top bigger-125"></i>
+																				</a>
+																			</td>
+																		</tr>
+																		<tr>
+																			<th></th>
+																			<th></th>
+																			<th>Total Pagos</th>
+																			<th>{{venta.totalPago|number:2}}</th>
+																			<th></th>
+																			<th></th>
+																		</tr>
+																	</tbody>
+																</table>
+															</div>
+														</td>
+													</tr>
+													<tr>
+														<th></th>
+														<th></th>
+														<th>Total General</th>
+														<th>{{totalgeneral|number:2}}</th>
+														<th></th>
+													</tr>
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</div>
+								<div class="modal-footer">
+									<button class="btn btn-danger pull-right" ng-click="cerrarTablaEstadoCuentaManteMiento()">Cancelar </button>
+								</div>
+							</div>
+						</div>
+
+						<div id="dialog-pago-credito-mantenimiento" title="Cobro deuda pendiente" class="modal">
+							<form name="formularioPago" ng-submit="efectuarPagoCreditoMantenimiento(pago)">
+								<!-- <p class="center">{{venta.cliente_ot.razon_social}}</p> -->
+								<!-- <div class="popover-title">
+									<p class="center">
+										<b class="blue">OT Nro. </b>{{venta.correlativo_ot}}
+									</p>
+								</div> -->
+								<div class="modal-header ficha">
+									
+									<h5 class="modal-title" id="myModalLabel"><b >PAGO</b> <b ng-if="venta.saldo==0 && venta.estado.nombre=='PENDIENTE'">ANTICIPO</b></h5>
+									<h5 class="modal-title" id="myModalLabel"><b >OT Nro. </b>{{venta.correlativo_ot}}</h5>
+								</div>
+
+								<div class="modal-body">
+									<b>Plazo: </b>{{venta.dias_credito}} días&nbsp
+									<b>A cuenta: Bs </b>{{venta.a_cuenta}}&nbsp
+									<b>Saldo: Bs </b>{{venta.saldo}}&nbsp
+									<b>Importe: </b>{{venta.total?venta.total:0}}&nbsp
+									<p>
+										<span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>¿Ingrese el monto a
+										cobrar?
+									</p>
+									<input ng-if="venta.saldo==0 && venta.estado.nombre=='PENDIENTE'" required ng-model="$parent.pago" min="0.0001" type="number" step="0.0001">
+									<input ng-if="venta.saldo>0 && venta.estado.nombre=='FINALIZADO'" required ng-model="$parent.pago" min="0.0001" max="{{venta.saldo}}" type="number" step="0.0001">
+									<!-- <input required ng-model="pago" min="0.0001" max="{{venta.saldo}}" type="number" step="0.0001"> -->
+									<button type="submit" class="btn btn-success" ng-disabled="formularioPago.$invalid">Cobrar</button>
+									<button type="button" class="btn btn-danger" ng-click="cerrarPagoCreditosMantenimiento()">Cancelar</button>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+				<div id="tab-proforma" class="tab-pane" >
+					<form name="listaProformas" novalidate ng-submit="filtrarDatosProforma(proforma)">
+						<fieldset>
+							<table class="table table-striped table-bordered table-hover">
+								<tbody>
+									<tr>
+										<td>
+											<label class="control-label center">Cuentas<br>Liquidadas <br>
+												<input name="switch-field-1" class="ace ace-switch ace-switch-4 ng-valid ng-dirty ng-valid-parse ng-touched ng-empty"
+													type="checkbox" ng-model="proforma.liquidados" ng-change="obtenerProformas(proforma.liquidados)">
+												<span class="lbl check-descuento"></span>
+											</label>
+											<label class="control-label center" ng-if="!proforma.liquidados">Saldos<br>Facturadas<br>
+												<input name="switch-field-1" class="ace ace-switch ace-switch-4 ng-valid ng-dirty ng-valid-parse ng-touched ng-empty"
+													type="checkbox" ng-model="proforma.facturados" ng-change=" ">
+												<span class="lbl check-descuento"></span>
+											</label>
+										</td>
+										<td align="right">
+											<!-- <button type="submit" ng-disabled="" class="btn-primary btn btn-app btn-xs"><i class="ace-icon fa fa-search align-top bigger-125"></i>Buscar</button> -->
+											<button type="button" ng-disabled="ProformSeleccionados.length==0" class="btn btn-app btn-danger btn-xs" ng-click="allPDFproforma(proforma)" ><i class="ace-icon fa fa-file-pdf-o bigger-160"></i>PDF</button>
+											<button type="button" ng-disabled="ProformSeleccionados.length==0" class="btn btn-app btn-success btn-xs" ng-click="allEXCproforma(proforma)"><i class="ace-icon fa fa-file-excel-o bigger-160"></i>Excel</button>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</fieldset>
+					</form>
+					<div class="table-header">
+						Lista de Clientes - Proformas
+					</div>
+					<div>
+						<div id="tabla-clientes_wrapper" class="dataTables_wrapper form-inline no-footer">
+							<div class="row">
+								<div class="col-sm-6">
+									<div>
+										<label>
+											Mostrar <select ng-model="paginatorProf.itemsPerPage" ng-change="paginatorProf.getFirstPage()"
+												name="tabla-proveedores_length" aria-controls="tabla-proveedores"
+												class="form-control input-sm">
+												<option value="0">Todos</option>
+												<option ng-selected="true" value="10">10</option>
+												<option value="25">25</option>
+												<option value="50">50</option>
+												<option value="100">100</option>
+											</select> Elementos</label>
+									</div>
+								</div>
+								<div class="col-sm-6" align="right">
+									<div>
+										<label>Buscar:
+											<input class="form-control input-sm" autofocus type="search" ng-model="textSearch"
+												ng-model-options='{ debounce: 600 }'
+												ng-change="paginatorProf.getSearch(textSearch,paginatorProf.filter,$event)">
+										</label>
+									</div>
+								</div>
+							</div>
+							<div style="overflow-x:auto;">
+								<table id="tabla-proforma" class="table table-striped table-bordered table-hover">
+									<thead>
+										<tr>
+											<th class="center">
+												<label class="pos-rel">
+													<input type="checkbox" class="ace" ng-model="selectAllProforma" ng-change="checkAllProforma(datosProforma, selectAllProforma)" />
+													<span class="lbl"></span>
+												</label>
+											</th>
+											<th>N°</th>
+											<th>CÓDIGO</th>
+											<th>RAZÓN SOCIAL</th>
+											<th>NIT</th>
+											<th>DIRECCIÓN</th>
+											<th>TELEFONO</th>
+											<th>RUBRO</th>
+											<th>CATEGORIA</th>
+											<th>UBICACIÓN GEOGRÁFICA</th>
+											<th>FECHA Importante 1</th>
+											<th>FECHA Importante 2</th>
+											<th>ACCIONES</th>
+										</tr>
+									</thead>
+			
+									<tbody>
+										<tr ng-repeat="cliente in datosProforma">
+											<td class="center">
+												<label class="pos-rel">
+													<input type="checkbox" ng-model="cliente.checkedProforma" 
+														ng-change="checkProforma($index, cliente, cliente.checkedProforma)" class="ace" /><!--ng-checked="paginatorProf.checkItem(cliente)"ng-change="paginatorProf.checkProforma($index, cliente, cliente.checkedProforma)" -->
+													<span class="lbl"></span>
+												</label>
+											</td>
+											<td>
+												{{($index+1)+(paginatorProf.itemsPerPage*(paginatorProf.currentPage-1))}}
+											</td>
+											<td>
+												{{cliente.codigo}}
+											</td>
+											<td>
+												{{cliente.razon_social}}
+											</td>
+											<td>{{cliente.nit}}</td>
+											<td>{{cliente.direccion}}</td>
+			
+											<td>
+												{{cliente.telefono1}}
+											</td>
+											<td>
+												{{cliente.rubro}}
+											</td>
+											<td>
+												{{cliente.categoria}}
+											</td>
+											<td>
+												{{cliente.ubicacion_geografica}}
+											</td>
+											<td>
+												{{cliente.fecha1 | date:"dd/MM"}}
+											</td>
+											<td>
+												{{cliente.fecha2 | date:"dd/MM"}}
+											</td>
+											<td>
+												<a class="red" href="javascript:void(0)" ng-click="impimirPDFXcliente(cliente, proforma.liquidados)" data-rel="tooltip" tooltip-placement="top" uib-tooltip="Imprimir PDF"> &nbsp;
+													<i class="ace-icon fa fa-file-pdf-o bigger-130"></i>
+												</a>
+												<a class="green" href="javascript:void(0)" ng-click="impimirEXCcliente(cliente, proforma.liquidados)" data-rel="tooltip" tooltip-placement="top" uib-tooltip="Imprimir EXC"> &nbsp;
+													<i class="ace-icon fa fa-file-excel-o bigger-130 "></i>
+												</a>
+												<a class="blue" href="javascript:void(0)" ng-click="abrirEstadoCuentaClienteProforma(cliente, proforma.liquidados)">
+													<i class="ace-icon fa fa-filter bigger-130 "></i>
+												</a>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+							<div class="row">
+								<div class="col-sm-6">
+									<div>
+										Mostrando página {{paginatorProf.currentPage}} de {{paginatorProf.pages.length}}
+									</div>
+								</div>
+								<div class="col-sm-6" align="right">
+									<ul class="pagination">
+										<li class="paginate_button">
+											<a href="javascript:void(0)" ng-click="paginatorProf.getFirstPage()">Primero</a>
+										</li>
+										<li class="paginate_button">
+											<a href="javascript:void(0)" e-disabled="paginatorProf.currentPage==1"
+												ng-click="paginatorProf.getPreviousPage()">
+												<<</a> 
+										</li> 
+										<li class="paginate_button"
+											ng-class="{active:paginatorProf.currentPage==page}"
+											ng-repeat="page in paginatorProf.pages"
+											ng-if="abs(paginatorProf.currentPage-page)<4">
+											<a e-disabled="paginatorProf.currentPage==page" href="javascript:void(0)"
+												ng-click="paginatorProf.getPage(page)">{{page}}</a>
+										</li>
+										<li class="paginate_button">
+											<a href="javascript:void(0)"
+												e-disabled="paginatorProf.currentPage==paginatorProf.pages.length"
+												ng-click="paginatorProf.getNextPage()">>></a>
+										</li>
+										<li class="paginate_button">
+											<a href="javascript:void(0)" ng-click="paginatorProf.getLastPage()">Ultimo</a>
+										</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+						<!-- estado de cuenta de proformas -->
+						<div id="tabla-estado-cuenta-proforma" style="overflow-x: hidden" class="modal">
+							<div class="modal-content">
+								<div class="modal-header">
+									<div class="row">
+										<div class="col-xs-12 col-sm-12" align="center">
+											<h3>Estado de Cuenta de proforma</h3>
+										</div>
+										<div class="col-xs-12" align="center">
+											<h4>{{datosProformaXcliente[0].razon_social}} - {{datosProformaXcliente[0].nit}}</h4>
+										</div>
+									</div>
+								</div>
+								<div class="modal-body">
+									<ul class="nav nav-tabs padding-12 tab-color-blue background-blue" id="myTab4">
+										<li class="active">
+											<a data-toggle="tab" data-target="#deudas-proformas-m" aria-expanded="true">Deudas</a>
+										</li>
+									</ul>
+			
+									<div class="tab-content">
+										<div id="deudas-proformas-m">
+											<div align="right">
+												<a class="blue" href="javascript:void(0)" ng-click="clickP(proforma.datosProformaXTransac)">
+													<i class="ace-icon fa fa-plus-circle bigger-200"></i>
+												</a>
+											</div>
+											<div class="table-fixed-header">
+												<table class="table table-striped table-bordered table-hover">
+													<thead fix-head class="table-head-color">
+														<tr>
+															<th>Fecha Prof</th>
+															<th>Fecha Fact</th>
+															<th>No. Prof</th>
+															<th>No. Fact</th>
+															<th>Saldo</th>
+															<th>Total</th>
+															<th>Acciones</th>
+														</tr>
+													</thead>
+													<tbody>
+														<tr ng-repeat="proforma in datosProformaXcliente">
+															<td>{{proforma.fecha_proforma | date:"dd/MM/yyyy"}}</td>
+															<td>{{proforma.fecha_factura | date:"dd/MM/yyyy"}}</td>
+															<td>{{proforma.correlativo}}</td>
+															<td>{{proforma.factura}}</td>
+															<td>{{proforma.saldo|number:2}}</td>
+															<td>{{proforma.totalgeneral | number:2}}</td>
+															<td>
+																<div ><!-- class="hidden-sm hidden-xs action-buttons" -->
+																	<a type="button" class="verDetalleTransaccion"  id="input" ng-if="proforma.a_cuenta > 0" href="javascript:void(0)"
+																		ng-click="verProformaTransaccionDetall(proforma)">
+																		<i class="ace-icon fa fa-plus bigger-130"></i>
+																	</a><!-- ng-if="datosProformaXTransac.length!=0" -->
+				
+																	<table id="{{proforma.id_proforma}}" style="display:none;" class="table table-striped table-bordered table-hover">
+																		<thead>
+																			<tr>
+																				<th>Fecha</th>
+																				<th>Recibo</th>
+																				<th>Descripción</th>
+																				<th>Pago</th>
+																				<th>Saldo</th>
+																				<th>Observación</th>
+																				<th>Acciones</th>
+																			</tr>
+																		</thead>
+																		<tbody>
+																			<tr ng-repeat="transaccion in proforma.datosProformaXTransac">
+																				<td>{{transaccion.fecha | date:"dd/MM/yyyy" }}</td>
+																				<td>{{transaccion.correlativo}}</td>
+																				<td ng-if="transaccion.anticipo">Anticipo a cuenta </td>
+																				<td ng-if="!transaccion.anticipo">Cobro a cuenta <b>Saldo Anterior {{transaccion.saldoAnterior|number:2}}</b> ({{transaccion.nombre}} - {{transaccion.numero}})</td>
+																				<td>{{transaccion.importe|number:2}}</td>
+																				<td>{{transaccion.saldoTotal|number:2}}</td>
+																				<td>
+																					<span ng-if="transaccion.cerrada" class="badge badge-success">Confirmado</span>
+																					<span ng-if="!transaccion.cerrada" class="badge badge-danger" uib-tooltip="Cerrar el candado desde el módulo de transacciones" tooltip-append-to-body="true">No Confirmado</span>
+																				</td>
+																				<td>
+																					<a class="blue col-sm-3" href="javascript:void(0)" ng-click="impimrResiboProformaTransaccion(transaccion)">
+																						<i class="ace-icon fa fa-print align-top bigger-125"></i>
+																					</a>
+																				</td>
+																			</tr>
+																			<tr>
+																				<th></th>
+																				<th></th>
+																				<th>Total Cobros</th>
+																				<th>{{proforma.totalTransac | number:2}}</th>
+																				<th></th>
+																				<th></th>
+																			</tr>
+																		</tbody>
+																	</table>
+																</div>
+															</td>
+														</tr>
+														<tr>
+															<th></th>
+															<th></th>
+															<th></th>
+															<th></th>
+															<th>Total General</th>
+															<th>{{totalgeneralProf|number:2}}</th>
+															<th></th>
+														</tr>
+													</tbody>
+												</table>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="modal-footer">
+									<button class="btn btn-danger pull-right" ng-click="cerrarTablaEstadoCuentaProforma()">Cancelar </button>
+								</div>
+							</div>
+						</div>
+						<!-- <div id="dialog-pago-credito-mantenimiento" title="Cobro deuda pendiente">
+							<form name="formularioPago" ng-submit="efectuarPagoCreditoMantenimiento(pago)">
+								<div class="modal-header ficha">
+									
+									<h5 class="modal-title" id="myModalLabel"><b >PAGO</b> <b ng-if="venta.saldo==0 && venta.estado.nombre=='PENDIENTE'">ANTICIPO</b></h5>
+									<h5 class="modal-title" id="myModalLabel"><b >OT Nro. </b>{{venta.correlativo_ot}}</h5>
+								</div>
+
+								<div class="modal-body">
+									<b>Plazo: </b>{{venta.dias_credito}} días&nbsp
+									<b>A cuenta: Bs </b>{{venta.a_cuenta}}&nbsp
+									<b>Saldo: Bs </b>{{venta.saldo}}&nbsp
+									<b>Importe: </b>{{venta.total?venta.total:0}}&nbsp
+									<p>
+										<span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>¿Ingrese el monto a
+										cobrar?
+									</p>
+									<input ng-if="venta.saldo==0 && venta.estado.nombre=='PENDIENTE'" required ng-model="$parent.pago" min="0.0001" type="number" step="0.0001">
+									<input ng-if="venta.saldo>0 && venta.estado.nombre=='FINALIZADO'" required ng-model="$parent.pago" min="0.0001" max="{{venta.saldo}}" type="number" step="0.0001">
+									<button type="submit" class="btn btn-success" ng-disabled="formularioPago.$invalid">Cobrar</button>
+									<button type="button" class="btn btn-danger" ng-click="cerrarPagoCreditosMantenimiento()">Cancelar</button>
+								</div>
+							</form>
+						</div> -->
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<div id="modal-pago-deuda-cliente" class="modal">
+
+		<div class="modal-content">
+			<div class="modal-header" align="center">
+				<h2>Compensacion Deuda</h2>
+				<p>{{cliente.nombre}}</p>
+			</div>
+			<form id="nuevo-anticipo-cliente" ng-submit="guardarCompensacionDeuda(anticipo)">
+			<div class="modal-body">
+					<div class="form-group">
+						<label for="inline">¿Ingresar monto a compensar?</label>
+						<input required type="number" class="form-control" ng-model="anticipo" min="1" step="0.0001" max="{{venta.saldo}}">
+					</div>				
+			</div>
+			<div class="modal-footer">
+				<button class="btn btn-danger pull-left" type="button" ng-click="cerrarPagoDeudaCliente()"><i class="ace-icon fa fa-times"></i>Cancelar</button>
+				<button class="btn btn-success pull-right" type="submit"><i class="ace-icon fa fa-floppy-o"></i>Guardar</button>
+			</div>
+		</form>
+		</div>
+	
+</div>

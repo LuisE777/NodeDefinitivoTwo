@@ -1,0 +1,1 @@
+alter table agil_empresa drop column ver_usuario_en_ticket;

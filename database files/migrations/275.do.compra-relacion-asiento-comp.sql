@@ -1,0 +1,1 @@
+ALTER TABLE inv_compra ADD asiento_contabilidad int(11);

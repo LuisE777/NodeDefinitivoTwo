@@ -1,0 +1,1 @@
+ALTER TABLE agil_medico_diagnostico_resultado  ADD estadistica VARCHAR(255) DEFAULT NULL;

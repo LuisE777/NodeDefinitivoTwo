@@ -1,0 +1,2 @@
+ALTER TABLE agil_rrhh_detalle_planilla_sueldos drop entrego_tr3;
+alter table agil_rrhh_tr3 drop fecha_elaboracion;

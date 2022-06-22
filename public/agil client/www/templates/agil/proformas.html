@@ -1,0 +1,3064 @@
+<div class="row">
+    <div class="col-xs-12">
+        <h3 class="header lighter blue">PROFORMAS</h3>
+        <button id="nuevo" ng-disabled="!aplicacion.puede_crear" class="btn-woBox button-glow"
+            ng-click="abrirdialogProformaEdicion()">
+            <i class="ace-icon fa fa-plus align-top bigger-125"></i>
+            Nuevo
+        </button>
+        <!-- <button class="btn btn-primary" ng-click="abrirdialogImportacionProforma()">Importar</button>
+        <a class="btn btn-yellow" href="/recursos/Proforma.xlsx">Ejemplo Importación</a> -->
+        <form name="formularioFiltroOperaciones" novalidate ng-submit="filtrarProformasOperaciones(filtro)">
+            <fieldset>
+                <legend>Filtro</legend>
+                <table class="table table-striped table-bordered table-hover">
+                    <tbody>
+                        <tr>
+                            <td>
+
+                            </td>
+                            <td>
+                                <label>Mes</label>&nbsp
+                            </td>
+                            <td>
+                                <label>Año</label>&nbsp
+                            </td>
+                            <td>
+                                <label class="pull-left">Fecha</label>
+                                <label class="pull-right">Factura
+                                    <br />
+                                    <input name="switch-field-1" ng-model="filtro.buscarFactura"
+                                        class="ace ace-switch ace-switch-4 ng-pristine ng-untouched ng-valid ng-not-empty"
+                                        type="checkbox">
+                                    <span class="lbl check-descuento"></span>
+                                </label>
+                            </td>
+                            <td>
+
+                                <a class="blue" href="javascript:void(0)" ng-click="abrirModalGenerarComprobante()">
+                                    <i class="ace-icon fa fa-sign-out bigger-150"></i>Generar Comprobante Diario
+                                </a>
+                            </td>
+                            <td>
+
+                                <label>
+                                    <p class="muted smaller-90">Cierre Mensual: <span ng-if="cierreMes"
+                                            class="text-info">SI</span><span ng-if="!cierreMes"
+                                            class="text-info">NO</span> </p>
+                                    <a class="blue" href="javascript:void(0)"
+                                        ng-if="!cierreMes && usuario.activar_cierre_mensual_proforma"
+                                        ng-click="abrirModalVerificarCuenta('cierre-mes')">
+                                        <i class="ace-icon fa fa-sign-out bigger-130"></i>Generar Cierre
+                                    </a>
+                                    <p class="text-info" ng-if="cierreMes">Generado en fecha:
+                                        {{datoMesCierre.fecha|date:'dd/MM/yyyy'}}</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>PERIODO</label>&nbsp
+                            </td>
+                            <td>
+                                <select required id="mesFiltroProformas" name="mes"
+                                    ng-options="mes as mes.nombre for mes in mesesFiltro track by mes.id"
+                                    ng-model="filtro.mes">
+                                    <option value="">TODOS</option>
+                                </select>
+                            </td>
+                            <td>
+                                <select required id="anioFiltroProformas" name="anio"
+                                    ng-options="anio as anio.nombre for anio in anios track by anio.id"
+                                    ng-model="filtro.anio">
+                                    <option value="" selected>TODOS</option>
+                                </select> &nbsp
+                            </td>
+                            <td>
+                                <div class="row col col-sm-12" style="width: auto;">
+                                    <div class="col col-sm-5" style="width: auto;">
+                                        Desde:
+                                        <div ng-class="{'has-error-date':fechasIncorrectaInic}">
+                                            <input ng-update-hidden type="text" data-date-format="dd/mm/yyyy"
+                                                class="form-control date-picker {{filtro.fecha_proforma_desde ? 'filterInputInUse' : ''}}"
+                                                id="fecha-proforma-filtro-desde" ng-update-hidden
+                                                ng-model="filtro.fecha_proforma_desde" name="fecha-profora-filtro-desde"
+                                                ng-change="validarFechaI(filtro.fecha_proforma_desde, filtro.fecha_proforma_hasta)">
+                                        </div>
+                                    </div>
+                                    <div class="col col-sm-5" style="width: auto;">
+                                        Hasta:
+                                        <div ng-class="{'has-error-date':fechasIncorrectaFin}">
+                                            <input ng-update-hidden type="text" data-date-format="dd/mm/yyyy"
+                                                class="form-control date-picker {{filtro.fecha_proforma_hasta ? 'filterInputInUse' : ''}}"
+                                                id="fecha-proforma-filtro-hasta" ng-update-hidden
+                                                ng-model="filtro.fecha_proforma_hasta" name="fecha-profora-filtro-hasta"
+                                                ng-change="validarFechaF(filtro.fecha_proforma_desde, filtro.fecha_proforma_hasta)">
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </td>
+                            <td>
+                                <button type="submit" 
+                                    class="btn btn-app btn-primary btn-xs">
+                                    <i class="ace-icon fa fa-search align-top bigger-125"></i>
+                                    Filtrar
+                                </button>
+                                <button type="button" class="btn btn-app btn-danger btn-xs"
+                                    ng-click="obtenerProformas(false, true, false)">
+                                    <i class="ace-icon fa fa-print bigger-160"></i>
+                                    PDF
+                                </button>
+                                <button type="button" class="btn btn-app btn-success btn-xs"
+                                    ng-click="obtenerProformas(false, false, true)">
+                                    <i class="ace-icon fa fa-print bigger-160"></i>
+                                    EXCEL
+                                </button>
+                            </td>
+                            <td>
+                                <a popover-trigger="outsideClick : outsideClick"
+                                    uib-popover-template="PopoverConfiguracionActividad.templateUrl"
+                                    popover-placement="left" class="btn button-config btn-primary" type="button"
+                                    id="id-btn-ServiciosConfig">
+                                    Configuración
+                                    <i class=" glyphicon glyphicon-cog bigger-100"> </i>
+                                </a>
+                            </td>
+                            <script type="text/ng-template" id="PopoverConfiguracionActividad.html">
+                            <div class="form-control">
+                                       <a href="javascript:void(0)" class="blue" ng-click="abrirConfiguracionActividades()">Actividad Economica</a>
+                                   </div>
+                                   <div class="form-control">
+                                       <a href="javascript:void(0)" class="blue" ng-click="abrirConfiguracionActividadesServicios()">Servicio</a>
+                                   </div>
+                                   <div class="form-control">
+                                        <a href="javascript:void(0)" class="blue" ng-click="abrirConfiguracionCentrosCostos()">Asignación centro costo</a>
+                                    </div>
+
+                           </script>
+                        </tr>
+                        <tr>
+                            <td>
+                                &nbsp
+                            </td>
+                            <td>
+                                <label>Razón Social</label>&nbsp
+                            </td>
+                            <td>
+                                <label>Sucursal</label>&nbsp
+                            </td>
+                            <td>
+                                <label>Monto</label>&nbsp
+                            </td>
+                            <td>
+                                <label>Actividad económica</label>&nbsp
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                FILTRO
+                            </td>
+                            <td>
+                                <input class="{{filtro.razon ? 'filterInputInUse' : ''}}" ng-model="filtro.razon"
+                                    type="text">
+                            </td>
+                            <td>
+                                <select class="{{filtro.sucursal ? 'filterInputInUse' : ''}}"
+                                    id="sucursalFiltroProformas" name="sucursal"
+                                    ng-options="sucursal as sucursal.nombre for sucursal in sucursales track by sucursal.id"
+                                    ng-model="filtro.sucursal"
+                                    ng-change="obtenerActividadesSucursal(filtro.sucursal.id)">
+                                    <option value="" selected>TODOS</option>
+                                </select>
+                            </td>
+                            <td>&nbsp
+                                <input class="{{filtro.monto ? 'filterInputInUse' : ''}}" ng-model="filtro.monto"
+                                    type="number">
+                            </td>
+                            <td style="max-width: 200px; width: 200px">
+                                <select class="{{filtro.actividadEconomica ? 'filterInputInUse' : ''}}"
+                                    style="max-width: 180px;width: 180px" required id="actividadFiltroProformas"
+                                    ng-model="filtro.actividadEconomica"
+                                    ng-change="obtenerServiciosActividadEmpresaPrincipal(filtro.actividadEconomica,true)"
+                                    ng-options="actividad as actividad.actividad.nombre for actividad in actividadesEmpresaSinRepeticion track by actividad.actividad.id">
+                                    <option value="" selected>TODOS</option>
+                                </select>
+                            </td>
+                            <td>
+                                <button class="btn btn-success"
+                                    ng-click="abrir_dialog_reporte_facturas_proformas()">FACTURAS</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                &nbsp
+                            </td>
+                            <td>
+                                <label>Servicio</label>&nbsp
+                            </td>
+                            <td>&nbsp
+                                <label>N° proforma</label>&nbsp
+                            </td>
+                            <td>
+                                <label>Usuario</label>&nbsp
+                            </td>
+                            <td>
+                                <label>Facturado/Pendientes</label>&nbsp
+                            </td>
+                            <td>
+                                <label>Nº Factura</label>&nbsp
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                            </td>
+                            <td>
+                                <div ng-if="filtro.actividadEconomica.id !==undefined">
+                                    <select class="{{filtro.servicio ? 'filterInputInUse' : ''}}" id="filtroServicio"
+                                        ng-model="filtro.servicio"
+                                        ng-options="servicio as servicio.nombre for servicio in filser track by servicio.id">
+                                        <option value="" selected>TODOS</option>
+                                    </select>
+                                </div>
+                                <div ng-if="filtro.actividadEconomica.id ===undefined">
+                                    <select id="filtroActividad" ng-model="filtro.servicio">
+                                        <option disabled selected value="">Seleccione una actividad</option>
+                                    </select>
+                                </div>
+                            </td>
+                            <td>&nbsp
+                                <input class="{{filtro.numero ? 'filterInputInUse' : ''}}" ng-model="filtro.numero"
+                                    type="number">
+                            </td>
+                            <td>
+                                <input class="{{filtro.usuario ? 'filterInputInUse' : ''}}" ng-model="filtro.usuario"
+                                    type="text">&nbsp
+                            </td>
+                            <td>
+                                <select class="{{filtro.proformaFacturadas ? 'filterInputInUse' : ''}}"
+                                    id="filtroFacturas" ng-model="filtro.proformaFacturadas"
+                                    ng-options="opcion as opcion.nombre for opcion in [{id: 1, nombre: 'Facturados'}, {id: 2, nombre: 'Pendientes'},{id: 3, nombre: 'Anuladas'},{id:4, nombre: 'Cobrado'},{id: 5, nombre: 'P/Cobrar'},{id: 6, nombre: 'A cuenta'}] track by opcion.id">
+                                    <option value="" selected>TODOS</option>
+                                </select>
+                            </td>
+                            <td>
+                                <input class="{{filtro.factura ? 'filterInputInUse' : ''}}" ng-model="filtro.factura"
+                                    type="number">&nbsp
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </fieldset>
+        </form>
+        <div class="clearfix">
+            <div class="pull-right tableTools-container"></div>
+        </div>
+        <div class="table-header">
+            <div class="pos-rel pull-left">
+                <a class="btn btn-primary btn-xs" popover-trigger="outsideClick : outsideClick"
+                    uib-popover-template="PopoverReportesRapido.templateUrl" popover-placement="right">
+                    <i class="menu-icon fa fa-bar-chart-o"></i>
+                </a>
+            </div>
+            Lista de Proformas
+            <style type="text/css" scoped>
+                .dropdown-menu {
+                    min-width: 250px !important;
+                }
+            </style>
+
+            <!--  Importaciones -->
+            <div class="pos-rel pull-right">
+                <a data-toggle="dropdown" class="btn btn-primary btn-xs dropdown-toggle" id="zoomBtn">
+                    <i class="ace-icon fa fa-wrench  bigger-110 icon-only "></i>
+                </a>
+                <ul
+                    class="dropdown-menu-right dropdown-navbar navbar-orange dropdown-menu dropdown-caret dropdown-close importar-text">
+                    <li class="dropdown-header header-importar">
+                        <i class="ace-icon fa fa-wrench white"></i>
+                        Importaciones
+                    </li>
+                    <li class="dropdown-content">
+                        <ul class="dropdown-menu dropdown-navbar navbar-pink">
+                            <li>
+                                <div class="clearfix">
+                                    <span class="pull-left" style="color:rgb(85, 128, 163) !important">
+                                        Proformas
+                                    </span>
+                                    <a href="/recursos/Proforma.xlsx" class="boton-importar pull-right">
+                                        <i class="fa  fa-cloud-download green"></i>
+                                    </a>
+                                    <div class="fileUpload boton-importar pull-right">
+                                        <span class="fileUpload-button ace-icon fa fa-cloud-upload red"></span>
+                                        <input ng-disabled="!aplicacion.puede_crear" class="upload" type="file"
+                                            custom-on-file-change="importarProformasv2" />
+                                    </div>
+                                    <div class="fileUpload boton-importar pull-right">
+                                        <!-- <span class="fileUpload-button ace-icon fa fa-cloud-upload blue"></span> -->
+                                        <a class="upload" ng-click="abrirdialogImportacionProforma()"><span
+                                                class="fileUpload-button ace-icon fa fa-cloud-upload blue"></span></a>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="clearfix">
+                                    <span class="pull-left" style="color:rgb(85, 128, 163) !important">
+                                        Facturaciones
+                                    </span>
+                                    <a href="/recursos/EJEMPLO-EXPO-FACTURACION.xlsx" class="boton-importar pull-right">
+                                        <i class="fa  fa-cloud-download green"></i>
+                                    </a>
+                                    <div class="fileUpload boton-importar pull-right">
+                                        <span class="fileUpload-button ace-icon fa fa-cloud-upload blue"></span>
+                                        <input ng-disabled="!aplicacion.puede_crear" class="upload" type="file"
+                                            custom-on-file-change="subirExcelFacturacion2" />
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="dropdown-footer"></li>
+                </ul>
+            </div>
+            <!-- Fin Importaciones -->
+
+            <label class="row pull-right">
+                <div class="col-xs-10" ng-include src="'/templates/gral/fields-viewer.html'"></div>
+            </label>
+            <label class="pull-right">TOTAL BS. {{totalProformas | number:2}} &nbsp;&nbsp; $U$. {{totalProformasDolar | number: 2}} &nbsp;&nbsp; SALDO BS. {{totalsaldo | number: 2}}&nbsp;&nbsp; $U$. {{totalsaldoDolar | number: 2}}&nbsp;&nbsp;.</label>
+            <script type="text/ng-template" id="PopoverReportesRapido.html">
+                <div class="form-control">
+                    <a href="javascript:void(0)" class="blue" ng-click="abrirReporteEmpresas(filtro)">Empresas</a>
+                </div>
+                 <div class="form-control">
+                    <a href="javascript:void(0)" class="blue" ng-click="abrirReporteCentroCosto(filtro)">Centro C.</a>
+                </div>
+            </script>
+        </div>
+        <div id="tabla-pacientes_wrapper" class="dataTables_wrapper form-inline no-footer">
+            <div class="row" ng-include src="'/templates/gral/paginator-header-2.html'">
+            </div>
+            <div style="overflow-x: scroll">
+                <table id="tabla-ventas" class="table table-striped table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th ng-if="fieldViewer.getConfiguration().numero.show">Nº</th>
+                            <!-- <th>Movimiento</th> -->
+                            <th ng-if="fieldViewer.getConfiguration().proforma.show">
+                                <a href="javascript:void(0)" ng-click="odenarColumnasProformas('correlativo')">Prof.
+                                    <span id="correlativo" class="sort fa fa-sort icon-only"></span>
+                                </a>
+                            </th>
+                            <th ng-if="fieldViewer.getConfiguration().factura.show">
+                                <a href="javascript:void(0)" ng-click="odenarColumnasProformas('factura')">Fact.
+                                    <span id="factura" class="sort fa fa-sort icon-only"></span>
+                                </a>
+                            </th>
+                            <th ng-if="fieldViewer.getConfiguration().cliente.show">
+                                <a href="javascript:void(0)" ng-click="odenarColumnasProformas('cliente')">Cliente
+                                    <span id="cliente" class="sort fa fa-sort icon-only"></span>
+                                </a>
+                            </th>
+                            <th ng-if="fieldViewer.getConfiguration().periodo.show">
+                                <a href="javascript:void(0)" ng-click="odenarColumnasProformas('periodo')">Periodo
+                                    <span id="periodo" class="sort fa fa-sort icon-only"></span>
+                                </a>
+                            </th>
+                            <th ng-if="fieldViewer.getConfiguration().sucursal.show">
+                                <a href="javascript:void(0)" ng-click="odenarColumnasProformas('sucursal')">Sucursal
+                                    <span id="sucursal" class="sort fa fa-sort icon-only"></span>
+                                </a>
+                            </th>
+                            <th ng-if="fieldViewer.getConfiguration().actividad.show">
+                                <a href="javascript:void(0)" ng-click="odenarColumnasProformas('actividad')">Act. Eco.
+                                    <span id="actividad" class="sort fa fa-sort icon-only"></span>
+                                </a>
+                            </th>
+                            <th ng-if="fieldViewer.getConfiguration().servicio.show">
+                                <a href="javascript:void(0)" ng-click="odenarColumnasProformas('servicio')">Servicio
+                                    <span id="servicio" class="sort fa fa-sort icon-only"></span>
+                                </a>
+                            </th>
+                            <th ng-if="fieldViewer.getConfiguration().usuario.show">
+                                <a href="javascript:void(0)" ng-click="odenarColumnasProformas('usuario')">Usuario
+                                    <span id="usuario" class="sort fa fa-sort icon-only"></span>
+                                </a>
+                            </th>
+                            <th ng-if="fieldViewer.getConfiguration().montobs.show">
+                                <a href="javascript:void(0)" ng-click="odenarColumnasProformas('monto')">Monto Bs.
+                                    <span id="monto" class="sort fa fa-sort icon-only"></span>
+                                </a>
+                            </th>
+                            <th ng-if="fieldViewer.getConfiguration().montosus.show">
+                                <a href="javascript:void(0)" ng-click="odenarColumnasProformas('montosus')">Monto $us.
+                                    <span id="montosus" class="sort fa fa-sort icon-only"></span>
+                                </a>
+                            </th>
+                            <th ng-if="fieldViewer.getConfiguration().fecha_recep.show">
+                                <a href="javascript:void(0)" ng-click="odenarColumnasProformas('fecha_recepcion')">Fecha
+                                    Recep.
+                                    <span id="fecha_recepcion" class="sort fa fa-sort icon-only"></span>
+                                </a>
+                            </th>
+                            <th ng-if="fieldViewer.getConfiguration().fecha_proforma.show">
+                                <a href="javascript:void(0)" ng-click="odenarColumnasProformas('fecha_proforma')">Fecha
+                                    Proforma
+                                    <span id="fecha_proforma" class="sort fa fa-sort icon-only"></span>
+                                </a>
+                            </th>
+                            <th ng-if="fieldViewer.getConfiguration().fecha_proforma_ok.show">
+                                <a href="javascript:void(0)"
+                                    ng-click="odenarColumnasProformas('fecha_proforma_ok')">Fecha
+                                    Proforma ok
+                                    <span id="fecha_proforma_ok" class="sort fa fa-sort icon-only"></span>
+                                </a>
+                            </th>
+                            <th ng-if="fieldViewer.getConfiguration().fecha_factura.show">
+                                <a href="javascript:void(0)" ng-click="odenarColumnasProformas('fecha_factura')">Fecha
+                                    Factura
+                                    <span id="fecha_factura" class="sort fa fa-sort icon-only"></span>
+                                </a>
+                            </th>
+                            <th ng-if="fieldViewer.getConfiguration().fecha_cobro.show">
+                                <a href="javascript:void(0)" ng-click="odenarColumnasProformas('fecha_cobro')">Fecha
+                                    Cobro
+                                    <span id="fecha_cobro" class="sort fa fa-sort icon-only"></span>
+                                </a>
+                            </th>
+                            <th >
+                                <a href="javascript:void(0)">Saldo Bs.
+                                    <!-- <span id="saldo_bs" class="sort fa fa-sort icon-only"></span> -->
+                                </a>
+                            </th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="{{proforma.color}}" ng-repeat="proforma in proformas">
+                            <td ng-if="fieldViewer.getConfiguration().numero.show" data-label="N°:">
+                                {{($index+1)+(paginator.itemsPerPage*(paginator.currentPage-1))}}
+                            </td>
+                            <td ng-if="fieldViewer.getConfiguration().proforma.show">{{proforma.correlativo}}</td>
+                            <td ng-if="fieldViewer.getConfiguration().factura.show">{{proforma.factura}}</td>
+                            <td ng-if="fieldViewer.getConfiguration().cliente.show">{{proforma.cliente.razon_social}}
+                            </td>
+                            <td ng-if="fieldViewer.getConfiguration().periodo.show">
+                                {{meses[proforma.periodo_mes].nombre}}/{{proforma.periodo_anio}}</td>
+                            <td ng-if="fieldViewer.getConfiguration().sucursal.show">{{proforma.sucursal.nombre}}</td>
+                            <td ng-if="fieldViewer.getConfiguration().actividad.show">
+                                {{proforma.actividadEconomica.nombre}}</td>
+                            <td ng-if="fieldViewer.getConfiguration().servicio.show">
+                                {{proforma.detallesProformas[0].servicio.nombre}}
+                            </td>
+                            <td ng-if="fieldViewer.getConfiguration().usuario.show">
+                                {{proforma.usuarioProforma.nombre_usuario}}</td>
+                            <td ng-if="fieldViewer.getConfiguration().montobs.show">{{proforma.totalImporteBs |
+                                number:2}}</td>
+                            <td ng-if="fieldViewer.getConfiguration().montosus.show">
+                                {{proforma.totalImporteSus | number:2}}</td>
+                            <td ng-if="fieldViewer.getConfiguration().fecha_recep.show">{{proforma.fecha_recepcion |
+                                    date:"dd/MM/yyyy"}}
+                                <div
+                                    ng-if="((proforma.fecha_recepcion===undefined || proforma.fecha_recepcion===null) && !proforma.eliminado)">
+                                    <a ng-disabled="!aplicacion.puede_modificar" class="orange"
+                                        href="javascript:void(0)" ng-click="abrirdialogmodalFechas(proforma,0)">
+                                        <i class="ace-icon fa fa-circle-o bigger-130"></i>
+                                    </a>
+                                </div>
+                            </td>
+                            <td ng-if="fieldViewer.getConfiguration().fecha_proforma.show">{{proforma.fecha_proforma |
+                                date:"dd/MM/yyyy"}}</td>
+                            <td ng-if="fieldViewer.getConfiguration().fecha_proforma_ok.show">{{proforma.fecha_proforma_ok
+                                | date:"dd/MM/yyyy"}}
+                                <div
+                                    ng-if="((proforma.fecha_proforma_ok===undefined || proforma.fecha_proforma_ok===null) && !proforma.eliminado)">
+                                    <a ng-disabled="!aplicacion.puede_modificar && proforma.eliminado" class="orange"
+                                        href="javascript:void(0)" ng-click="abrirdialogmodalFechas(proforma,false)">
+                                        <i class="ace-icon fa fa-circle-o bigger-130"></i>
+                                    </a>
+                                </div>
+                            </td>
+                            <td ng-if="fieldViewer.getConfiguration().fecha_factura.show">{{proforma.fecha_factura |
+                                date:"dd/MM/yyyy"}}
+                                <div
+                                    ng-if="((proforma.fecha_factura===undefined || proforma.fecha_factura===null) && !proforma.eliminado)">
+                                    <a ng-disabled="!aplicacion.puede_modificar" class="orange"
+                                        href="javascript:void(0)" ng-click="abrirdialogmodalFechas(proforma,false)">
+                                        <i class="ace-icon fa fa-circle-o bigger-130"></i>
+                                    </a>
+                                </div>
+                            </td>
+                            <td ng-if="fieldViewer.getConfiguration().fecha_cobro.show">{{proforma.fecha_cobro |
+                                date:"dd/MM/yyyy"}}
+                                <div
+                                    ng-if="((proforma.fecha_cobro===undefined || proforma.fecha_cobro===null) && !proforma.eliminado)">
+                                    <a ng-disabled="!aplicacion.puede_modificar" class="orange"
+                                        href="javascript:void(0)" ng-click="abrirdialogmodalFechas(proforma,false)">
+                                        <i class="ace-icon fa fa-circle-o bigger-130"></i>
+                                    </a>
+                                </div>
+                                <label class="bg-orange" ng-if="proforma.eliminado">&nbsp;ANULADO&nbsp;</label>
+                            </td>
+                            <td>
+                                {{proforma.totalImporteBs - proforma.a_cuenta | number:2}}
+                            </td>
+                            <td>
+                                <div>
+                                    <a ng-if="!proforma.eliminado" ng-disabled="!aplicacion.puede_modificar"
+                                        class="orange" href="javascript:void(0)" ng-click="editar(proforma)"
+                                        data-rel="tooltip" tooltip-placement="top" uib-tooltip="Editar">
+                                        <i class="ace-icon fa fa-pencil-square-o bigger-130"></i>
+                                    </a>
+                                    <a ng-if="!proforma.eliminado" popover-trigger="outsideClick : outsideClick"
+                                        uib-popover-template="impresiones.templateUrl" popover-placement="left"
+                                        data-rel="tooltip" tooltip-placement="left" uib-tooltip="Imprimir proforma"
+                                        class="green" href="javascript:void(0)">
+                                        <span class="ace-icon fa fa-print bigger-130"></span>
+                                    </a>
+                                    <script type="text/ng-template" id="impresiones.html">
+                                             <div class="form-control">
+                                                        <a  class="blue" href="javascript:void(0)" ng-click="imprimir(proforma,0)">Sin detalle</a>
+                                                    </div>
+                                                    <div class="form-control">
+                                                        <a  class="blue" href="javascript:void(0)" ng-click="imprimir(proforma,1)">Con detalle</a>
+                                                    </div>
+                                                    <div class="form-control">
+                                                            <a  class="blue" href="javascript:void(0)" ng-click="imprimir(proforma,2)">Mixta</a>
+                                                        </div>
+                                            </script>
+                                    <a e-disabled="!aplicacion.puede_ver" class="blue" href="javascript:void(0)"
+                                        ng-click="ver(proforma)" data-rel="tooltip" tooltip-placement="top"
+                                        uib-tooltip="Ver">
+                                        <i class="ace-icon fa fa-search-plus bigger-130"></i>
+                                    </a>
+                                    <a ng-if="(!proforma.eliminado || proforma.fecha_cobro) && (proforma.eliminado || !proforma.fecha_cobro)" ng-disabled="!aplicacion.puede_eliminar" class="red"
+                                        href="javascript:void(0)"
+                                        ng-click="anularProformaFactura(proforma)" data-rel="tooltip"
+                                        tooltip-placement="top" uib-tooltip="Anular">
+                                        <i class="ace-icon fa fa-trash-o bigger-130"></i>
+                                    </a>
+                                    <a ng-if="!proforma.eliminado" class="red" href="javascript:void(0)"
+                                        popover-trigger="outsideClick : outsideClick"
+                                        uib-popover-template="PopoverTipoImpresionFactura.templateUrl"
+                                        popover-placement="left">
+                                        <i class="ace-icon fa fa-print bigger-130"></i>
+                                    </a>
+                                    <!-- <a popover-trigger="outsideClick : outsideClick" uib-popover-template="PopoverTipoImpresionFactura.templateUrl"
+                                    popover-placement="left" class="btn button-config btn-primary" type="button" id="id-btn-TipoImpresionFactura">
+                                    Configuración
+                                    <i class=" glyphicon glyphicon-cog bigger-100"> </i>
+                                </a> -->
+
+                                    <script type="text/ng-template" id="PopoverTipoImpresionFactura.html">
+                            <div class="form-control">
+                                       <a href="javascript:void(0)" class="blue" ng-click="imprimirFactura(proforma, true, false)">Con detalle</a>
+                                   </div>
+                                   <div class="form-control">
+                                    <a href="javascript:void(0)" class="blue" ng-click="imprimirFactura(proforma, true, true)">Con detalle/S Cab</a>
+                                </div>
+                                   <div class="form-control">
+                                       <a href="javascript:void(0)" class="blue" ng-click="imprimirFactura(proforma, false, false)">Sin detalle</a>
+                                   </div>
+                                   <div class="form-control">
+                                        <a href="javascript:void(0)" class="blue" ng-click="imprimirFactura(proforma, null, true)">Formato antiguo</a>
+                                    </div>
+
+                           </script>
+                                    <a e-disabled="!aplicacion.puede_ver" class="red" href="javascript:void(0)"
+                                        ng-click="verFactura(proforma)" data-rel="tooltip" tooltip-placement="top"
+                                        uib-tooltip="Ver">
+                                        <i class="ace-icon fa fa-search-plus bigger-130"></i>
+                                    </a>
+                                    <span
+                                        ng-if="(proforma.observacion !== 'Sin observaciones.' && proforma.observacion !== '' ) || proforma.eliminado"
+                                        class="badge badge-transparent tooltip-error" title="{{proforma.observacion}}"
+                                        uib-tooltip="" data-original-title="{{proforma.observacion}}"
+                                        tooltip-placement="left" data-html="true">
+                                        <i class="ace-icon fa fa-exclamation-triangle orange bigger-130"></i>
+                                    </span>
+                                </div>
+                                <!-- <div class="hidden-md hidden-lg">
+                                    <div class="inline pos-rel">
+                                        <button class="btn btn-minier btn-yellow dropdown-toggle" data-toggle="dropdown"
+                                            data-position="auto">
+                                            <i class="ace-icon fa fa-caret-down icon-only bigger-120"></i>
+                                        </button>
+                                        <ul class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-menu-right dropdown-caret dropdown-close">
+                                            <li ng-if="!proforma.eliminado">
+                                                <a ng-disabled="!aplicacion.puede_modificar" class="orange" href="javascript:void(0)"
+                                                    ng-click="editar(proforma)">
+                                                    <i class="ace-icon fa fa-pencil-square-o bigger-130"></i>
+                                                </a>
+                                            </li>
+                                            <li ng-if="!proforma.eliminado">
+                                                <a popover-trigger="outsideClick : outsideClick" uib-popover-template="impresiones.templateUrl"
+                                                    popover-placement="left" class="green" href="javascript:void(0)">
+                                                    <i class="ace-icon fa fa-print bigger-130" data-rel="tooltip"
+                                                        tooltip-placement="top" uib-tooltip="Imprimir"></i>
+                                                </a>
+                                                <script type="text/ng-template" id="impresiones.html">
+
+                                                         <div class="form-control">
+                                                                    <a  class="blue" ng-click="imprimir(proforma,0)">Sin detalle</a>
+                                                                </div>
+                                                                <div class="form-control">
+                                                                    <a  class="blue" ng-click="imprimir(proforma,1)">Con detalle</a>
+                                                                </div>
+                                                                <div class="form-control">
+                                                                        <a  class="blue" ng-click="imprimir(proforma,2)">Mixta</a>
+                                                                    </div>
+
+                                                        </script>
+                                            </li>
+                                            <li>
+                                                <a ng-disabled="!aplicacion.puede_ver" class="blue" href="javascript:void(0)"
+                                                    ng-click="ver(proforma)">
+                                                    <i class="ace-icon fa fa-search-plus bigger-130"></i>
+                                                </a>
+                                            </li>
+                                            <li ng-if="!proforma.eliminado">
+                                                <a ng-disabled="!aplicacion.puede_eliminar" class="red" ng-if="solicitud.activo"
+                                                    ng-click="abrirPopupConfirmacionEliminacion(eliminar,proforma)">
+                                                    <i class="ace-icon fa fa-trash-o bigger-130"></i>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div> -->
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="row" ng-include src="'/templates/gral/paginator.html'">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modalConfiguracionActividadesServicios" style="overflow-x:hidden !important" class="modal wizard-posicion">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="formConfiguracionActividadesServicios" name="form" novalidate
+                ng-submit="guardarConfiguracionActividadServicios(configuracionActividadServicio)">
+                <div class="row">
+                    <h2 align="center" class="blue">Servicios</h2>
+                </div>
+                <div id="modal-wizard-panel-container">
+                    <div class="modal-header steps-container">
+                        <!-- <div class="modal-header"> -->
+                        <ul class="steps">
+                            <li data-step="1" class="active">
+                                <span class="step">
+                                    <span class="glyphicon glyphicon-cog"></span>
+                                </span>
+                                <span class="title">SERVICIOS</span>
+                            </li>
+                            <li data-step="2">
+                                <span class="step">
+                                    <span class="fa fa-list-alt"></span>
+                                </span>
+                                <span class="title">Finalizar</span>
+                            </li>
+                        </ul>
+                        <!-- </div> -->
+                    </div>
+                    <div class="modal-body step-content">
+                        <div class="step-pane active" data-step="1">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="row form-group">
+                                        <div class="col-lg-5">
+                                            <label for="paterno">Actividades</label>
+                                        </div>
+                                        <div class="col-lg-7">
+                                            <select style="max-width: 180px;width: 180px"
+                                                ng-change="obtenerServiciosActividadEmpresaPrincipal(nActividad.actividadEconomica.actividad)"
+                                                required id="actividadServicios" name="actividad"
+                                                ng-options="actividad as actividad.actividad.nombre for actividad in actividadesEmpresaSinRepeticion track by actividad.actividad.id"
+                                                ng-model="nActividad.actividadEconomica">
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row form-group">
+                                        <div class="col-lg-5">
+                                            <label for="materno">Código</label>
+                                        </div>
+                                        <div class="col-lg-7">
+                                            <input required ng-model="nActividad.servicio.codigo" type="text">
+                                        </div>
+                                    </div>
+                                    <div class="row form-group">
+                                        <div class="col-lg-5">
+                                            <label for="materno">Servicio</label>
+                                        </div>
+                                        <div class="col-lg-7">
+                                            <input required ng-model="nActividad.servicio.nombre" type="text">
+                                        </div>
+                                    </div>
+                                    <div class="row form-group">
+                                        <div class="col-lg-5">
+                                            <label for="materno">Precio</label>
+                                        </div>
+                                        <div class="col-lg-7">
+                                            <input required ng-model="nActividad.servicio.precio" type="number">
+                                        </div>
+
+                                    </div>
+                                    <div class="row form-group">.
+                                        <div class="container-fluid">
+                                            <button type="button" class="btn btn-primary"
+                                                ng-click="agregarDetalleActividadServicio(nActividad)">
+                                                <i class="ace-icon fa fa-plus align-top bigger-125"></i>
+                                            </button>
+                                        </div>
+
+                                    </div>
+                                    <div class="row form-group">
+                                        <div class="container-fluid">
+                                            <table class="table table-striped table-bordered table-hover">
+                                                <thead>
+                                                    <th>Código</th>
+                                                    <th>Servicios</th>
+                                                    <th>Precio</th>
+                                                    <th>Acciones</th>
+                                                </thead>
+                                                <tbody ng-if="!servicio.eliminado"
+                                                    ng-repeat="servicio in configuracionActividadServicio">
+                                                    <td>
+                                                        {{servicio.codigo}}
+                                                    </td>
+                                                    <td>
+                                                        {{servicio.nombre}}
+                                                    </td>
+                                                    <td>
+                                                        {{servicio.precio | number:2}}
+                                                    </td>
+                                                    <td>
+                                                        <a e-disabled="!aplicacion.puede_eliminar" class="red"
+                                                            ng-click="abrirPopupConfirmacionEliminacion(eliminarDetalleConfiguracion,servicio)"
+                                                            data-rel="tooltip" tooltip-placement="top"
+                                                            uib-tooltip="Eliminar">
+                                                            <i class="ace-icon fa fa-trash-o bigger-130"></i>
+                                                        </a>
+                                                        <a e-disabled="!aplicacion.puede_modificar" class="blue"
+                                                            ng-click="editarServicio(servicio)" data-rel="tooltip"
+                                                            tooltip-placement="top" uib-tooltip="Modificar">
+                                                            <i class="ace-icon fa fa-pencil-square-o bigger-130"></i>
+                                                        </a>
+                                                    </td>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="step-pane" data-step="2">
+                            <div class="center">
+                                <h4 class="blue">Finalización</h4>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="modal-footer wizard-actions">
+
+                    <!-- <button class="btn btn-sm btn-prev">
+                        <i class="ace-icon fa fa-arrow-left"></i>
+                        Anterior
+                    </button> -->
+
+                    <button id="siguienteP" ng-disabled="!aplicacion.puede_crear"
+                        class="btn btn-success btn-sm btn-next" data-last="Finish">
+                        Siguiente
+                        <i class="ace-icon fa fa-arrow-right icon-on-right"></i>
+                    </button>
+
+                    <button type="button" class="btn btn-danger btn-sm pull-left" data-dismiss="modal"
+                        ng-click="cerrarConfiguracionActividadesServicios()">
+                        <i class="ace-icon fa fa-times"></i>
+                        Cancelar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div id="dialog-dosificar-actividad" title="¿Dosificar actividad?" class="modal">
+    <p>
+        <span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>¿Esta seguro de reemplazar
+        la dosificación existente por una nueva?
+    </p>
+    <p>
+        La dosificación anterior quedara cerrada y no podra ser usada para la emisión de nuevas facturas.
+    </p>
+    <button type="button" class="btn btn-danger" ng-click="dosificarSucursalActividad()">Si</button>
+    <button type="button" class="btn btn-success" ng-click="cerrarconfirmarDosificacion()">No</button>
+</div>
+
+<div id="dialog-importar-proformas" title="Importación proformas" class="modal">
+    <div class="modal-dialog">
+        <div class="modal-body">
+            <label>Archivo de proformas:</label>
+            <div class="row"></div>
+            <div class="row">
+                <input type="file" class="upload" custom-on-file-change="cargarCabeceraProformasImportacion">
+            </div>
+            <!-- <label>Detalle:</label>
+            <div class="row">
+                <div class="row"></div>
+                <input type="file" class="upload" custom-on-file-change="cargarDetalleProformasImportacion">
+            </div> -->
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-primary" ng-click="importarProformas()">Si</button>
+            <button type="button" class="btn btn-danger" ng-click="cerrardialogImportacionProforma()">No</button>
+        </div>
+    </div>
+</div>
+
+<div id="dialog-ver-facturacion" class="modal" title="¿Dosificar actividad?">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form ng-submit="guardarRevision()">
+                <div class="modal-header bg-blue">
+                    <h2 class="center">Facturación proformas</h2>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <table>
+                            <tr>
+                                <td>
+                                    <b>Factura:</b> {{verFacturacionProforma.factura}}
+                                </td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>
+                                    <b>Autorización:</b> {{verFacturacionProforma.autorizacion}}
+                                </td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>
+                                    <b>Código control:</b> {{verFacturacionProforma.codigo_control}}
+                                </td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>
+                                    <b>Fecha facturación:</b> {{verFacturacionProforma.fecha_factura}}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <b>Proforma:</b> {{verFacturacionProforma.proformaSeleccionada}}
+                                </td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>
+                                    <b>Fecha proforma:</b> {{verFacturacionProforma.fecha_proforma}}
+                                </td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>
+                                    <b>Cliente:</b> {{verFacturacionProforma.cliente.razon_social}}
+                                </td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>
+                                    <b>Nit:</b> {{verFacturacionProforma.cliente.nit}}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+
+                                </td>
+                            </tr>
+                        </table>
+                        <div class="clearfix">
+                            <div class="pull-right tableTools-container"></div>
+                        </div>
+                        <div class="table-header">
+                            <b>DETALLES FACTURACIÓN</b>
+                        </div>
+                        <table class="table table-striped table-bordered table-hover">
+                            <tr>
+                                <td>
+                                    <b>Detalle</b>
+                                </td>
+                                <td>
+                                    <b>Precio unitario</b>
+                                </td>
+                                <td>
+                                    <b>Cantidad</b>
+                                </td>
+                                <td>
+                                    <b>Importe Bs.</b>
+                                </td>
+                                <td>
+                                    <b>Importe $us.</b>
+                                </td>
+                            </tr>
+                            <tr ng-repeat="detalle in verFacturacionProforma.detalles">
+                                <td>
+                                    {{detalle.servicio.nombre}}
+                                </td>
+                                <td>
+                                    {{detalle.precio_unitario}}
+                                </td>
+                                <td>
+                                    {{detalle.cantidad}}
+                                </td>
+                                <td>
+                                    {{detalle.importe}}
+                                </td>
+                                <td>
+                                    {{(detalle.importe / verFacturacionProforma.cambio_dolar).toFixed(2)}}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td>
+                                    <b>Total General:</b>
+                                </td>
+                                <td>
+                                    {{verFacturacionProforma.importeBs}}
+                                </td>
+                                <td>
+                                    {{verFacturacionProforma.importeSus.toFixed(2)}}
+                                </td>
+                            </tr>
+                        </table>
+                        <div class="clearfix">
+                            <div class="pull-right tableTools-container"></div>
+                        </div>
+                        <div class="table-header">
+                            <b>Proformas en esta facturación</b>
+                        </div>
+                        <table class="table table-striped table-bordered table-hover">
+                            <tr>
+                                <td>
+                                    <b>N° prof.</b>
+                                </td>
+                                <td>
+                                    <b>fecha proforma</b>
+                                </td>
+                                <td>
+                                    <b>Total Bs</b>
+                                </td>
+                                <td>
+                                    <b>Total $sus</b>
+                                </td>
+                            </tr>
+                            <tr ng-repeat="proforma in verFacturacionProforma.proformas">
+                                <td>
+                                    {{proforma.correlativo}}
+                                </td>
+                                <td>
+                                    {{proforma.fecha_proforma.split('T')[0].split('-').reverse().join('/')}}
+                                </td>
+                                <td>
+                                    {{proforma.totalImporteBs}}
+                                </td>
+                                <td>
+                                    {{(proforma.totalImporteBs / verFacturacionProforma.cambio_dolar).toFixed(2)}}
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer wizard-actions">
+                    <!-- <button type="submit" class="btn btn-success">GUARDAR</button> -->
+                    <button type="button" ng-click="cerrarVerFacturacion()"
+                        class="btn btn-danger pull-left">SALIR</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div id="modalConfiguracionActividades" style="overflow-x:hidden !important" class="modal wizard-posicion">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="formConfiguracionActividadesEconomicas" name="form" novalidate
+                ng-submit="guardarConfiguracionActividadEconomicas()">
+                <div class="row">
+                    <h2 align="center" class="blue">Actividades económicas</h2>
+                </div>
+                <div id="modal-wizard-panel-container-actividad">
+                    <div class="modal-header steps-container">
+                        <!-- <div class="modal-header"> -->
+                        <ul class="steps">
+                            <li data-step="1" class="active">
+                                <span class="step">
+                                    <span class="glyphicon glyphicon-cog"></span>
+                                </span>
+                                <span class="title">Actividades económicas</span>
+                            </li>
+                            <li data-step="2">
+                                <span class="step">
+                                    <span class="fa fa-list-alt"></span>
+                                </span>
+                                <span class="title">Finalizar</span>
+                            </li>
+                        </ul>
+                        <!-- </div> -->
+                    </div>
+                    <div class="modal-body step-content">
+                        <div class="step-pane active" data-step="1">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="row form-group">
+                                        <div class="col-lg-4">
+                                            <label for="paterno">Sucursal</label>
+                                        </div>
+                                        <div class="col-lg-5">
+                                            <select style="max-width: 180px;width: 180px" required
+                                                id="Sucursalactividad" name="Sucursalactividad"
+                                                ng-change="obtenerActividadesSucursal(sucursalActividades.id)"
+                                                ng-options="sucursal as sucursal.nombre for sucursal in sucursales track by sucursal.id"
+                                                ng-model="sucursalActividades">
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row form-group">
+                                        <div class="col-lg-4">
+                                            <label for="paterno">Actividades</label>
+                                        </div>
+                                        <div class="col-lg-5">
+                                            <select style="max-width: 180px;width: 180px" required
+                                                id="actividadSucursal" name="actividad"
+                                                ng-options="actividad as actividad.nombre for actividad in actividades track by actividad.id"
+                                                ng-model="actividadEconomicaEmpresa">
+                                            </select>
+                                        </div>
+                                        <div class="col-lg-2">
+                                            <button type="button" class="btn btn-primary"
+                                                ng-click="agregarDetalleActividadEmpresa(sucursalActividades,actividadEconomicaEmpresa)">
+                                                <i class="ace-icon fa fa-plus align-top bigger-125"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <!-- <div class="row form-group">
+
+                                    </div> -->
+                                    <div class="row form-group">
+                                        <div class="container-fluid">
+                                            <table class="table table-striped table-bordered table-hover">
+                                                <thead>
+                                                    <th>Actividades</th>
+                                                    <th>Dosificación</th>
+                                                    <th>Acciones</th>
+                                                </thead>
+                                                <tbody>
+                                                    <tr ng-if="!actividad.expirado"
+                                                        ng-repeat="actividad in actividadesDosificaciones track by $index">
+                                                        <td>
+                                                            {{actividad.actividad.nombre}}
+                                                            <span ng-if="actividad.eliminado" style="color: red">SE
+                                                                ELIMINARA</span>
+                                                        </td>
+                                                        <td>
+                                                            {{actividad.dosificacion.autorizacion}}
+                                                            <span ng-if="actividad.dosificacion.expirado"
+                                                                style="color: red">EXPIRADO</span>
+                                                        </td>
+                                                        <td>
+                                                            <!-- <a ng-disabled="!aplicacion.puede_eliminar" class="blue" ng-click="sinFuncionalidad()" data-rel="tooltip" tooltip-placement="top"
+                                                                uib-tooltip="Historial Dosificaciones">
+                                                                <i class="ace-icon fa fa-book"></i>
+                                                            </a> -->
+
+                                                            <a ng-disabled="!aplicacion.puede_modificar" class="green"
+                                                                ng-click="abrirdialogDosificacionesDisponibles(actividad)"
+                                                                data-rel="tooltip" tooltip-placement="top"
+                                                                uib-tooltip="Dosificar">
+                                                                <i class="fa fa-hand-o-up"></i>
+                                                            </a>
+
+                                                            <a ng-disabled="!aplicacion.puede_eliminar" class="red"
+                                                                ng-click="mostarMensajeConfirmacionEliminacionActividad(actividad)"
+                                                                data-rel="tooltip" tooltip-placement="top"
+                                                                uib-tooltip="Eliminar">
+                                                                <i class="ace-icon fa fa-trash-o bigger-130"></i>
+                                                            </a>
+
+                                                            <a ng-click="obtenerHistorialActividad(actividad)"
+                                                                popover-trigger="outsideClick : outsideClick"
+                                                                popover-append-to-body="true" popover-title="Historial"
+                                                                uib-popover-template="PopoverConfiguracionActividadhistorial.templateUrl"
+                                                                popover-placement="top"
+                                                                class="btn button-config btn-minier" type="button"
+                                                                id="id-btn-historialDosificacion">
+                                                                H
+                                                            </a>
+                                                            <script type="text/ng-template"
+                                                                id="PopoverConfiguracionActividadhistorial.html">
+
+                                                                    <table class="table table-striped table-bordered table-hover ">
+                                                                        <thead>
+                                                                            <tr>
+                                                                                <th>
+                                                                                    N°
+                                                                                </th>
+                                                                                <th>
+                                                                                    autorizacion
+                                                                                </th>
+                                                                                <th>
+                                                                                    Correlativo
+                                                                                </th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody>
+                                                                            <tr ng-repeat="actividadd in historialActividad track by $index">
+                                                                                <td>
+                                                                                    {{$index+1}}
+                                                                                </td>
+                                                                                <td>
+                                                                                    {{actividadd.dosificacion.autorizacion}}
+                                                                                    <span ng-if="actividadd.dosificacion.expirado" style="color: red">EXPIRADO</span>
+                                                                                </td>
+                                                                                <td>
+                                                                                    {{actividadd.dosificacion.correlativo}}
+                                                                                </td>
+                                                                            </tr>
+                                                                        </tbody>
+                                                                    </table>
+
+
+                                                            </script>
+                                                            <a class="red" ng-if="!actividad.id_cuenta && actividad.id"
+                                                                href="javascript:void(0)" tooltip-placement="top"
+                                                                uib-tooltip="Asignar cuenta Ingreso"
+                                                                tooltip-append-to-body="true"
+                                                                ng-click="abrirModalAsignarCuentaProforma(actividad,'cuentaIngreso')">
+                                                                <i class="fa fa-exclamation fa-2x"
+                                                                    aria-hidden="true"></i>
+                                                            </a>
+                                                            <a class="info" ng-if="actividad.id_cuenta && actividad.id"
+                                                                href="javascript:void(0)" tooltip-placement="top"
+                                                                uib-tooltip="{{actividad.cuenta.nombre}}"
+                                                                tooltip-append-to-body="true"
+                                                                ng-click="abrirModalAsignarCuentaProforma(actividad,'cuentaIngreso')">
+                                                                <i class="fa fa-info-circle fa-2x"
+                                                                    aria-hidden="true"></i>
+                                                            </a>
+                                                            <a class="text-warning"
+                                                                ng-if="!actividad.id_cuenta_caja_banco && actividad.id"
+                                                                href="javascript:void(0)" tooltip-placement="top"
+                                                                uib-tooltip="Asignar cuenta cajaBanco"
+                                                                tooltip-append-to-body="true"
+                                                                ng-click="abrirModalAsignarCuentaProforma(actividad,'cuentaCajaBanco')">
+                                                                <i class="fa fa-exclamation fa-2x"
+                                                                    aria-hidden="true"></i>
+                                                            </a>
+                                                            <a class="green"
+                                                                ng-if="actividad.id_cuenta_caja_banco && actividad.id"
+                                                                href="javascript:void(0)" tooltip-placement="top"
+                                                                uib-tooltip="{{actividad.cuentaCajaBanco.nombre}}"
+                                                                tooltip-append-to-body="true"
+                                                                ng-click="abrirModalAsignarCuentaProforma(actividad,'cuentaCajaBanco')">
+                                                                <i class="fa fa-info-circle fa-2x"
+                                                                    aria-hidden="true"></i>
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="step-pane" data-step="2">
+                            <div class="center">
+                                <h4 class="blue">Finalización</h4>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="modal-footer wizard-actions">
+
+                    <!-- <button class="btn btn-sm btn-prev">
+                            <i class="ace-icon fa fa-arrow-left"></i>
+                            Anterior
+                        </button> -->
+
+                    <button ng-disabled="!aplicacion.puede_crear" id="siguiente-wizard-configuracion-proforma"
+                        class="btn btn-success btn-sm btn-next" data-last="Finish">
+                        Siguiente
+                        <i class="ace-icon fa fa-arrow-right icon-on-right"></i>
+                    </button>
+
+                    <button type="button" class="btn btn-danger btn-sm pull-left" data-dismiss="modal"
+                        ng-click="cerrarConfiguracionActividades()">
+                        <i class="ace-icon fa fa-times"></i>
+                        Cancelar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div id="proforma-edicion" style="overflow-x:hidden !important" class="modal wizard-posicion">
+    <div class="row">
+        <div class="col-sm-4">
+            <div class="widget-box">
+                <form id="formularioProforma" name="formularioProforma" novalidate
+                    ng-submit="guardarProforma(formularioProforma.$valid,proforma)">
+                    <div class="widget-header">
+                        <h4 class="widget-title">DATOS DE PROFORMA</h4>
+                        &nbsp;
+                        <div class="row">
+                            |
+                            <button tabindex="-1"
+                                ng-disabled="(proforma.ver !== undefined || detallesProformas.length==0)"
+                                id="guardarProforma" type="submit" class="btn btn-primary">
+                                <i class="ace-icon fa fa-floppy-o align-top bigger-125"></i>
+                                GUARDAR
+                            </button>
+                            <button tabindex="-1" id="cerrarV" type="button" class="btn btn-primary btn-danger"
+                                ng-click="cerrardialogProformaEdicion()">
+                                <i class="ace-icon fa fa-times red2 align-top bigger-125"></i>
+                                CERRAR
+                            </button>
+                        </div>
+                    </div>
+                    <div class="widget-body">
+                        <div class="widget-main">
+                            <table class="table table-striped table-bordered table-hover">
+                                <tr>
+                                    <td>
+                                        <div class="row">
+                                            <div class="container-fluid">
+                                                <label>SUCURSAL</label>
+                                                <div ng-if="(!verificarBloqueoServicios())">
+                                                    <select class="form-control" data-validate="validate(required)"
+                                                        required id="sucursalProforma" name="sucursal"
+                                                        ng-options="sucursal as sucursal.nombre for sucursal in sucursales track by sucursal.id"
+                                                        ng-disabled="(proforma.ver !== undefined || $scope.verificarDetallesProformas())"
+                                                        ng-model="proforma.sucursal"
+                                                        ng-change="obtenerActividadesSucursal(proforma.sucursal.id)">
+                                                        <option value="" disabled selected>Selec. Sucursal</option>
+                                                    </select>
+                                                </div>
+                                                <div ng-if="(verificarBloqueoServicios())">
+                                                    <select class="form-control" data-validate="validate(required)"
+                                                        required id="sucursalProformaDisabled" name="sucursalDisabled"
+                                                        ng-options="sucursal as sucursal.nombre for sucursal in sucursales track by sucursal.id"
+                                                        ng-model="proforma.sucursal" disabled>
+                                                        <option value="" disabled selected>Selec. Sucursal</option>
+                                                    </select>
+                                                </div>
+
+                                                <span class="red">(*)</span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="row">
+                                            <div class="container-fluid">
+                                                <div class="">
+                                                    <label>ACTIVIDAD</label>
+                                                </div>
+                                                <div ng-if="(!verificarBloqueoServicios())">
+                                                    <select autofocus class="form-control" style="width:150px;"
+                                                        data-validate="validate(required)"
+                                                        ng-change="obtenerServiciosActividadEmpresaPrincipal(proforma.actividadEconomica)"
+                                                        required id="actividadProforma" name="actividad"
+                                                        ng-model="proforma.actividadEconomica"
+                                                        ng-options="actividad as actividad.nombre for actividad in actividadesSucursal track by actividad.id"
+                                                        ng-disabled="(proforma.ver !== undefined || $scope.verificarDetallesProformas())"
+                                                        data-placeholder="Click para escoger">
+                                                        <option value="" disabled selected>Selec. Actividad</option>
+                                                    </select>
+                                                    <span class="red">(*)</span>
+                                                    <span ng-if="dosificacionesExpiradas" style="color: red">Las
+                                                        Actividades con dosificaciones expiradas no se muestran</span>
+                                                </div>
+                                                <div ng-if="(verificarBloqueoServicios())">
+                                                    <select class="form-control" data-validate="validate(required)"
+                                                        required id="actividadProformaDisable" name="actividad"
+                                                        ng-model="proforma.actividadEconomica" disabled
+                                                        ng-options="actividad as actividad.nombre for actividad in actividadesSucursal track by actividad.id"
+                                                        data-placeholder="Click para escoger">
+                                                    </select>
+                                                    <span class="red">(*)</span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="invalid-message help-block"
+                                            ng-messages="formularioProforma.actividad.$error"
+                                            ng-if=" (formularioProforma.$submitted && formularioProforma.actividad.$invalid)">
+                                            <div ng-messages-include="/templates/gral/messages.html"></div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>RAZÓN SOCIAL CLIENTE</label>
+                                        <div ng-if="(!verificarBloqueoServicios())">
+                                            <input ng-disabled="($scope.verificarDetallesProformas())"
+                                                ng-keypress="interceptarTecla($event,'proformaDetalle',true)"
+                                                autocomplete="off" data-validate="validate(required)" id="razon_social"
+                                                name="razon_social" required type="text"
+                                                ng-model="proforma.cliente.razon_social"
+                                                placeholder="Ingrese la Razon Social"
+                                                uib-typeahead="cliente as cliente.razon_social for cliente in buscarCliente($viewValue)"
+                                                typeahead-wait-ms="2000"
+                                                typeahead-template-url="templates/autocompletar.html"
+                                                typeahead-show-hint="false" typeahead-min-length="0"
+                                                typeahead-on-select="establecerCliente($item, $model, $label, $event)">
+                                        </div>
+                                        <div ng-if="(verificarBloqueoServicios())">
+                                            <input autocomplete="off" data-validate="validate(required)"
+                                                id="razon_socialDisabled" name="razon_social" required type="text"
+                                                ng-model="proforma.cliente.razon_social" disabled>
+                                        </div>
+
+                                        <span class="red">(*)</span>
+                                        <button tabindex="-1"
+                                            ng-disabled="(proforma.ver !== undefined || $scope.verificarDetallesProformas())"
+                                            id="mostrar_clientes_proforma" type="button"
+                                            ng-click="abrirdialogClientesProforma()" class="btn btn-info btn-sm">
+                                            <i class="ace-icon fa fa-search-plus bigger-110"></i>
+                                        </button>
+                                        <!-- <span class="invalid-message" ng-show="formularioProforma.razon_social.$dirty && formularioProforma.razon_social.$invalid">
+                                            Dato requerido.
+                                        </span> -->
+                                    </td>
+                                    <td>
+                                        <label>NIT CLIENTE</label>
+                                        <div ng-if="(!verificarBloqueoServicios())">
+                                            <input ng-disabled="($scope.verificarDetallesProformas())"
+                                                ng-keypress="interceptarTecla($event,'proformaDetalle',true)"
+                                                data-validate="validate(required)" id="nit" name="nit" required
+                                                type="number" min="0" ng-model="proforma.cliente.nit"
+                                                placeholder="Ingrese el NIT"
+                                                uib-typeahead="cliente as cliente.nit for cliente in buscarCliente($viewValue)"
+                                                typeahead-wait-ms="2000"
+                                                typeahead-template-url="templates/autocompletar.html"
+                                                typeahead-show-hint="false" typeahead-min-length="0"
+                                                typeahead-on-select="establecerCliente($item, $model, $label, $event)">
+                                        </div>
+                                        <div ng-if="(verificarBloqueoServicios())">
+                                            <input id="nit" name="nit" required type="number" min="0"
+                                                ng-model="proforma.cliente.nit" disabled>
+                                        </div>
+                                        <span class="red">(*)</span>
+                                        <!-- <span class="invalid-message" ng-show="formularioProforma.nit.$dirty && formularioProforma.nit.$invalid">
+                                                Debe ingresar un número mayor o igual a 0.
+                                            </span> -->
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">
+                                        <div class="container-fluid">
+
+                                            <label class="row">DETALLE</label>
+
+
+                                            <textarea ng-disabled="proforma.ver !== undefined" class="form-control"
+                                                row="3" required name="detalle" id="proformaDetalle"
+                                                ng-keypress="interceptarTecla($event,'id_servicioProforma',true)"
+                                                ng-model="proforma.detalle"></textarea>
+                                            <span class="red">(*)</span>
+                                            <!-- <span class="invalid-message" ng-show="formularioProforma.detalle.$dirty && formularioProforma.detalle.$invalid">
+                                                Detalle es un dato requerido.
+                                            </span> -->
+                                        </div>
+                                    </td>
+                                    <div class="col-md-4">
+                                        <label for="">Tipo de cambio.</label>
+                                        <label for="">{{moneda.dolar}}</label>
+                                    </div>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>FECHA</label>
+                                        <!--  <input name="fecha" required class="form-control" type="date" id="fecha" ng-model="proforma.fecha" ng-change="actualizarPeriodo(proforma.fecha)"
+                                        /> -->
+                                        <input disabled ng-update-hidden
+                                            ng-change="actualizarPeriodo(proforma.fecha_proforma)" type="text"
+                                            data-date-format="dd/mm/yyyy" class="form-control date-picker"
+                                            id="fecha-inicial" ng-update-hidden ng-model="proforma.fecha_proforma"
+                                            name="fecha-inicial" value="{{proforma.fecha_proforma | date: dd/mm/yy}}">
+                                        <span class="red">(*)</span>
+                                        <!-- <span class="invalid-message" ng-show="formularioProforma.fecha.$dirty && formularioProforma.fecha.$invalid">
+                                            Dato requerido.
+                                        </span> -->
+                                    </td>
+                                    <td>
+                                        <div class="container-fluid">
+                                            <div class="row">
+                                                <label>PERIODO</label>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <select ng-disabled="proforma.ver !== undefined" required
+                                                            id="mes" name="mes"
+                                                            ng-options="mes as mes.nombre for mes in meses track by mes.id"
+                                                            ng-model="proforma.periodo_mes">
+                                                            <option disabled value="" selected>Mes</option>
+                                                        </select>
+
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <select ng-disabled="proforma.ver !== undefined" required
+                                                            id="anio" name="anio"
+                                                            ng-options="anio as anio.nombre for anio in anios track by anio.id"
+                                                            ng-model="proforma.periodo_anio">
+                                                            <option disabled value="" selected>Año</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <span class="red">(*)</span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <!-- <td> -->
+                                    <!-- <div class="col-md-6">
+                                                <label>Detalle</label>
+                                        </div>
+                                        <div class="col-md-6">
+                                        <textarea row="3" name="detalle" id="proformaDetalle" ng-model="proforma.detalle"></textarea><span class="red">(*)</span>
+                                        </div> -->
+
+
+                                    <!-- </td> -->
+                                    <!-- <td>
+                                        <label>SUJETO A CF</label>
+                                        <input disabled type="number" step="0.001" ng-model="proforma.total" />
+                                    </td> -->
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="col-sm-8">
+            <div class="widget-box">
+                <div class="widget-header">
+                    <h4 class="widget-title">BUSQUEDA SERVICIO</h4>
+                </div>
+                <div class="widget-body">
+                    <div class="widget-main">
+                        <form id="formularioBusquedaServicio" name="formularioBusquedaServicio" novalidate>
+                            <table class="table table-striped table-bordered table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            <label>SERVICIO</label>
+                                        </th>
+                                        <th>
+                                            <label>CÓD. ITEM</label>
+                                        </th>
+                                        <th>
+                                            <label>CANT. (u)</label>
+                                        </th>
+                                        <th>
+                                            <label>P.U. (Bs/u)</label>
+                                        </th>
+                                        <th>
+                                            <label>P.U. ($us/u)</label>
+                                        </th>
+                                        <th>
+                                            <label>IMP. (Bs)</label>
+                                        </th>
+                                        <th>
+                                            <label>IMP. ($us)</label>
+                                        </th>
+                                        <th>
+                                            <label>Centro Costos</label>
+                                        </th>
+                                        <th>
+                                            <label>ACC.</label>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <input ng-disabled="proforma.ver" autocomplete="off"
+                                                ng-keypress="interceptarTecla($event,'cantidad',true)"
+                                                id="id_servicioProforma" required type="text"
+                                                ng-model="detalleProforma.servicio.nombre"
+                                                placeholder="Ingrese el nombre del servicio..."
+                                                uib-typeahead="servicio as (servicio.codigo+' - '+servicio.nombre) for servicio in buscarservicio($viewValue)"
+                                                typeahead-wait-ms="1000"
+                                                typeahead-template-url="templates/autocompletar.html"
+                                                typeahead-show-hint="false" typeahead-min-length="1"
+                                                typeahead-on-select="establecerservicio($item, $model, $label, $event)">
+                                            <div class="space-6"></div>
+
+                                            <button
+                                                ng-disabled="(proforma.ver || proforma.actividadEconomica === undefined)"
+                                                id="mostrar_servicios_proforma" type="button"
+                                                ng-click="abrirBusquedaServiciosProforma(proforma.actividadEconomica)"
+                                                class="btn btn-info btn-sm">
+                                                <i class="ace-icon fa fa-search-plus bigger-110"></i>
+                                            </button>
+                                        </td>
+                                        <td>
+                                            {{detalleProforma.servicio.codigo}}
+                                        </td>
+                                        <td>
+                                            <input ng-disabled="proforma.ver !== undefined" onfocus="this.select();"
+                                                ng-keypress="interceptarTecla($event,'agregar_detalle_asignacion_centro_costo',false)"
+                                                id="cantidad" name="cantidad" step="1" min="1" required
+                                                class="col-xs-12" ng-change="calcularImporte()"
+                                                ng-model="detalleProforma.cantidad" type="number" />
+                                        </td>
+                                        <td ng-if="detalleProforma.editarPrecio === undefined">
+                                            {{detalleProforma.precio_unitario | number:2}}
+                                            <a ng-if="detalleProforma.precio_unitario >=0"
+                                                ng-disabled="proforma.ver !== undefined" class="green"
+                                                href="javascript:void(0)"
+                                                ng-click="modificarProformaPrecioUnitarioServicio(detalleProforma)">
+                                                <i class="ace-icon fa fa-pencil-square-o bigger-130"></i>
+                                            </a>
+
+                                        </td>
+                                        <td ng-if="detalleProforma.editarPrecio !== undefined">
+                                            <input ng-disabled="proforma.ver !== undefined" onfocus="this.select();"
+                                                id="edicion" name="cantidad" step="0.01" min="0.01" required
+                                                class="col-xs-12" ng-change="calcularImporte()"
+                                                ng-model="detalleProforma.precio_unitario" type="number" />
+                                        </td>
+                                        <td ng-if="detalleProforma.editarPrecio === undefined">
+                                            {{detalleProforma.precioSus | number:2}}
+                                            <a ng-if="detalleProforma.precioSus >=0"
+                                                ng-disabled="proforma.ver !== undefined" class="green"
+                                                href="javascript:void(0)"
+                                                ng-click="modificarProformaPrecioUnitarioServicio(detalleProforma)">
+                                                <i class="ace-icon fa fa-pencil-square-o bigger-130"></i>
+                                            </a>
+                                        </td>
+                                        <td ng-if="detalleProforma.editarPrecio !== undefined">
+                                            <input ng-disabled="proforma.ver !== undefined" onfocus="this.select();"
+                                                id="edicion" name="cantidad" step="0.01" min="0.01" required
+                                                class="col-xs-12" ng-change="calcularImporte(true)"
+                                                ng-model="detalleProforma.precioSus" type="number" />
+                                        </td>
+                                        <td>
+                                            {{detalleProforma.importe | number:2}}
+                                        </td>
+                                        <td>
+                                            {{detalleProforma.importeSus | number:2}}
+                                        </td>
+                                        <td>
+                                            <select ng-disabled="proforma.ver" required id="centroCosto"
+                                                name="centroCosto"
+                                                ng-options="centroCosto as centroCosto.nombre for centroCosto in listaCentroCostosClienteEmpresaPro track by centroCosto.id"
+                                                ng-model="detalleProforma.centroCosto">
+                                            </select>
+                                            <a href="javascript:void(0)" e-disabled="proforma.ver"
+                                                ng-if="proforma.cliente"
+                                                ng-click="abrirConfiguracionCentrosCostos(proforma.cliente)">
+                                                <i class="blue ace-icon fa fa-pencil-square-o bigger-130"></i>
+                                            </a>
+                                            <!-- <select ng-disabled="proforma.ver !== undefined" required id="centroCosto" name="centroCosto" ng-options="centroCosto as centroCosto.nombre for centroCosto in centroCostos track by centroCosto.id"
+                                                ng-model="detalleProforma.centroCosto">
+                                            </select> -->
+                                        </td>
+                                        <td>
+                                            <button ng-disabled="proforma.ver"
+                                                id="agregar_detalle_asignacion_centro_costo" type="button"
+                                                ng-disabled="formularioBusquedaservicio.$invalid"
+                                                ng-click="agregardetalleProforma(detalleProforma)"
+                                                class="btn btn-success btn-sm">
+                                                <i class="ace-icon fa fa-plus bigger-110"></i>
+                                            </button>
+                                            <!-- <div class="space-6"></div>
+                                            <button id="mostrar_desc" type="button" ng-click="mostrarDescuentos()" class="btn btn-info btn-sm">
+                                                <i class="ace-icon fa fa-exchange bigger-110"></i>
+                                            </button> -->
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="widget-box">
+                <div class="widget-header" ng-if="detallesProformas.length>0">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <h4 class="widget-title">DETALLE DE PROFORMA</h4>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="container-fluid">
+                            <b>Total Bs: {{proforma.totalImporteBs | number:2}} &nbsp &nbsp Total $us:
+                                {{proforma.totalImporteSus
+                                | number:2}}&nbsp &nbsp &nbsp Son:&nbsp&nbsp{{proforma.importeLiteral}} </b>
+                        </div>
+                    </div>
+                </div>
+                <div class="widget-body" ng-if="detallesProformas.length>0">
+                    <div class="widget-main">
+                        <table class="table table-striped table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        <label>#</label>
+                                    </th>
+                                    <th>
+                                        <label>NOMBRE</label>
+                                    </th>
+                                    <th>
+                                        <label>CÓD. ITEM</label>
+                                    </th>
+                                    <th>
+                                        <label>P.U. (Bs/u)</label>
+                                    </th>
+                                    <th>
+                                        <label>P.U. ($us/u)</label>
+                                    </th>
+                                    <th>
+                                        <label>CANT. (u)</label>
+                                    </th>
+                                    <th>
+                                        <label>IMP. (Bs)</label>
+                                    </th>
+                                    <th>
+                                        <label>IMP. ($us)</label>
+                                    </th>
+                                    <th>
+                                        <label>Centro Costos</label>
+                                    </th>
+                                    <th>
+                                        <label>ACCIONES</label>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-if="!detalle.eliminado" ng-repeat="detalle in detallesProformas">
+                                    <td>
+                                        {{$index+1}}
+                                    </td>
+                                    <td>
+                                        {{detalle.servicio.nombre}}
+                                    </td>
+                                    <td>
+                                        {{detalle.servicio.codigo}}
+                                    </td>
+                                    <td>
+                                        {{detalle.precio_unitario | number:2}}
+                                    </td>
+                                    <td>
+                                        {{detalle.precioSus | number:2}}
+                                    </td>
+                                    <td>
+                                        {{detalle.cantidad}}
+                                    </td>
+                                    <td>
+                                        {{detalle.importe| number:2}}
+                                    </td>
+                                    <td>
+                                        {{detalle.importeSus | number:2}}
+                                    </td>
+                                    <td>
+                                        {{detalle.centroCosto.nombre}}
+                                    </td>
+
+                                    <td>
+                                        <a e-disabled="proforma.ver" class="red" href="javascript:void(0)"
+                                            ng-click="deleteDetalleProforma(detalle)">
+                                            <i class="ace-icon fa fa-trash-o bigger-130"></i>
+                                        </a>
+                                        <a e-disabled="proforma.ver" class="blue" href="javascript:void(0)"
+                                            ng-click="editarDetalleProforma(detalle)">
+                                            <i class="ace-icon fa fa-pencil-square-o bigger-130"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+
+                                    </td>
+                                    <td>
+                                        <b>TOTALES</b>
+                                    </td>
+                                    <td>
+
+                                    </td>
+                                    <td>
+
+                                    </td>
+                                    <td>
+
+                                    </td>
+                                    <td>
+
+                                    </td>
+                                    <td>
+                                        <b>{{proforma.totalImporteBs | number:2}}</b>
+                                    </td>
+                                    <td>
+                                        <b>{{proforma.totalImporteSus | number:2}}</b>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="dialog-Busqueda-servicio-proforma" style="overflow-x:hidden;" class="modal">
+    <div class="row">
+        <div class="widget-header">
+            <div class="container-fluid">
+                <div class="col-md-8">
+                    <label>Búsqueda:
+                        <input focus tabindex="1" type="search" class="form-control input-sm"
+                            ng-model="textoBusquedaServicio" ng-change="filtrarServicios(textoBusquedaServicio)">
+                    </label>
+                </div>
+                <div class="col-md-4">
+                    <button type="button" ng-click="cerrarBusquedaServiciosProforma()" class="btn btn-danger">
+                        <i class="ace-icon fa fa-close align-top bigger-125"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="container-fluid">
+            <div class="widget-box">
+                <div class="widget-body">
+                    <div class="widget-main">
+                        <div class="table-fixed-header">
+                            <table class="table table-striped table-bordered table-hover ">
+                                <thead fix-head class="table-head-color">
+                                    <tr>
+                                        <th>
+                                            <label for="">N°</label>
+                                        </th>
+                                        <th>
+                                            <label for="">
+                                                Código
+                                            </label>
+                                        </th>
+                                        <th>
+                                            Nombre
+                                        </th>
+                                        <th>
+                                            Precio
+                                        </th>
+                                        <th>
+                                            Acciones
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="servicio in serviciosProcesados">
+                                        <td>
+                                            {{$index+1}}
+                                        </td>
+                                        <td>
+                                            {{servicio.codigo}}
+                                        </td>
+                                        <td>
+                                            {{servicio.nombre}}
+                                        </td>
+                                        <td>
+                                            {{servicio.precio}}
+                                        </td>
+                                        <td>
+                                            <a tabindex="{{$index+2}}" href="javascript:void(0)"
+                                                ng-click="establecerservicio(servicio,true)"
+                                                ng-keypress="interceptarTecla($event,'agregar_detalle_venta',false)">SELECCIONAR</a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="dialog-cliente-proforma" style="overflow-x:hidden;" class="modal">
+    <div class="row">
+        <div class="widget-header">
+            <div class="container-fluid">
+                <div class="col-md-8">
+                    <label>Búsqueda:
+                        <input focus tabindex="1" type="search" class="form-control input-sm" ng-model="textoBusqueda"
+                            ng-change="filtrarClientes(textoBusqueda)">
+                    </label>
+                </div>
+                <div class="col-md-4">
+                    <button type="button" ng-click="cerrardialogClientesProforma()" class="btn btn-danger">
+                        <i class="ace-icon fa fa-close align-top bigger-125"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="container-fluid">
+            <div class="widget-box">
+                <div class="widget-body">
+                    <div class="widget-main">
+                        <div class="table-fixed-header">
+                            <table class="table table-striped table-bordered table-hover ">
+                                <thead fix-head class="table-head-color">
+                                    <tr>
+                                        <th>
+                                            <label for="">N°</label>
+                                        </th>
+                                        <th>
+                                            <label for="">
+                                                Razon social
+                                            </label>
+                                        </th>
+                                        <th>
+                                            NIT
+                                        </th>
+                                        <th>
+                                            Acciones
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="cliente in clientesProcesados">
+                                        <td>
+                                            {{$index+1}}
+                                        </td>
+                                        <td>
+                                            {{cliente.razon_social}}
+                                        </td>
+                                        <td>
+                                            {{cliente.nit}}
+                                        </td>
+                                        <td>
+                                            <a tabindex="{{$index+2}}" href="javascript:void(0)"
+                                                ng-keypress="interceptarTecla($event,'agregar_detalle_venta',false)"
+                                                ng-click="seleccionarcliente(cliente)">SELECCIONAR</a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="dialog-cliente-empresa" style="overflow-x:hidden;" class="modal">
+    <div class="row">
+        <div class="widget-header">
+            <div class="container-fluid">
+                <div class="col-md-8">
+                    <label>Búsqueda:
+                        <input focus tabindex="1" type="search" class="form-control input-sm" ng-model="textoBusqueda"
+                            ng-change="filtrarClientes(textoBusqueda)">
+                    </label>
+                </div>
+                <div class="col-md-4">
+                    <button type="button" ng-click="cerrardialogClienteEmpresa()" class="btn btn-danger">
+                        <i class="ace-icon fa fa-close align-top pull-left bigger-125"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="container-fluid">
+            <div class="widget-box">
+                <div class="widget-body">
+                    <div class="widget-main">
+                        <div class="table-fixed-header">
+                            <table class="table table-striped table-bordered table-hover ">
+                                <thead fix-head class="table-head-color">
+                                    <tr>
+                                        <th>
+                                            <label for="">N°</label>
+                                        </th>
+                                        <th>
+                                            <label for="">
+                                                Razon social
+                                            </label>
+                                        </th>
+                                        <th>
+                                            NIT
+                                        </th>
+                                        <th>
+                                            Acciones
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="cliente in clientesProcesados">
+                                        <td>
+                                            {{$index+1}}
+                                        </td>
+                                        <td>
+                                            {{cliente.razon_social}}
+                                        </td>
+                                        <td>
+                                            {{cliente.nit}}
+                                        </td>
+                                        <td>
+                                            <a tabindex="{{$index+2}}" href="javascript:void(0)"
+                                                ng-keypress="interceptarTecla($event,'agregar_detalle_venta',false)"
+                                                ng-click="asignarEmpresaExterna(cliente)">SELECCIONAR</a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modalFechas" style="overflow-x:hidden !important" class="modal wizard-posicion">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form name="formularioFiltroOperaciones" novalidate ng-submit="actualizarFechas(proformaFechas)">
+                <div id="modal-wizard-panel-container">
+                    <div class="row">
+                        <div class="col-xs-12 col-md-12" >
+                            <div class="col-xs-12 col-md-12 " align="center">
+                                <label class="blue"><b> CLIENTE: </b> {{proformaFechas.cliente.razon_social}}</label>
+                            </div>
+                            <div class="col-xs-12 col-md-12" align="center">
+                                <label class="blue" ><b> ACT-ECONOMIC: </b>{{proformaFechas.actividadEconomica.nombre}}</label>
+                            </div>
+                            <div class="col-xs-12 col-md-12" ng-if="!proformaFechas.nuevo" align="center">
+                                <label class="blue"><b> N° PROFORMA: </b>{{proformaFechas.correlativo}}</label>
+                            </div>
+                            <div class="form-group col-xs-12 col-md-12" ng-if="!proformaFechas.nuevo" align="center">
+                                <label class="blue"><b> FECHA PROFORMA: </b>{{proformaFechas.FechProf}}</label>
+                            </div>
+
+                            <div class="form-group col-xs-12 col-md-6">
+                                <label for="">FECHA DE RECEPCIÓN</label>
+                            </div>
+                            <div class=" form-group col-xs-12 col-md-6" >
+                                <div ng-class="{'has-error-date':fechasIncorrec}"> 
+                                    <input autocomplete="off" type="text" data-date-format="dd/mm/yyyy" class="form-control date-picker"  id="fecha-recepcion" ng-update-hidden ng-model="proformaFechas.fecha_recepcion_texto" name="fecha-recepcion" ng-change="validarNoMayorAlaFecha(proformaFechas)">
+                                </div>    
+                            </div>
+                            <div class="form-group col-xs-12 col-md-6" ng-if="!proformaFechas.nuevo">
+                                <label for=""> FECHA PROFORMA OK</label>
+                            </div>
+                            <div class="form-group col-xs-12 col-md-6" ng-if="!proformaFechas.nuevo">
+                                <input autocomplete="off" ng-update-hidden type="text" data-date-format="dd/mm/yyyy" class="form-control date-picker" id="fecha-proformaOk" ng-model="proformaFechas.fecha_proforma_ok_texto" name="fecha-proformaOk">
+                            </div>
+                            <div class="form-group col-xs-12 col-md-6" ng-if="!proformaFechas.nuevo">
+                                <label for="">FECHA DE FACTURA</label>
+                            </div>
+                            <div class="form-group col-xs-12 col-md-6" ng-if="!proformaFechas.nuevo">
+                                <input disabled autocomplete="off" type="text" data-date-format="dd/mm/yyyy" class="form-control date-picker" id="fecha-factura" ng-model="proformaFechas.fecha_factura_texto" name="fecha-factura">
+                            </div>
+                            <div class="form-group col-xs-12 col-md-6" ng-if="!proformaFechas.nuevo">
+                                <label for="">FECHA DE COBRO</label>
+                            </div>
+                            <div class="form-group col-xs-12 col-md-6" ng-if="!proformaFechas.nuevo">
+                                <input autocomplete="off" disabled ng-update-hidden type="text" data-date-format="dd/mm/yyyy" class="form-control date-picker" id="fecha-cobro" ng-model="proformaFechas.fecha_cobro_texto" name="fecha-cobro">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-xs-12 col-md-12">
+                        <div class="modal-footer wizard-actions">
+                            <button type="submit" id="siguiente-wizard-fechas-proforma" ng-disabled="fechasIncorrec"
+                                class="btn btn-success btn-sm btn-next" data-last="Finish">
+                                Guardar
+                                <i class="ace-icon fa fa-arrow-right icon-on-right"></i>
+                            </button>
+                            <button type="button" class="btn btn-danger btn-sm pull-left" data-dismiss="modal"
+                                ng-click="cerrardialogmodalFechas()">
+                                <i class="ace-icon fa fa-times"></i>
+                                Cancelar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="modal" id="dialog-dosificaciones-disponibles" style="overflow-y:hidden;">
+    <div class="modal-header bg-primary">
+        <button type="button" ng-click="cerrardialogDosificacionesDisponibles()" class="close" data-dismiss="modal"
+            aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title" id="advertenciaPrestamoPersonal">DOSIFICACIONES DISPONIBLES</h4>
+    </div>
+    <div class="modal-body">
+        <div class="table-fixed-header" style="position: sticky !important;">
+            <table class="table table-striped table-bordered table-hover ">
+                <thead fix-head class="table-head-color">
+                    <tr>
+                        <th>
+                            N°
+                        </th>
+                        <th>
+                            autorizacion
+                        </th>
+                        <th>
+                            Correlativo
+                        </th>
+                        <th>
+                            Acciones
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="dosificacion in dosificaciones">
+                        <td>
+                            {{$index+1}}
+                        </td>
+                        <td>
+                            {{dosificacion.autorizacion}}
+                            <span ng-if="dosificacion.expirado" style="color: red">EXPIRADO</span>
+                        </td>
+                        <td>
+                            {{dosificacion.correlativo}}
+                        </td>
+                        <td>
+                            <a ng-click="abrirconfirmarDosificacion(dosificacion)">SELECCIONAR</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-danger" ng-click="cerrardialogDosificacionesDisponibles()"
+            data-dismiss="modal">Cerrar</button>
+    </div>
+</div>
+
+<div id="modalEmpresaCentroCosto" style="overflow-x:hidden !important" class="modal wizard-posicion">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="formEmpresaCentroCosto" name="form" novalidate
+                ng-submit="guardarAsignacionCentroCostos(centroCostosClienteEmpresa.empresa)">
+                <div class="row">
+                    <h2 align="center" class="blue">Empresa</h2>
+                </div>
+                <div id="modal-wizard-panel-container">
+                    <div class="modal-header steps-container">
+                        <!-- <div class="modal-header"> -->
+                        <ul class="steps">
+                            <li data-step="1" class="active">
+                                <span class="step">
+                                    <span class="glyphicon glyphicon-cog"></span>
+                                </span>
+                                <span class="title">EMPRESA</span>
+                            </li>
+                            <li data-step="2">
+                                <span class="step">
+                                    <span class="fa fa-list-alt"></span>
+                                </span>
+                                <span class="title">Finalizar</span>
+                            </li>
+                        </ul>
+                        <!-- </div> -->
+                    </div>
+                    <div class="modal-body step-content">
+                        <div class="step-pane active" data-step="1">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="row form-group">
+                                        <div class="col-lg-4">
+                                            <label for="paterno">Empresa</label>
+                                        </div>
+                                        <div class="col-lg-8">
+                                            <!-- <select style="max-width: 220px;width: 220px" ng-disabled="proforma.cliente"
+                                                ng-change="obtenercentroCostosClienteEmpresa(centroCostosClienteEmpresa.empresa)"
+                                                required id="ClienteEmpresa"
+                                                ng-options="empresa as empresa.razon_social for empresa in clientes track by empresa.id"
+                                                ng-model="centroCostosClienteEmpresa.empresa">
+                                                <option disabled selected value="">Seleccione una Empresa</option>
+                                            </select> -->
+                                            <input name="gastoinput" type="text" placeholder="Empresa"
+                                                ng-disabled="proforma.cliente" autocomplete="off" class="form-control"
+                                                ng-model="centroCostosClienteEmpresa.empresa"
+                                                uib-typeahead="empresa as empresa.razon_social for empresa in clientes | filter:$viewValue"
+                                                typeahead-show-hint="true" reset-typeahead
+                                                typeahead-on-select="obtenercentroCostosClienteEmpresa(centroCostosClienteEmpresa.empresa)"
+                                                typeahead-append-to-body="true"
+                                                typeahead-template-url="customTemplate.html"
+                                                typeahead-focus-on-select="false" typeahead-min-length="0">
+                                            <script type="text/ng-template" id="customTemplate.html">
+                                                <a>
+                                                    <i class="icon fa fa-building-o bigger-200 blue"></i>
+                                                    <span ng-bind-html="match.label | uibTypeaheadHighlight:query"></span>
+                                                </a>
+                                            </script>
+                                        </div>
+                                    </div>
+                                    <div class="row form-group">
+                                        <div class="col-lg-4">
+                                            <label for="materno">Centro de costo</label>
+                                        </div>
+                                        <div class="col-lg-8">
+                                            <!-- <select style="max-width: 220px;width: 220px" required
+                                                id="centroCostoClienteEmpresa"
+                                                ng-options="centroCosto as centroCosto.nombre for centroCosto in centroCostos track by centroCosto.id"
+                                                ng-model="centroCostosClienteEmpresa.centroCosto">
+                                                <option disabled selected value="">Seleccione un Centro de costo</option>
+                                            </select> -->
+                                            <input type="text" placeholder="Centro de costo" required autocomplete="off"
+                                                class="form-control" ng-model="centroCostosClienteEmpresa.centroCosto"
+                                                uib-typeahead="centroCosto as centroCosto.nombre for centroCosto in centroCostos | filter:$viewValue"
+                                                typeahead-show-hint="true" reset-typeahead
+                                                typeahead-append-to-body="true"
+                                                typeahead-template-url="customTemplate2.html"
+                                                typeahead-focus-on-select="false" typeahead-min-length="0">
+                                            <script type="text/ng-template" id="customTemplate2.html">
+                                                <a>
+                                                    <i class="icon fa fa-money bigger-200 green"></i>
+                                                    <span ng-bind-html="match.label | uibTypeaheadHighlight:query"></span>
+                                                </a>
+                                            </script>
+
+                                        </div>
+                                    </div>
+                                    <div class="row form-group">
+                                        <div class="container-fluid">
+                                            <button type="button" class="btn btn-primary"
+                                                ng-click="agregarDetalleCentroCostosCliente(centroCostosClienteEmpresa)">
+                                                <i class="ace-icon fa fa-plus align-top bigger-125"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="row form-group">
+                                        <div class="container-fluid">
+                                            <table class="table table-striped table-bordered table-hover">
+                                                <thead>
+                                                    <th>Centro costos</th>
+                                                    <th>Acciones</th>
+                                                </thead>
+                                                <tbody ng-if="!centroCosto.eliminado"
+                                                    ng-repeat="centroCosto in listaCentroCostosClienteEmpresa">
+                                                    <td>
+                                                        {{centroCosto.nombre}}
+                                                    </td>
+                                                    <td>
+                                                        <a e-disabled="!aplicacion.puede_eliminar" class="red"
+                                                            ng-click="abrirPopupConfirmacionEliminacion(eliminarAsignacionCentroCosto,centroCosto)"
+                                                            data-rel="tooltip" tooltip-placement="top"
+                                                            uib-tooltip="Eliminar">
+                                                            <i class="ace-icon fa fa-trash-o bigger-130"></i>
+                                                        </a>
+                                                    </td>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="step-pane" data-step="2">
+                            <div class="center">
+                                <h4 class="blue">Finalización</h4>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="modal-footer wizard-actions">
+
+                    <!-- <button class="btn btn-sm btn-prev">
+                        <i class="ace-icon fa fa-arrow-left"></i>
+                        Anterior
+                    </button> -->
+
+                    <button id="siguienteCCC" type="submit" ng-disabled="!aplicacion.puede_crear"
+                        class="btn btn-success btn-sm btn-next" data-last="Finish">
+                        Siguiente
+                        <i class="ace-icon fa fa-arrow-right icon-on-right"></i>
+                    </button>
+
+                    <button type="button" class="btn btn-danger btn-sm pull-left" data-dismiss="modal"
+                        ng-click="cerrarConfiguracionCentrosCostos()">
+                        <i class="ace-icon fa fa-times"></i>
+                        Cancelar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- ========= inicio  modal reporte empresas ========= -->
+<div class="modal" id="dialog-reporte-empresa">
+    <div class="modal-content">
+        <div class="modal-header bg-primary">
+            <button type="button" ng-click="cerrarVentanReportePorEmpresa()" class="close" data-dismiss="modal"
+                aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <center>
+                <h4 class="modal-title" id="advertenciaPrestamoPersonal" style="align-content:center;">Empresas</h4>
+            </center>
+        </div>
+        <div class="modal-body">
+            <div class="row" ng-include src="'/templates/gral/paginator-graficos-empresa.html'">
+            </div>
+            <!--  <div class="container"> -->
+            <div class="row">
+                <div class="col-6 col-md-3"></div>
+                <div class="col-6 col-md-6">
+                    <label> Mes
+                        <!-- <select required id="mesFiltroProformas" name="mes" ng-options="mes as mes.nombre for mes in mesesFiltro track by mes.id"
+                            ng-model="filtro.mes" multiple>
+                            <option value="" selected>TODOS</option>
+                        </select>  -->
+                        <div isteven-multi-select input-model="mesesFiltro" output-model="filtroGraficosEmpresa.mes"
+                            button-label="nombre" item-label="nombre" tick-property="activo">
+                        </div>
+
+                    </label>
+
+                    <label>Año
+                        <select required id="anioFiltroProformas" name="anio"
+                            ng-options="anio as anio.nombre for anio in anios track by anio.id"
+                            ng-model="filtroGraficosEmpresa.anio">
+                            <option value="" selected>TODOS</option>
+                        </select></label>
+                    <button class="btn btn-primary" ng-click="filtrarEmpresas(filtroGraficosEmpresa)"
+                        style="margin:  2px;">Filtrar</button>
+                </div>
+                <div class="col-6 col-md-1"></div>
+            </div>
+            <!--  </div> -->
+            <div class="table-header">
+                <div class="row">
+                    <div class="col-sm-10">
+                        <h4 class="widget-title">Lista de Empresas</h4>
+                    </div>
+                    <div class="col-sm-2">
+                        <a class="btn btn-primary green tooltip-info" href="javascript:void(0)"
+                            uib-tooltip="Grafica General" popover-trigger="outsideClick : outsideClick"
+                            uib-popover-template="PopoverReportesGraficoGeneral.templateUrl" popover-placement="left"
+                            style="line-height: 0; padding: 0px; ">
+                            <i class="ace-icon fa fa-bar-chart-o align-top bigger-100"></i>
+                        </a>
+                    </div>
+                    <script type="text/ng-template" id="PopoverReportesGraficoGeneral.html">
+                        <div class="form-control">
+                            <a href="javascript:void(0)" class="blue" ng-click="graficoComparativo()">Gráfica Comparativo</a>
+                        </div>
+                         <div class="form-control">
+                            <a href="javascript:void(0)" class="blue" ng-click="graficarEmpresa()">Gráfica Proforma</a>
+                        </div>
+                    </script>
+                </div>
+            </div>
+
+            <div class="table-fixed-header">
+                <table id="tabla-proforma" class="table table-striped table-bordered table-hover ">
+                    <thead fix-head class="table-head-color">
+                        <tr>
+                            <th>N°</th>
+                            <th>
+                                <a href="javascript:void(0)"
+                                    ng-click="paginatorGraficosEmpresa.sortColumn('razon_social',obtenerLista)">Cliente
+                                    <span id="razon_social" class="sort fa fa-sort icon-only"></span>
+                                </a>
+                            </th>
+                            <th>
+                                <a href="javascript:void(0)"
+                                    ng-click="paginatorGraficosEmpresa.sortColumn('totalImporteBs',obtenerLista)">Monto
+                                    Bs
+                                    <span id="totalImporteBs" class="sort fa fa-sort icon-only"></span>
+                                </a>
+                            </th>
+                            <th>
+                                <!--<a href="javascript:void(0)" ng-click="paginator.sortColumn('totalImporteBs,obtenerLista')">-->Monto
+                                $
+                                <span id="totalImporteBs" class="short fa fa-short icon-only"></span>
+                                <!--</a>-->
+                            </th>
+                            <th style="width:5px">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="cliente in proformasEmpresa">
+                            <td>{{$index+1}}</td>
+                            <td>
+                                {{cliente.razon_social}}
+                            </td>
+                            <td>
+                                {{cliente.totalImporteBs | number:2}}
+                            </td>
+                            <td>
+                                {{cliente.totalImporteSus | number:2}}
+                            </td>
+                            <td>
+                                <a class="blue tooltip-info" href="javascript:void(0)" uib-tooltip="Pdf"
+                                    ng-click="imprimirSimpleReportePDFEmpresa(cliente)">
+                                    <!-- <i class="ace-icon fa fa-print bigger-130"></i> -->
+                                    <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
+                                </a>
+                                <a class="green tooltip-info" href="javascript:void(0)" uib-tooltip="Graficar"
+                                    popover-trigger="outsideClick : outsideClick"
+                                    uib-popover-template="PopoverReportesSimpleGraficoComparativo.templateUrl"
+                                    popover-placement="left">
+                                    <i class="ace-icon fa fa-bar-chart-o align-top bigger-100"></i>
+                                </a>
+                                <!-- <a class="blue tooltip-info" href="javascript:void(0)" uib-tooltip="Graficar" ng-click="ImprimirSimpleGraficoEmpresa(cliente,estadoGraficoSimple)">
+                                    <i class="ace-icon fa fa-bar-chart-o align-top bigger-100"></i>
+                                    <i class="far fa-file-excel"></i>
+                                </a> -->
+                                <a class="red tooltip-info" href="javascript:void(0)" uib-tooltip="Excel"
+                                    ng-click="imprimirSimpleReporteExcelEmpresa(cliente)">
+                                    <i class="fa fa-file-excel-o" aria-hidden="true"></i>
+                                </a>
+                            </td>
+                            <script type="text/ng-template" id="PopoverReportesSimpleGraficoComparativo.html">
+                                <div class="form-control">
+                                    <a href="javascript:void(0)" class="blue" ng-click="graficoComparativo(cliente,filtro)">Gráfica Simple Comparativo</a>
+                                </div>
+                                 <div class="form-control">
+                                    <a href="javascript:void(0)" class="blue" ng-click="graficoProformasIndividualEmpresa(proforma)">Gráfica Simple Proforma</a>
+                                </div>
+                            </script>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="row" ng-include src="'/templates/gral/paginator-graficas-empresa.html'">
+            </div>
+        </div>
+        <div class="modal-footer">
+            <!-- <label class="pull-lefth inline">
+                    <small class="muted smaller-90">Ver Detalle :</small>
+                    <input id="id-button-detalle" ng-click="conDetalle()" name="switch-view-detail-products" checked="checked" type="checkbox"
+                     class="ace ace-switch ace-switch-4">
+                    <span class="lbl check-detalle"></span>
+                </label> -->
+            <!--  <button id="pdfLstado" class="btn btn-app btn-danger btn-xs" ng-click="generarPdfVentasMensuales()">
+                    <i class="ace-icon fa fa-print bigger-160"></i>
+                    PDF
+                </button>
+                <button id="excelLstado" class="btn btn-app btn-success btn-xs" ng-click="generarExcelVentasMensuales()">
+                    <i class="ace-icon fa fa-print bigger-160"></i>
+                    Excel
+                </button> -->
+            <button type="button" class="btn btn-danger" ng-click="cerrarVentanReportePorEmpresa()">Cerrar</button>
+        </div>
+    </div>
+
+</div>
+<!-- Fin modal reporte empresas -->
+
+<!--Reporte Grafico Empresa-->
+<div id="dialog-grafico-reporte-empresa" style="overflow-x:hidden;" class="modal">
+    <div class="row">
+        <div class="modal-header">
+            <div class="container-fluid">
+                <div class="">
+                    <button type="button" ng-click="cerrarVentanaGraficaEmpresa()" class="pull-right">
+                        <i class="ace-icon fa fa-close align-top bigger-125"></i>
+                    </button>
+                    <center>
+                        <h2 class="blue">REPORTE GRÁFICO</h2>
+                        <h4 class="blue">Reporte a las 10 empresas mas vendidas</h4>
+                    </center>
+                    <br>
+                    <div col-sm>
+                        <div id="tablaReportesEmpresas" style="height: 580px; width: 800px; align-content:center;">
+                        </div>
+                    </div>
+                    <!-- <div col-sm>
+                        <canvas id="myChartPie" width="auto" height="auto" ng-show="graficoTorta"></canvas>
+                    </div> -->
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <div class="">
+                    <div class="col-sm-12">
+                        <label>
+                            <small class="muted smaller-90">Dolares: </small>
+                            <input name="switch-field-1" ng-model="graficoEmpresasDolares"
+                                ng-click="modificarGraficoEmpresas()"
+                                class="ace ace-switch ace-switch-4 ng-pristine ng-untouched ng-valid ng-not-empty"
+                                type="checkbox">
+                            <span class="lbl check-descuento"></span>
+                        </label>
+
+                        <label>
+                            <small class="muted smaller-90">Ver gráfico de tortas: </small>
+                            <input name="switch-field-1" ng-model="graficoEmpresasTorta"
+                                ng-click="modificarGraficoEmpresas()"
+                                class="ace ace-switch ace-switch-4 ng-pristine ng-untouched ng-valid ng-not-empty"
+                                type="checkbox">
+                            <span class="lbl check-descuento"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Fin reporte Grafico Empresa-->
+
+
+<!-- ========= inicio  modal reporte centro costos ========= -->
+<div class="modal" id="dialog-reporte-centro-costos">
+    <div class="modal-content">
+        <div class="modal-header bg-primary">
+            <button type="button" ng-click="cerraVentanaCentroCostos()" class="close" data-dismiss="modal"
+                aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <center>
+                <h4 class="modal-title" id="advertenciaPrestamoPersonal" style="align-content:center;">Centro de Costos
+                </h4>
+            </center>
+        </div>
+        <div class="modal-body">
+            <div class="row" ng-include src="'/templates/gral/paginator-header-1.html'">
+            </div>
+            <div class="table-header">
+                <div class="row">
+                    <div class="col-sm-10">
+                        <h4 class="widget-title">Lista de costos</h4>
+                    </div>
+                    <div class="col-sm-2">
+                        <button type="button" class="btn btn-primary btn-sm btn-grafico"
+                            ng-click="graficarEmpresa(false)">
+                            <i class="ace-icon fa fa-bar-chart-o align-top bigger-100"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-fixed-header">
+                <table id="tabla-proforma" class="table table-striped table-bordered table-hover ">
+                    <thead fix-head class="table-head-color">
+                        <tr>
+                            <th>N°</th>
+                            <th>
+                                <a href="javascript:void(0)"
+                                    ng-click="paginator.sortColumn('razon_social',obtenerLista)">Cliente
+                                    <span id="razon_social" class="sort fa fa-sort icon-only"></span>
+                                </a>
+                            </th>
+                            <th>
+                                <a href="javascript:void(0)"
+                                    ng-click="paginator.sortColumn('totalImporteBs',obtenerLista)">Monto
+                                    Bs
+                                    <span id="totalImporteBs" class="sort fa fa-sort icon-only"></span>
+                                </a>
+                            </th>
+                            <th>
+                                <a href="javascript:void(0)"
+                                    ng-click="paginator.sortColumn('totalImporteBs,obtenerLista')">Monto
+                                    $
+                                    <span id="totalImporteBs" class="short fa fa-short icon-only"></span>
+                                </a>
+                            </th>
+                            <th style="width:5px">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="proforma in proformasEmpresa">
+                            <td>{{$index+1}}</td>
+                            <td>
+                                {{proforma.razon_social}}
+                            </td>
+                            <td>
+                                {{proforma.totalImporteBs | number:2}}
+                            </td>
+                            <td>
+                                {{(proforma.totalImporteBs / proforma.cambio_dolar) | number:2}}
+                            </td>
+                            <td>
+                                <a class="blue tooltip-info" href="javascript:void(0)" uib-tooltip="Imprimir"
+                                    ng-click="imprimirSimpleReporteEmpresa(proforma.id)">
+                                    <i class="ace-icon fa fa-print bigger-130"></i>
+                                </a>
+
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="row" ng-include src="'/templates/gral/paginator.html'">
+            </div>
+        </div>
+        <div class="modal-footer">
+            <!-- <label class="pull-lefth inline">
+                <small class="muted smaller-90">Ver Detalle :</small>
+                <input id="id-button-detalle" ng-click="conDetalle()" name="switch-view-detail-products" checked="checked" type="checkbox"
+                 class="ace ace-switch ace-switch-4">
+                <span class="lbl check-detalle"></span>
+            </label> -->
+            <!--  <button id="pdfLstado" class="btn btn-app btn-danger btn-xs" ng-click="generarPdfVentasMensuales()">
+                <i class="ace-icon fa fa-print bigger-160"></i>
+                PDF
+            </button>
+            <button id="excelLstado" class="btn btn-app btn-success btn-xs" ng-click="generarExcelVentasMensuales()">
+                <i class="ace-icon fa fa-print bigger-160"></i>
+                Excel
+            </button> -->
+            <button type="button" class="btn btn-danger" ng-click="cerraVentanaCentroCostos()">Cerrar</button>
+        </div>
+    </div>
+
+</div>
+<!-- Fin modal reporte empresas -->
+
+<!--Reporte Grafico Individual Empresas-->
+<div id="dialog-grafico-individual-empresa" style="overflow-x:hidden;" class="modal">
+    <div class="row">
+        <div class="modal-header">
+            <div class="container-fluid">
+                <button type="button" ng-click="cerrarSimpleGrafica()" class="pull-right">
+                    <i class="ace-icon fa fa-close align-top bigger-125"></i>
+                </button>
+                <br><br>
+                <div id="tablaSimpleReportesEmpresas" style="height: 580px; width: 800px; align-content:center;">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="col-6 col-md-6">
+                    <button type="button" class="btn btn-info" style="margin-right: 50%;"
+                        ng-click="graficarProformasIndividualEmpresa(true)" ng-if="facturaciones == null">Gráfica
+                        Facturaciones</button>
+                    <button type="button" class="btn btn-info" style="margin-right: 50%;"
+                        ng-click="graficoProformasIndividualEmpresa()" ng-if="facturaciones != null">Volver</button>
+                </div>
+                <div class="col-6 col-md-6">
+                    <label>
+                        <small class="muted smaller-90">Dolares: </small>
+                        <input name="switch-field-1" ng-model="graficoIndividualDolares"
+                            ng-click="modificarGraficoIndividual()"
+                            class="ace ace-switch ace-switch-4 ng-pristine ng-untouched ng-valid ng-not-empty"
+                            type="checkbox">
+                        <span class="lbl"></span>
+                    </label>
+
+                    <label>
+                        <small class="muted smaller-90">Ver gráfico de tortas: </small>
+                        <input name="switch-field-1" ng-model="graficoIndividualTorta"
+                            ng-click="modificarGraficoIndividual()"
+                            class="ace ace-switch ace-switch-4 ng-pristine ng-untouched ng-valid ng-not-empty"
+                            type="checkbox">
+                        <span class="lbl check-descuento"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Fin Reporte Grafico Individual Empresas-->
+
+<!--Reporte Grafico de Comparacion Empresas-->
+<div id="dialog-reporte-comparacion" style="overflow-x:hidden;" class="modal">
+    <div class="row">
+        <div class="modal-header">
+            <div class="container-fluid">
+                <button type="button" ng-click="cerrarVentaGraficaComparativa()" class="pull-right">
+                    <i class="ace-icon fa fa-close align-top bigger-125"></i>
+                </button>
+                <br><br>
+                <canvas id="myChartSaleVsPurchase" style="height: 580px; width: 800px; align-content:center;">
+                </canvas>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Fin Reporte Grafico de Comparacion Empresas-->
+
+<!-- ========= inicio  modal reporte facturas proformas ========= -->
+<div class="modal" id="dialog-reporte-facturas-proformas">
+    <div class="modal-content">
+        <div class="modal-header bg-primary">
+            <button type="button" ng-click="cerrar_dialog_reporte_facturas_proformas()" class="close"
+                data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <center>
+                <h4 class="modal-title" id="advertenciaPrestamoPersonal" style="align-content:center;">Facturas de
+                    proformas</h4>
+            </center>
+        </div>
+        <div class="modal-body">
+            <div class="row container-fluid">
+                <!-- <legend>Filtro</legend> -->
+                <table class="table table-striped table-bordered table-hover">
+                    <tbody>
+                        <tr>
+                            <td>
+
+                            </td>
+                            <td>
+                                <label>Mes</label>&nbsp
+                            </td>
+                            <td>
+                                <label>Año</label>&nbsp
+                            </td>
+                            <td colspan="2">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>PERIODO PROFORMA</label>&nbsp
+                            </td>
+                            <td>
+                                <select required id="mesFiltroFacturasProformas" name="mes"
+                                    ng-options="mes as mes.nombre for mes in mesesFiltro track by mes.id"
+                                    ng-model="filtroFacturasProformas.mes">
+                                    <option value="">TODOS</option>
+                                </select>
+                            </td>
+                            <td>
+                                <select required id="anioFiltroFacturasProformas" name="anio"
+                                    ng-options="anio as anio.nombre for anio in anios track by anio.id"
+                                    ng-model="filtroFacturasProformas.anio">
+                                    <option value="" selected>TODOS</option>
+                                </select> &nbsp
+                            </td>
+                            <td colspan="2">
+                                <button type="button" class="btn btn-xs btn-primary"
+                                    ng-click="obtenerFacturasProformas()">
+                                    <i class="ace-icon fa fa-search"></i>
+                                    Filtrar
+                                </button>
+                                <button type="button" class="btn btn-xs btn-success"
+                                    ng-click="obtenerFacturasProformas(true)">
+                                    <i class="ace-icon fa fa-file-o"></i>
+                                    Excel
+                                </button>
+                                <a class="bg-warning btn btn-xs" href="javascript:void(0)"
+                                    popover-trigger="outsideClick : outsideClick"
+                                    uib-popover-template="PopoverLibroFacturas.templateUrl" popover-placement="left">
+                                    <i class="ace-icon fa fa-print bigger-130"></i>LCV
+                                </a>
+                                <script type="text/ng-template" id="PopoverLibroFacturas.html">
+                            <div class="form-control">
+                                       <a href="javascript:void(0)" class="blue" ng-click="generarPdfLibroVentasProforma(factura, true)">PDF</a>
+                                   </div>
+                                   <div class="form-control">
+                                       <a href="javascript:void(0)" class="blue" ng-click="generarExcelLibroVentasProforma(factura, false)">EXCEL</a>
+                                   </div>
+                                   <div class="form-control">
+                                        <a href="javascript:void(0)" class="blue" ng-click="generarTXTLibroVentasProformas(factura, null)">TXT</a>
+                                    </div>
+                                    
+                           </script>
+
+                            </td>
+
+                        </tr>
+                        <tr>
+                            <td>Fecha</td>
+                            <td>
+                                Desde:
+                                <input
+                                    class="{{(filtroFacturasProformas.fecha_factura_desde.length > 0 ? 'filterInputInUse' : '')}}, date-picker "
+                                    ng-update-hidden type="text" data-date-format="dd/mm/yyyy"
+                                    class="form-control date-picker" id="fecha-factura-filtro-desde" ng-update-hidden
+                                    ng-model="filtroFacturasProformas.fecha_factura_desde"
+                                    name="fecha-factura-filtro-desde">
+
+                            </td>
+                            <td>
+                                Hasta:
+                                <input
+                                    class="{{(filtroFacturasProformas.fecha_factura_hasta.length > 0 ? 'filterInputInUse' : '')}}, date-picker"
+                                    ng-update-hidden type="text" data-date-format="dd/mm/yyyy"
+                                    class="form-control date-picker" id="fecha-factura-filtro-hasta" ng-update-hidden
+                                    ng-model="filtroFacturasProformas.fecha_factura_hasta"
+                                    name="fecha-factura-filtro-hasta">
+                            </td>
+                            <td colspan="2">
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                &nbsp
+                            </td>
+                            <td>
+                                <label>Razón Social</label>&nbsp
+                            </td>
+                            <td>
+                                <label>Sucursal</label>&nbsp
+                            </td>
+                            <td colspan="2">
+                                <label>Actividad económica</label>&nbsp
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                FILTRO
+                            </td>
+                            <td>
+                                <input ng-keypress="interceptarTeclaFacturasProformas($event)"
+                                    class="{{(filtroFacturasProformas.razon.length > 0 ? 'filterInputInUse' : '')}}"
+                                    ng-model="filtroFacturasProformas.razon" type="text">
+                            </td>
+                            <td>
+                                <select class="{{(filtroFacturasProformas.sucursal ? 'filterInputInUse' : '')}}"
+                                    id="sucursalFiltroProformas" name="sucursal"
+                                    ng-options="sucursal as sucursal.nombre for sucursal in sucursales track by sucursal.id"
+                                    ng-model="filtroFacturasProformas.sucursal"
+                                    ng-change="obtenerActividadesSucursal(filtroFacturasProformas.sucursal.id)">
+                                    <option value="" selected>TODOS</option>
+                                </select>
+                            </td>
+                            <td colspan="2" style="max-width: 200px; width: 200px">
+                                <select
+                                    class="{{(filtroFacturasProformas.actividadEconomica ? 'filterInputInUse' : '')}}"
+                                    style="max-width: 180px;width: 180px" required id="actividadFiltroProformas"
+                                    ng-model="filtroFacturasProformas.actividadEconomica"
+                                    ng-options="actividad as actividad.actividad.nombre for actividad in actividadesEmpresaSinRepeticion track by actividad.actividad.id">
+                                    <option value="" selected>TODOS</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                &nbsp
+                            </td>
+                            <td>
+                                <label>Usuario</label>&nbsp
+                            </td>
+                            <td>
+                                <label>Nº Factura</label>&nbsp
+                            </td>
+                            <td>
+                                <label>Autorización</label>&nbsp
+                            </td>
+                            <td>
+                                <label>Estado</label>&nbsp
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                            </td>
+                            <td>
+                                <input ng-keypress="interceptarTeclaFacturasProformas($event)"
+                                    class="{{(filtroFacturasProformas.usuario.length > 0 ? 'filterInputInUse' : '')}}"
+                                    ng-model="filtroFacturasProformas.usuario" type="text">&nbsp
+                            </td>
+                            <td>
+                                <input ng-keypress="interceptarTeclaFacturasProformas($event)"
+                                    class="{{(filtroFacturasProformas.factura > 0 ? 'filterInputInUse' : '')}}"
+                                    ng-model="filtroFacturasProformas.factura" type="number">&nbsp
+                            </td>
+                            <td>
+                                <input ng-keypress="interceptarTeclaFacturasProformas($event)"
+                                    class="{{(filtroFacturasProformas.autorizacion > 0 ? 'filterInputInUse' : '')}}"
+                                    ng-model="filtroFacturasProformas.autorizacion" type="number">&nbsp
+                            </td>
+                            <td>
+                                <select class="{{(filtroFacturasProformas.estado ? 'filterInputInUse' : '')}}"
+                                    style="max-width: 180px;width: 180px" required id="estadoFiltroProformas"
+                                    ng-model="filtroFacturasProformas.estado"
+                                    ng-options="estado as estado.nombre for estado in estadosFacturaProformaFiltro track by estado.id">
+                                    <option value="" selected>TODOS</option>
+                                </select>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="row container-fluid">
+                <div class="row table-header container-fluid">
+                    <!-- <div class="row"> -->
+                    <div class="col-sm-10">
+                        <h4 class="widget-title">Lista de Facturas en Proformas</h4>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 container-fluid">
+                    Mostrar <select ng-model="paginatorReporteFacturasProformas.itemsPerPage"
+                        ng-change="paginatorReporteFacturasProformas.getFirstPage()"
+                        name="tabla-facturas-proformas-items-pagina"
+                        ng-options="cantidad as cantidad.texto for cantidad in cantidadItems track by cantidad.cantidad">
+                    </select> Elementos
+                </div>
+            </div>
+            <div class="row table-fixed-header container-fluid">
+                <table id="tabla-facturas-proformas" class="table table-striped table-bordered table-hover">
+                    <thead fix-head class="table-head-color">
+                        <tr>
+                            <th>#</th>
+                            <th><a href="javascript:void(0)"
+                                    ng-click="paginatorReporteFacturasProformas.sortColumn('fecha_factura',obtenerLista)">Fecha
+                                    <span id="fecha_factura_proforma" class="sort fa fa-sort icon-only"></span>
+                                </a></th>
+                            <th><a href="javascript:void(0)"
+                                    ng-click="paginatorReporteFacturasProformas.sortColumn('factura',obtenerLista)">Nro.
+                                    <span id="fecha_factura_proforma" class="sort fa fa-sort icon-only"></span>
+                                </a></th>
+                            <th>
+                                <a href="javascript:void(0)"
+                                    ng-click="paginatorReporteFacturasProformas.sortColumn('razon_social',obtenerLista)">Cliente
+                                    <span id="razon_social" class="sort fa fa-sort icon-only"></span>
+                                </a>
+                            </th>
+                            <th>
+                                <a href="javascript:void(0)"
+                                    ng-click="paginatorReporteFacturasProformas.sortColumn('totalImporteBs',obtenerLista)">Bs.
+                                    <span id="totalImporteBs" class="sort fa fa-sort icon-only"></span>
+                                </a>
+                            </th>
+                            <th>
+                                $us.
+                                <span id="totalImporteBs" class="short fa fa-short icon-only"></span>
+                            </th>
+                            <th>Autorización</th>
+                            <th>Código control</th>
+                            <th>Actividad económica</th>
+                            <th>Proformas</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="{{(factura.id_cliente === 'Anulada'?'colorAnulado':'')}}"
+                            ng-repeat="factura in listaFacturasProformas">
+                            <td>
+                                {{$index + 1}}
+                            </td>
+                            <td>
+                                {{factura.fecha_factura | date: "dd/MM/yyyy"}}
+                            </td>
+                            <td>
+                                {{factura.factura}}
+                            </td>
+                            <td>
+                                {{factura.cliente.razon_social && factura.cliente.razon_social || 'ANULADA'}}
+                            </td>
+                            <td>
+                                {{factura.totalImporteBs && factura.totalImporteBs || 0 | number:2}}
+                            </td>
+                            <td>
+                                {{factura.totalImporteSus && factura.totalImporteSus || 0 | number:2}}
+                            </td>
+                            <td>
+                                {{factura.autorizacion}}
+                            </td>
+                            <td>
+                                {{factura.codigo_control && factura.codigo_control || 0}}
+                            </td>
+                            <td>
+                                {{factura.actividadEconomica.nombre}}
+                            </td>
+                            <td>
+                                {{factura.correlativo && factura.correlativo || 0}}
+                            </td>
+                            <td>
+                                <a class="red" href="javascript:void(0)" popover-trigger="outsideClick : outsideClick"
+                                    uib-popover-template="PopoverTipoImpresionFacturas.templateUrl"
+                                    popover-placement="left">
+                                    <i class="ace-icon fa fa-print bigger-130"></i>
+                                </a>
+                                <script type="text/ng-template" id="PopoverTipoImpresionFacturas.html">
+                            <div class="form-control">
+                                       <a href="javascript:void(0)" class="blue" ng-click="imprimirFactura(factura, true)">Con detalle</a>
+                                   </div>
+                                   <div class="form-control">
+                                       <a href="javascript:void(0)" class="blue" ng-click="imprimirFactura(factura, false)">Sin detalle</a>
+                                   </div>
+                                   <div class="form-control">
+                                        <a href="javascript:void(0)" class="blue" ng-click="imprimirFactura(factura, null)">Formato antiguo</a>
+                                    </div>
+                           </script>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="row" ng-include src="'/templates/gral/paginator-reporte-facturas-proforma.html'">
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-danger"
+                ng-click="cerrar_dialog_reporte_facturas_proformas()">Cerrar</button>
+        </div>
+    </div>
+</div>
+<!-- Fin modal reporte facturas proformas -->
+
+<!-- asignar cuenta actividad -->
+<div id="dialog-asignar-cuenta-proforma" title="Asignar Cuenta" class="modal">
+    <form class="center" id="formularioAsignarCuenta" name="formularioAsignarCuenta"
+        ng-submit="verificarAsignacionCuentaProforma(actividadAsignacionCuenta)">
+
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Asignar Cuenta</h3>
+            </div>
+            <div class="modal-body">
+                <input name="asig" autocomplete="off" required ng-keypress="interceptarTecla($event,'cantidad',true)"
+                    id="asig" required type="text" ng-model="actividadCuenta" placeholder="Busqueda..."
+                    uib-typeahead="cuenta as (cuenta.codigo+'-'+cuenta.nombre+'-'+cuenta.descripcion+'-'+cuenta.tipoCuenta.nombre) for cuenta in buscarCuentasParaAsignarProforma($viewValue)"
+                    typeahead-wait-ms="1000" typeahead-template-url="templates/autocompletar.html"
+                    typeahead-append-to-body="true" typeahead-show-hint="false" typeahead-min-length="3"
+                    class="form-control" typeahead-on-select="asignarCuentaProforma($item)">
+
+                <span ng-if="actividadAsignacionCuenta.cuenta && !actividadAsignacionCuenta.cuenta.id"
+                    class="red">Seleccionar una cuenta existente para continuar.</span>
+                <span ng-if="actividadAsignacionCuenta.cuenta && actividadAsignacionCuenta.cuenta.id"
+                    class="text-success">Cuenta asignada correctamente.</span>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-success"
+                    ng-disabled="formularioAsignarCuenta.$invalid && !actividadAsignacionCuenta.cuenta.id">Asignar</button>
+                <button type="button" class="btn btn-danger"
+                    ng-click="cerrarModalAsignarCuentaProforma(cuenta)">Cancelar</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- fin asignar cuenta actividad -->
+<!-- generar Comprobante diario -->
+<div id="dialog-generar-comprobante" class="modal">
+    <div class="modal-content">
+        <form ng-submit="generarComprobanteProformaFactura(filtroGenComp.estado.nombre)">
+            <div class="modal-header center">
+                <h3>Generar Comprobante</h3>
+                <p><small>Fecha Actual</small></p>
+                <small id="helpId" class="text-info">{{tiempoGC | date:"dd/MM/yyyy - HH:mm:ss" }}</small>
+            </div>
+            <div class="modal-body center">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="">Fecha:</label>
+                            <input ng-update-hidden type="text" id="fecha-generacion-comprobante" required
+                                class="form-control date-timepicker-inicio" ng-update-hidden
+                                ng-model="filtroGenComp.fecha_generacion_comprobante"
+                                name="fecha-generacion-comprobante"
+                                ng-change="obtenerfacturasPendienteDeContabilizar();obtenerCierreMesProformaCompGen()">
+                            <p><small id="helpId" class="text-info">El comprobante sera generado con registros de
+                                    facturas asta
+                                    fecha:</small></p>
+                            <small id="helpId" class="text-info">{{filtroGenComp.fecha_generacion_comprobante }}</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="">Estado</label>
+                            <select required id="estadoFiltroProformasComp"
+                                ng-change="obtenerfacturasPendienteDeContabilizar()" ng-model="filtroGenComp.estado"
+                                class="form-control"
+                                ng-options="estado as estado.nombre for estado in estadosFacturaProformaFiltro track by estado.id">
+                            </select>
+                            <p><small id="helpId" class="text-info" ng-if="filtroGenComp.estado.id==2 ">Cierre Mensual:
+                                    <span ng-if="datoMesCierreComGen.id">SI.</span>
+                                    <span ng-if="!datoMesCierreComGen.id">NO.</span>
+                                    &nbsp;{{datoMesCierreComGen.fecha|date:'dd/MM/yyyy'}}</small></p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <p>Cantidad facturas para generar:{{listaProformaFacturaParaContabilizar.length}}</p>
+                        <div class="table-fixed-header">
+                            <table class="table table-striped table-bordered table-hover ">
+                                <thead fix-head class="table-head-color">
+                                    <tr>
+                                        <th>Nº</th>
+                                        <th>Factura</th>
+                                        <th>Fecha</th>
+                                        <th>Monto</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="factura in listaProformaFacturaParaContabilizar">
+                                        <td scope="row">{{$index+1}}</td>
+                                        <td>{{factura.factura}}</td>
+                                        <td>{{factura.fecha_factura| date:"dd/MM/yyyy - HH:mm"}}</td>
+                                        <td>{{factura.totalImporteBs| number:2}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-success">Generar</button>
+                <button type="button" class="btn btn-warning" ng-click="generarComprobanteProformaFactura('Rectificar')"
+                    ng-if="filtroGenComp.estado.id==2 && datoMesCierreComGen.id">Rectificar</button>
+                <button type="button" class="btn btn-danger"
+                    ng-click="cerrarModalGenerarComprobante()">Cancelar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- generar Comprobante diario -->
+<div id="modal-verificar-cuenta" title="Asignar Cuenta" class="modal">
+    <form name="formularioAsignarCuenta" novalidate ng-submit="verificarCuentaAdmin(cuenta)">
+        <div class="modal-header">
+            <p>
+            <h3>Verificar Cuenta</h3>
+            </p>
+        </div>
+        <div class="modal-body">
+            <div>
+                <span>Nombre Usuario: </span>
+                <input class="form-control" type="text" ng-model="cuenta.nombre_usuario">
+            </div>
+            <div>
+                <span>Clave</span>
+                <input class="form-control" type="password" name="contra" ng-model="cuenta.clave">
+            </div>
+        </div>
+        <div ng-if="tipoVerificacion =='cierre-mes'" class="text-center">
+            <h5>Si los datos son correctos se cerrara el mes de {{meses[filtro.mes.id-1].nombre}} del
+                {{filtro.anio.id}}.</h5>
+        </div>
+        <div class="modal-footer">
+            <div class="col-sm-6">
+                <button type="submit" class="btn btn-success" ng-disabled="formularioAsignarCuenta.$invalid">
+                    verificar y Guardar
+                </button>
+            </div>
+
+
+            <div class="col-sm-6">
+                <button type="button" class="btn btn-danger" ng-click="cerrarModalVerificarCuenta()">Cancelar</button>
+            </div>
+        </div>
+    </form>
+</div>

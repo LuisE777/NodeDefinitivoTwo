@@ -1,0 +1,1 @@
+INSERT INTO gl_clase(tipo,nombre,nombre_corto,createdAt,updatedAt) VALUES ((SELECT gl_tipo.id from gl_tipo where nombre_corto = 'MOVEGR'), 'SALIDA MANTENIMIENTO OT', 'SMOT', '2018-12-13 12:07:06', '2018-12-13 12:10:46');

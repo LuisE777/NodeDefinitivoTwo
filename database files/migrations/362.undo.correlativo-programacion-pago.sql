@@ -1,0 +1,1 @@
+ALTER TABLE agil_correlativo_empresa  drop numero_correlativo_programacion_pago;

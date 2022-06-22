@@ -1,0 +1,1 @@
+update sys_aplicacion set titulo= 'ORDEN DE COMPRA' where titulo = 'PEDIDOS' and url='pedidos'

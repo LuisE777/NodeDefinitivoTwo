@@ -1,0 +1,2 @@
+ALTER TABLE agil_vehiculos_externos DROP FOREIGN KEY agil_vehiculos_externos_ibfk_1;
+ALTER TABLE agil_vehiculos_externos DROP id_producto;

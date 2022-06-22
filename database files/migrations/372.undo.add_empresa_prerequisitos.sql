@@ -1,0 +1,2 @@
+ALTER TABLE agil_medico_prerequisito drop id_empresa;
+ALTER TABLE agil_medico_paciente_prerequisito drop asignado;

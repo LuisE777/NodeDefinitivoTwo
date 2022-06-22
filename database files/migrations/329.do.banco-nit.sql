@@ -1,0 +1,1 @@
+ALTER TABLE agil_banco ADD nit varchar(255) default '';

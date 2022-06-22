@@ -1,0 +1,1 @@
+alter table inv_compra drop verificado_para_comprobante;

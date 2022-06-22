@@ -1,0 +1,4 @@
+ALTER TABLE agil_rrhh_empleado_formacion_academica drop eliminado;
+ALTER TABLE agil_rrhh_empleado_experiencia_laboral drop eliminado;
+ALTER TABLE agil_rrhh_empleado_capacidad_interno_externo drop eliminado;
+ALTER TABLE agil_rrhh_empleado_logro_interno_externo drop eliminado;

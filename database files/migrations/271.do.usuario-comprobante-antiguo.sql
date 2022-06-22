@@ -1,0 +1,1 @@
+ALTER TABLE sys_usuario ADD crear_comprobante_antiguo tinyint default 0;

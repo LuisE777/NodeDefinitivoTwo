@@ -1,0 +1,1 @@
+ALTER TABLE agil_rrhh_parametros add pro_vivienda_patronal  decimal(20, 4) default 2;

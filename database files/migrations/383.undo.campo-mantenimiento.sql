@@ -1,0 +1,2 @@
+ALTER TABLE agil_mantenimiento_orden_trabajo DROP FOREIGN KEY inv_solicitud_reposicion_ibfk_9;
+ALTER TABLE agil_mantenimiento_orden_trabajo drop campo;

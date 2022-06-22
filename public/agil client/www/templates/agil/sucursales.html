@@ -1,0 +1,2371 @@
+<div class="row">
+	<div class="col-xs-12">
+		<h3 class="header smaller lighter blue">SUCURSALES</h3>
+
+		<button ng-disabled="!aplicacion.puede_crear" class="btn-woBox button-glow" ng-click="crearNuevaSucursal()">
+			<i class="ace-icon fa fa-plus align-top bigger-125"></i>
+			Nuevo
+		</button>
+
+		<div class="clearfix">
+			<div class="pull-right tableTools-container"></div>
+		</div>
+		<div class="table-header">
+			Lista de Sucursales
+		</div>
+
+		<!-- div.table-responsive -->
+
+		<!-- div.dataTables_borderWrap -->
+		<div style="overflow-x:auto;">
+			<table id="tabla-sucursales" class="table table-striped table-bordered table-hover">
+				<thead>
+					<tr>
+						<th class="center">
+							Activo
+						</th>
+						<th>Nombre Sucursal</th>
+						<th>Nro.Sucursal</th>
+						<th>Dirección</th>
+						<th>Teléfono 1</th>
+						<th>Teléfono 2</th>
+						<th>Teléfono 3</th>
+						<th>Departamento</th>
+						<th>Municipio</th>
+						<th>Acciones</th>
+					</tr>
+				</thead>
+
+				<tbody>
+					<tr ng-repeat="sucursal in sucursales">
+						<td class="center">
+							<input class="ace ace-switch ace-switch-4" type="checkbox" ng-model="sucursal.activo"
+								ng-change="habilitarSucursales(sucursal)" />
+							<span class="lbl check-descuento"></span>
+						</td>
+						<td>{{sucursal.nombre}}</td>
+						<td>{{sucursal.numero}}</td>
+						<td>{{sucursal.direccion}}</td>
+						<td>{{sucursal.telefono1}}</td>
+						<td>{{sucursal.telefono2}}</td>
+						<td>{{sucursal.telefono3}}</td>
+						<td>{{sucursal.departamento.nombre}}</td>
+						<td>{{sucursal.municipio.nombre}}</td>
+						<td>
+							<div class="hidden-sm hidden-xs action-buttons">
+								<a class="blue" href="javascript:void(0)" e-disabled="!aplicacion.puede_ver"
+									ng-click="verSucursal(sucursal)">
+									<i class="ace-icon fa fa-search-plus bigger-130"></i>
+								</a>
+
+								<a class="green" href="javascript:void(0)" e-disabled="!aplicacion.puede_modificar"
+									ng-click="modificarSucursal(sucursal)">
+									<i class="ace-icon fa fa-pencil bigger-130"></i>
+								</a>
+
+								<a class="red" href="javascript:void(0)" e-disabled="!aplicacion.puede_eliminar"
+									ng-click="mostrarConfirmacionEliminacion(sucursal)">
+									<i class="ace-icon fa fa-trash-o bigger-130"></i>
+								</a>
+								<a class="blue" href="javascript:void(0)" e-disabled="!aplicacion.puede_modificar"
+									ng-click="modificarCorrelativos(sucursal)">
+									<i class="ace-icon fa fa-bookmark bigger-130"></i>
+								</a>
+								<a class="blue" href="javascript:void(0)" e-disabled="!aplicacion.puede_modificar"
+									ng-if="usuario.empresa.usar_configuracion_iso"
+									ng-click="abrirModalConfiguracionIso(sucursal)">
+									<img src="img/iso.png" height="25" width="25" alt="">
+								</a>
+								<a class="blue" href="javascript:void(0)" e-disabled="!aplicacion.puede_modificar"
+									ng-if="usuario.empresa.usar_mantenimiento"
+									ng-click="abrirModalMantenimiento(sucursal.id)">
+									<i class="fa fa-car" alt="Mantenimiento"></i>
+								</a>
+								<a class="blue" href="javascript:void(0)" ng-if="sucursal.activo && usuario.empresa.usar_facturacion_electronica" e-disabled="!aplicacion.puede_modificar"
+									ng-if="usuario"
+									ng-click="abrirActivarSFESucursal(sucursal)">
+									<i class="ace-icon icono-impuestos bigger-130" alt="Sistema de Facturación en Linea"></i>
+								</a>
+							</div>
+
+							<div class="hidden-md hidden-lg">
+								<div class="inline pos-rel">
+									<button class="btn btn-minier btn-yellow dropdown-toggle" data-toggle="dropdown"
+										data-position="auto">
+										<i class="ace-icon fa fa-caret-down icon-only bigger-120"></i>
+									</button>
+
+									<ul
+										class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-menu-right dropdown-caret dropdown-close">
+										<li>
+											<a href="javascript:void(0)" e-disabled="!aplicacion.puede_ver"
+												ng-click="verSucursal(sucursal)" class="tooltip-info" data-rel="tooltip"
+												title="View">
+												<span class="blue">
+													<i class="ace-icon fa fa-search-plus bigger-120"></i>
+												</span>
+											</a>
+										</li>
+
+										<li>
+											<a href="javascript:void(0)" e-disabled="!aplicacion.puede_modificar"
+												ng-click="modificarSucursal(sucursal)" class="tooltip-success"
+												data-rel="tooltip" title="Edit">
+												<span class="green">
+													<i class="ace-icon fa fa-pencil-square-o bigger-120"></i>
+												</span>
+											</a>
+										</li>
+
+										<li>
+											<a href="javascript:void(0)" e-disabled="!aplicacion.puede_eliminar"
+												ng-click="mostrarConfirmacionEliminacion(sucursal)"
+												class="tooltip-error" data-rel="tooltip" title="Delete">
+												<span class="red">
+													<i class="ace-icon fa fa-trash-o bigger-120"></i>
+												</span>
+											</a>
+										</li>
+										<li>
+											<a href="javascript:void(0)" e-disabled="!aplicacion.puede_modificar"
+												ng-click="modificarCorrelativos(sucursal)" class="tooltip-error"
+												data-rel="tooltip" title="Delete">
+												<span class="blue">
+													<i class="ace-icon fa fa-bookmark bigger-120"></i>
+												</span>
+											</a>
+										</li>
+									</ul>
+								</div>
+							</div>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+
+<div id="modal-wizard-sucursal-edicion" class="modal wizard-posicion">
+	<div class="modal-dialog modal-rh-nuevo">
+		<div class="modal-content">
+			<form ng-submit="saveForm(sucursal)">
+				<div id="modal-wizard-container-sucursal-edicion">
+					<div class="modal-header">
+						<ul class="steps">
+							<li data-step="1" class="active">
+								<span class="step">1</span>
+								<span class="title">Datos de la Sucursal</span>
+							</li>
+							<li data-step="2">
+								<span class="step">2</span>
+								<span class="title">Datos adicionales</span>
+							</li>
+							<li data-step="3">
+								<span class="step">3</span>
+								<span class="title">Datos de almacenes</span>
+							</li>
+							<li data-step="4">
+								<span class="step">4</span>
+								<span class="title">Datos de Actividad y Dosificación</span>
+							</li>
+							<li data-step="5">
+								<span class="step">5</span>
+								<span class="title">Finalizar</span>
+							</li>
+						</ul>
+					</div>
+
+					<div class="modal-body step-content">
+						<div class="step-pane active" data-step="1">
+							<div class="form-group">
+								<div class="row">
+									<label class="col-sm-3 control-label no-padding-right" for="nombre">Nombre
+										Sucursal</label>
+
+									<div class="col-sm-9">
+										<input required type="text" id="nombreSucursal" ng-model="sucursal.nombre"
+											placeholder="Nombre" class="col-xs-10 col-sm-5" />
+									</div>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<div class="row">
+									<label class="col-sm-3 control-label no-padding-right" for="numero">Número
+										Sucursal</label>
+
+									<div class="col-sm-9">
+										<input required type="number" id="numeroSucursal" ng-model="sucursal.numero"
+											placeholder="Numero" class="form-control" />
+									</div>
+								</div>
+							</div>
+
+							<!-- <div class="space-4"></div> -->
+
+							<div class="form-group">
+								<div class="row">
+									<label class="col-sm-3 control-label no-padding-right"
+										for="sucursaldireccion">Dirección</label>
+
+									<div class="col-sm-9">
+										<input required type="text" id="sucursaldireccionSucursal"
+											ng-model="sucursal.direccion" placeholder="dirección"
+											class="form-control" />
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<div class="row">
+									<label class="col-sm-3 control-label no-padding-right"
+										for="sucursaltelefono1">Teléfono 1</label>
+
+									<div class="col-sm-9">
+										<input type="text" id="sucursaltelefono1Sucursal" ng-model="sucursal.telefono1"
+											placeholder="telefono 1" class="form-control" />
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="step-pane" data-step="2">
+							<div class="form-group">
+								<div class="row">
+									<label class="col-sm-3 control-label no-padding-right"
+										for="sucursaltelefono2">Teléfono 2</label>
+
+									<div class="col-sm-9">
+										<input type="text" id="sucursaltelefono2Sucursal" ng-model="sucursal.telefono2"
+											placeholder="telefono 2" class="form-control" />
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<div class="row">
+									<label class="col-sm-3 control-label no-padding-right"
+										for="sucursaltelefono3">Teléfono 3</label>
+
+									<div class="col-sm-9">
+										<input type="text" id="sucursaltelefono3Sucursal" ng-model="sucursal.telefono3"
+											placeholder="telefono 3" class="form-control" />
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<div class="row">
+									<label
+										class="control-label col-xs-12 col-sm-3 no-padding-right">Departamento</label>
+
+									<div class="col-xs-12 col-sm-9">
+										<select required id="departamento" name="departamentoM"
+											data-placeholder="Click para escoger" ng-model="sucursal.id_departamento"
+											ng-change="buscarMunicipios(sucursal.id_departamento)">
+											<option ng-selected="departamento.id==sucursal.id_departamento"
+												ng-repeat="departamento in departamentos"
+												value="{{departamento.id}}-{{departamento.nombre_corto}}">
+												{{departamento.nombre}}</option>
+										</select>
+									</div>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<div class="row">
+									<label class="control-label col-xs-12 col-sm-3 no-padding-right">Municipio</label>
+
+									<div class="col-xs-12 col-sm-9">
+										<select required id="municipio" name="municipioM"
+											ng-options="municipio as municipio.nombre for municipio in municipios track by municipio.id"
+											ng-model="sucursal.municipio">
+											<!-- <option ng-selected="municipio.id==sucursal.id_municipio" ng-repeat="municipio in municipios" value="{{municipio.id}}">{{municipio.nombre}}</option> -->
+										</select>
+									</div>
+								</div>
+							</div>
+
+
+							<div class="form-group">
+								<div class="row">
+									<label class="col-sm-6 control-label no-padding-right"
+										for="nota_venta_correlativo">Número Correlativo Venta</label>
+
+									<div class="col-sm-6">
+										<input required type="number" id="nota_venta_correlativoSucursal"
+											ng-model="sucursal.nota_venta_correlativo"
+											placeholder="Correlativo nota de venta" class="form-control" />
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<div class="row">
+									<label class="col-sm-6 control-label no-padding-right"
+										for="nota_traspaso_correlativo">Número Correlativo
+										Traspaso</label>
+
+									<div class="col-sm-6">
+										<input required type="number" id="nota_traspaso_correlativo"
+											ng-model="sucursal.nota_traspaso_correlativo"
+											placeholder="Correlativo nota de traspaso" class="form-control" />
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<div class="row">
+									<label class="col-sm-6 control-label no-padding-right"
+										for="nota_baja_correlativo">Número Correlativo Baja</label>
+
+									<div class="col-sm-6">
+										<input required type="number" id="nota_baja_correlativoSucursal"
+											ng-model="sucursal.nota_baja_correlativo"
+											placeholder="Correlativo nota de baja" class="form-control" />
+									</div>
+								</div>
+							</div>
+							<div class="form-group" ng-if="usuario.empresa.usar_pedidos">
+								<div class="row">
+									<label class="col-sm-6 control-label no-padding-right"
+										for="pedido_correlativo">Número Correlativo Pedido</label>
+
+									<div class="col-sm-6">
+										<input required type="number" id="pedido_correlativo"
+											ng-model="sucursal.pedido_correlativo" placeholder="Correlativo pedido"
+											class="form-control" />
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<div class="row">
+									<label class="col-sm-6 control-label no-padding-right"
+										for="pedido_correlativo">Número Correlativo Recibo</label>
+
+									<div class="col-sm-6">
+										<input required type="number" id="nota_recibo_correlativo"
+											ng-model="sucursal.nota_recibo_correlativo" placeholder="Correlativo recibo"
+											class="form-control" />
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<div class="row">
+									<label class="col-sm-6 control-label no-padding-right"
+										for="cotizacion_correlativo">Número Correlativo
+										Cotizacion</label>
+
+									<div class="col-sm-6">
+										<input required type="number" id="cotizacion_correlativoSucursal"
+											ng-model="sucursal.cotizacion_correlativo"
+											placeholder="Correlativo cotizacion" class="form-control" />
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<div class="row">
+									<label class="col-sm-6 control-label no-padding-right"
+										for="pre_factura_correlativo">Número Correlativo Pre
+										Factura</label>
+
+									<div class="col-sm-6">
+										<input required type="number" id="pre_factura_correlativoSucursal"
+											ng-model="sucursal.pre_factura_correlativo"
+											placeholder="Correlativo pre factura" class="form-control" />
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<div class="row">
+									<label class="col-sm-6 control-label no-padding-right"
+										for="correlativo_proforma">Número Correlativo Proforma</label>
+
+									<div class="col-sm-6">
+										<input required type="number" id="correlativo_proformaSucursal"
+											ng-model="sucursal.correlativo_proforma" placeholder="Correlativo proforma"
+											class="form-control" />
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="step-pane" data-step="3">
+							<div class="form-group">
+								<div class="row">
+									<label class="col-sm-3 control-label no-padding-right" for="almacen.nombre">Nombre
+										Almacen</label>
+
+									<div class="col-sm-9">
+										<input type="text" id="almacen.nombre" ng-model="almacen.nombre"
+											placeholder="Nombre almacen" class="form-control" />
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<div class="row">
+									<label class="col-sm-3 control-label no-padding-right" for="almacen.numero">Número
+										Almacen</label>
+
+									<div class="col-sm-9">
+										<input type="number" id="almacen.numero" ng-model="almacen.numero"
+											placeholder="Número almacen" class="form-control" />
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<div class="row">
+									<label class="col-sm-3 control-label no-padding-right"
+										for="almacen.direccion">Dirección Almacen</label>
+
+									<div class="col-sm-9">
+										<input type="text" id="almacen.direccion" ng-model="almacen.direccion"
+											placeholder="Dirección almacen" class="form-control" />
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<div class="row">
+									<label class="col-sm-3 control-label no-padding-right"
+										for="almacen.telefono">Teléfono Almacen</label>
+
+									<div class="col-sm-9">
+										<input type="text" id="almacen.telefono" ng-model="almacen.telefono"
+											placeholder="Teléfono almacen" class="form-control" />
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<div class="col-sm-9">
+									<button ng-if="!almacen.edit" type="button" class="btn btn-primary"
+										ng-click="agregarAlmacen(almacen)">
+										<i class="ace-icon fa fa-plus align-top bigger-125"></i>Agregar
+									</button>
+								</div>
+								<div class="col-sm-9">
+									<button ng-if="almacen.edit" type="button" class="btn btn-success"
+										ng-click="agregarAlmacen(almacen)">
+										<i class="ace-icon fa fa-plus align-top bigger-125"></i>Editar
+									</button>
+								</div>
+							</div>
+							<table id="tabla-almacenes" class="table table-striped table-bordered table-hover">
+								<thead>
+									<tr>
+										<th>Nombre Almacen</th>
+										<th>Número Almacen</th>
+										<th>Dirección Almacen</th>
+										<th>Teléfono Almacen</th>
+										<th>cuenta</th>
+										<th>Acciones</th>
+									</tr>
+								</thead>
+
+								<tbody>
+									<tr ng-repeat="almacen in sucursal.almacenes track by $index"
+										ng-if="!almacen.eliminado">
+
+										<td>{{almacen.nombre}}</td>
+										<td>{{almacen.numero}}</td>
+										<td>{{almacen.direccion}}</td>										
+										<td>{{almacen.telefono}}</td>
+										<td>
+											<input name="asig" autocomplete="off"
+												ng-keypress="interceptarTecla($event,'cantidad',true)" id="asig"
+												type="text" ng-model="almacen.cuenta" placeholder="Busqueda..."
+												uib-typeahead="cuenta as (cuenta.codigo+' '+cuenta.nombre) for cuenta in buscarCuentaVinculante($viewValue)"
+												typeahead-wait-ms="1000"
+												typeahead-template-url="templates/autocompletar.html"
+												typeahead-append-to-body="true" typeahead-show-hint="false"
+												typeahead-min-length="3" class="form-control"
+												typeahead-on-select="verificarCuenta(formularioAsignarCuenta,almacen.cuenta)">
+												<small class="green" ng-if=almacen.cuenta.id>{{almacen.cuenta.nombre}}.</small>
+												<small class="text-warning" ng-if=!almacen.cuenta.id>Cuenta sin asignada.</small>
+										</td>
+										<td>
+											<div class="hidden-sm hidden-xs action-buttons">
+												<a class="green" href="javascript:void(0)"
+													ng-click="modificarAlmacen(almacen)">
+													<i class="ace-icon fa fa-pencil bigger-130"></i>
+												</a>
+
+												<a class="red" href="javascript:void(0)"
+													ng-click="removerAlmacen(almacen)">
+													<i class="ace-icon fa fa-trash-o bigger-130"></i>
+												</a>
+											</div>
+
+											<div class="hidden-md hidden-lg">
+												<div class="inline pos-rel">
+													<button class="btn btn-minier btn-yellow dropdown-toggle"
+														data-toggle="dropdown" data-position="auto">
+														<i class="ace-icon fa fa-caret-down icon-only bigger-120"></i>
+													</button>
+
+													<ul
+														class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-menu-right dropdown-caret dropdown-close">
+														<li>
+															<a href="javascript:void(0)"
+																ng-click="modificarAlmacen(almacen)"
+																class="tooltip-success" data-rel="tooltip" title="Edit">
+																<span class="green">
+																	<i
+																		class="ace-icon fa fa-pencil-square-o bigger-120"></i>
+																</span>
+															</a>
+														</li>
+
+														<li>
+															<a href="javascript:void(0)"
+																ng-click="removerAlmacen(almacen)" class="tooltip-error"
+																data-rel="tooltip" title="Delete">
+																<span class="red">
+																	<i class="ace-icon fa fa-trash-o bigger-120"></i>
+																</span>
+															</a>
+														</li>
+													</ul>
+												</div>
+											</div>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<div class="step-pane" data-step="4">
+							<div class="form-group">
+								<div class="row">
+									<label class="control-label col-xs-12 col-sm-3 no-padding-right">Actividad</label>
+									<div class="col-xs-12 col-sm-9">
+										<select id="actividad" name="actividad"
+											ng-options="actividad as actividad.nombre for actividad in actividades track by actividad.id"
+											ng-model="actividadDosificacion.actividad"></select>
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<div class="row">
+									<label
+										class="control-label col-xs-12 col-sm-3 no-padding-right">Dosificación</label>
+									<div class="col-xs-12 col-sm-9">
+										<select id="dosificacion" name="dosificacion"
+											ng-options="dosificacion as dosificacion.autorizacion for dosificacion in dosificaciones track by dosificacion.id"
+											ng-model="actividadDosificacion.dosificacion"></select>
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<div class="col-sm-9">
+									<div class="row">
+										<button type="button" class="btn btn-primary"
+											ng-click="agregarActividadDosificacion(actividadDosificacion)">
+											<i class="ace-icon fa fa-plus align-top bigger-125"></i>
+										</button>
+									</div>
+								</div>
+							</div>
+							<div class="space-4"></div>
+							<table id="tabla-actividades" class="table table-striped table-bordered table-hover">
+								<thead>
+									<tr>
+										<th>Nº</th>
+										<th>Actividad</th>
+										<th>Dosificación</th>
+										<th>Acciones</th>
+									</tr>
+								</thead>
+
+								<tbody>
+									<tr ng-repeat="actividadDosificacion in sucursal.actividadesDosificaciones track by $index"
+										ng-if="!actividadDosificacion.eliminado">
+
+										<td>{{$index+1}}</td>
+										<td>
+											{{actividadDosificacion.actividad.nombre}}
+											<span ng-if="actividadDosificacion.expirado"
+												style="color: red">EXPIRADO</span>
+										</td>
+										<td>
+											{{actividadDosificacion.dosificacion.autorizacion}}
+											<span ng-if="actividadDosificacion.dosificacion.expirado"
+												style="color: red">EXPIRADO</span>
+										</td>
+										<td>
+											<div class="hidden-sm hidden-xs action-buttons">
+												<a class="red" href="javascript:void(0)"
+													ng-click="removerActividadDosificacion(actividadDosificacion)">
+													<i class="ace-icon fa fa-trash-o bigger-130"></i>
+												</a>
+											</div>
+
+											<div class="hidden-md hidden-lg">
+												<div class="inline pos-rel">
+													<button class="btn btn-minier btn-yellow dropdown-toggle"
+														data-toggle="dropdown" data-position="auto">
+														<i class="ace-icon fa fa-caret-down icon-only bigger-120"></i>
+													</button>
+
+													<ul
+														class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-menu-right dropdown-caret dropdown-close">
+														<li>
+															<a href="javascript:void(0)"
+																ng-click="removerActividadDosificacion(actividadDosificacion)"
+																class="tooltip-error" data-rel="tooltip" title="Delete">
+																<span class="red">
+																	<i class="ace-icon fa fa-trash-o bigger-120"></i>
+																</span>
+															</a>
+														</li>
+													</ul>
+												</div>
+											</div>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<div class="step-pane" data-step="5">
+							<div class="center">
+								<h4 class="blue">Finalización</h4>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="modal-footer wizard-actions">
+					<button class="btn btn-sm btn-prev">
+						<i class="ace-icon fa fa-arrow-left"></i>
+						Anterior
+					</button>
+
+					<button type="submit" id="siguiente" class="btn btn-success btn-sm btn-next" data-last="Finish">
+						Siguiente
+						<i class="ace-icon fa fa-arrow-right icon-on-right"></i>
+					</button>
+
+					<button type="button" class="btn btn-danger btn-sm pull-left" data-dismiss="modal"
+						ng-click="cerrarPopPupEdicion()">
+						<i class="ace-icon fa fa-times"></i>
+						Cancelar
+					</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+<!-- PAGE CONTENT ENDS -->
+
+<div id="modal-wizard-sucursal-vista" class="modal wizard-posicion">
+	<div class="modal-dialog modal-rh-nuevo">
+		<div class="modal-content">
+			<div id="modal-wizard-container-sucursal-vista">
+				<div class="modal-header">
+					<ul class="steps">
+						<li data-step="1" class="active">
+							<span class="step">1</span>
+							<span class="title">Datos de la Sucursal</span>
+						</li>
+						<li data-step="2">
+							<span class="step">2</span>
+							<span class="title">Datos adicionales</span>
+						</li>
+						<li data-step="3">
+							<span class="step">3</span>
+							<span class="title">Datos de almacenes</span>
+						</li>
+						<li data-step="4">
+							<span class="step">4</span>
+							<span class="title">Datos de Actividad y Dosificación</span>
+						</li>
+						<li data-step="5">
+							<span class="step">5</span>
+							<span class="title">Finalizar</span>
+						</li>
+					</ul>
+				</div>
+
+				<div class="modal-body step-content">
+					<div class="step-pane active" data-step="1">
+						<div class="form-group">
+							<div class="row">
+								<label class="col-sm-3 control-label no-padding-right" for="nombre">Nombre
+									Sucursal</label>
+
+								<div class="col-sm-9">
+									<input disabled required type="text" id="nombreSucursalDisabled"
+										ng-model="sucursal.nombre" placeholder="Nombre" class="col-xs-10 col-sm-5" />
+								</div>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<div class="row">
+								<label class="col-sm-3 control-label no-padding-right" for="numero">Número
+									Sucursal</label>
+
+								<div class="col-sm-9">
+									<input disabled required type="text" id="numeroSucursalDisabled"
+										ng-model="sucursal.numero" placeholder="Numero" class="form-control" />
+								</div>
+							</div>
+						</div>
+
+						<!-- <div class="space-4"></div> -->
+
+						<div class="form-group">
+							<div class="row">
+								<label class="col-sm-3 control-label no-padding-right"
+									for="sucursaldireccion">Dirección</label>
+
+								<div class="col-sm-9">
+									<input disabled required type="text" id="sucursaldireccionSucursalDisabled"
+										ng-model="sucursal.direccion" placeholder="dirección" class="form-control" />
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="row">
+								<label class="col-sm-3 control-label no-padding-right" for="sucursaltelefono1">Teléfono
+									1</label>
+
+								<div class="col-sm-9">
+									<input disabled type="text" id="sucursaltelefono1SucursalDisabled"
+										ng-model="sucursal.telefono1" placeholder="telefono 1" class="form-control" />
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="step-pane" data-step="2">
+						<div class="form-group">
+							<div class="row">
+								<label class="col-sm-3 control-label no-padding-right" for="sucursaltelefono2">Teléfono
+									2</label>
+
+								<div class="col-sm-9">
+									<input disabled type="text" id="sucursaltelefono2SucursalDisabled"
+										ng-model="sucursal.telefono2" placeholder="telefono 2" class="form-control" />
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="row">
+								<label class="col-sm-3 control-label no-padding-right" for="sucursaltelefono3">Teléfono
+									3</label>
+
+								<div class="col-sm-9">
+									<input disabled type="text" id="sucursaltelefono3SucursalDisabled"
+										ng-model="sucursal.telefono3" placeholder="telefono 3" class="form-control" />
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="row">
+								<label class="control-label col-xs-12 col-sm-3 no-padding-right">Departamento</label>
+
+								<div class="col-xs-12 col-sm-9">
+									<select disabled required id="departamento" name="departamentoM"
+										data-placeholder="Click para escoger" ng-model="sucursal.id_departamento"
+										ng-change="buscarMunicipios(empresa.id_departamento)">
+										<option ng-selected="departamento.id==sucursal.id_departamento"
+											ng-repeat="departamento in departamentos" value="{{departamento.id}}">
+											{{departamento.nombre}}</option>
+									</select>
+								</div>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<div class="row">
+								<label class="control-label col-xs-12 col-sm-3 no-padding-right">Municipio</label>
+
+								<div class="col-xs-12 col-sm-9">
+									<select disabled required id="municipio" name="municipioM"
+										ng-model="sucursal.id_municipio" data-placeholder="Click para escoger">
+										<option ng-selected="municipio.id==sucursal.id_municipio"
+											ng-repeat="municipio in municipios" value="{{municipio.id}}">
+											{{municipio.nombre}}</option>
+									</select>
+								</div>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<div class="row">
+								<label class="col-sm-6 control-label no-padding-right"
+									for="nota_venta_correlativo">Número Correlativo Venta</label>
+
+								<div class="col-sm-6">
+									<input disabled required type="number" id="nota_venta_correlativoSucursalDisabled"
+										ng-model="sucursal.nota_venta_correlativo"
+										placeholder="Correlativo nota de venta" class="form-control" />
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="row">
+								<label class="col-sm-6 control-label no-padding-right"
+									for="nota_traspaso_correlativo">Número Correlativo
+									Traspaso</label>
+
+								<div class="col-sm-6">
+									<input disabled required type="number"
+										id="nota_traspaso_correlativoSucursalDisabled"
+										ng-model="sucursal.nota_traspaso_correlativo"
+										placeholder="Correlativo nota de traspaso" class="form-control" />
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="row">
+								<label class="col-sm-6 control-label no-padding-right"
+									for="nota_baja_correlativo">Número Correlativo Baja</label>
+
+								<div class="col-sm-6">
+									<input disabled required type="number" id="nota_baja_correlativoSucursalDisabled"
+										ng-model="sucursal.nota_baja_correlativo" placeholder="Correlativo nota de baja"
+										class="form-control" />
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="row">
+								<label class="col-sm-6 control-label no-padding-right"
+									for="cotizacion_correlativo">Número Correlativo
+									cotizacion</label>
+
+								<div class="col-sm-6">
+									<input disabled required type="number" id="cotizacion_correlativoSucursalDisabled"
+										ng-model="sucursal.cotizacion_correlativo" placeholder="Correlativo cotizacion"
+										class="form-control" />
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="step-pane" data-step="3">
+						<table id="tabla-almacenes" class="table table-striped table-bordered table-hover">
+							<thead>
+								<tr>
+									<th>Nombre Almacen</th>
+									<th>Número Almacen</th>
+									<th>Dirección Almacen</th>
+									<th>Teléfono Almacen</th>
+								</tr>
+							</thead>
+
+							<tbody>
+								<tr ng-repeat="almacen in sucursal.almacenes track by $index"
+									ng-if="!almacen.eliminado">
+
+									<td>{{almacen.nombre}}</td>
+									<td>{{almacen.numero}}</td>
+									<td>{{almacen.direccion}}</td>
+									<td>{{almacen.telefono}}</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div class="step-pane" data-step="4">
+						<table id="tabla-actividades" class="table table-striped table-bordered table-hover">
+							<thead>
+								<tr>
+									<th>Nº</th>
+									<th>Actividad</th>
+									<th>Dosificación</th>
+								</tr>
+							</thead>
+
+							<tbody>
+								<tr ng-repeat="actividadDosificacion in sucursal.actividadesDosificaciones track by $index"
+									ng-if="!actividadDosificacion.eliminado">
+
+									<td>{{$index+1}}</td>
+									<td>
+										{{actividadDosificacion.actividad.nombre}}
+									</td>
+									<td>
+										{{actividadDosificacion.dosificacion.autorizacion}}
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div class="step-pane" data-step="5">
+						<div class="center">
+							<h4 class="blue">Finalización</h4>
+						</div>
+					</div>
+
+				</div>
+			</div>
+
+			<div class="modal-footer wizard-actions">
+				<button class="btn btn-sm btn-prev">
+					<i class="ace-icon fa fa-arrow-left"></i>
+					Anterior
+				</button>
+
+				<button type="submit" id="siguiente" class="btn btn-success btn-sm btn-next" data-last="Finish">
+					Siguiente
+					<i class="ace-icon fa fa-arrow-right icon-on-right"></i>
+				</button>
+
+				<button type="button" class="btn btn-danger btn-sm pull-left" data-dismiss="modal"
+					ng-click="cerrarPopPupVista()">
+					<i class="ace-icon fa fa-times"></i>
+					Cancelar
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+<div id="dialog-eliminar-sucursal" title="¿Eliminación de Sucursal?" class="modal">
+	<p>
+		<span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>¿Esta seguro de eliminar la
+		sucursal seleccionada?
+	</p>
+	<button type="button" class="btn btn-danger" ng-click="eliminarSucursal(sucursal)">Si</button>
+	<button type="button" class="btn btn-success" ng-click="cerrarConfirmacionEliminacion()">No</button>
+</div>
+
+<div id="modal-wizard-sucursal-correlativo-edicion" class="modal wizard-posicion">
+	<div class="">
+		<div class="modal-content">
+			<form ng-submit="guardarCorrelativos(sucursal)">
+				<div id="modal-wizard-container-sucursal-correlativo">
+					<div class="modal-header modal-header-ficha">
+						<div class="titulo-ficha">
+							<h4>{{sucursal.nombre}}</h4>
+						</div>
+					</div>
+					<div class="modal-header">
+						<ul class="steps">
+							<li data-step="1" class="active">
+								<span class="step">1</span>
+								<span class="title">Correlativos de la Sucursal</span>
+							</li>
+
+							<li id="cabeza-correlativos-almacen" data-step="2" ng-click="stepWizard(2)"
+								ng-hide="!usuario.empresa.usar_configuracion_iso">
+								<span class="step">2</span>
+								<span class="title">Correlativos de los Almacenes</span>
+							</li>
+							<li data-step="3">
+								<span class="step">3</span>
+								<span class="title">Finalizar</span>
+							</li>
+						</ul>
+					</div>
+
+					<div class="modal-body step-content">
+						<div class="step-pane active" data-step="1">
+							<div class="form-group">
+								<div class="row">
+									<label class="col-sm-2 control-label no-padding-right"
+										for="numero_correlativo_ot">Número
+										Correlativo OT</label>
+
+									<div class="col-sm-2">
+										<input required type="number" id="numero_correlativo_ot"
+											ng-model="sucursal.numero_correlativo_ot" placeholder="Correlativo OT"
+											class="form-control" />
+									</div>
+
+									<label class="col-sm-2 control-label no-padding-right"
+										for="numero_correlativo_ot_mecanica">Número
+										Correlativo OT Mecanica</label>
+
+									<div class="col-sm-2">
+										<input required type="number" id="numero_correlativo_ot_mecanica"
+											ng-model="sucursal.numero_correlativo_ot_mecanica"
+											placeholder="Correlativo OT Mecanica" class="form-control" />
+									</div>
+
+									<label class="col-sm-2 control-label no-padding-right"
+										for="numero_correlativo_ot_chaperia">Número
+										Correlativo OT Chaperia</label>
+
+									<div class="col-sm-2">
+										<input required type="number" id="numero_correlativo_ot_chaperia"
+											ng-model="sucursal.numero_correlativo_ot_chaperia"
+											placeholder="Correlativo OT Chaperia" class="form-control" />
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<div class="row">
+									<label class="col-sm-2 control-label no-padding-right"
+										for="nota_venta_correlativo">Número
+										Correlativo Venta</label>
+
+									<div class="col-sm-2">
+										<input required type="number" id="nota_venta_correlativoCorrelativosSucursal"
+											ng-model="sucursal.nota_venta_correlativo"
+											placeholder="Correlativo nota de venta" class="form-control" />
+									</div>
+
+									<label class="col-sm-2 control-label no-padding-right"
+										for="nota_traspaso_correlativo">Número Correlativo
+										Traspaso</label>
+
+									<div class="col-sm-2">
+										<input required type="number" id="nota_traspaso_correlativoCorrelativosSucursal"
+											ng-model="sucursal.nota_traspaso_correlativo"
+											placeholder="Correlativo nota de traspaso" class="form-control" />
+									</div>
+
+									<label class="col-sm-2 control-label no-padding-right"
+										for="nota_baja_correlativo">Número
+										Correlativo Baja</label>
+
+									<div class="col-sm-2">
+										<input required type="number" id="nota_baja_correlativoCorrelativosSucursal"
+											ng-model="sucursal.nota_baja_correlativo"
+											placeholder="Correlativo nota de baja" class="form-control" />
+									</div>
+								</div>
+							</div>
+
+
+
+							<div class="form-group">
+								<div class="row">
+									<label class="col-sm-2 control-label no-padding-right"
+										for="cotizacion_correlativo">Número
+										Correlativo
+										Cotizacion</label>
+
+									<div class="col-sm-2">
+										<input required type="number" id="cotizacion_correlativoCorrelativosSucursal"
+											ng-model="sucursal.cotizacion_correlativo"
+											placeholder="Correlativo cotizacion" class="form-control" />
+									</div>
+
+									<label class="col-sm-2 control-label no-padding-right"
+										for="pre_factura_correlativo">Número
+										Correlativo
+										PreFactura</label>
+
+									<div class="col-sm-2">
+										<input required type="number" id="pre_factura_correlativoCorrelativosSucursal"
+											ng-model="sucursal.pre_factura_correlativo"
+											placeholder="Correlativo pre factura" class="form-control" />
+									</div>
+
+									<label class="col-sm-2 control-label no-padding-right"
+										for="pre_factura_correlativo">Número
+										Correlativo Despacho</label>
+
+									<div class="col-sm-2">
+										<input required type="number" id="despacho_correlativoCorrelativosSucursal"
+											ng-model="sucursal.despacho_correlativo" placeholder="Correlativo despacho"
+											class="form-control" />
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<div class="row">
+									<label class="col-sm-2 control-label no-padding-right"
+										for="pre_factura_correlativo">Número
+										Correlativo Despacho
+										Recibo</label>
+
+									<div class="col-sm-2">
+										<input required type="number" id="despacho_correlativoRecibo"
+											ng-model="sucursal.despacho_recivo_correlativo"
+											placeholder="Correlativo recibo despacho" class="form-control" />
+									</div>
+
+									<label class="col-sm-2 control-label no-padding-right"
+										for="pre_factura_correlativo">Número
+										Correlativo Ropa
+										Trabajo</label>
+
+									<div class="col-sm-2">
+										<input required type="number" id="ropa_correlativo"
+											ng-model="sucursal.ropa_trabajo_correlativo"
+											placeholder="Correlativo ropa trabajo" class="form-control" />
+									</div>
+
+									<div ng-if="usuario.empresa.usar_pedidos">
+										<label class="col-sm-2 control-label no-padding-right"
+											for="pedido_correlativo">Número
+											Correlativo Pedido</label>
+
+										<div class="col-sm-2">
+											<input required type="number" id="pedido_correlativo"
+												ng-model="sucursal.pedido_correlativo" placeholder="Correlativo pedido"
+												class="form-control" />
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<!-- <div class="form-group">
+									<label class="col-sm-6 control-label no-padding-right" for="pre_factura_correlativo">Número Correlativo PreFactura</label>
+		
+									<div class="col-sm-6">
+										<input required type="number" id="pre_factura_correlativo" ng-model="sucursal.pre_factura_correlativo" placeholder="Correlativo pre factura"
+										 class="form-control" />
+									</div>
+								</div> -->
+							<div class="form-group">
+								<div class="row">
+									<label class="col-sm-6 control-label no-padding-right"
+										for="comprobante_ingreso_correlativo">Número Correlativo
+										Comprobante Ingreso</label>
+
+									<div class="col-sm-3">
+										<input required type="number" id="comprobante_ingreso_correlativo"
+											ng-model="sucursal.comprobante_ingreso_correlativo"
+											placeholder="Correlativo comprobante ingreso" class="form-control" />
+									</div>
+									<div class="col-xs-1 col-sm-1">
+										Reiniciar
+									</div>
+									<div class="col-xs-2 col-sm-2">
+										<input class="ace ace-switch ace-switch-4" type="checkbox"
+											ng-model="sucursal.reiniciar_comprobante_ingreso_correlativo" />
+										<span class="lbl check-descuento"></span>
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<div class="row">
+									<label class="col-sm-6 control-label no-padding-right"
+										for="comprobante_egreso_correlativo">Número Correlativo
+										Comprobante Egreso</label>
+
+									<div class="col-sm-3">
+										<input required type="number" id="comprobante_egreso_correlativo"
+											ng-model="sucursal.comprobante_egreso_correlativo"
+											placeholder="Correlativo comprobante egreso" class="form-control" />
+									</div>
+									<div class="col-xs-1 col-sm-1">
+										Reiniciar
+									</div>
+									<div class="col-xs-2 col-sm-2">
+										<input class="ace ace-switch ace-switch-4" type="checkbox"
+											ng-model="sucursal.reiniciar_comprobante_egreso_correlativo" />
+										<span class="lbl check-descuento"></span>
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<div class="row">
+									<label class="col-sm-6 control-label no-padding-right"
+										for="comprobante_traspaso_correlativo">Número Correlativo
+										Comprobante Traspaso</label>
+
+									<div class="col-sm-3">
+										<input required type="number" id="comprobante_traspaso_correlativo"
+											ng-model="sucursal.comprobante_traspaso_correlativo"
+											placeholder="Correlativo comprobante traspaso" class="form-control" />
+									</div>
+									<div class="col-xs-1 col-sm-1">
+										Reiniciar
+									</div>
+									<div class="col-xs-2 col-sm-2">
+										<input class="ace ace-switch ace-switch-4" type="checkbox"
+											ng-model="sucursal.reiniciar_comprobante_traspaso_correlativo" />
+										<span class="lbl check-descuento"></span>
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<div class="row">
+									<label class="col-sm-6 control-label no-padding-right"
+										for="comprobante_caja_chica_correlativo">Número
+										Correlativo Comprobante Caja Chica</label>
+
+									<div class="col-sm-3">
+										<input required type="number" id="comprobante_caja_chica_correlativo"
+											ng-model="sucursal.comprobante_caja_chica_correlativo"
+											placeholder="Correlativo comprobante caja chica" class="form-control" />
+									</div>
+									<div class="col-xs-1 col-sm-1">
+										Reiniciar
+									</div>
+									<div class="col-xs-2 col-sm-2">
+										<input class="ace ace-switch ace-switch-4" type="checkbox"
+											ng-model="sucursal.reiniciar_comprobante_caja_chica_correlativo" />
+										<span class="lbl check-descuento"></span>
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<div class="row">
+									<label class="col-sm-2 control-label no-padding-right"
+										for="nota_venta_correlativo">Número
+										Correlativo Venta
+										Receta Farmacia</label>
+
+									<div class="col-sm-2">
+										<input required type="number" id="nota_venta_farmacia_correlativo"
+											ng-model="sucursal.nota_venta_farmacia_correlativo"
+											placeholder="Correlativo nota de venta" class="form-control" />
+									</div>
+
+									<label class="col-sm-2 control-label no-padding-right"
+										for="caja_chica_ingreso_correlativo">Número Correlativo
+										Ingreso Caja Chica</label>
+
+									<div class="col-sm-2">
+										<input required type="number" id="caja_chica_ingreso_correlativo"
+											ng-model="sucursal.caja_chica_ingreso_correlativo"
+											placeholder="Correlativo ingreso caja chica" class="form-control" />
+									</div>
+
+									<label class="col-sm-2 control-label no-padding-right"
+										for="caja_chica_egreso_correlativo">Número Correlativo
+										Egreso Caja Chica</label>
+
+									<div class="col-sm-2">
+										<input required type="number" id="caja_chica_egreso_correlativo"
+											ng-model="sucursal.caja_chica_egreso_correlativo"
+											placeholder="Correlativo egreso caja chica" class="form-control" />
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<div class="row">
+									<label class="col-sm-2 control-label no-padding-right"
+										for="vale_caja_chica_correlativo">Número Correlativo
+										Vale Caja Chica</label>
+
+									<div class="col-sm-2">
+										<input required type="number" id="vale_caja_chica_correlativo"
+											ng-model="sucursal.vale_caja_chica_correlativo"
+											placeholder="Correlativo vale caja chica" class="form-control" />
+									</div>
+
+									<label class="col-sm-2 control-label no-padding-right"
+										for="numero_rendicion_fondo_gasto_correlativo">Número Correlativo
+										Fondo a Redir Caja Chica</label>
+
+									<div class="col-sm-2">
+										<input required type="number" id="numero_rendicion_fondo_gasto_correlativo"
+											ng-model="sucursal.numero_rendicion_fondo_gasto_correlativo"
+											placeholder="Correlativo vale caja chica" class="form-control" />
+									</div>
+
+									<label class="col-sm-2 control-label no-padding-right"
+										for="numero_correlativo_prestamo_rrhh">Número correlativo prestamo(RRHH)</label>
+
+									<div class="col-sm-2">
+										<input required type="number" id="numero_correlativo_prestamo_rrhh"
+											ng-model="sucursal.numero_correlativo_prestamo_rrhh"
+											placeholder="Correlativo prestamo" class="form-control" />
+									</div>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<div class="row">
+									<label class="col-sm-2 control-label no-padding-right"
+										for="correlativo_proforma">Número
+										Correlativo Proforma</label>
+
+									<div class="col-sm-2">
+										<input required type="number" id="correlativo_proformaCorrelativosSucursal"
+											ng-model="sucursal.correlativo_proforma" placeholder="Correlativo proforma"
+											class="form-control" />
+									</div>
+
+									<label class="col-sm-2 control-label no-padding-right">Número Correlativo Anticipo
+										Clinte</label>
+
+									<div class="col-sm-2">
+										<input required type="number" ng-model="sucursal.anticipo_cliente_correlativo"
+											placeholder="Correlativo anticipo cliente" class="form-control" />
+									</div>
+
+									<label class="col-sm-2 control-label no-padding-right">Número Correlativo Anticipo
+										Proveedor</label>
+
+									<div class="col-sm-2">
+										<input required type="number" ng-model="sucursal.anticipo_proveedor_correlativo"
+											placeholder="Correlativo anticipo proveedor" class="form-control" />
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<div class="row">
+									<label class="col-sm-2 control-label no-padding-right">Número Correlativo
+										Compensación
+										Anticipo Clinte</label>
+
+									<div class="col-sm-2">
+										<input required type="number"
+											ng-model="sucursal.anticipo_compensacion_cliente_correlativo"
+											placeholder="Correlativo anticipo cliente" class="form-control" />
+									</div>
+
+									<label class="col-sm-2 control-label no-padding-right">Número Correlativo
+										Compensación
+										Anticipo Proveedor</label>
+
+									<div class="col-sm-2">
+										<input required type="number"
+											ng-model="sucursal.anticipo_compensacion_proveedor_correlativo"
+											placeholder="Correlativo anticipo proveedor" class="form-control" />
+									</div>
+
+									<label class="col-sm-2 control-label no-padding-right">Número Correlativo Incremento
+										Caja
+										Chica</label>
+
+									<div class="col-sm-2">
+										<input required type="number"
+											ng-model="sucursal.numero_correlativo_caja_chica_incremento"
+											placeholder="Correlativo incremento caja chica" class="form-control" />
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<div class="row">
+									<label class="col-sm-2 control-label no-padding-right">Número Correlativo Modulo
+										Pedido</label>
+
+									<div class="col-sm-2">
+										<input required type="number"
+											ng-model="sucursal.numero_correlativo_modulo_pedido"
+											placeholder="Correlativo incremento modulo pedido" class="form-control" />
+									</div>
+
+									<label class="col-sm-2 control-label no-padding-right">Número Correlativo Solicitud
+										Modulo
+										almacen</label>
+
+									<div class="col-sm-2">
+										<input required type="number"
+											ng-model="sucursal.numero_correlativo_solicitud_almacen"
+											placeholder="Correlativo solicitud modulo almacen" class="form-control" />
+									</div>
+
+									<label class="col-sm-2 control-label no-padding-right">Número Correlativo Reposicion
+										Modulo
+										almacen</label>
+
+									<div class="col-sm-2">
+										<input required type="number"
+											ng-model="sucursal.numero_correlativo_reposicion_almacen"
+											placeholder="Correlativo reposicion modulo almacen" class="form-control" />
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<div class="row">
+									<label class="col-sm-2 control-label no-padding-right">Número Correlativo Devolución
+										Item</label>
+
+									<div class="col-sm-2">
+										<input required type="number"
+											ng-model="sucursal.numero_correlativo_devolucion_item"
+											placeholder="Correlativo Devolución Item" class="form-control" />
+									</div>
+
+									<label class="col-sm-2 control-label no-padding-right">Número Correlativo Reposición
+										Item</label>
+
+									<div class="col-sm-2">
+										<input required type="number"
+											ng-model="sucursal.numero_correlativo_reposicion_item"
+											placeholder="Correlativo Reposición Item" class="form-control" />
+									</div>
+									<label class="col-sm-2 control-label no-padding-right">Número Correlativo Ingreso
+										Por Ajuste</label>
+
+									<div class="col-sm-2">
+										<input required type="number"
+											ng-model="sucursal.numero_correlativo_ingreso_por_ajuste"
+											placeholder="Correlativo Reposición Item" class="form-control" />
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<div class="row">
+									<label class="col-sm-2 control-label no-padding-right">Número Correlativo Ingreso
+										Por Producción</label>
+
+									<div class="col-sm-2">
+										<input required type="number"
+											ng-model="sucursal.numero_correlativo_ingreso_produccion"
+											placeholder="Correlativo produccion" class="form-control" />
+									</div>
+								</div>
+							</div>
+							<div class="form-group" ng-if="usuario.empresa.usar_pedidos">
+								<div class="row">
+									<label class="col-sm-2 control-label no-padding-right" for="frase_pedido">Frase
+										Pedido</label>
+
+									<div class="col-sm-6">
+										<input required type="text" maxlength="10" id="frase_pedido"
+											ng-model="sucursal.frase_pedido" placeholder="Frase pedido"
+											class="form-control" />
+									</div>
+
+									<label class="col-sm-2 control-label no-padding-right"
+										for="copias_impresion_pedido">Número
+										Copias Impresión
+										Pedido</label>
+
+									<div class="col-sm-2">
+										<input required type="number" id="copias_impresion_pedido"
+											ng-model="sucursal.copias_impresion_pedido"
+											placeholder="Número Copias Impresión Pedido" class="form-control" />
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<div class="row">
+									<label class="control-label col-xs-12 col-sm-2 no-padding-right">Tamaño Papel Nota
+										Venta</label>
+
+									<div class="col-sm-2">
+										<select required
+											ng-options="tamanoPapelFactura as tamanoPapelFactura.nombre for tamanoPapelFactura in tamanosPapelFactura track by tamanoPapelFactura.id"
+											ng-model="sucursal.configuracionFactura.tamanoPapelNotaVenta"></select>
+									</div>
+
+									<label class="control-label col-xs-12 col-sm-2 no-padding-right">Tamaño Papel Nota
+										Traspaso</label>
+
+									<div class="col-xs-12 col-sm-2">
+										<select required
+											ng-options="tamanoPapelFactura as tamanoPapelFactura.nombre for tamanoPapelFactura in tamanosPapelFactura track by tamanoPapelFactura.id"
+											ng-model="sucursal.configuracionFactura.tamanoPapelNotaTraspaso"></select>
+									</div>
+
+									<label class="control-label col-xs-12 col-sm-2 no-padding-right">Tamaño Papel Nota
+										Baja</label>
+
+									<div class="col-xs-12 col-sm-2">
+										<select required
+											ng-options="tamanoPapelFactura as tamanoPapelFactura.nombre for tamanoPapelFactura in tamanosPapelFactura track by tamanoPapelFactura.id"
+											ng-model="sucursal.configuracionFactura.tamanoPapelNotaBaja"></select>
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<div class="row">
+									<label class="control-label col-xs-12 col-sm-2 no-padding-right">Tamaño Papel Nota
+										Pedido</label>
+
+									<div class="col-xs-12 col-sm-2">
+										<select required
+											ng-options="tamanoPapelFactura as tamanoPapelFactura.nombre for tamanoPapelFactura in tamanosPapelFactura track by tamanoPapelFactura.id"
+											ng-model="sucursal.configuracionFactura.tamanoPapelNotaPedido"></select>
+									</div>
+
+									<label class="control-label col-xs-12 col-sm-2 no-padding-right">Imprimir Pedido
+										Corto?</label>
+									<div class="col-xs-12 col-sm-2">
+										<input class="ace ace-switch ace-switch-4" type="checkbox"
+											ng-model="sucursal.imprimir_pedido_corto" />
+										<span class="lbl check-descuento"></span>
+									</div>
+
+									<label class="control-label col-xs-12 col-sm-2 no-padding-right">Tamaño Papel Cierre
+										Caja</label>
+
+									<div class="col-xs-12 col-sm-2">
+										<select required
+											ng-options="tamanoPapelFactura as tamanoPapelFactura.nombre for tamanoPapelFactura in tamanosPapelFactura track by tamanoPapelFactura.id"
+											ng-model="sucursal.configuracionFactura.tamanoPapelCierreCaja"></select>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="step-pane" data-step="2" ng-hide="!usuario.empresa.usar_configuracion_iso">
+							<div class="table-responsive"
+								style="overflow-y:  scroll; overflow-x:  visible; max-height: 450px;">
+								<table class="table table-striped table-hover">
+									<thead>
+										<tr>
+											<th>#</th>
+											<th>Nombre Almacen</th>
+											<th>Correlativos Compra ISO</th>
+											<th>Correlativos Consumo ISO</th>
+											<th>Correlativos Orden de Compra</th>
+											<th>Correlativos Traspaso Salida</th>
+											<th>Correlativos Dotación Ropa</th>
+											<th>Correlativos Baja ISO</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr ng-repeat="almacen in sucursal.almacenes">
+											<th scope="row">{{$index+1}}</th>
+											<td>{{almacen.nombre}}</td>
+											<td>
+												<input ng-disabled="!tipoDocs.compra" type="number" enter
+													ng-model="almacen.numero_correlativo_iso_compra">
+											</td>
+											<td>
+												<input ng-disabled="!tipoDocs.consumo" type="number" enter
+													ng-model="almacen.numero_correlativo_iso_consumo">
+											</td>
+											<td>
+												<input ng-disabled="!tipoDocs.ordencompra" type="number" enter
+													ng-model="almacen.numero_correlativo_iso_orden_compra">
+											</td>
+											<td>
+												<input ng-disabled="!tipoDocs.traspasosuc" type="number" enter
+													ng-model="almacen.numero_correlativo_iso_traspaso_salida">
+											</td>
+											<td>
+												<input ng-disabled="!tipoDocs.ropatrabajo" type="number" enter
+													ng-model="almacen.numero_correlativo_iso_dotacion_ropa">
+											</td>
+											<td>
+												<input ng-disabled="!tipoDocs.baja" type="number" enter
+													ng-model="almacen.numero_correlativo_iso_baja">
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+
+						<div class="step-pane" data-step="3">
+							<div class="center">
+								<h4 class="blue">Finalización</h4>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="modal-footer wizard-actions">
+					<button class="btn btn-sm btn-prev">
+						<i class="ace-icon fa fa-arrow-left"></i>
+						Anterior
+					</button>
+
+					<button type="submit" id="siguiente-correlativo" class="btn btn-success btn-sm btn-next"
+						data-last="Finish">
+						Siguiente
+						<i class="ace-icon fa fa-arrow-right icon-on-right"></i>
+					</button>
+
+					<button type="button" class="btn btn-danger btn-sm pull-left" data-dismiss="modal"
+						ng-click="cerrarPopPupEdicionCorrelativo()">
+						<i class="ace-icon fa fa-times"></i>
+						Cancelar
+					</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+<div id="modal-wizard-sucursal-correlativo-edicion33444" style="overflow-y: hidden" class="modal wizard-posicion">
+	<div class="modal-dialog modal-rh-nuevo">
+		<div class="modal-content">
+			<form ng-submit="guardarCorrelativos(sucursal)">
+
+				<div class="modal-header bg-primary">
+					<button type="button" ng-click="cerrarPopPupEdicionCorrelativo()" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<h4 class="modal-title" id="advertenciaPrestamoPersonal">Datos Correlativos</h4>
+				</div>
+				<div id="modal-body">
+					<div class="form-group">
+						<div class="row">
+							<label class="col-sm-6 control-label no-padding-right" for="numero_correlativo_ot">Número
+								Correlativo OT</label>
+
+							<div class="col-sm-6">
+								<input required type="number" id="numero_correlativo_ot"
+									ng-model="sucursal.numero_correlativo_ot" placeholder="Correlativo OT"
+									class="form-control" />
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="row">
+							<label class="col-sm-6 control-label no-padding-right"
+								for="numero_correlativo_ot_mecanica">Número
+								Correlativo OT Mecanica</label>
+
+							<div class="col-sm-6">
+								<input required type="number" id="numero_correlativo_ot_mecanica"
+									ng-model="sucursal.numero_correlativo_ot_mecanica"
+									placeholder="Correlativo OT Mecanica" class="form-control" />
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="row">
+							<label class="col-sm-6 control-label no-padding-right"
+								for="numero_correlativo_ot_chaperia">Número
+								Correlativo OT Chaperia</label>
+
+							<div class="col-sm-6">
+								<input required type="number" id="numero_correlativo_ot_chaperia"
+									ng-model="sucursal.numero_correlativo_ot_chaperia"
+									placeholder="Correlativo OT Chaperia" class="form-control" />
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="row">
+							<label class="col-sm-6 control-label no-padding-right" for="nota_venta_correlativo">Número
+								Correlativo Venta</label>
+
+							<div class="col-sm-6">
+								<input required type="number" id="nota_venta_correlativoCorrelativosSucursal"
+									ng-model="sucursal.nota_venta_correlativo" placeholder="Correlativo nota de venta"
+									class="form-control" />
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="row">
+							<label class="col-sm-6 control-label no-padding-right"
+								for="nota_traspaso_correlativo">Número Correlativo
+								Traspaso</label>
+
+							<div class="col-sm-6">
+								<input required type="number" id="nota_traspaso_correlativoCorrelativosSucursal"
+									ng-model="sucursal.nota_traspaso_correlativo"
+									placeholder="Correlativo nota de traspaso" class="form-control" />
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="row">
+							<label class="col-sm-6 control-label no-padding-right" for="nota_baja_correlativo">Número
+								Correlativo Baja</label>
+
+							<div class="col-sm-6">
+
+								<input required type="number" id="nota_baja_correlativoCorrelativosSucursal"
+									ng-model="sucursal.nota_baja_correlativo" placeholder="Correlativo nota de baja"
+									class="form-control" />
+							</div>
+						</div>
+					</div>
+
+					<div class="form-group" ng-if="usuario.empresa.usar_pedidos">
+						<div class="row">
+							<label class="col-sm-6 control-label no-padding-right" for="pedido_correlativo">Número
+								Correlativo Pedido</label>
+
+							<div class="col-sm-6">
+								<input required type="number" id="pedido_correlativo"
+									ng-model="sucursal.pedido_correlativo" placeholder="Correlativo pedido"
+									class="form-control" />
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="row">
+							<label class="col-sm-6 control-label no-padding-right" for="cotizacion_correlativo">Número
+								Correlativo
+								Cotizacion</label>
+
+							<div class="col-sm-6">
+								<input required type="number" id="cotizacion_correlativoCorrelativosSucursal"
+									ng-model="sucursal.cotizacion_correlativo" placeholder="Correlativo cotizacion"
+									class="form-control" />
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="row">
+							<label class="col-sm-6 control-label no-padding-right" for="pre_factura_correlativo">Número
+								Correlativo
+								PreFactura</label>
+
+							<div class="col-sm-6">
+								<input required type="number" id="pre_factura_correlativoCorrelativosSucursal"
+									ng-model="sucursal.pre_factura_correlativo" placeholder="Correlativo pre factura"
+									class="form-control" />
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="row">
+							<label class="col-sm-6 control-label no-padding-right" for="pre_factura_correlativo">Número
+								Correlativo Despacho</label>
+
+							<div class="col-sm-6">
+								<input required type="number" id="despacho_correlativoCorrelativosSucursal"
+									ng-model="sucursal.despacho_correlativo" placeholder="Correlativo despacho"
+									class="form-control" />
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="row">
+							<label class="col-sm-6 control-label no-padding-right" for="pre_factura_correlativo">Número
+								Correlativo Despacho
+								Recibo</label>
+
+							<div class="col-sm-6">
+								<input required type="number" id="despacho_correlativoRecibo"
+									ng-model="sucursal.despacho_recivo_correlativo"
+									placeholder="Correlativo recibo despacho" class="form-control" />
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="row">
+							<label class="col-sm-6 control-label no-padding-right" for="pre_factura_correlativo">Número
+								Correlativo Ropa
+								Trabajo</label>
+
+							<div class="col-sm-6">
+								<input required type="number" id="ropa_correlativo"
+									ng-model="sucursal.ropa_trabajo_correlativo" placeholder="Correlativo ropa trabajo"
+									class="form-control" />
+							</div>
+						</div>
+					</div>
+					<!-- <div class="form-group">
+							<label class="col-sm-6 control-label no-padding-right" for="pre_factura_correlativo">Número Correlativo PreFactura</label>
+
+							<div class="col-sm-6">
+								<input required type="number" id="pre_factura_correlativo" ng-model="sucursal.pre_factura_correlativo" placeholder="Correlativo pre factura"
+								 class="form-control" />
+							</div>
+						</div> -->
+					<div class="form-group">
+						<div class="row">
+							<label class="col-sm-6 control-label no-padding-right"
+								for="comprobante_ingreso_correlativo">Número Correlativo
+								Comprobante Ingreso</label>
+
+							<div class="col-sm-3">
+								<input required type="number" id="comprobante_ingreso_correlativo"
+									ng-model="sucursal.comprobante_ingreso_correlativo"
+									placeholder="Correlativo comprobante ingreso" class="form-control" />
+							</div>
+							<div class="col-xs-1 col-sm-1">
+								Reiniciar
+							</div>
+							<div class="col-xs-2 col-sm-2">
+								<input class="ace ace-switch ace-switch-4" type="checkbox"
+									ng-model="sucursal.reiniciar_comprobante_ingreso_correlativo" />
+								<span class="lbl check-descuento"></span>
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="row">
+							<label class="col-sm-6 control-label no-padding-right"
+								for="comprobante_egreso_correlativo">Número Correlativo
+								Comprobante Egreso</label>
+
+							<div class="col-sm-3">
+								<input required type="number" id="comprobante_egreso_correlativo"
+									ng-model="sucursal.comprobante_egreso_correlativo"
+									placeholder="Correlativo comprobante egreso" class="form-control" />
+							</div>
+							<div class="col-xs-1 col-sm-1">
+								Reiniciar
+							</div>
+							<div class="col-xs-2 col-sm-2">
+								<input class="ace ace-switch ace-switch-4" type="checkbox"
+									ng-model="sucursal.reiniciar_comprobante_egreso_correlativo" />
+								<span class="lbl check-descuento"></span>
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="row">
+							<label class="col-sm-6 control-label no-padding-right"
+								for="comprobante_traspaso_correlativo">Número Correlativo
+								Comprobante Traspaso</label>
+
+							<div class="col-sm-3">
+								<input required type="number" id="comprobante_traspaso_correlativo"
+									ng-model="sucursal.comprobante_traspaso_correlativo"
+									placeholder="Correlativo comprobante traspaso" class="form-control" />
+							</div>
+							<div class="col-xs-1 col-sm-1">
+								Reiniciar
+							</div>
+							<div class="col-xs-2 col-sm-2">
+								<input class="ace ace-switch ace-switch-4" type="checkbox"
+									ng-model="sucursal.reiniciar_comprobante_traspaso_correlativo" />
+								<span class="lbl check-descuento"></span>
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="row">
+							<label class="col-sm-6 control-label no-padding-right"
+								for="comprobante_caja_chica_correlativo">Número
+								Correlativo Comprobante Caja Chica</label>
+
+							<div class="col-sm-3">
+								<input required type="number" id="comprobante_caja_chica_correlativo"
+									ng-model="sucursal.comprobante_caja_chica_correlativo"
+									placeholder="Correlativo comprobante caja chica" class="form-control" />
+							</div>
+							<div class="col-xs-1 col-sm-1">
+								Reiniciar
+							</div>
+							<div class="col-xs-2 col-sm-2">
+								<input class="ace ace-switch ace-switch-4" type="checkbox"
+									ng-model="sucursal.reiniciar_comprobante_caja_chica_correlativo" />
+								<span class="lbl check-descuento"></span>
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="row">
+							<label class="col-sm-6 control-label no-padding-right" for="nota_venta_correlativo">Número
+								Correlativo Venta
+								Receta Farmacia</label>
+
+							<div class="col-sm-6">
+								<input required type="number" id="nota_venta_farmacia_correlativo"
+									ng-model="sucursal.nota_venta_farmacia_correlativo"
+									placeholder="Correlativo nota de venta" class="form-control" />
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="row">
+							<label class="col-sm-6 control-label no-padding-right"
+								for="caja_chica_ingreso_correlativo">Número Correlativo
+								Ingreso Caja Chica</label>
+
+							<div class="col-sm-6">
+								<input required type="number" id="caja_chica_ingreso_correlativo"
+									ng-model="sucursal.caja_chica_ingreso_correlativo"
+									placeholder="Correlativo ingreso caja chica" class="form-control" />
+							</div>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<div class="row">
+							<label class="col-sm-6 control-label no-padding-right"
+								for="caja_chica_egreso_correlativo">Número Correlativo
+								Egreso Caja Chica</label>
+
+							<div class="col-sm-6">
+								<input required type="number" id="caja_chica_egreso_correlativo"
+									ng-model="sucursal.caja_chica_egreso_correlativo"
+									placeholder="Correlativo egreso caja chica" class="form-control" />
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="row">
+							<label class="col-sm-6 control-label no-padding-right"
+								for="vale_caja_chica_correlativo">Número Correlativo
+								Vale Caja Chica</label>
+
+							<div class="col-sm-6">
+								<input required type="number" id="vale_caja_chica_correlativo"
+									ng-model="sucursal.vale_caja_chica_correlativo"
+									placeholder="Correlativo vale caja chica" class="form-control" />
+							</div>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<div class="row">
+							<label class="col-sm-6 control-label no-padding-right"
+								for="numero_rendicion_fondo_gasto_correlativo">Número Correlativo
+								Fondo a Redir Caja Chica</label>
+
+							<div class="col-sm-6">
+								<input required type="number" id="numero_rendicion_fondo_gasto_correlativo"
+									ng-model="sucursal.numero_rendicion_fondo_gasto_correlativo"
+									placeholder="Correlativo vale caja chica" class="form-control" />
+							</div>
+						</div>
+					</div>
+					<div class="form-group" ng-if="sucursal.numero==0">
+						<div class="row">
+							<label class="col-sm-6 control-label no-padding-right"
+								for="numero_correlativo_prestamo_rrhh">Número correlativo prestamo(RRHH)</label>
+
+							<div class="col-sm-6">
+								<input required type="number" id="numero_correlativo_prestamo_rrhh"
+									ng-model="sucursal.numero_correlativo_prestamo_rrhh"
+									placeholder="Correlativo prestamo" class="form-control" />
+							</div>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<div class="row">
+							<label class="col-sm-6 control-label no-padding-right" for="correlativo_proforma">Número
+								Correlativo Proforma</label>
+
+							<div class="col-sm-6">
+								<input required type="number" id="correlativo_proformaCorrelativosSucursal"
+									ng-model="sucursal.correlativo_proforma" placeholder="Correlativo proforma"
+									class="form-control" />
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="row">
+							<label class="col-sm-6 control-label no-padding-right">Número Correlativo Anticipo
+								Clinte</label>
+
+							<div class="col-sm-6">
+								<input required type="number" ng-model="sucursal.anticipo_cliente_correlativo"
+									placeholder="Correlativo anticipo cliente" class="form-control" />
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="row">
+							<label class="col-sm-6 control-label no-padding-right">Número Correlativo Anticipo
+								Proveedor</label>
+
+							<div class="col-sm-6">
+								<input required type="number" ng-model="sucursal.anticipo_proveedor_correlativo"
+									placeholder="Correlativo anticipo proveedor" class="form-control" />
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="row">
+							<label class="col-sm-6 control-label no-padding-right">Número Correlativo Compensación
+								Anticipo Clinte</label>
+
+							<div class="col-sm-6">
+								<input required type="number"
+									ng-model="sucursal.anticipo_compensacion_cliente_correlativo"
+									placeholder="Correlativo anticipo cliente" class="form-control" />
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="row">
+							<label class="col-sm-6 control-label no-padding-right">Número Correlativo Compensación
+								Anticipo Proveedor</label>
+
+							<div class="col-sm-6">
+								<input required type="number"
+									ng-model="sucursal.anticipo_compensacion_proveedor_correlativo"
+									placeholder="Correlativo anticipo proveedor" class="form-control" />
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="row">
+							<label class="col-sm-6 control-label no-padding-right">Número Correlativo incremento caja
+								chica</label>
+
+							<div class="col-sm-6">
+								<input required type="number"
+									ng-model="sucursal.numero_correlativo_caja_chica_incremento"
+									placeholder="Correlativo incremento caja chica" class="form-control" />
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="row">
+							<label class="col-sm-6 control-label no-padding-right">Número Correlativo Modulo
+								Pedido</label>
+
+							<div class="col-sm-6">
+								<input required type="number" ng-model="sucursal.numero_correlativo_modulo_pedido"
+									placeholder="Correlativo incremento modulo pedido" class="form-control" />
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="row">
+							<label class="col-sm-6 control-label no-padding-right">Número Correlativo solicitud modulo
+								almacen</label>
+
+							<div class="col-sm-6">
+								<input required type="number" ng-model="sucursal.numero_correlativo_solicitud_almacen"
+									placeholder="Correlativo solicitud modulo almacen" class="form-control" />
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="row">
+							<label class="col-sm-6 control-label no-padding-right">Número Correlativo Reposicion modulo
+								almacen</label>
+
+							<div class="col-sm-6">
+								<input required type="number" ng-model="sucursal.numero_correlativo_reposicion_almacen"
+									placeholder="Correlativo reposicion modulo almacen" class="form-control" />
+							</div>
+						</div>
+					</div>
+					<div class="form-group" ng-if="usuario.empresa.usar_pedidos">
+						<div class="row">
+							<label class="col-sm-6 control-label no-padding-right" for="frase_pedido">Frase
+								Pedido</label>
+
+							<div class="col-sm-6">
+								<input required type="text" maxlength="10" id="frase_pedido"
+									ng-model="sucursal.frase_pedido" placeholder="Frase pedido" class="form-control" />
+							</div>
+						</div>
+					</div>
+					<div class="form-group" ng-if="usuario.empresa.usar_pedidos">
+						<div class="row">
+							<label class="col-sm-6 control-label no-padding-right" for="copias_impresion_pedido">Número
+								Copias Impresión
+								Pedido</label>
+
+							<div class="col-sm-6">
+								<input required type="number" id="copias_impresion_pedido"
+									ng-model="sucursal.copias_impresion_pedido"
+									placeholder="Número Copias Impresión Pedido" class="form-control" />
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="row">
+							<label class="control-label col-xs-12 col-sm-6 no-padding-right">Tamaño Papel Nota
+								Venta</label>
+
+							<div class="col-sm-6">
+								<select required
+									ng-options="tamanoPapelFactura as tamanoPapelFactura.nombre for tamanoPapelFactura in tamanosPapelFactura track by tamanoPapelFactura.id"
+									ng-model="sucursal.configuracionFactura.tamanoPapelNotaVenta"></select>
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="row">
+							<label class="control-label col-xs-12 col-sm-6 no-padding-right">Tamaño Papel Nota
+								Traspaso</label>
+
+							<div class="col-xs-12 col-sm-6">
+								<select required
+									ng-options="tamanoPapelFactura as tamanoPapelFactura.nombre for tamanoPapelFactura in tamanosPapelFactura track by tamanoPapelFactura.id"
+									ng-model="sucursal.configuracionFactura.tamanoPapelNotaTraspaso"></select>
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="row">
+							<label class="control-label col-xs-12 col-sm-6 no-padding-right">Tamaño Papel Nota
+								Baja</label>
+
+							<div class="col-xs-12 col-sm-6">
+								<select required
+									ng-options="tamanoPapelFactura as tamanoPapelFactura.nombre for tamanoPapelFactura in tamanosPapelFactura track by tamanoPapelFactura.id"
+									ng-model="sucursal.configuracionFactura.tamanoPapelNotaBaja"></select>
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="row">
+							<label class="control-label col-xs-12 col-sm-6 no-padding-right">Tamaño Papel Nota
+								Pedido</label>
+
+							<div class="col-xs-12 col-sm-6">
+								<select required
+									ng-options="tamanoPapelFactura as tamanoPapelFactura.nombre for tamanoPapelFactura in tamanosPapelFactura track by tamanoPapelFactura.id"
+									ng-model="sucursal.configuracionFactura.tamanoPapelNotaPedido"></select>
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="row">
+							<label class="control-label col-xs-12 col-sm-6 no-padding-right">Imprimir Pedido
+								Corto?</label>
+							<div class="col-xs-12 col-sm-6">
+								<input class="ace ace-switch ace-switch-4" type="checkbox"
+									ng-model="sucursal.imprimir_pedido_corto" />
+								<span class="lbl check-descuento"></span>
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="row">
+							<label class="control-label col-xs-12 col-sm-6 no-padding-right">Tamaño Papel Cierre
+								Caja</label>
+
+							<div class="col-xs-12 col-sm-6">
+								<select required
+									ng-options="tamanoPapelFactura as tamanoPapelFactura.nombre for tamanoPapelFactura in tamanosPapelFactura track by tamanoPapelFactura.id"
+									ng-model="sucursal.configuracionFactura.tamanoPapelCierreCaja"></select>
+							</div>
+						</div>
+					</div>
+				</div>
+
+
+
+				<div class="modal-footer wizard-actions">
+
+					<button type="submit" id="siguiente-f" class="btn btn-success btn-sm btn-next">
+						Guardar
+						<i class="ace-icon fa fa-arrow-right icon-on-right"></i>
+					</button>
+
+					<button type="button" class="btn btn-danger btn-sm pull-left" data-dismiss="modal"
+						ng-click="cerrarPopPupEdicionCorrelativo()">
+						<i class="ace-icon fa fa-times"></i>
+						Cancelar
+					</button>
+				</div>
+
+
+			</form>
+		</div>
+	</div>
+
+</div>
+<!-- PAGE CONTENT ENDS -->
+<div id="dialog-configuracion-iso" class="modal">
+	<div class="modal-header">
+		<h3>Configuración Iso</h3>
+	</div>
+	<div class="modal-body">
+		<form id="formiso" ng-submit="agregarConfiguracionIso()">
+			<div class="form-group">
+				<label>Seleccionar Tipo doc</label>
+				<select class="form-control" ng-options="doc as doc.nombre  
+			for doc in tiposDocumentosIso.clases track by doc.id" ng-model="configuracionIso.tipoDocumento" required>
+					<option value="">Seleccionar</option>
+				</select>
+				<small class="text-danger " ng-if="errorConfiguracioniso">{{errorConfiguracioniso}}</small>
+			</div>
+			<div class="row">
+				<div class="col-sm-6">
+					<div class="form-group">
+						<label for="nombre_iso">Nombre</label>
+						<input type="text" name="nombre_iso" id="nombre_iso" class="form-control" required
+							ng-model="configuracionIso.nombre">
+					</div>
+				</div>
+				<div class="col-sm-6">
+					<div class="form-group">
+						<label for="revicion_iso">Revisión</label>
+						<input type="text" name="revicion_iso" id="revicion_iso" class="form-control" required
+							ng-model="configuracionIso.revicion">
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-6">
+					<div class="form-group">
+						<label for="Codigo_iso">Código</label>
+						<input type="text" name="Codigo_iso" id="Codigo_iso" class="form-control" required
+							ng-model="configuracionIso.codigo">
+					</div>
+				</div>
+				<div class="col-sm-6">
+					<div class="form-group">
+						<label for="fecha_aprobacion_iso">Fecha de Aprobación</label>
+						<datepicker date-format="dd/MM/yyyy" datepicker-mobile="true">
+						<input type="text" name="fecha_aprobacion_iso" 
+							autocomplete="off" id="fecha_aprobacion_iso" class="form-control" required
+							ng-model="configuracionIso.fecha_aprobacion_iso">
+						</datepicker>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<button type="submit" class="btn btn-primary">
+					<i class="ace-icon fa fa-plus align-top bigger-125"></i>Agregar
+				</button>
+			</div>
+		</form>
+		<div>
+			<table class="table table-striped table-inverse table-responsive">
+				<thead>
+					<tr>
+						<th>Tipo Doc</th>
+						<th>Nombre</th>
+						<th>Revisión</th>
+						<th>Codigo</th>
+						<th>Fecha de Aprobación</th>
+						<th>Versión Impresión</th>
+						<th>Activo</th>
+						<th>Predefinido</th>
+						<th>Acc</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="configuracion in configuracionesIso">
+						<td>{{configuracion.tipoDocumento.nombre}}
+							<p><small class="text-danger" ng-if="configuracion.eliminado">la configuracion se
+									eliminara.</small></p>
+						</td>
+						<td>{{configuracion.nombre}}</td>
+						<td>{{configuracion.revicion}}</td>
+						<td>{{configuracion.codigo}}</td>
+						<td>{{configuracion.fecha_aprobacion|date:'dd/MM/yyyy'}}</td>
+						<td>{{configuracion.version_impresion}}</td>
+						<td><input id="activo" ng-model="configuracion.activo"
+								ng-change="modificarEstadosISO(configuracion, $index)" type="checkbox"
+								class="ace ace-switch ace-switch-4"><span class="lbl check-descuento"></span></td>
+						<td><input id="predefinido" ng-model="configuracion.predefinido"
+								ng-disabled="!configuracion.activo"
+								ng-change="modificarEstadosISO(configuracion, $index)" type="checkbox"
+								class="ace ace-switch ace-switch-4"><span class="lbl check-descuento"></span></td>
+						<td>
+							<a href="javascript:void(0)" class="text-success"
+								ng-click="modificarConfiguracionIso(configuracion)">
+								<i class="fa fa-pencil bigger-140"></i>
+							</a>
+							<a href="javascript:void(0)" class="text-danger"
+								ng-click="eliminarConfiguracionIso(configuracion)">
+								<i class="fa fa-trash-o bigger-140"></i>
+							</a>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<div class="modal-footer">
+		<button type="button" class="btn btn-danger" ng-click="cerrarModalConfiguracionIso()">Cancelar</button>
+		<button type="button" class="btn btn-success" ng-click="guardarConfiguracionIso()">Guardar</button>
+	</div>
+
+</div>
+
+
+<div id="dialog-mantenimientos" class="modal wizard-posicion" style="overflow:hidden">
+	<div>
+		<div>
+			<div class="table-header" align="center">
+				Configuraciones Mantenimiento
+			</div>
+			<div class="modal-body">
+				<table class="table table-striped table-inverse table-responsive">
+					<thead>
+						<tr>
+							<th class="text-center">Tipo Mantenimiento</th>
+							<th class="text-center">Correlativo</th>
+							<th class="text-center">Activo</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="tipo in tiposMantenimiento">
+							<td>{{tipo.especialidad.nombre}}</td>
+							<td><input type="number" id="correlativo-ot" ng-model="tipo.numeracion" min="1" step="1"
+									placeholder="Correlativo OT" class="form-control"></td>
+							<td><input id="activo" ng-model="tipo.activo" type="checkbox"
+									class="ace ace-switch ace-switch-4 ng-pristine ng-untouched ng-valid ng-not-empty"><span
+									class="lbl check-descuento"></span></td>
+
+						</tr>
+					</tbody>
+				</table>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-success"
+						ng-click="guardarConfiguracionMantenimiento(sucursal.id)">Guardar</button>
+					<button type="button" class="btn btn-danger"
+						ng-click="cerrarModalMantenimiento()">Cerrar</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- * //////// INICIO MODAL ACTIVAR SISTEMA FACTURACION ELECTRONICA  /////////////// -->
+<div id="modal-SFE" class="modal wizard-posicion" style="overflow:hidden">
+    <div class="modal-content">
+        <div class="modal-header bg-primary">
+            <button type="button" class="close" ng-click="cerrarActivarSFESucursal()" data-dismiss="modal"
+                aria-hidden="true">&times;</button>
+            <h5 class='smaller bolder text-center text-white text-uppercase'
+                style="margin-top: 0px; margin-bottom: 0px;">
+                CONFIGURACIÓN SFE 
+            </h5>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+				<div ng-if="!sucursal.usar_facturacion_en_linea" class="alert alert-info" style="margin: 12px; border-radius: 6px; height: auto; display: flex; justify-content: space-between; justify-items: center;">
+					<p class="bolder">La sucursal {{ sucursal.nombre }} no esta habilitado para facturar en linea.</p>
+					<button class="btn btn-sm btn-success" ng-click="habilitarSucursal(sucursal)" style="border-radius: 5px;">Habilitar</button>
+				</div>
+				<table ng-if="sucursal.usar_facturacion_en_linea" class="table table-striped table-bordered table-hover nowrap dataTable no-footer" style="margin-top:0px!important;">
+					<thead>
+						<tr>
+							<th class="text-center small">N°</th>
+							<th class="text-center small">CATÁLOGO</th>
+							<th class="text-center small">ACCIONES</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="catalogo in catalogos track by $index">
+							<td>{{ $index + 1 }}</td>
+							<td><p class="d-block">{{ catalogo.nombre }}</p></td>
+							<td>
+								<button type="button" class="btn btn-block btn-xs btn-success" ng-click="abrirCatalogoFacturacion(sucursal, catalogo)" style="background-color: #0c8245!important;">Configurar <i class="fa fa-caret-right" aria-hidden="true"></i>
+								</button>
+							</a>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+        </div>
+        <div class="modal-footer" style="margin-bottom:0px!important;">
+            <div class="pull-right">
+				<button ng-click="cerrarActivarSFESucursal()" type="button" class="btn btn-danger btn-sm">
+					<i class="ace-icon fa fa-arrow-left bigger-110"></i> Cancelar
+				</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+<!-- * //////// FIN MODAL ACTIVAR SISTEMA FACTURACION ELECTRONICA /////////////// -->
+
+<!-- * //////// INICIO MODAL CATALOGO SIN  /////////////// -->
+<div id="modal-catagolo-SFE" class="modal wizard-posicion" style="overflow:hidden">
+    <div class=" modal-content">
+        <div class="modal-header bg-primary">
+            <button type="button" class="close" ng-click="cerrarCatalogoFacturacion()" data-dismiss="modal"
+                aria-hidden="true">&times;</button>
+            <h5 class='smaller bolder text-center text-white text-uppercase'
+                style="margin-top: 0px; margin-bottom: 0px;">
+                {{ catalogo.nombre }}
+            </h5>
+        </div>
+        <div class="modal-body" style="max-height: 500px; overflow-y: scroll;">
+			<!-- <div class="table-header">Actividades disponibles</div> -->
+			<table ng-if="sucursal.usar_facturacion_en_linea" class="table table-striped table-bordered table-hover nowrap dataTable no-footer" style="margin-top:0px!important;">
+				<thead>
+					<tr>
+						<th class="text-center small">N°</th>
+						<th class="text-center small">CÓDIGO</th>
+						<th class="text-center small">DESCRIPCIÓN</th>
+						<th class="text-center small">ACTIVO</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="detalle in detalles track by $index">
+						<td>{{ $index + 1 }}</td>
+						<td>{{ detalle.codigo }}</td>
+						<td>{{ detalle.descripcion }}</td>
+						<td>
+							<input id="activo" ng-model="detalle.activo" ng-true-value="1" type="checkbox" class="ace ace-switch ace-switch-4">
+							<span class="lbl check-descuento"></span>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+        </div>
+        <div class="modal-footer" style="margin-bottom:0px!important;">
+            <div class="pull-left">
+                <button ng-click="cerrarCatalogoFacturacion()" type="button" class="btn btn-danger btn-sm">
+                    <i class="ace-icon fa fa-arrow-left bigger-110"></i> Cancelar
+                </button>
+            </div>
+            <div class="pull-right">
+                <button ng-click="guardarCambiosActividades(detalles)" type="button" class="btn btn-primary btn-sm">
+                    <i class="ace-icon fa fa-save bigger-110"></i> Guardar
+                </button>
+
+            </div>
+        </div>
+    </div>
+</div>
+<!-- * //////// FIN MODAL CATALOGO SIN /////////////// -->

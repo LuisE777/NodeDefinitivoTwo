@@ -1,0 +1,1 @@
+ALTER TABLE agil_empresa add usar_generador_series tinyint default 0;

@@ -1,0 +1,1 @@
+alter table inv_detalle_venta drop cambio_item;

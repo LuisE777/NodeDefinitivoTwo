@@ -1,0 +1,5 @@
+ALTER TABLE agil_mantenimiento_orden_trabajo DROP FOREIGN KEY agil_mantenimiento_orden_trabajo_ibfk_8;
+alter table agil_mantenimiento_orden_trabajo DROP COLUMN tipo_pago;
+alter table agil_mantenimiento_orden_trabajo DROP COLUMN dias_credito;
+alter table agil_mantenimiento_orden_trabajo DROP COLUMN a_cuenta;
+alter table agil_mantenimiento_orden_trabajo DROP COLUMN saldo;

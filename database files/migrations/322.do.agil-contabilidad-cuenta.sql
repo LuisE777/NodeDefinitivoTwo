@@ -1,0 +1,1 @@
+ALTER TABLE agil_contabilidad_cuenta ADD id_cuenta_depreciacion int(11) DEFAULT null;

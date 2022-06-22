@@ -1,0 +1,2 @@
+ALTER TABLE agil_cuenta_transaccion_detalle DROP FOREIGN KEY agil_cuenta_transaccion_detalle_ibfk_2;
+ALTER TABLE agil_cuenta_transaccion_detalle  drop id_compra;

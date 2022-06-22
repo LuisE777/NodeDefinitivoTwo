@@ -1,0 +1,1 @@
+update sys_aplicacion set titulo = 'MANTENIMIENTO', url = 'mantenimiento' where titulo = 'vehiculos';

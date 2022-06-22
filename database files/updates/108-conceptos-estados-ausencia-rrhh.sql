@@ -1,0 +1,3 @@
+INSERT INTO gl_tipo(nombre,nombre_corto,empresa,createdAt,updatedAt) VALUES ('ESTADOS DE AUSENCIA RRHH', 'RRHH_EDA',35, '2018-07-25 12:28:22', '2018-07-25 12:28:22');
+INSERT INTO gl_clase(tipo,nombre,nombre_corto,createdAt,updatedAt,habilitado) VALUES ((SELECT gl_tipo.id from gl_tipo where nombre_corto = 'RRHH_EDA'), 'SOLICITUD', 'SOL', '2018-07-25 12:28:22', '2018-07-25 12:28:22',1);
+INSERT INTO gl_clase(tipo,nombre,nombre_corto,createdAt,updatedAt,habilitado) VALUES ((SELECT gl_tipo.id from gl_tipo where nombre_corto = 'RRHH_EDA'), 'AUTORIZADO', 'AUT', '2018-07-25 12:28:22', '2018-07-25 12:28:22',1);

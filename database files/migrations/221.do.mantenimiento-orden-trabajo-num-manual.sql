@@ -1,0 +1,1 @@
+alter table agil_mantenimiento_orden_trabajo add numero_manual int(11) default 0;

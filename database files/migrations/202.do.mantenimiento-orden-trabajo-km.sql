@@ -1,0 +1,1 @@
+alter table agil_mantenimiento_orden_trabajo add km varchar(255);

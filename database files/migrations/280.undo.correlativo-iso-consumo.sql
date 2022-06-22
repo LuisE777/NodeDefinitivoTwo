@@ -1,0 +1,2 @@
+ALTER TABLE agil_almacen drop numero_correlativo_iso_consumo;
+ALTER TABLE inv_solicitud_reposicion drop numero_iso_consumo;

@@ -1,0 +1,1 @@
+ALTER TABLE agil_rrhh_parametros DROP COLUMN solo_jubilados;

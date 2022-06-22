@@ -1,0 +1,1 @@
+ALTER TABLE agil_proforma add glosa_unica tinyint default 1;

@@ -1,0 +1,1 @@
+ALTER TABLE agil_rrhh_empleado_ficha drop encargardado_area;

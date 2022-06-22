@@ -1,0 +1,102 @@
+
+<h3 class="header smaller lighter blue">ESTADO DE RESULTADOS</h3>
+<div class="row">
+    <div class="col-sm-12 col-md-9 col-lg-6">
+        <div class="row form-group">
+            <div class="col-xs-12">
+                <span class="lbl"> PERIODO</span>
+            </div>
+            <div class="col-xs-12 col-sm-4 col-md-4 col-lg-3">
+                <select ng-model="configuracionImpresion.tipoPeriodo" ng-change="cargarFechasFiltro(configuracionImpresion.tipoPeriodo.nombre)"
+                class="form-control " ng-options="periodo as periodo.nombre for periodo in TiposPeriodos.clases track by periodo.id">
+                    <option value="">SELECCIONAR</option>
+                </select>
+            </div>
+            <div ng-if="configuracionImpresion.tipoPeriodo.nombre=='GESTIÓN' || configuracionImpresion.tipoPeriodo.nombre=='MES'||configuracionImpresion.tipoPeriodo.nombre=='COMPARATIVO'" class="col-xs-12 col-sm-4 col-md-4 col-lg-3">
+                <select ng-if="configuracionImpresion.tipoPeriodo.nombre=='GESTIÓN' || configuracionImpresion.tipoPeriodo.nombre=='MES'||configuracionImpresion.tipoPeriodo.nombre=='COMPARATIVO'"
+                required  class="form-control " ng-options="gestion as gestion.nombre for gestion in gestiones | orderBy:'-nombre' track by gestion.id"
+                ng-model="configuracionImpresion.gestion">
+                    <option value="">SELECCIONAR</option>
+                </select>
+            </div>
+            <div ng-if="configuracionImpresion.tipoPeriodo.nombre=='COMPARATIVO'" class="col-xs-12 col-sm-4 col-md-4 col-lg-3">
+                <select ng-if="configuracionImpresion.tipoPeriodo.nombre=='COMPARATIVO'" class="form-control " required 
+                ng-options="gestion as gestion.nombre for gestion in gestiones | orderBy:'-nombre' track by gestion.id" ng-model="configuracionImpresion.gestion_fin">
+                    <option value="">SELECCIONAR</option>
+                </select>
+            </div>
+            <div ng-if="configuracionImpresion.tipoPeriodo.nombre=='MES'" class="col-xs-12 col-sm-4 col-md-4 col-lg-3">
+                <select ng-if="configuracionImpresion.tipoPeriodo.nombre=='MES'" required  class="form-control " ng-options="mes as mes.nombre for mes in meses track by mes.id"
+                ng-model="configuracionImpresion.mes">
+                    <option value="">SELECCIONAR</option>
+                </select>
+            </div>
+            <div ng-if="configuracionImpresion.tipoPeriodo.nombre=='FECHAS'" class="col-xs-12 col-sm-4 col-md-4 col-lg-3">
+                    <input id="fecha_uno" ng-if="configuracionImpresion.tipoPeriodo.nombre=='FECHAS'" type="text" placeholder="Desde" ng-model="configuracionImpresion.fecha_inicio" ng-update-hidden data-date-format="dd/mm/yyyy" class="from-control  date-picker" style="max-width: 100%;" required>
+            </div>
+            <span></span>
+            <div ng-if="configuracionImpresion.tipoPeriodo.nombre=='FECHAS'" class="col-xs-12 col-sm-4 col-md-4 col-lg-3">
+                    <input id="fecha_dos" ng-if="configuracionImpresion.tipoPeriodo.nombre=='FECHAS'" type="text" placeholder="Hasta" ng-model="configuracionImpresion.fecha_fin" ng-update-hidden data-date-format="dd/mm/yyyy" class="from-control  date-picker" style="max-width: 100%;" required>
+            </div>
+        </div>
+        <div class="row form-group">
+            <div class="col-xs-12">
+                <span class="lbl"> DETALLE DEL ESTADO</span>
+            </div>
+            <div class="col-xs-12 col-sm-4 col-md-4" id="detalle" name="detalle">
+                <select class="form-control col-xs-12 col-md-4" name="filtroTipo_cuenta" id="filtroTipo_cuenta"  ng-options="cuentaTipo as cuentaTipo.nombre for cuentaTipo in cuentaTipos" ng-model="configuracionImpresion.tipo_cuenta">
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-12 col-md-3 col-lg-6 ">
+        <div class="row" style="margin-top: 5px;">
+            <div class="form-group col-xs-12">
+                <label>
+                    <input id="skip-validation" ng-model="configuracionImpresion.bimonetario" type="checkbox" class="ace ace-switch ace-switch-4">
+                    <span class="lbl middle"></span>
+                    <span class="lbl ">BIMONETARIO</span>
+                </label>
+            </div>
+           <!--  <div class="form-group col-xs-12">
+                <label>
+                    <input id="skip-validation" ng-model="configuracionImpresion.cencos" type="checkbox" class="ace ace-switch ace-switch-4">
+                    <span class="lbl middle"></span>
+                    <span class="lbl">CON CENCOS</span>
+                </label>
+            </div> -->
+            <div class="form-group col-xs-12">
+                <label>
+                    <input id="skip-validation" ng-model="configuracionImpresion.codigos" type="checkbox" class="ace ace-switch ace-switch-4">
+                    <span class="lbl middle"></span>
+                    <span class="lbl">CON CÓDIGOS</span>
+                </label>
+            </div>
+            <div class="col-xs-12">
+                <h4 class="header smaller lighter blue">CENTRO DE COSTOS</h4>
+                <div isteven-multi-select input-model="cencos"
+                    output-model="configuracionImpresion.cencos" button-label="icon name"
+                    item-label="icon name maker" tick-property="ticked" translation="localLang" max-labels="5" on-item-click="" required>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-12" style="padding-top: 5px;">
+        <div class="row">
+            <div class="form-group col-xs-12">
+                <button  class="btn-pdf" ng-click="generarPdf()">
+                    <i class="ace-icon fa fa-print bigger-160"></i>
+                    PDF
+                </button>
+                <button  class="btn-xlsx" ng-click="generarXlsx()">
+                    <i class="ace-icon fa fa-print bigger-160"></i>
+                    Excel
+                </button>
+                <!-- <button  class="btn btn-app btn-primary btn-xs" ng-click="generarWordBalanceGeneral()">
+                    <i class="ace-icon fa fa-print bigger-160"></i>
+                    Word
+                </button> -->
+            </div>
+        </div> 
+    </div>
+</div>

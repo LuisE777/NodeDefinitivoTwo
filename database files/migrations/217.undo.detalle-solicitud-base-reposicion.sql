@@ -1,0 +1,2 @@
+alter table inv_detalle_solicitud_producto_base drop detalle_orden_reposicion;
+alter table sys_usuario drop encargado_sincronizacion_gestion;

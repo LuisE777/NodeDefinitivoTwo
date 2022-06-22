@@ -1,0 +1,1 @@
+alter table agil_rrhh_empleado_ficha drop observacion;

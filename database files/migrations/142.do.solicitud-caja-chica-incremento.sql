@@ -1,0 +1,1 @@
+ALTER TABLE agil_solicitud_caja_chica add incremento  decimal(20, 4) default 0;

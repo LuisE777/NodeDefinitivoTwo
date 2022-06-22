@@ -1,0 +1,3 @@
+ALTER TABLE inv_solicitud_reposicion DROP FOREIGN KEY inv_solicitud_reposicion_ibfk_7;
+ALTER TABLE inv_solicitud_reposicion DROP id_cierre_usuario;
+ALTER TABLE inv_solicitud_reposicion DROP fecha_cierre;

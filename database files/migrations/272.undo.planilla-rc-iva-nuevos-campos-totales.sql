@@ -1,0 +1,3 @@
+ALTER TABLE agil_rrhh_planilla_rc_iva DROP otros_ingresos;
+ALTER TABLE agil_rrhh_planilla_rc_iva DROP monto_ingresos_netos;
+ALTER TABLE agil_rrhh_planilla_rc_iva DROP saldo_fisco;

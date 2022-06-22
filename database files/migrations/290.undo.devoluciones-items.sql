@@ -1,0 +1,3 @@
+ALTER TABLE agil_empresa DROP usar_devoluciones;
+ALTER TABLE agil_sucursal drop numero_correlativo_devolucion_item;
+ALTER TABLE agil_sucursal drop numero_correlativo_reposicion_item;

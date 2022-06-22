@@ -1,0 +1,2 @@
+ALTER TABLE agil_mantenimiento_orden_trabajo_mano_obra CHANGE COLUMN diagnostico trabajo_realizado VARCHAR(255);
+alter table agil_mantenimiento_orden_trabajo_mano_obra add requerimiento_trabajo varchar(255);

@@ -1,0 +1,26 @@
+<div class="col-sm-6">
+    <div>
+    <label>
+    Mostrar <select ng-model="paginatorLc.itemsPerPage" ng-change="paginatorLc.getFirstPage()" name="tabla-proveedores_length" aria-controls="tabla-proveedores" class="form-control input-sm">
+          <option value="0">Todos</option>
+          <option ng-selected="true" value="10">10</option>
+          <option value="25">25</option>
+          <option value="50">50</option>
+          <option value="100">100</option>
+        </select> Elementos</label>
+    </div>
+  </div>
+  <div class="col-sm-6" align="right">
+    <div class="col-sm-5">
+  
+    </div>
+    <div class="col-sm-3">
+      <label style="margin-top: 5px;">Buscar:</label> 
+    </div>
+    <div class="col-xs-12 col-sm-4 col-md-3 col-lg-3" style="padding: 0px 0px;">
+      <div ng-class="{ 'button-glow' :!textSearch.length>0 }" >
+        <input style="margin: 0px 0px !important; width: 100%;" id="searchBox" name="searchBox" class="input-sm" type="search" ng-model="textSearch" ng-model-options='{ debounce: 600 }' ng-change="paginatorLc.getSearch(textSearch,paginatorLc.filter,$event)">
+      </div>
+  
+    </div>
+  </div>

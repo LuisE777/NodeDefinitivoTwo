@@ -1,0 +1,1 @@
+alter table agil_rrhh_planilla_sueldos drop comprobante;

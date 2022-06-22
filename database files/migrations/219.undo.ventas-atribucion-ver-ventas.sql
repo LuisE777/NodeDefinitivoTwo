@@ -1,0 +1,1 @@
+alter table sys_usuario drop ver_listado_ventas;

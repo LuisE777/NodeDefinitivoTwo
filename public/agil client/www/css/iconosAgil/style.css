@@ -1,0 +1,186 @@
+@font-face {
+  font-family: 'iconosAgil';
+  src:  url('fonts/iconosAgil.eot?kg3fof');
+  src:  url('fonts/iconosAgil.eot?kg3fof#iefix') format('embedded-opentype'),
+    url('fonts/iconosAgil.ttf?kg3fof') format('truetype'),
+    url('fonts/iconosAgil.woff?kg3fof') format('woff'),
+    url('fonts/iconosAgil.svg?kg3fof#iconosAgil') format('svg');
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+
+[class^="icon-agil-"], [class*=" icon-agil-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'iconosAgil' !important;
+  speak: never;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-agil-anticipos:before {
+  content: "\e91f";
+}
+.icon-agil-subsidio:before {
+  content: "\e933";
+}
+.icon-agil-otros-bonos:before {
+  content: "\e92b";
+}
+.icon-agil-prerequisitos:before {
+  content: "\e91e";
+}
+.icon-agil-baja-medica:before {
+  content: "\e920";
+}
+.icon-agil-llamada-atencion:before {
+  content: "\e921";
+}
+.icon-agil-prestamos:before {
+  content: "\e922";
+}
+.icon-agil-reporte-ausencias:before {
+  content: "\e923";
+}
+.icon-agil-reporte-hijos:before {
+  content: "\e927";
+}
+.icon-agil-ropa-trabajo:before {
+  content: "\e928";
+}
+.icon-agil-vacaciones:before {
+  content: "\e929";
+}
+.icon-agil-altas-bajas:before {
+  content: "\e92a";
+}
+.icon-agil-cotizacion:before {
+  content: "\e93f";
+}
+.icon-agil-seguimiento:before {
+  content: "\e91b";
+}
+.icon-agil-porteria:before {
+  content: "\e91c";
+}
+.icon-agil-liquidacion:before {
+  content: "\e91d";
+}
+.icon-agil-polifuncionalidad:before {
+  content: "\e919";
+}
+.icon-agil-farmacia2:before {
+  content: "\e91a";
+}
+.icon-agil-proformas:before {
+  content: "\e918";
+}
+.icon-agil-solicitud:before {
+  content: "\e913";
+}
+.icon-agil-caja-chica:before {
+  content: "\e914";
+}
+.icon-agil-activos:before {
+  content: "\e915";
+}
+.icon-agil-sucursales:before {
+  content: "\e916";
+}
+.icon-agil-sucursales2:before {
+  content: "\e917";
+}
+.icon-agil-pacientes:before {
+  content: "\e912";
+}
+.icon-agil-inventarios:before {
+  content: "\e911";
+}
+.icon-agil-ventas:before {
+  content: "\e901";
+}
+.icon-agil-almacen2:before {
+  content: "\e910";
+}
+.icon-agil-tabla-dinamica:before {
+  content: "\e900";
+}
+.icon-agil-planilla:before {
+  content: "\e931";
+}
+.icon-agil-banco:before {
+  content: "\e930";
+}
+.icon-agil-clientes:before {
+  content: "\e932";
+}
+.icon-agil-almacen:before {
+  content: "\e92f";
+}
+.icon-agil-rrhh:before {
+  content: "\e92e";
+}
+.icon-agil-comensales:before {
+  content: "\e902";
+}
+.icon-agil-compras:before {
+  content: "\e903";
+}
+.icon-agil-comprobantes-o-plan:before {
+  content: "\e904";
+}
+.icon-agil-comprobantes:before {
+  content: "\e905";
+}
+.icon-agil-configuraciones:before {
+  content: "\e906";
+}
+.icon-agil-despacho:before {
+  content: "\e907";
+}
+.icon-agil-destino:before {
+  content: "\e908";
+}
+.icon-agil-dosificacion:before {
+  content: "\e909";
+}
+.icon-agil-factura-1:before {
+  content: "\e90a";
+}
+.icon-agil-farmacia:before {
+  content: "\e90b";
+}
+.icon-agil-mantenimiento:before {
+  content: "\e90c";
+}
+.icon-agil-mesa:before {
+  content: "\e90d";
+}
+.icon-agil-orden-de-servicio:before {
+  content: "\e90e";
+}
+.icon-agil-plan-cuenta:before {
+  content: "\e90f";
+}
+.icon-agil-proveedores:before {
+  content: "\e924";
+}
+.icon-agil-reporte:before {
+  content: "\e925";
+}
+.icon-agil-rutas:before {
+  content: "\e926";
+}
+.icon-agil-transaccion:before {
+  content: "\e92c";
+}
+.icon-agil-usuarios:before {
+  content: "\e92d";
+}

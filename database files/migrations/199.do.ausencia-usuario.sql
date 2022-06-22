@@ -1,0 +1,1 @@
+alter table agil_rrhh_empleado_ausencia add usuario int(11);

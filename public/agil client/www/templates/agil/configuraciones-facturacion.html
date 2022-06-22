@@ -1,0 +1,106 @@
+<main>
+
+    <div class="row">
+        <div class="col-xs-12">
+            <h3 class="header smaller small lighter blue">Configuración Facturación</h3>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12 col-sm-6 col-lg-7">
+            <div class="widget-box">
+                <div class="widget-header">
+                    <h5 class="smaller">Catálogos</h5>    
+                </div>
+                <div class="widget-body">
+                    <div class="widget-main">
+                        <div class="row">
+                            <div class="col-xs-6" style="margin-top:8px">
+                                <label for="cat_actividades" class="block">Actividades</label>
+                            </div>
+                            <div class="col-xs-6" style="margin-top:8px">
+                                <select class="form-control input-sm" name="act_econ" id="act_econ" ng-model="catalogo.actividad" required ng-options="actividad as actividad.descripcion for actividad in actividades">
+                                </select>
+                            </div>
+                            <div class="col-xs-6" style="margin-top:8px">
+                                <label for="cat_emision" class="block">Tipos de Emisión</label>
+                            </div>
+                            <div class="col-xs-6" style="margin-top:8px">
+                                <select class="form-control input-sm" name="act_econ" id="act_econ" ng-model="catalogo.emision" required ng-options="emision as emision.descripcion for emision in emisiones">
+                                </select>
+                            </div>
+                            <div class="col-xs-6" style="margin-top:8px">
+                                <label for="cat_facturas" class="block">Tipos de Factura</label>
+                            </div>
+                            <div class="col-xs-6" style="margin-top:8px">
+                                <select class="form-control input-sm" name="act_econ" id="act_econ" ng-model="catalogo.factura" required ng-options="factura as factura.descripcion for factura in facturas">
+                                </select>
+                            </div>
+                            <div class="col-xs-6" style="margin-top:8px">
+                                <label for="cat_metodos" class="block">Métodos de Pago</label>
+                            </div>
+                            <div class="col-xs-6" style="margin-top:8px">
+                                <select class="form-control input-sm" name="act_econ" id="act_econ" ng-model="catalogo.metodo" required ng-options="metodo as metodo.descripcion for metodo in metodos">
+                                </select>
+                            </div>
+                            <div class="col-xs-6" style="margin-top:8px">
+                                <label for="cat_monedas" class="block">Tipos de Monedas</label>
+                            </div>
+                            <div class="col-xs-6" style="margin-top:8px">
+                                <select class="form-control input-sm" name="act_econ" id="act_econ" ng-model="catalogo.moneda" required ng-options="moneda as moneda.descripcion for moneda in monedas">
+                                </select>
+                            </div>
+                            <div class="col-xs-6" style="margin-top:8px">
+                                <label for="cat_doc_sector" class="block">Doc. Sector</label>
+                            </div>
+                            <div class="col-xs-6" style="margin-top:8px">
+                                <select class="form-control input-sm" name="act_econ" id="act_econ" ng-model="catalogo.sector" required ng-options="sector as sector.descripcion for sector in sectores">
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-actions" style="margin: 0px 0px; padding: 8px 8px!important;">
+                        <div class="row">
+                            <div class="pull-right" style="margin-right: 15px;">
+                                <button class="btn btn-sm btn-primary">Guardar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12 col-sm-6 col-lg-5">
+            <div class="widget-box">
+                <div class="widget-header">
+                    <h5 class="smaller">Punto de Venta</h5>    
+                </div>
+                <div class="widget-body">
+                    <div class="widget-main">
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <label for="imprimir_factura" class="block">Imprimir al facturar</label>
+                            </div>
+                            <div class="col-xs-6">
+                                <input class="ace ace-switch ace-switch-4" type="checkbox" ng-model="sucursal.activo" ng-change="habilitarSucursales(sucursal)" />
+                                <span class="lbl check-descuento"></span>
+                            </div>
+                            <div class="col-xs-6">
+                                <label for="cerrar_factura" class="block">Cerrar al facturar</label>
+                            </div>
+                            <div class="col-xs-6">
+                                <input class="ace ace-switch ace-switch-4" type="checkbox" ng-model="sucursal.inactivo" ng-change="habilitarSucursales(sucursal)" />
+                                <span class="lbl check-descuento"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-actions" style="margin: 0px 0px; padding: 8px 8px!important;">
+                        <div class="row">
+                            <div class="pull-right" style="margin-right: 15px;">
+                                <button class="btn btn-sm btn-primary">Guardar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>

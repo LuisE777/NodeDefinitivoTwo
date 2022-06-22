@@ -1,0 +1,1 @@
+ALTER TABLE sys_usuario drop crear_comprobante_antiguo;

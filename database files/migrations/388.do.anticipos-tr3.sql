@@ -1,0 +1,1 @@
+alter table agil_rrhh_detalle_planilla_aguinaldos add entrego_tr3 TINYINT(1) DEFAULT false;

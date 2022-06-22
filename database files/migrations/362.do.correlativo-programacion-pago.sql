@@ -1,0 +1,1 @@
+ALTER TABLE agil_correlativo_empresa  add numero_correlativo_programacion_pago  INT(11) DEFAULT 0;

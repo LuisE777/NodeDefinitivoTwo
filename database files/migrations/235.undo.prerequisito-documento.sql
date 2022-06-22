@@ -1,0 +1,2 @@
+ALTER TABLE agil_sucursal drop numero_correlativo_solicitud_almacen;
+ALTER TABLE inv_solicitud_reposicion drop numero_correlativo;

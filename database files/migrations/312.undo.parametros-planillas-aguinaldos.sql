@@ -1,0 +1,5 @@
+ALTER TABLE agil_rrhh_parametros DROP factor_calculo_dias;
+ALTER TABLE agil_rrhh_parametros DROP resolucion_ministerio;
+ALTER TABLE agil_rrhh_parametros DROP dias_min_trabajos;
+ALTER TABLE agil_rrhh_parametros DROP FOREIGN KEY agil_rrhh_parametros_ibfk_2;
+ALTER TABLE agil_rrhh_parametros DROP id_metodo_dias;

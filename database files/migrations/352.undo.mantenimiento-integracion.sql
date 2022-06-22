@@ -1,0 +1,2 @@
+ALTER TABLE sys_usuario drop integracion_contable_mantenimiento;
+ALTER TABLE agil_mantenimiento_orden_trabajo drop comprobante;

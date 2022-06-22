@@ -1,0 +1,1 @@
+ALTER TABLE inv_compra  drop estado_programacion_pago;

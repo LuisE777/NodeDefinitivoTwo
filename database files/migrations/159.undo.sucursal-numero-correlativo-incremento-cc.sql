@@ -1,0 +1,2 @@
+ALTER TABLE agil_sucursal drop numero_correlativo_caja_chica_incremento;
+ALTER TABLE agil_solicitud_caja_chica drop numero_correlativo_incremento;

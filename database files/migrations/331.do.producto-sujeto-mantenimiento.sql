@@ -1,0 +1,1 @@
+ALTER TABLE agil_producto ADD sujeto_mantenimiento tinyint default 0;

@@ -1,0 +1,2 @@
+ALTER TABLE agil_rrhh_empleado_beneficio_social drop usar_primer_mes;
+ALTER TABLE agil_rrhh_empleado_beneficio_social drop usar_segundo_mes;

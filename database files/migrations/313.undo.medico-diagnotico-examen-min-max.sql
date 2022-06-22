@@ -1,0 +1,2 @@
+ALTER TABLE agil_medico_diagnostico_examen drop minimo;
+ALTER TABLE agil_medico_diagnostico_examen drop maximo;

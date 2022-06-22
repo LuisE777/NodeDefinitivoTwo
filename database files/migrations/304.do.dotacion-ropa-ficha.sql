@@ -1,0 +1,1 @@
+alter table agil_rrhh_empleado_dotacion_ropa add ficha int(11);

@@ -1,0 +1,1 @@
+ALTER TABLE agil_proveedor ADD estado varchar(255);

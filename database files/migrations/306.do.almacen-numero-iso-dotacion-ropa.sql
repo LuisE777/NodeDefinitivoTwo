@@ -1,0 +1,1 @@
+alter table agil_almacen add numero_correlativo_iso_dotacion_ropa int(11);

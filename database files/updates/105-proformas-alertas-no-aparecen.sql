@@ -1,0 +1,1 @@
+update agil_proforma set cliente = case cliente when 17039 then 7911 when 17040 then 7911 else cliente end;

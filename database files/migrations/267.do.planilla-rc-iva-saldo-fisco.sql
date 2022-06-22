@@ -1,0 +1,1 @@
+ALTER TABLE agil_rrhh_detalle_planilla_rc_iva ADD saldo_fisco decimal(20, 4) default 0;

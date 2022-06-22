@@ -1,0 +1,3 @@
+ALTER TABLE agil_rrhh_detalle_planilla_sueldos DROP COLUMN horas_extras_r;
+ALTER TABLE agil_rrhh_detalle_planilla_sueldos DROP COLUMN dias_rol_turnos;
+ALTER TABLE agil_rrhh_detalle_planilla_sueldos DROP COLUMN horas_extras_rol;

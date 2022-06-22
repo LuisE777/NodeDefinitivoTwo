@@ -1,0 +1,1 @@
+ALTER TABLE agil_cuenta_transaccion ADD detalle_dos varchar(255);

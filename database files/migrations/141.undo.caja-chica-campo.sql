@@ -1,0 +1,1 @@
+ALTER TABLE agil_caja_chica drop caja_chica_solicitud;

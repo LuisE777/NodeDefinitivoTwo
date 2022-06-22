@@ -1,0 +1,1 @@
+ALTER TABLE agil_rrhh_empleado_dotacion_ropa_item DROP FOREIGN KEY agil_rrhh_empleado_dotacion_ropa_item_ibfk_5;

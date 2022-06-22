@@ -1,0 +1,1 @@
+ALTER TABLE agil_rrhh_empleado_hora_extra_ordinaria add fecha_cierre datetime;

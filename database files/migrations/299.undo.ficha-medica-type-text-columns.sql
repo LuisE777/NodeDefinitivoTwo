@@ -1,0 +1,10 @@
+alter table agil_medico_paciente_ficha MODIFY estilo_vida varchar(255) default null;
+alter table agil_medico_paciente_ficha MODIFY actividad_laboral varchar(255) default null;
+alter table agil_medico_paciente_ficha MODIFY area_operacion varchar(255) default null;
+alter table agil_medico_paciente_ficha MODIFY riesgo varchar(255) default null;
+alter table agil_medico_paciente_ficha MODIFY alergia_otros_comentario varchar(255) default null;
+alter table agil_medico_paciente_ficha MODIFY enfermedad_comentario varchar(255) default null;
+alter table agil_medico_paciente_ficha MODIFY quirurgico_comentario varchar(255) default null;
+alter table agil_medico_paciente_ficha MODIFY descripcion varchar(255) default null;
+alter table agil_medico_paciente_ficha MODIFY descripcion_antecedentes varchar(255) default null;
+alter table agil_medico_paciente_ficha MODIFY quirurgico_descripcion varchar(255) default null;

@@ -1,0 +1,1 @@
+ALTER TABLE agil_gestion_detalle_orden_reposicion  ADD cantidad_total DECIMAL(20, 4);

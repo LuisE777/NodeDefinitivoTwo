@@ -1,0 +1,1 @@
+ALTER TABLE sys_usuario drop integracion_contable_ropa_trabajo_rrhh;

@@ -1,0 +1,1 @@
+ALTER TABLE agil_rrhh_empleado_ficha add codigo_tributario int(11);

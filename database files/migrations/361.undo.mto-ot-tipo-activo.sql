@@ -1,0 +1,1 @@
+ALTER TABLE agil_mantenimiento_orden_trabajo  drop tipo_activo;

@@ -1,0 +1,24 @@
+<div class="col-sm-6">
+    <div>
+      Mostrando página {{paginatorCalendarioRolTurnos.currentPage}} de {{paginatorCalendarioRolTurnos.pages.length}}
+    </div>
+  </div>
+  <div class="col-sm-6" align="right">
+    <ul class="pagination">
+      <li class="paginate_button">
+        <a href="javascript:void(0)" ng-click="paginatorCalendarioRolTurnos.getFirstPage()">Primero</a>
+      </li>
+      <li class="paginate_button">
+        <a href="javascript:void(0)" e-disabled="paginatorCalendarioRolTurnos.currentPage==1" ng-click="paginatorCalendarioRolTurnos.getPreviousPage()"><<</a>
+      </li>
+      <li class="paginate_button" ng-class="{active:paginatorCalendarioRolTurnos.currentPage==page}" ng-repeat="page in paginatorCalendarioRolTurnos.pages" ng-if="abs(paginatorCalendarioRolTurnos.currentPage-page)<4">
+        <a e-disabled="paginatorCalendarioRolTurnos.currentPage==page" href="javascript:void(0)" ng-click="paginatorCalendarioRolTurnos.getPage(page)">{{page}}</a>
+      </li>
+      <li class="paginate_button">
+        <a href="javascript:void(0)" e-disabled="paginatorCalendarioRolTurnos.currentPage==paginatorCalendarioRolTurnos.pages.length" ng-click="paginatorCalendarioRolTurnos.getNextPage()">>></a>
+      </lidiv>
+      <li class="paginate_button">
+        <a href="javascript:void(0)" ng-click="paginatorCalendarioRolTurnos.getLastPage()">Ultimo</a>
+      </li>
+    </ul>
+  </div>

@@ -1,0 +1,1 @@
+alter table agil_rrhh_detalle_planilla_aguinaldos drop entrego_tr3;

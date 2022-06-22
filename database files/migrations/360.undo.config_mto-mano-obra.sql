@@ -1,0 +1,1 @@
+ALTER TABLE agil_config_mantenimiento  drop especialidades_grupal;

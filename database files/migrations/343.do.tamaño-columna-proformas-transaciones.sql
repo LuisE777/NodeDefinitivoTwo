@@ -1,0 +1,1 @@
+alter table agil_cuenta_transaccion MODIFY proformas TEXT(2000);
