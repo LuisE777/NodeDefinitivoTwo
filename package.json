@@ -23,7 +23,6 @@
     "mysql": "^2.18.1",
     "node-cron": "^3.0.0",
     "node-schedule": "^1.2.1",
-    "node-windows": "0.1.10",
     "nodemailer": "^5.0.0",
     "pdfkit": "0.7.1",
     "pkcs12-xml": "^1.0.5",
